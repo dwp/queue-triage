@@ -1,0 +1,6 @@
+rootProject.name = 'queue-triage'
+
+include 'queue-triage-core',
+        'queue-triage-core-client',
+        'queue-triage-web'
+
