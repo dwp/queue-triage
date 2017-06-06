@@ -1,5 +1,14 @@
+apply plugin: 'org.springframework.boot'
+apply plugin: 'application'
+
+mainClassName = 'uk.gov.dwp.queue.triage.core.QueueTriageCoreApplication'
+
 dependencies {
 
     compile project(':queue-triage-core-client')
 
+    compile "org.slf4j:slf4j-api:${slf4jApiVersion}",
+            "org.springframework.boot:spring-boot-starter",
+            "org.springframework.boot:spring-boot-starter-jetty",
+            "org.springframework:spring-web"
 }
