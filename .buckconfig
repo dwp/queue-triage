@@ -1,0 +1,12 @@
+[alias]
+  core = //queue-triage-core:main
+  web  = //queue-triage-web:main
+
+[java]
+  src_roots = /src/main/java, /src/test/java
+  source_level = 8
+  target_level = 8
+
+[maven_repositories]
+  central = https://repo1.maven.org/maven2
+  m2 = ~/.m2/repository

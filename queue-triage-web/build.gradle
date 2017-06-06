@@ -1,5 +1,0 @@
-dependencies {
-
-    compile project(':queue-triage-core-client')
-
-}
