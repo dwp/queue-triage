@@ -9,7 +9,6 @@ java_library(
         '//lib:spring-boot-starter',
         '//lib:spring-boot-starter-jetty',
         '//lib:spring-web',
-        #transitive deps
         '//lib:apache-el',
         '//lib:asm',
         '//lib:asm-commons',
@@ -50,11 +49,11 @@ java_library(
         '//lib:websocket-client',
         '//lib:websocket-common',
         '//lib:websocket-server',
-        '//lib:websocket-servlet'
+        '//lib:websocket-servlet',
     ],
     visibility = [
         "PUBLIC"
-    ]
+    ],
 )
 
 java_test(
@@ -68,5 +67,4 @@ java_test(
     visibility = [
         "PUBLIC"
     ],
-
 )
