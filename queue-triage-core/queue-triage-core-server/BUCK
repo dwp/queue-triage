@@ -4,12 +4,11 @@ java_library(
     resources = glob(['src/main/resources/**/*']),
     resources_root = 'src/main/resources',
     deps = [
-        '//queue-triage-core-client:main',
+        '//queue-triage-core/queue-triage-core-client:main',
         '//lib:slf4j-api',
         '//lib:spring-boot-starter',
         '//lib:spring-boot-starter-jetty',
         '//lib:spring-web',
-        #transitive deps
         '//lib:apache-el',
         '//lib:asm',
         '//lib:asm-commons',
@@ -50,23 +49,22 @@ java_library(
         '//lib:websocket-client',
         '//lib:websocket-common',
         '//lib:websocket-server',
-        '//lib:websocket-servlet'
+        '//lib:websocket-servlet',
     ],
     visibility = [
         "PUBLIC"
-    ]
+    ],
 )
 
 java_test(
     name = "test",
     srcs = glob(['src/test/java/**/*Test.java']),
     deps = [
-        '//queue-triage-core:main',
+        '//queue-triage-core/queue-triage-core-server:main',
         '//lib:common-test',
         '//lib:javax.servlet-api',
     ],
     visibility = [
         "PUBLIC"
     ],
-
 )
