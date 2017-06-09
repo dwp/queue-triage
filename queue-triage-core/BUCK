@@ -1,0 +1,72 @@
+java_library(
+    name = "main",
+    srcs = glob(["src/main/java/**/*.java"]),
+    resources = glob(['src/main/resources/**/*']),
+    resources_root = 'src/main/resources',
+    deps = [
+        '//queue-triage-core-client:main',
+        '//lib:slf4j-api',
+        '//lib:spring-boot-starter',
+        '//lib:spring-boot-starter-jetty',
+        '//lib:spring-web',
+        #transitive deps
+        '//lib:apache-el',
+        '//lib:asm',
+        '//lib:asm-commons',
+        '//lib:asm-tree',
+        '//lib:javax-websocket-client-impl',
+        '//lib:javax-websocket-server-impl',
+        '//lib:javax.annotation-api',
+        '//lib:javax.servlet-api',
+        '//lib:javax.websocket-api',
+        '//lib:jcl-over-slf4j',
+        '//lib:jetty-annotations',
+        '//lib:jetty-client',
+        '//lib:jetty-continuation',
+        '//lib:jetty-http',
+        '//lib:jetty-io',
+        '//lib:jetty-plus',
+        '//lib:jetty-security',
+        '//lib:jetty-server',
+        '//lib:jetty-servlet',
+        '//lib:jetty-servlets',
+        '//lib:jetty-util',
+        '//lib:jetty-webapp',
+        '//lib:jetty-xml',
+        '//lib:jul-to-slf4j',
+        '//lib:log4j-over-slf4j',
+        '//lib:logback-classic',
+        '//lib:logback-core',
+        '//lib:snakeyaml',
+        '//lib:spring-aop',
+        '//lib:spring-beans',
+        '//lib:spring-boot',
+        '//lib:spring-boot-autoconfigure',
+        '//lib:spring-boot-starter-logging',
+        '//lib:spring-context',
+        '//lib:spring-core',
+        '//lib:spring-expression',
+        '//lib:websocket-api',
+        '//lib:websocket-client',
+        '//lib:websocket-common',
+        '//lib:websocket-server',
+        '//lib:websocket-servlet'
+    ],
+    visibility = [
+        "PUBLIC"
+    ]
+)
+
+java_test(
+    name = "test",
+    srcs = glob(['src/test/java/**/*Test.java']),
+    deps = [
+        '//queue-triage-core:main',
+        '//lib:common-test',
+        '//lib:javax.servlet-api',
+    ],
+    visibility = [
+        "PUBLIC"
+    ],
+
+)
