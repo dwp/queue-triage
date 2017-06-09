@@ -1,5 +1,5 @@
 [alias]
-  core = //queue-triage-core:main
+  core-server = //queue-triage-core/queue-triage-core-server:main
   web  = //queue-triage-web:main
 
 [java]

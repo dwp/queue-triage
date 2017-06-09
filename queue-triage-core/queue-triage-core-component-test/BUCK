@@ -23,8 +23,8 @@ java_test(
     name = "test",
     srcs = glob(['src/test/java/**/*Test.java']),
     deps = [
-        '//queue-triage-core:main',
-        '//queue-triage-core-component-test:main',
+        '//queue-triage-core/queue-triage-core-server:main',
+        '//queue-triage-core/queue-triage-core-component-test:main',
         '//lib:junit',
         '//lib:common-test',
         '//lib:javax.servlet-api',
