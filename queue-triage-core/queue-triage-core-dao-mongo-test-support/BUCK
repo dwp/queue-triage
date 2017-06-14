@@ -1,0 +1,20 @@
+java_library(
+    name = 'test-lib-main',
+    srcs = glob(['src/main/java/**/*.java']),
+    resources = glob(['src/main/resources/mongo-dao-test.properties']),
+    resources_root = 'src/main/resources',
+    deps = [
+        '//queue-triage-core/queue-triage-core-dao-mongo:main',
+        '//lib:hamcrest-core',
+        '//lib:junit',
+        '//lib:mongodb-driver',
+        '//lib:spring-beans',
+        '//lib:spring-boot-autoconfigure',
+        '//lib:spring-boot-test',
+        '//lib:spring-context',
+        '//lib:spring-test',
+    ],
+    visibility = [
+        '//queue-triage-core/queue-triage-core-dao-mongo:test',
+    ]
+)

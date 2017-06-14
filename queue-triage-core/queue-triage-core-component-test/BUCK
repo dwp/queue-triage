@@ -2,7 +2,6 @@ java_library(
     name = "main",
     srcs = glob(['src/main/java/**/*.java']),
     deps = [
-        '//lib:apache-httpclient',
         '//lib:hamcrest-core',
         '//lib:hamcrest-library',
         '//lib:jgiven-core',
@@ -25,9 +24,10 @@ java_test(
     deps = [
         '//queue-triage-core/queue-triage-core-server:main',
         '//queue-triage-core/queue-triage-core-component-test:main',
-        '//lib:junit',
         '//lib:common-test',
-        '//lib:javax.servlet-api',
+        '//lib:hibernate-validator-incl-deps',
+        '//lib:javax-servlet-api',
+        '//lib:javax-validation-api',
         '//lib:jgiven',
         '//lib:jgiven-spring',
         '//lib:spring-beans',

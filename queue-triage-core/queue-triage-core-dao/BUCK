@@ -1,0 +1,26 @@
+java_library(
+    name = "main",
+    srcs = glob(["src/main/java/**/*.java"]),
+    deps =[
+        '//queue-triage-core/queue-triage-core-client:main',
+        '//lib:jackson-core',
+        '//lib:jackson-databind',
+    ],
+    visibility = [
+        'PUBLIC'
+    ]
+)
+
+java_test(
+    name = 'test',
+    srcs = glob(['src/test/java/**/*.java']),
+    deps = [
+        ':main',
+        '//queue-triage-core/queue-triage-core-jackson:main',
+        '//lib:common-test',
+        '//lib:jackson-core',
+        '//lib:jackson-databind',
+        '//lib:json-path-matchers-incl-deps',
+        '//lib:slf4j-api',
+    ]
+)

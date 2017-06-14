@@ -1,7 +1,12 @@
 java_library(
     name = "main",
     srcs = glob(["src/main/java/**/*.java"]),
-    deps = [
+    deps =[
+        '//lib:commons-lang3',
+        '//lib:hibernate-validator',
+        '//lib:jackson-annotations',
+        '//lib:javax-ws-rs-api',
+        '//lib:javax-validation-api',
     ],
     visibility = [
         "PUBLIC"

@@ -15,9 +15,9 @@ java_library(
         '//lib:asm-tree',
         '//lib:javax-websocket-client-impl',
         '//lib:javax-websocket-server-impl',
-        '//lib:javax.annotation-api',
-        '//lib:javax.servlet-api',
-        '//lib:javax.websocket-api',
+        '//lib:javax-annotation-api',
+        '//lib:javax-servlet-api',
+        '//lib:javax-websocket-api',
         '//lib:jcl-over-slf4j',
         '//lib:jetty-annotations',
         '//lib:jetty-client',
@@ -36,6 +36,7 @@ java_library(
         '//lib:log4j-over-slf4j',
         '//lib:logback-classic',
         '//lib:logback-core',
+        '//lib:mongodb-driver-incl-deps',
         '//lib:snakeyaml',
         '//lib:spring-aop',
         '//lib:spring-beans',
@@ -60,11 +61,13 @@ java_test(
     name = "test",
     srcs = glob(['src/test/java/**/*Test.java']),
     deps = [
+        '//queue-triage-core/queue-triage-core-client:main',
+        '//queue-triage-core/queue-triage-core-client-test-support:test-lib-main',
         '//queue-triage-core/queue-triage-core-server:main',
         '//lib:common-test',
-        '//lib:javax.servlet-api',
+        '//lib:commons-lang3',
+        '//lib:javax-servlet-api',
     ],
     visibility = [
-        "PUBLIC"
     ],
 )

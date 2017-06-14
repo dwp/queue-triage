@@ -1,0 +1,17 @@
+java_library(
+    name = "main",
+    srcs = glob(["src/main/java/**/*.java"]),
+    deps =[
+        '//queue-triage-core/queue-triage-core-client:main',
+        '//lib:jackson-annotations',
+        '//lib:jackson-core',
+        '//lib:jackson-databind',
+        '//lib:jackson-datatype-jsr310',
+        '//lib:jackson-jaxrs-base',
+        '//lib:jackson-jaxrs-json-provider',
+        '//lib:spring-context',
+    ],
+    visibility = [
+        "PUBLIC"
+    ]
+)

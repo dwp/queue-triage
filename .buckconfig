@@ -3,7 +3,7 @@
   web  = //queue-triage-web:main
 
 [java]
-  src_roots = /src/main/java, /src/test/java
+  src_roots = src
   source_level = 8
   target_level = 8
 
