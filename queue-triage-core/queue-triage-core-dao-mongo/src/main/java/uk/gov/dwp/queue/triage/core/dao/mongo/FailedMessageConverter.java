@@ -2,16 +2,16 @@ package uk.gov.dwp.queue.triage.core.dao.mongo;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
-import uk.gov.dwp.queue.triage.core.client.Destination;
-import uk.gov.dwp.queue.triage.core.client.FailedMessage;
-import uk.gov.dwp.queue.triage.core.client.FailedMessageId;
+import uk.gov.dwp.queue.triage.core.domain.Destination;
+import uk.gov.dwp.queue.triage.core.domain.FailedMessage;
+import uk.gov.dwp.queue.triage.id.FailedMessageId;
 import uk.gov.dwp.queue.triage.core.dao.ObjectConverter;
 
 import java.time.ZonedDateTime;
 import java.util.Map;
 
-import static uk.gov.dwp.queue.triage.core.client.FailedMessageBuilder.aFailedMessage;
-import static uk.gov.dwp.queue.triage.core.client.FailedMessageId.fromString;
+import static uk.gov.dwp.queue.triage.core.domain.FailedMessageBuilder.aFailedMessage;
+import static uk.gov.dwp.queue.triage.id.FailedMessageId.fromString;
 
 public class FailedMessageConverter implements DBObjectWithIdConverter<FailedMessage, FailedMessageId> {
 

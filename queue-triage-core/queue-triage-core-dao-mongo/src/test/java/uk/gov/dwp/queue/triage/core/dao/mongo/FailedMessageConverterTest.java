@@ -4,9 +4,9 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 import org.junit.Before;
 import org.junit.Test;
-import uk.gov.dwp.queue.triage.core.client.Destination;
-import uk.gov.dwp.queue.triage.core.client.FailedMessageBuilder;
-import uk.gov.dwp.queue.triage.core.client.FailedMessageId;
+import uk.gov.dwp.queue.triage.core.domain.Destination;
+import uk.gov.dwp.queue.triage.core.domain.FailedMessageBuilder;
+import uk.gov.dwp.queue.triage.id.FailedMessageId;
 import uk.gov.dwp.queue.triage.core.dao.mongo.configuration.DaoConfig;
 import uk.gov.dwp.queue.triage.core.dao.ObjectConverter;
 
@@ -22,13 +22,13 @@ import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import static uk.gov.dwp.queue.triage.core.client.FailedMessageId.newFailedMessageId;
+import static uk.gov.dwp.queue.triage.id.FailedMessageId.newFailedMessageId;
 import static uk.gov.dwp.queue.triage.core.dao.mongo.DBObjectMatcher.hasField;
 import static uk.gov.dwp.queue.triage.core.dao.mongo.FailedMessageConverter.CONTENT;
 import static uk.gov.dwp.queue.triage.core.dao.mongo.FailedMessageConverter.DESTINATION;
 import static uk.gov.dwp.queue.triage.core.dao.mongo.FailedMessageConverter.PROPERTIES;
-import static uk.gov.dwp.queue.triage.core.client.DestinationMatcher.aDestination;
-import static uk.gov.dwp.queue.triage.core.client.FailedMessageMatcher.aFailedMessage;
+import static uk.gov.dwp.queue.triage.core.domain.DestinationMatcher.aDestination;
+import static uk.gov.dwp.queue.triage.core.domain.FailedMessageMatcher.aFailedMessage;
 
 public class FailedMessageConverterTest {
 

@@ -1,4 +1,6 @@
-package uk.gov.dwp.queue.triage.core.client;
+package uk.gov.dwp.queue.triage.core.domain;
+
+import uk.gov.dwp.queue.triage.id.FailedMessageId;
 
 import java.time.ZonedDateTime;
 import java.util.HashMap;

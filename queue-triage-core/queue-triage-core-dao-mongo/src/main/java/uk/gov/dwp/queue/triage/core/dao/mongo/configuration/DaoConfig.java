@@ -1,7 +1,6 @@
 package uk.gov.dwp.queue.triage.core.dao.mongo.configuration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
 import org.bson.BSON;
 import org.bson.Transformer;
@@ -9,8 +8,8 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
-import uk.gov.dwp.queue.triage.core.client.Destination;
-import uk.gov.dwp.queue.triage.core.client.Id;
+import uk.gov.dwp.queue.triage.core.domain.Destination;
+import uk.gov.dwp.queue.triage.id.Id;
 import uk.gov.dwp.queue.triage.core.dao.FailedMessageDao;
 import uk.gov.dwp.queue.triage.core.dao.ObjectConverter;
 import uk.gov.dwp.queue.triage.core.dao.PropertiesConverter;

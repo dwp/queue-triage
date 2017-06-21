@@ -2,7 +2,7 @@ java_library(
     name = "main",
     srcs = glob(["src/main/java/**/*.java"]),
     deps =[
-        '//queue-triage-core/queue-triage-core-client:main',
+        "//common/id:queue-triage-common-id",
         '//lib:jackson-annotations',
         '//lib:jackson-core',
         '//lib:jackson-databind',

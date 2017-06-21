@@ -1,9 +1,10 @@
-package uk.gov.dwp.queue.triage.core.client;
+package uk.gov.dwp.queue.triage.core.domain;
 
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
 import org.hamcrest.core.IsAnything;
+import uk.gov.dwp.queue.triage.id.FailedMessageId;
 
 import java.time.ZonedDateTime;
 import java.util.Map;

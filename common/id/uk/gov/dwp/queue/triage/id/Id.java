@@ -1,4 +1,4 @@
-package uk.gov.dwp.queue.triage.core.client;
+package uk.gov.dwp.queue.triage.id;
 
 import java.util.UUID;
 

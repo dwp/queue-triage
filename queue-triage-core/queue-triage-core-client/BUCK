@@ -2,6 +2,7 @@ java_library(
     name = "main",
     srcs = glob(["src/main/java/**/*.java"]),
     deps =[
+        '//common/id:queue-triage-common-id',
         '//lib:commons-lang3',
         '//lib:hibernate-validator',
         '//lib:jackson-annotations',
@@ -9,6 +10,8 @@ java_library(
         '//lib:javax-validation-api',
     ],
     visibility = [
-        "PUBLIC"
+        "//queue-triage-core/queue-triage-core-server:main",
+        "//queue-triage-core/queue-triage-core-server:test",
+        "//queue-triage-web:main",
     ]
 )

@@ -2,8 +2,8 @@ package uk.gov.dwp.queue.triage.core.dao.mongo;
 
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
-import uk.gov.dwp.queue.triage.core.client.FailedMessage;
-import uk.gov.dwp.queue.triage.core.client.FailedMessageId;
+import uk.gov.dwp.queue.triage.core.domain.FailedMessage;
+import uk.gov.dwp.queue.triage.id.FailedMessageId;
 import uk.gov.dwp.queue.triage.core.dao.FailedMessageDao;
 
 public class FailedMessageMongoDao implements FailedMessageDao {

@@ -1,8 +1,7 @@
-package uk.gov.dwp.queue.triage.core.client;
+package uk.gov.dwp.queue.triage.core.domain;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import org.hibernate.validator.constraints.NotEmpty;
+import uk.gov.dwp.queue.triage.id.FailedMessageId;
 
 import javax.validation.constraints.NotNull;
 import java.time.ZonedDateTime;
@@ -20,15 +19,14 @@ public class FailedMessage {
     @NotEmpty
     private final String content;
     @NotNull
-    @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS)
     private final Map<String, Object> properties;
 
-    FailedMessage(@JsonProperty("failedMessageId") FailedMessageId failedMessageId,
-                  @JsonProperty("destination") Destination destination,
-                  @JsonProperty("sentAt") ZonedDateTime sentAt,
-                  @JsonProperty("failedAt") ZonedDateTime failedAt,
-                  @JsonProperty("content") String content,
-                  @JsonProperty("properties") Map<String, Object> properties) {
+    FailedMessage(FailedMessageId failedMessageId,
+                  Destination destination,
+                  ZonedDateTime sentAt,
+                  ZonedDateTime failedAt,
+                  String content,
+                  Map<String, Object> properties) {
         this.failedMessageId = failedMessageId;
         this.destination = destination;
         this.sentAt = sentAt;

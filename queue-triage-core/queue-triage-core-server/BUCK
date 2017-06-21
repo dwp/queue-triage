@@ -62,7 +62,7 @@ java_test(
     srcs = glob(['src/test/java/**/*Test.java']),
     deps = [
         '//queue-triage-core/queue-triage-core-client:main',
-        '//queue-triage-core/queue-triage-core-client-test-support:test-lib-main',
+        '//queue-triage-core/queue-triage-core-domain-test-support:test-lib-main',
         '//queue-triage-core/queue-triage-core-server:main',
         '//lib:common-test',
         '//lib:commons-lang3',

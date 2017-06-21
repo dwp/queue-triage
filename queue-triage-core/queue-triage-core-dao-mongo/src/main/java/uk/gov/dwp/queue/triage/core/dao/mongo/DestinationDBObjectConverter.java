@@ -2,12 +2,12 @@ package uk.gov.dwp.queue.triage.core.dao.mongo;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
-import uk.gov.dwp.queue.triage.core.client.Destination;
-
-import static uk.gov.dwp.queue.triage.core.client.Destination.BROKER_NAME;
-import static uk.gov.dwp.queue.triage.core.client.Destination.NAME;
+import uk.gov.dwp.queue.triage.core.domain.Destination;
 
 public class DestinationDBObjectConverter implements DBObjectConverter<Destination> {
+
+    static final String BROKER_NAME = "brokerName";
+    static final String NAME = "name";
 
     @Override
     public Destination convertToObject(DBObject dbObject) {

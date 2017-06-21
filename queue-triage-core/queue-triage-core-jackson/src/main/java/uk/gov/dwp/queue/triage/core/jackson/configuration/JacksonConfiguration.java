@@ -7,7 +7,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import uk.gov.dwp.queue.triage.core.client.Id;
+import uk.gov.dwp.queue.triage.id.Id;
 import uk.gov.dwp.queue.triage.core.jackson.ISO8601DateFormatWithMilliSeconds;
 import uk.gov.dwp.queue.triage.core.jackson.IdDeserializer;
 import uk.gov.dwp.queue.triage.core.jackson.IdSerializer;

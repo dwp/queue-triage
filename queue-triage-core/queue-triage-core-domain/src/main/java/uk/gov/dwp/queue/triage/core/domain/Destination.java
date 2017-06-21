@@ -1,17 +1,11 @@
-package uk.gov.dwp.queue.triage.core.client;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
+package uk.gov.dwp.queue.triage.core.domain;
 
 public class Destination {
-
-    public static final String BROKER_NAME = "brokerName";
-    public static final String NAME = "name";
 
     private final String brokerName;
     private final String name;
 
-    public Destination(@JsonProperty(BROKER_NAME) String brokerName,
-                       @JsonProperty(NAME) String name) {
+    public Destination(String brokerName, String name) {
         this.brokerName = brokerName;
         this.name = name;
     }

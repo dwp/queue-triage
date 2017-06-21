@@ -2,10 +2,10 @@ package uk.gov.dwp.queue.triage.core.dao.mongo;
 
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import uk.gov.dwp.queue.triage.core.client.Destination;
-import uk.gov.dwp.queue.triage.core.client.FailedMessage;
-import uk.gov.dwp.queue.triage.core.client.FailedMessageBuilder;
-import uk.gov.dwp.queue.triage.core.client.FailedMessageId;
+import uk.gov.dwp.queue.triage.core.domain.Destination;
+import uk.gov.dwp.queue.triage.core.domain.FailedMessage;
+import uk.gov.dwp.queue.triage.core.domain.FailedMessageBuilder;
+import uk.gov.dwp.queue.triage.id.FailedMessageId;
 import uk.gov.dwp.queue.triage.core.dao.util.HashMapBuilder;
 
 import java.time.LocalDateTime;
@@ -19,8 +19,8 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
-import static uk.gov.dwp.queue.triage.core.client.FailedMessageId.newFailedMessageId;
-import static uk.gov.dwp.queue.triage.core.client.FailedMessageMatcher.aFailedMessage;
+import static uk.gov.dwp.queue.triage.id.FailedMessageId.newFailedMessageId;
+import static uk.gov.dwp.queue.triage.core.domain.FailedMessageMatcher.aFailedMessage;
 import static uk.gov.dwp.queue.triage.core.dao.util.HashMapBuilder.newHashMap;
 
 public class FailedMessageMongoDaoTest extends AbstractMongoDaoTest {

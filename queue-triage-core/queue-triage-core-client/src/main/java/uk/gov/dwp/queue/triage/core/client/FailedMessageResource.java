@@ -1,5 +1,7 @@
 package uk.gov.dwp.queue.triage.core.client;
 
+import uk.gov.dwp.queue.triage.id.FailedMessageId;
+
 import javax.ws.rs.*;
 
 @Consumes("application/json")
@@ -9,8 +11,5 @@ public interface FailedMessageResource {
 
     @GET
     @Path("/{failedMessageId}")
-    FailedMessage getFailedMessage(@PathParam("failedMessageId") FailedMessageId failedMessgeId);
-
-    @POST
-    void create(FailedMessage failedMessage);
+    FailedMessageResponse getFailedMessage(@PathParam("failedMessageId") FailedMessageId failedMessgeId);
 }

@@ -2,11 +2,11 @@ package uk.gov.dwp.queue.triage.core.dao.mongo;
 
 import com.mongodb.DBObject;
 import org.junit.Test;
-import uk.gov.dwp.queue.triage.core.client.Destination;
+import uk.gov.dwp.queue.triage.core.domain.Destination;
 
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
-import static uk.gov.dwp.queue.triage.core.client.DestinationMatcher.aDestination;
+import static uk.gov.dwp.queue.triage.core.domain.DestinationMatcher.aDestination;
 
 public class DestinationDBObjectConverterTest {
 

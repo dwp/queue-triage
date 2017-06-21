@@ -1,0 +1,10 @@
+java_library(
+    name = "queue-triage-common-id",
+    srcs = glob(["**/*.java"]),
+    deps = [
+        '//lib:jackson-annotations',
+    ],
+    visibility = [
+        "PUBLIC",
+    ],
+)

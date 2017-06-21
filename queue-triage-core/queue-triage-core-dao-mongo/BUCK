@@ -2,7 +2,8 @@ java_library(
     name = "main",
     srcs = glob(["src/main/java/**/*.java"]),
     deps = [
-        '//queue-triage-core/queue-triage-core-client:main',
+        "//common/id:queue-triage-common-id",
+        '//queue-triage-core/queue-triage-core-domain:queue-triage-core-domain',
         '//queue-triage-core/queue-triage-core-dao:main',
         '//queue-triage-core/queue-triage-core-jackson:main',
         '//lib:jackson-databind',
@@ -21,8 +22,9 @@ java_test(
     name = 'test',
     srcs = glob([ 'src/test/java/**/*Test.java']),
     deps = [
-        '//queue-triage-core/queue-triage-core-client:main',
-        '//queue-triage-core/queue-triage-core-client-test-support:test-lib-main',
+        "//common/id:queue-triage-common-id",
+        '//queue-triage-core/queue-triage-core-domain:queue-triage-core-domain',
+        '//queue-triage-core/queue-triage-core-domain-test-support:test-lib-main',
         '//queue-triage-core/queue-triage-core-dao:main',
         '//queue-triage-core/queue-triage-core-dao-mongo:main',
         '//queue-triage-core/queue-triage-core-dao-mongo-test-support:test-lib-main',
