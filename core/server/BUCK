@@ -1,10 +1,10 @@
 java_library(
-    name = "main",
+    name = "queue-triage-core-server",
     srcs = glob(["src/main/java/**/*.java"]),
     resources = glob(['src/main/resources/**/*']),
     resources_root = 'src/main/resources',
     deps = [
-        '//queue-triage-core/queue-triage-core-client:main',
+        '//core/client:queue-triage-core-client',
         '//lib:slf4j-api',
         '//lib:spring-boot-starter',
         '//lib:spring-boot-starter-jetty',
@@ -61,9 +61,9 @@ java_test(
     name = "test",
     srcs = glob(['src/test/java/**/*Test.java']),
     deps = [
-        '//queue-triage-core/queue-triage-core-client:main',
-        '//queue-triage-core/queue-triage-core-domain-test-support:test-lib-main',
-        '//queue-triage-core/queue-triage-core-server:main',
+        '//core/client:queue-triage-core-client',
+        '//core/domain-test-support:queue-triage-core-domain-test-support',
+        '//core/server:queue-triage-core-server',
         '//lib:common-test',
         '//lib:commons-lang3',
         '//lib:javax-servlet-api',
