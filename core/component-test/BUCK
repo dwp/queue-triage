@@ -1,5 +1,5 @@
 java_library(
-    name = "main",
+    name = "queue-triage-core-component-test",
     srcs = glob(['src/main/java/**/*.java']),
     deps = [
         '//lib:hamcrest-core',
@@ -22,8 +22,8 @@ java_test(
     name = "test",
     srcs = glob(['src/test/java/**/*Test.java']),
     deps = [
-        '//queue-triage-core/queue-triage-core-server:main',
-        '//queue-triage-core/queue-triage-core-component-test:main',
+        '//core/server:queue-triage-core-server',
+        '//core/component-test:queue-triage-core-component-test',
         '//lib:common-test',
         '//lib:hibernate-validator-incl-deps',
         '//lib:javax-servlet-api',
