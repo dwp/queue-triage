@@ -1,11 +1,11 @@
 java_library(
-    name = "main",
+    name = "queue-triage-core-dao-mongo",
     srcs = glob(["src/main/java/**/*.java"]),
     deps = [
         "//common/id:queue-triage-common-id",
-        '//queue-triage-core/queue-triage-core-domain:queue-triage-core-domain',
-        '//queue-triage-core/queue-triage-core-dao:main',
-        '//queue-triage-core/queue-triage-core-jackson:main',
+        '//core/domain:queue-triage-core-domain',
+        '//core/dao:queue-triage-core-dao',
+        '//core/jackson:queue-triage-core-jackson',
         '//lib:jackson-databind',
         '//lib:mongodb-driver-incl-deps',
         '//lib:spring-beans',
@@ -13,8 +13,8 @@ java_library(
         '//lib:spring-context',
     ],
     visibility = [
-        '//queue-triage-core/queue-triage-core-dao-mongo-test-support:test-lib-main',
-        '//queue-triage-core/queue-triage-core-server:main',
+        '//core/dao-mongo-test-support:queue-triage-core-dao-mongo-test-support',
+        '//core/server:queue-triage-core-server',
     ]
 )
 
@@ -23,11 +23,11 @@ java_test(
     srcs = glob([ 'src/test/java/**/*Test.java']),
     deps = [
         "//common/id:queue-triage-common-id",
-        '//queue-triage-core/queue-triage-core-domain:queue-triage-core-domain',
-        '//queue-triage-core/queue-triage-core-domain-test-support:test-lib-main',
-        '//queue-triage-core/queue-triage-core-dao:main',
-        '//queue-triage-core/queue-triage-core-dao-mongo:main',
-        '//queue-triage-core/queue-triage-core-dao-mongo-test-support:test-lib-main',
+        '//core/domain:queue-triage-core-domain',
+        '//core/domain-test-support:queue-triage-core-domain-test-support',
+        '//core/dao:queue-triage-core-dao',
+        '//core/dao-mongo:queue-triage-core-dao-mongo',
+        '//core/dao-mongo-test-support:queue-triage-core-dao-mongo-test-support',
         '//lib:common-test',
         '//lib:commons-logging',
         '//lib:hibernate-validator-incl-deps',

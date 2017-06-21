@@ -10,10 +10,10 @@ java_library(
         '//lib:javax-validation-api',
     ],
     visibility = [
-        "//queue-triage-core/queue-triage-core-server:main",
-        "//queue-triage-core/queue-triage-core-dao:main",
-        "//queue-triage-core/queue-triage-core-dao-mongo:main",
-        "//queue-triage-core/queue-triage-core-dao-mongo:test",
-        "//queue-triage-core/queue-triage-core-domain-test-support:test-lib-main",
+        "//core/server:queue-triage-core-server",
+        "//core/dao:queue-triage-core-dao",
+        "//core/dao-mongo:queue-triage-core-dao-mongo",
+        "//core/dao-mongo:test",
+        "//core/domain-test-support:queue-triage-core-domain-test-support",
     ]
 )
