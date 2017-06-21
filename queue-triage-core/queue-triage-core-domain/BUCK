@@ -1,0 +1,19 @@
+java_library(
+    name = "queue-triage-core-domain",
+    srcs = glob(["**/*.java"]),
+    deps = [
+        "//common/id:queue-triage-common-id",
+        '//lib:commons-lang3',
+        '//lib:hibernate-validator',
+        '//lib:jackson-annotations',
+        '//lib:javax-ws-rs-api',
+        '//lib:javax-validation-api',
+    ],
+    visibility = [
+        "//queue-triage-core/queue-triage-core-server:main",
+        "//queue-triage-core/queue-triage-core-dao:main",
+        "//queue-triage-core/queue-triage-core-dao-mongo:main",
+        "//queue-triage-core/queue-triage-core-dao-mongo:test",
+        "//queue-triage-core/queue-triage-core-domain-test-support:test-lib-main",
+    ]
+)

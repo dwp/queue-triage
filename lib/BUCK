@@ -1,23 +1,33 @@
+prebuilt_jar(name='accessors-smart', binary_jar=':accessors-smart-mvn', visibility=['PUBLIC'])
 prebuilt_jar(name='apache-el', binary_jar=':apache-el-mvn', visibility=["PUBLIC"])
 prebuilt_jar(name='asm', binary_jar=':asm-mvn', visibility=["PUBLIC"])
 prebuilt_jar(name='asm-commons', binary_jar=':asm-commons-mvn', visibility=["PUBLIC"])
 prebuilt_jar(name='asm-tree', binary_jar=':asm-tree-mvn', visibility=["PUBLIC"])
+prebuilt_jar(name='bson', binary_jar=':bson-mvn', visibility=['PUBLIC'])
 prebuilt_jar(name='byte-buddy', binary_jar=':byte-buddy-mvn', visibility=["PUBLIC"])
-prebuilt_jar(name='commons-codec', binary_jar=':commons-codec-mvn', visibility=["PUBLIC"])
+prebuilt_jar(name='classmate', binary_jar=':classmate-mvn', visibility=["PUBLIC"])
+prebuilt_jar(name='commons-lang3', binary_jar=':commons-lang3-mvn', visibility=['PUBLIC'])
 prebuilt_jar(name='commons-logging', binary_jar=':commons-logging-mvn', visibility=["PUBLIC"])
-prebuilt_jar(name='fluent-hc', binary_jar=':fluent-hc-mvn', visibility=["PUBLIC"])
 prebuilt_jar(name='gson', binary_jar=':gson-mvn', visibility=["PUBLIC"])
 prebuilt_jar(name='guava', binary_jar=':guava-mvn', visibility=["PUBLIC"])
 prebuilt_jar(name='hamcrest-core', binary_jar=':hamcrest-core-mvn', visibility=["PUBLIC"])
 prebuilt_jar(name='hamcrest-library', binary_jar=':hamcrest-library-mvn', visibility=["PUBLIC"])
-prebuilt_jar(name='httpcore', binary_jar=':httpcore-mvn', visibility=["PUBLIC"])
-prebuilt_jar(name='httpclient', binary_jar=':httpclient-mvn', visibility=["PUBLIC"])
+prebuilt_jar(name='hibernate-validator', binary_jar=':hibernate-validator-mvn', source_jar=':hibernate-validator-src', visibility=['PUBLIC'])
+prebuilt_jar(name='jackson-annotations', binary_jar=':jackson-annotations-mvn', visibility=['PUBLIC'])
+prebuilt_jar(name='jackson-core', binary_jar=':jackson-core-mvn', visibility=['PUBLIC'])
+prebuilt_jar(name='jackson-databind', binary_jar=':jackson-databind-mvn', visibility=['PUBLIC'])
+prebuilt_jar(name='jackson-datatype-jsr310', binary_jar=':jackson-datatype-jsr310-mvn', visibility=['PUBLIC'])
+prebuilt_jar(name='jackson-jaxrs-base', binary_jar=':jackson-jaxrs-base-mvn', visibility=['PUBLIC'])
+prebuilt_jar(name='jackson-jaxrs-json-provider', binary_jar=':jackson-jaxrs-json-provider-mvn', visibility=['PUBLIC'])
 prebuilt_jar(name='jansi', binary_jar=':jansi-mvn', visibility=["PUBLIC"])
+prebuilt_jar(name='javax-annotation-api', binary_jar=':javax-annotation-api-mvn', visibility=["PUBLIC"])
+prebuilt_jar(name='javax-servlet-api', binary_jar=':javax-servlet-api-mvn', visibility=["PUBLIC"])
+prebuilt_jar(name='javax-validation-api', binary_jar=':javax-validation-api-mvn', visibility=['PUBLIC'])
+prebuilt_jar(name='javax-websocket-api', binary_jar=':javax-websocket-api-mvn', visibility=["PUBLIC"])
 prebuilt_jar(name='javax-websocket-client-impl', binary_jar=':javax-websocket-client-impl-mvn', visibility=["PUBLIC"])
 prebuilt_jar(name='javax-websocket-server-impl', binary_jar=':javax-websocket-server-impl-mvn', visibility=["PUBLIC"])
-prebuilt_jar(name='javax.annotation-api', binary_jar=':javax.annotation-api-mvn', visibility=["PUBLIC"])
-prebuilt_jar(name='javax.servlet-api', binary_jar=':javax.servlet-api-mvn', visibility=["PUBLIC"])
-prebuilt_jar(name='javax.websocket-api', binary_jar=':javax.websocket-api-mvn', visibility=["PUBLIC"])
+prebuilt_jar(name='javax-ws-rs-api', binary_jar=':javax-ws-rs-api-mvn', visibility=["PUBLIC"])
+prebuilt_jar(name='jboss-logging', binary_jar=':jboss-logging-mvn', visibility=['PUBLIC'])
 prebuilt_jar(name='jcl-over-slf4j', binary_jar=':jcl-over-slf4j-mvn', visibility=["PUBLIC"])
 prebuilt_jar(name='jetty-annotations', binary_jar=':jetty-annotations-mvn', visibility=["PUBLIC"])
 prebuilt_jar(name='jetty-client', binary_jar=':jetty-client-mvn', visibility=["PUBLIC"])
@@ -36,15 +46,21 @@ prebuilt_jar(name='jgiven-core', binary_jar=':jgiven-core-mvn', visibility=["PUB
 prebuilt_jar(name='jgiven-junit', binary_jar=':jgiven-junit-mvn', visibility=["PUBLIC"])
 prebuilt_jar(name='jgiven-html5-report', binary_jar=':jgiven-html5-report-mvn', visibility=["PUBLIC"])
 prebuilt_jar(name='jgiven-spring', binary_jar=':jgiven-spring-mvn', visibility=["PUBLIC"])
+prebuilt_jar(name='json-path', binary_jar=':json-path-mvn', visibility=['PUBLIC'])
+prebuilt_jar(name='json-path-matchers', binary_jar=':json-path-matchers-mvn', visibility=['PUBLIC'])
+prebuilt_jar(name='json-smart', binary_jar=':json-smart-mvn', visibility=['PUBLIC'])
 prebuilt_jar(name='jul-to-slf4j', binary_jar=':jul-to-slf4j-mvn', visibility=["PUBLIC"])
 prebuilt_jar(name='junit', binary_jar=':junit-mvn', visibility=["PUBLIC"])
 prebuilt_jar(name='log4j-over-slf4j', binary_jar=':log4j-over-slf4j-mvn', visibility=["PUBLIC"])
 prebuilt_jar(name='logback-classic', binary_jar=':logback-classic-mvn', visibility=["PUBLIC"])
 prebuilt_jar(name='logback-core', binary_jar=':logback-core-mvn', visibility=["PUBLIC"])
 prebuilt_jar(name='mockito-core', binary_jar=':mockito-core-mvn', visibility=["PUBLIC"])
+prebuilt_jar(name='mongodb-driver', binary_jar=':mongodb-driver-mvn', visibility=['PUBLIC'])
+prebuilt_jar(name='mongodb-driver-core', binary_jar=':mongodb-driver-core-mvn', visibility=['PUBLIC'])
 prebuilt_jar(name='objenesis', binary_jar=':objenesis-mvn', visibility=["PUBLIC"])
 prebuilt_jar(name='paranamer', binary_jar=':paranamer-mvn', visibility=["PUBLIC"])
 prebuilt_jar(name='slf4j-api', binary_jar=':slf4j-api-mvn', visibility=["PUBLIC"])
+prebuilt_jar(name='slf4j-simple', binary_jar=':slf4j-simple-mvn', visibility=["PUBLIC"])
 prebuilt_jar(name='snakeyaml', binary_jar=':snakeyaml-mvn', visibility=["PUBLIC"])
 prebuilt_jar(name='spring-aop', binary_jar=':spring-aop-mvn', visibility=["PUBLIC"])
 prebuilt_jar(name='spring-beans', binary_jar=':spring-beans-mvn', visibility=["PUBLIC"])
@@ -55,7 +71,7 @@ prebuilt_jar(name='spring-boot-starter-jetty', binary_jar=':spring-boot-starter-
 prebuilt_jar(name='spring-boot-starter-logging', binary_jar=':spring-boot-starter-logging-mvn', visibility=["PUBLIC"])
 prebuilt_jar(name='spring-boot-test', binary_jar=':spring-boot-test-mvn', visibility=["PUBLIC"])
 prebuilt_jar(name='spring-context', binary_jar=':spring-context-mvn', visibility=["PUBLIC"])
-prebuilt_jar(name='spring-core', binary_jar=':spring-core-mvn', visibility=["PUBLIC"])
+prebuilt_jar(name='spring-core', binary_jar=':spring-core-mvn', source_jar=':spring-core-src', visibility=["PUBLIC"])
 prebuilt_jar(name='spring-expression', binary_jar=':spring-expression-mvn', visibility=["PUBLIC"])
 prebuilt_jar(name='spring-web', binary_jar=':spring-web-mvn', visibility=["PUBLIC"])
 prebuilt_jar(name='spring-test', binary_jar=':spring-test-mvn', visibility=["PUBLIC"])
@@ -65,26 +81,37 @@ prebuilt_jar(name='websocket-common', binary_jar=':websocket-common-mvn', visibi
 prebuilt_jar(name='websocket-server', binary_jar=':websocket-server-mvn', visibility=["PUBLIC"])
 prebuilt_jar(name='websocket-servlet', binary_jar=':websocket-servlet-mvn', visibility=["PUBLIC"])
 
+remote_file(name='accessors-smart-mvn', out='accessors-smart-1.2.jar', url='mvn:net.minidev:accessors-smart:jar:1.2', sha1='c592b500269bfde36096641b01238a8350f8aa31')
 remote_file(name='apache-el-mvn', out='apache-el-8.0.33.jar', url='mvn:org.mortbay.jasper:apache-el:jar:8.0.33', sha1='1b8fa2179b3937cada939317bb135815e79c0ac2')
 remote_file(name='asm-mvn', out='asm-5.1.jar', url='mvn:org.ow2.asm:asm:jar:5.1', sha1='5ef31c4fe953b1fd00b8a88fa1d6820e8785bb45')
 remote_file(name='asm-commons-mvn', out='asm-commons-5.1.jar', url='mvn:org.ow2.asm:asm-commons:jar:5.1', sha1='25d8a575034dd9cfcb375a39b5334f0ba9c8474e')
 remote_file(name='asm-tree-mvn', out='asm-tree-5.1.jar', url='mvn:org.ow2.asm:asm-tree:jar:5.1', sha1='87b38c12a0ea645791ead9d3e74ae5268d1d6c34')
+remote_file(name='bson-mvn', out='bson-3.4.2.jar', url='mvn:org.mongodb:bson:jar:3.4.2', sha1='8455e0c6926ff2bf444325ea46fd8b74adaf0362')
 remote_file(name='byte-buddy-mvn', out='byte-buddy-1.6.14.jar', url='mvn:net.bytebuddy:byte-buddy:jar:1.6.14', sha1='871c3e49dc6183d0d361601c2f1d11abb1a6b48c')
-remote_file(name='commons-codec-mvn', out='commons-codec-1.9.jar', url='mvn:commons-codec:commons-codec:jar:1.9', sha1='9ce04e34240f674bc72680f8b843b1457383161a')
+remote_file(name='classmate-mvn', out='classmate-1.3.3.jar', url='mvn:com.fasterxml:classmate:jar:1.3.3', sha1='864c8e370a691e343210cc7c532fc198cee460d8')
+remote_file(name='commons-lang3-mvn', out='commons-lang3-3.5.jar', url='mvn:org.apache.commons:commons-lang3:jar:3.5', sha1='6c6c702c89bfff3cd9e80b04d668c5e190d588c6')
 remote_file(name='commons-logging-mvn', out='commons-logging-1.2.jar', url='mvn:commons-logging:commons-logging:jar:1.2', sha1='4bfc12adfe4842bf07b657f0369c4cb522955686')
-remote_file(name='fluent-hc-mvn', out='fluent-hc-4.5.3.jar', url='mvn:org.apache.httpcomponents:fluent-hc:jar:4.5.3', sha1='76487e3a4fa77b2dd6cb1927ea423e220d7efbab')
 remote_file(name='gson-mvn', out='gson-2.8.1.jar', url='mvn:com.google.code.gson:gson:jar:2.8.1', sha1='02a8e0aa38a2e21cb39e2f5a7d6704cbdc941da0')
 remote_file(name='guava-mvn', out='guava-19.0.jar', url='mvn:com.google.guava:guava:jar:19.0', sha1='6ce200f6b23222af3d8abb6b6459e6c44f4bb0e9')
 remote_file(name='hamcrest-core-mvn', out='hamcrest-core-1.3.jar', url='mvn:org.hamcrest:hamcrest-core:jar:1.3', sha1='42a25dc3219429f0e5d060061f71acb49bf010a0')
 remote_file(name='hamcrest-library-mvn', out='hamcrest-library-1.3.jar', url='mvn:org.hamcrest:hamcrest-library:jar:1.3', sha1='4785a3c21320980282f9f33d0d1264a69040538f')
-remote_file(name='httpclient-mvn', out='httpclient-4.5.3.jar', url='mvn:org.apache.httpcomponents:httpclient:jar:4.5.3', sha1='d1577ae15f01ef5438c5afc62162457c00a34713')
-remote_file(name='httpcore-mvn', out='httpcore-4.4.6.jar', url='mvn:org.apache.httpcomponents:httpcore:jar:4.4.6', sha1='e3fd8ced1f52c7574af952e2e6da0df8df08eb82')
+remote_file(name='hibernate-validator-mvn', out='hibernate-validator-5.3.5.Final.jar', url='mvn:org.hibernate:hibernate-validator:jar:5.3.5.Final', sha1='0622a9bcef2eed6d41b5b8e0662c36212009e375')
+remote_file(name='hibernate-validator-src', out='hibernate-validator-5.3.5.Final-sources.jar', url='mvn:org.hibernate:hibernate-validator:src:5.3.5.Final', sha1='901d21d67b3dfb7a7fdf2cde1bd0eb9ca989f2f3')
+remote_file(name='jackson-annotations-mvn', out='jackson-annotations-2.8.8.jar', url='mvn:com.fasterxml.jackson.core:jackson-annotations:jar:2.8.8', sha1='1ed81c0e4eb2d261d1da0a3a45bd6b199fb5cf9a')
+remote_file(name='jackson-core-mvn', out='jackson-core-2.8.8.jar', url='mvn:com.fasterxml.jackson.core:jackson-core:jar:2.8.8', sha1='d478fb6de45a7c3d2cad07c8ad70c7f0a797a020')
+remote_file(name='jackson-databind-mvn', out='jackson-databind-2.8.8.jar', url='mvn:com.fasterxml.jackson.core:jackson-databind:jar:2.8.8', sha1='bf88c7b27e95cbadce4e7c316a56c3efffda8026')
+remote_file(name='jackson-datatype-jsr310-mvn', out='jackson-datatype-jsr310-2.8.8.jar', url='mvn:com.fasterxml.jackson.datatype:jackson-datatype-jsr310:jar:2.8.8', sha1='c84e77d8e21625efa6129b8116bf0b0b3aae7d9b')
+remote_file(name='jackson-jaxrs-base-mvn', out='jackson-jaxrs-base-2.8.8.jar', url='mvn:com.fasterxml.jackson.jaxrs:jackson-jaxrs-base:jar:2.8.8', sha1='345a87f3c145912163964ded45803ebf0a9c775e')
+remote_file(name='jackson-jaxrs-json-provider-mvn', out='jackson-jaxrs-json-provider-2.8.8.jar', url='mvn:com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider:jar:2.8.8', sha1='e70be1cd2ad47615a527f7475f63acadbf3be730')
 remote_file(name='jansi-mvn', out='jansi-1.15.jar', url='mvn:org.fusesource.jansi:jansi:jar:1.15', sha1='5292bc138cb1412ea940551c667f8ec4da52d249')
 remote_file(name='javax-websocket-client-impl-mvn', out='javax-websocket-client-impl-9.4.4.v20170414.jar', url='mvn:org.eclipse.jetty.websocket:javax-websocket-client-impl:jar:9.4.4.v20170414', sha1='5f6065786b386c516435902cb9c2d181d8dd969b')
 remote_file(name='javax-websocket-server-impl-mvn', out='javax-websocket-server-impl-9.4.4.v20170414.jar', url='mvn:org.eclipse.jetty.websocket:javax-websocket-server-impl:jar:9.4.4.v20170414', sha1='ff73d845b3031e9bc5dd1defd69fe15d6eedf058')
-remote_file(name='javax.annotation-api-mvn', out='javax.annotation-api-1.2.jar', url='mvn:javax.annotation:javax.annotation-api:jar:1.2', sha1='479c1e06db31c432330183f5cae684163f186146')
-remote_file(name='javax.servlet-api-mvn', out='javax.servlet-api-3.1.0.jar', url='mvn:javax.servlet:javax.servlet-api:jar:3.1.0', sha1='3cd63d075497751784b2fa84be59432f4905bf7c')
-remote_file(name='javax.websocket-api-mvn', out='javax.websocket-api-1.0.jar', url='mvn:javax.websocket:javax.websocket-api:jar:1.0', sha1='fc843b649d4a1dcb0497669d262befa3918c7ba8')
+remote_file(name='javax-annotation-api-mvn', out='javax-annotation-api-1.2.jar', url='mvn:javax.annotation:javax.annotation-api:jar:1.2', sha1='479c1e06db31c432330183f5cae684163f186146')
+remote_file(name='javax-ws-rs-api-mvn', out='javax-ws-rs-api-2.0.1.jar', url='mvn:javax.ws.rs:javax.ws.rs-api:jar:2.0.1', sha1='104e9c2b5583cfcfeac0402316221648d6d8ea6b')
+remote_file(name='javax-servlet-api-mvn', out='javax-servlet-api-3.1.0.jar', url='mvn:javax.servlet:javax.servlet-api:jar:3.1.0', sha1='3cd63d075497751784b2fa84be59432f4905bf7c')
+remote_file(name='javax-validation-api-mvn', out='javax-validation-api-1.1.0.Final.jar', url='mvn:javax.validation:validation-api:jar:1.1.0.Final', sha1='8613ae82954779d518631e05daa73a6a954817d5')
+remote_file(name='javax-websocket-api-mvn', out='javax-websocket-api-1.0.jar', url='mvn:javax.websocket:javax.websocket-api:jar:1.0', sha1='fc843b649d4a1dcb0497669d262befa3918c7ba8')
+remote_file(name='jboss-logging-mvn', out='jboss-logging-3.3.0.Final.jar', url='mvn:org.jboss.logging:jboss-logging:jar:3.3.0.Final', sha1='3616bb87707910296e2c195dc016287080bba5af')
 remote_file(name='jcl-over-slf4j-mvn', out='jcl-over-slf4j-1.7.25.jar', url='mvn:org.slf4j:jcl-over-slf4j:jar:1.7.25', sha1='f8c32b13ff142a513eeb5b6330b1588dcb2c0461')
 remote_file(name='jetty-annotations-mvn', out='jetty-annotations-9.4.4.v20170414.jar', url='mvn:org.eclipse.jetty:jetty-annotations:jar:9.4.4.v20170414', sha1='2d4a498a64093f29f4267a0f30a0c26d7ce96e0a')
 remote_file(name='jetty-client-mvn', out='jetty-client-9.4.4.v20170414.jar', url='mvn:org.eclipse.jetty:jetty-client:jar:9.4.4.v20170414', sha1='06b3d9dcfa375ee4f4fe6c8bf27ccc403c76b4ae')
@@ -103,15 +130,21 @@ remote_file(name='jgiven-core-mvn', out='jgiven-core-0.15.1.jar', url='mvn:com.t
 remote_file(name='jgiven-html5-report-mvn', out='jgiven-html5-report-0.15.1.jar', url='mvn:com.tngtech.jgiven:jgiven-html5-report:jar:0.15.1', sha1='6d011ce29cdf5f6ab1c5863ba523fa9973463b29')
 remote_file(name='jgiven-junit-mvn', out='jgiven-junit-0.15.1.jar', url='mvn:com.tngtech.jgiven:jgiven-junit:jar:0.15.1', sha1='0b862638480787929088efb28632d212a6701fa2')
 remote_file(name='jgiven-spring-mvn', out='jgiven-spring-0.15.1.jar', url='mvn:com.tngtech.jgiven:jgiven-spring:jar:0.15.1', sha1='312abfa016e04e88fe73e4a97fcc396534c82d9d')
+remote_file(name='json-path-mvn', out='json-path-2.2.0.jar', url='mvn:com.jayway.jsonpath:json-path:jar:2.2.0', sha1='22290d17944bd239fabf5ac69005a60a7ecbbbcb')
+remote_file(name='json-path-matchers-mvn', out='json-path-matchers-1.1.jar', url='mvn:org.valid4j:json-path-matchers:jar:1.1', sha1='e12365d144e4818384e99823160a06e314d26290')
+remote_file(name='json-smart-mvn', out='json-smart-2.3.jar', url='mvn:net.minidev:json-smart:jar:2.3', sha1='007396407491352ce4fa30de92efb158adb76b5b')
 remote_file(name='jul-to-slf4j-mvn', out='jul-to-slf4j-1.7.25.jar', url='mvn:org.slf4j:jul-to-slf4j:jar:1.7.25', sha1='0af5364cd6679bfffb114f0dec8a157aaa283b76')
 remote_file(name='junit-mvn', out='junit-4.12.jar', url='mvn:junit:junit:jar:4.12', sha1='2973d150c0dc1fefe998f834810d68f278ea58ec')
 remote_file(name='log4j-over-slf4j-mvn', out='log4j-over-slf4j-1.7.25.jar', url='mvn:org.slf4j:log4j-over-slf4j:jar:1.7.25', sha1='a87bb47468f47ee7aabbd54f93e133d4215769c3')
 remote_file(name='logback-classic-mvn', out='logback-classic-1.1.11.jar', url='mvn:ch.qos.logback:logback-classic:jar:1.1.11', sha1='ccedfbacef4a6515d2983e3f89ed753d5d4fb665')
 remote_file(name='logback-core-mvn', out='logback-core-1.1.11.jar', url='mvn:ch.qos.logback:logback-core:jar:1.1.11', sha1='88b8df40340eed549fb07e2613879bf6b006704d')
 remote_file(name='mockito-core-mvn', out='mockito-core-2.8.9.jar', url='mvn:org.mockito:mockito-core:jar:2.8.9', sha1='1afb35b2d77d40567756c379e54c18da3574a96e')
+remote_file(name='mongodb-driver-mvn', out='mongodb-driver-3.4.2.jar', url='mvn:org.mongodb:mongodb-driver:jar:3.4.2', sha1='d565cc4db7fd756973b1500424577a503d17f48a')
+remote_file(name='mongodb-driver-core-mvn', out='mongodb-driver-core-3.4.2.jar', url='mvn:org.mongodb:mongodb-driver-core:jar:3.4.2', sha1='d0a18b4e46fe79467a71d7f9f1bc5932de670829')
 remote_file(name='objenesis-mvn', out='objenesis-2.5.1.jar', url='mvn:org.objenesis:objenesis:jar:2.5.1', sha1='272bab9a4e5994757044d1fc43ce480c8cb907a4')
 remote_file(name='paranamer-mvn', out='paranamer-2.8.jar', url='mvn:com.thoughtworks.paranamer:paranamer:jar:2.8', sha1='619eba74c19ccf1da8ebec97a2d7f8ba05773dd6')
-remote_file(name='slf4j-api-mvn', out='slf4j-api-1.7.13.jar', url='mvn:org.slf4j:slf4j-api:jar:1.7.13', sha1='7fcf30c25b8f4a9379b9dad0d3f487b25272c026')
+remote_file(name='slf4j-api-mvn', out='slf4j-api-1.7.25.jar', url='mvn:org.slf4j:slf4j-api:jar:1.7.25', sha1='da76ca59f6a57ee3102f8f9bd9cee742973efa8a')
+remote_file(name='slf4j-simple-mvn', out='slf4j-simple-1.7.25.jar', url='mvn:org.slf4j:slf4j-simple:jar:1.7.25', sha1='8dacf9514f0c707cbbcdd6fd699e8940d42fb54e')
 remote_file(name='snakeyaml-mvn', out='snakeyaml-1.17.jar', url='mvn:org.yaml:snakeyaml:jar:1.17', sha1='7a27ea250c5130b2922b86dea63cbb1cc10a660c')
 remote_file(name='spring-aop-mvn', out='spring-aop-4.3.8.RELEASE.jar', url='mvn:org.springframework:spring-aop:jar:4.3.8.RELEASE', sha1='2ee7e60f8838bff13c5def48fab571ab10553e5d')
 remote_file(name='spring-beans-mvn', out='spring-beans-4.3.8.RELEASE.jar', url='mvn:org.springframework:spring-beans:jar:4.3.8.RELEASE', sha1='9d39133bb80e13d643bfefd731fe86cab3aa2bd7')
@@ -123,6 +156,7 @@ remote_file(name='spring-boot-starter-logging-mvn', out='spring-boot-starter-log
 remote_file(name='spring-boot-test-mvn', out='spring-boot-test-1.5.3.RELEASE.jar', url='mvn:org.springframework.boot:spring-boot-test:jar:1.5.3.RELEASE', sha1='ad57d8bacb4fc147ded7c99806f8693855f5fe29')
 remote_file(name='spring-context-mvn', out='spring-context-4.3.8.RELEASE.jar', url='mvn:org.springframework:spring-context:jar:4.3.8.RELEASE', sha1='944073ac58ab78b78a7694d2c53d4ae9f634c815')
 remote_file(name='spring-core-mvn', out='spring-core-4.3.8.RELEASE.jar', url='mvn:org.springframework:spring-core:jar:4.3.8.RELEASE', sha1='cce6c251249e48f0a86aa578c2a0e262efa5a1e0')
+remote_file(name='spring-core-src', out='spring-core-4.3.8.RELEASE-sources.jar', url='mvn:org.springframework:spring-core:src:4.3.8.RELEASE', sha1='b278822fc694d9b5a943fef1d4c9fd28ad2b92a6')
 remote_file(name='spring-expression-mvn', out='spring-expression-4.3.8.RELEASE.jar', url='mvn:org.springframework:spring-expression:jar:4.3.8.RELEASE', sha1='0204f7e241f42f46b16baa3d190752703efd7797')
 remote_file(name='spring-test-mvn', out='spring-test-4.3.8.RELEASE.jar', url='mvn:org.springframework:spring-test:jar:4.3.8.RELEASE', sha1='37e3896fb1d3fa08235224b1a7528f806de717cc')
 remote_file(name='spring-web-mvn', out='spring-web-4.3.8.RELEASE.jar', url='mvn:org.springframework:spring-web:jar:4.3.8.RELEASE', sha1='ec1b675c2e234b0c776d36ed56c691520030026f')
@@ -166,14 +200,39 @@ java_library(
 )
 
 java_library(
-    name = 'apache-httpclient',
+    name = 'hibernate-validator-incl-deps',
     deps = [],
     exported_deps = [
-        ':fluent-hc',
-        ':httpclient',
-        ':httpcore',
-        ':commons-logging',
-        ':commons-codec',
+        ':classmate',
+        ':hibernate-validator',
+        ':jboss-logging',
+
+    ],
+    visibility = [
+        'PUBLIC',
+    ],
+)
+java_library(
+    name = 'mongodb-driver-incl-deps',
+    deps = [],
+    exported_deps = [
+        ':bson',
+        ':mongodb-driver',
+        ':mongodb-driver-core',
+    ],
+    visibility = [
+        'PUBLIC',
+    ]
+)
+
+java_library(
+    name = 'json-path-matchers-incl-deps',
+    deps = [],
+    exported_deps = [
+        ':accessors-smart',
+        ':json-smart',
+        ':json-path',
+        ':json-path-matchers'
     ],
     visibility = [
         "PUBLIC",
