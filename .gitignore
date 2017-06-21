@@ -1,3 +1,8 @@
-.idea
-buck-out
+# Directories
+.idea/
+buck-out/
+classes/
+jgiven-reports/
+
+# Files
 *.iml
