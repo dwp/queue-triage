@@ -1,5 +1,5 @@
 java_library(
-    name = "main",
+    name = "queue-triage-core-client",
     srcs = glob(["src/main/java/**/*.java"]),
     deps =[
         '//common/id:queue-triage-common-id',
@@ -10,8 +10,8 @@ java_library(
         '//lib:javax-validation-api',
     ],
     visibility = [
-        "//queue-triage-core/queue-triage-core-server:main",
-        "//queue-triage-core/queue-triage-core-server:test",
-        "//queue-triage-web:main",
+        "//core/server:queue-triage-core-server",
+        "//core/server:test",
+        "//web:queue-triage-web",
     ]
 )
