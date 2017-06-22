@@ -10,8 +10,6 @@ public class DaoProperties {
     public static class Collection {
 
         private String failedMessage;
-        private String failedMessageLabel;
-        private String destinationStatistics;
 
         public String getFailedMessage() {
             return failedMessage;
@@ -19,22 +17,6 @@ public class DaoProperties {
 
         public void setFailedMessage(String failedMessage) {
             this.failedMessage = failedMessage;
-        }
-
-        public String getFailedMessageLabel() {
-            return failedMessageLabel;
-        }
-
-        public void setFailedMessageLabel(String failedMessageLabel) {
-            this.failedMessageLabel = failedMessageLabel;
-        }
-
-        public String getDestinationStatistics() {
-            return destinationStatistics;
-        }
-
-        public void setDestinationStatistics(String destinationStatistics) {
-            this.destinationStatistics = destinationStatistics;
         }
     }
 

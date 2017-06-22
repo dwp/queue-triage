@@ -1,0 +1,9 @@
+prebuilt_jar(name='javax-annotation-api', binary_jar=':javax-annotation-api-mvn', visibility=["PUBLIC"])
+prebuilt_jar(name='javax-servlet-api', binary_jar=':javax-servlet-api-mvn', visibility=["PUBLIC"])
+prebuilt_jar(name='javax-validation-api', binary_jar=':javax-validation-api-mvn', visibility=['PUBLIC'])
+prebuilt_jar(name="javax-ws-rs-api", binary_jar=":javax-ws-rs-api-mvn", visibility=["PUBLIC"])
+
+remote_file(name='javax-annotation-api-mvn', out='javax-annotation-api-1.2.jar', url='mvn:javax.annotation:javax.annotation-api:jar:1.2', sha1='479c1e06db31c432330183f5cae684163f186146')
+remote_file(name='javax-servlet-api-mvn', out='javax-servlet-api-3.1.0.jar', url='mvn:javax.servlet:javax.servlet-api:jar:3.1.0', sha1='3cd63d075497751784b2fa84be59432f4905bf7c')
+remote_file(name='javax-validation-api-mvn', out='javax-validation-api-1.1.0.Final.jar', url='mvn:javax.validation:validation-api:jar:1.1.0.Final', sha1='8613ae82954779d518631e05daa73a6a954817d5')
+remote_file(name="javax-ws-rs-api-mvn", out="javax-ws-rs-api-2.0.1.jar", url="mvn:javax.ws.rs:javax.ws.rs-api:jar:2.0.1", sha1="104e9c2b5583cfcfeac0402316221648d6d8ea6b")

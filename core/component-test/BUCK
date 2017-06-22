@@ -2,10 +2,10 @@ java_library(
     name = "queue-triage-core-component-test",
     srcs = glob(['src/main/java/**/*.java']),
     deps = [
-        '//lib:hamcrest-core',
-        '//lib:hamcrest-library',
-        '//lib:jgiven-core',
-        '//lib:jgiven-spring',
+        '//lib/test:hamcrest-core',
+        '//lib/test:hamcrest-library',
+        '//lib/test:jgiven',
+        '//lib/test:jgiven-spring',
         '//lib:spring-beans',
         '//lib:spring-boot',
         '//lib:spring-boot-test',
@@ -15,7 +15,7 @@ java_library(
     ],
     visibility = [
         "PUBLIC"
-    ]
+    ],
 )
 
 java_test(
@@ -24,12 +24,10 @@ java_test(
     deps = [
         '//core/server:queue-triage-core-server',
         '//core/component-test:queue-triage-core-component-test',
-        '//lib:common-test',
-        '//lib:hibernate-validator-incl-deps',
-        '//lib:javax-servlet-api',
-        '//lib:javax-validation-api',
-        '//lib:jgiven',
-        '//lib:jgiven-spring',
+        '//lib/test:common',
+        '//lib/javax:javax-servlet-api',
+        '//lib/test:jgiven',
+        '//lib/test:jgiven-spring',
         '//lib:spring-beans',
         '//lib:spring-boot-test',
         '//lib:spring-test',

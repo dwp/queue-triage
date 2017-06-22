@@ -4,8 +4,8 @@ java_library(
     deps = [
         "//common/id:queue-triage-common-id",
         '//core/domain:queue-triage-core-domain',
-        '//lib:hamcrest-core',
-        '//lib:hamcrest-library',
+        '//lib/test:hamcrest-core',
+        '//lib/test:hamcrest-library',
     ],
     visibility = [
         # Ideally I would like to limit this to test modules only
