@@ -2,9 +2,11 @@ prebuilt_jar(name="cxf-core", binary_jar=":cxf-core-mvn", visibility=["PUBLIC"])
 prebuilt_jar(name="cxf-rt-frontend-jaxrs", binary_jar=":cxf-rt-frontend-jaxrs-mvn", visibility=["PUBLIC"])
 prebuilt_jar(name="cxf-rt-transports-http", binary_jar=":cxf-rt-transports-http-mvn", visibility=["PUBLIC"])
 prebuilt_jar(name="cxf-rt-transports-http-jetty-jar", binary_jar=":cxf-rt-transports-http-jetty-mvn", visibility=["PUBLIC"])
+prebuilt_jar(name="cxf-rt-rs-client", binary_jar=":cxf-rt-rs-client-mvn", visibility=["//core/component-test:"])
 
 remote_file(name="cxf-core-mvn", out="cxf-core-3.1.11.jar", url="mvn:org.apache.cxf:cxf-core:jar:3.1.11", sha1="caadef0efbe228b45d41fea91eb4a2928983676c")
 remote_file(name="cxf-rt-frontend-jaxrs-mvn", out="cxf-rt-frontend-jaxrs-3.1.11.jar", url="mvn:org.apache.cxf:cxf-rt-frontend-jaxrs:jar:3.1.11", sha1="7d2932ab2d5eb438129c4556b47c144a3575f132")
+remote_file(name="cxf-rt-rs-client-mvn", out="cxf-rt-rs-client-3.1.11.jar", url="mvn:org.apache.cxf:cxf-rt-rs-client:jar:3.1.11", sha1="fa06735ef57c0f478820f71adc0188b9043809f8")
 remote_file(name="cxf-rt-transports-http-mvn", out="cxf-rt-transports-http-3.1.11.jar", url="mvn:org.apache.cxf:cxf-rt-transports-http:jar:3.1.11", sha1="c87e71ce60f3b0db67169a4b22898a6d49f1d5de")
 remote_file(name="cxf-rt-transports-http-jetty-mvn", out="cxf-rt-transports-http-jetty-3.1.11.jar", url="mvn:org.apache.cxf:cxf-rt-transports-http-jetty:jar:3.1.11", sha1="f8ffbe0b98e52f182677688a316b38587ef269c0")
 
@@ -17,9 +19,11 @@ java_library(
         ":cxf-rt-transports-http-jetty-jar",
         "//lib/javax:javax-ws-rs-api",
         "//lib/javax:javax-annotation-api",
-        "//lib:slf4j-api",
+        "//lib/slf4j:slf4j-api",
     ],
     visibility = [
+        "//common/cxf:queue-triage-cxf",
+        "//core/component-test:test",
         "//core/server:queue-triage-core-server",
     ]
 )

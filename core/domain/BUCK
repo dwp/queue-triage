@@ -7,6 +7,8 @@ java_library(
     ],
     visibility = [
         "//core/server:queue-triage-core-server",
+        "//core/server:test",
+        "//core/component-test:queue-triage-core-component-test",
         "//core/dao:queue-triage-core-dao",
         "//core/dao-mongo:queue-triage-core-dao-mongo",
         "//core/dao-mongo:test",

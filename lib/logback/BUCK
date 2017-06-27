@@ -1,0 +1,5 @@
+prebuilt_jar(name='logback-classic', binary_jar=':logback-classic-mvn', visibility=["PUBLIC"])
+remote_file(name='logback-classic-mvn', out='logback-classic-1.1.11.jar', url='mvn:ch.qos.logback:logback-classic:jar:1.1.11', sha1='ccedfbacef4a6515d2983e3f89ed753d5d4fb665')
+
+prebuilt_jar(name='logback-core', binary_jar=':logback-core-mvn', visibility=["PUBLIC"])
+remote_file(name='logback-core-mvn', out='logback-core-1.1.11.jar', url='mvn:ch.qos.logback:logback-core:jar:1.1.11', sha1='88b8df40340eed549fb07e2613879bf6b006704d')

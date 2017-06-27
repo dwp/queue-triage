@@ -10,7 +10,7 @@ import uk.gov.dwp.queue.triage.core.dao.ObjectConverter;
 import java.time.ZonedDateTime;
 import java.util.Map;
 
-import static uk.gov.dwp.queue.triage.core.domain.FailedMessageBuilder.aFailedMessage;
+import static uk.gov.dwp.queue.triage.core.domain.FailedMessageBuilder.newFailedMessage;
 import static uk.gov.dwp.queue.triage.id.FailedMessageId.fromString;
 
 public class FailedMessageConverter implements DBObjectWithIdConverter<FailedMessage, FailedMessageId> {
@@ -36,7 +36,7 @@ public class FailedMessageConverter implements DBObjectWithIdConverter<FailedMes
             return null;
         }
         BasicDBObject basicDBObject = (BasicDBObject)dbObject;
-        return aFailedMessage()
+        return newFailedMessage()
                 .withFailedMessageId(fromString(basicDBObject.getString("_id")))
                 .withDestination(destinationDBObjectMapper.convertToObject((DBObject) basicDBObject.get(DESTINATION)))
                 .withSentDateTime((ZonedDateTime)basicDBObject.get(SENT_DATE_TIME))

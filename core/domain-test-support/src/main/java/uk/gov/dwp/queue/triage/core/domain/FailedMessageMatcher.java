@@ -18,7 +18,7 @@ public class FailedMessageMatcher extends TypeSafeMatcher<FailedMessage> {
     private Matcher<Destination> destinationMatcher = new IsAnything<>();
     private Matcher<ZonedDateTime> sentAtMatcher = new IsAnything<>();
     private Matcher<ZonedDateTime> failedAtMatcher = new IsAnything<>();
-    private Matcher<Map<String, Object>> propertiesMatcher = new IsAnything<>();
+    private Matcher<Map<? extends String, ? extends Object>> propertiesMatcher = new IsAnything<>();
 
     private FailedMessageMatcher() { }
 
@@ -61,7 +61,7 @@ public class FailedMessageMatcher extends TypeSafeMatcher<FailedMessage> {
         return this;
     }
 
-    public FailedMessageMatcher withProperties(Matcher<Map<String, Object>> propertiesMatcher) {
+    public FailedMessageMatcher withProperties(Matcher<Map<? extends String, ? extends Object>> propertiesMatcher) {
         this.propertiesMatcher = propertiesMatcher;
         return this;
     }

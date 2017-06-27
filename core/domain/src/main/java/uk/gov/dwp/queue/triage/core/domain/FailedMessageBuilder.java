@@ -18,12 +18,12 @@ public class FailedMessageBuilder {
     private FailedMessageBuilder() {
     }
 
-    public static FailedMessageBuilder aFailedMessage() {
+    public static FailedMessageBuilder newFailedMessage() {
         return new FailedMessageBuilder();
     }
 
     public static FailedMessageBuilder clone(FailedMessage failedMessage) {
-        return aFailedMessage()
+        return newFailedMessage()
                 .withFailedMessageId(failedMessage.getFailedMessageId())
                 .withDestination(failedMessage.getDestination())
                 .withSentDateTime(failedMessage.getSentAt())

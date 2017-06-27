@@ -1,0 +1,57 @@
+prebuilt_jar(name='spring-aop', binary_jar=':spring-aop-mvn')
+prebuilt_jar(name='spring-beans', binary_jar=':spring-beans-mvn', visibility=["PUBLIC"])
+prebuilt_jar(name="spring-boot-jar", binary_jar = ":spring-boot-mvn")
+prebuilt_jar(name="spring-boot-autoconfigure", binary_jar = ":spring-boot-autoconfigure-mvn", visibility=["PUBLIC"])
+prebuilt_jar(name="spring-boot-test", binary_jar=":spring-boot-test-mvn", visibility=["PUBLIC"])
+prebuilt_jar(name="spring-context", binary_jar=":spring-context-mvn", visibility=["PUBLIC"])
+prebuilt_jar(name="spring-core-jar", binary_jar=":spring-core-mvn", source_jar=":spring-core-src")
+prebuilt_jar(name='spring-expression', binary_jar=':spring-expression-mvn')
+prebuilt_jar(name='spring-test', binary_jar=':spring-test-mvn', visibility=["PUBLIC"])
+prebuilt_jar(name='spring-web', binary_jar=':spring-web-mvn', visibility=["PUBLIC"])
+
+remote_file(name='spring-aop-mvn', out='spring-aop-4.3.8.RELEASE.jar', url='mvn:org.springframework:spring-aop:jar:4.3.8.RELEASE', sha1='2ee7e60f8838bff13c5def48fab571ab10553e5d')
+remote_file(name='spring-beans-mvn', out='spring-beans-4.3.8.RELEASE.jar', url='mvn:org.springframework:spring-beans:jar:4.3.8.RELEASE', sha1='9d39133bb80e13d643bfefd731fe86cab3aa2bd7')
+remote_file(name='spring-boot-autoconfigure-mvn', out='spring-boot-autoconfigure-1.5.3.RELEASE.jar', url='mvn:org.springframework.boot:spring-boot-autoconfigure:jar:1.5.3.RELEASE', sha1='b2b4d4a704f039bf22787cc412b1dd34741821fc')
+remote_file(name="spring-boot-mvn", out="spring-boot-1.5.3.RELEASE.jar", url="mvn:org.springframework.boot:spring-boot:jar:1.5.3.RELEASE", sha1="5fedde3489afd5dbd82f9122aaec4c9f6da3d564")
+remote_file(name='spring-boot-test-mvn', out='spring-boot-test-1.5.3.RELEASE.jar', url='mvn:org.springframework.boot:spring-boot-test:jar:1.5.3.RELEASE', sha1='ad57d8bacb4fc147ded7c99806f8693855f5fe29')
+remote_file(name="spring-context-mvn", out="spring-context-4.3.8.RELEASE.jar", url="mvn:org.springframework:spring-context:jar:4.3.8.RELEASE", sha1="944073ac58ab78b78a7694d2c53d4ae9f634c815")
+remote_file(name="spring-core-mvn", out="spring-core-4.3.8.RELEASE.jar", url="mvn:org.springframework:spring-core:jar:4.3.8.RELEASE", sha1="cce6c251249e48f0a86aa578c2a0e262efa5a1e0")
+remote_file(name="spring-core-src", out="spring-core-4.3.8.RELEASE-sources.jar", url="mvn:org.springframework:spring-core:src:4.3.8.RELEASE", sha1="b278822fc694d9b5a943fef1d4c9fd28ad2b92a6")
+remote_file(name='spring-expression-mvn', out='spring-expression-4.3.8.RELEASE.jar', url='mvn:org.springframework:spring-expression:jar:4.3.8.RELEASE', sha1='0204f7e241f42f46b16baa3d190752703efd7797')
+remote_file(name='spring-test-mvn', out='spring-test-4.3.8.RELEASE.jar', url='mvn:org.springframework:spring-test:jar:4.3.8.RELEASE', sha1='37e3896fb1d3fa08235224b1a7528f806de717cc')
+remote_file(name='spring-web-mvn', out='spring-web-4.3.8.RELEASE.jar', url='mvn:org.springframework:spring-web:jar:4.3.8.RELEASE', sha1='ec1b675c2e234b0c776d36ed56c691520030026f')
+
+java_library(
+    name = "spring-boot",
+    exported_deps = [
+        ":spring-aop",
+        ":spring-beans",
+        ":spring-boot-autoconfigure",
+        ":spring-boot-jar",
+        ":spring-context",
+        ":spring-core",
+        ":spring-expression"
+    ],
+    visibility = [
+        "//common/cxf:queue-triage-cxf",
+        "//core/component-test:queue-triage-core-component-test",
+        "//core/dao-mongo:queue-triage-core-dao-mongo",
+        "//core/dao-mongo:test",
+        "//core/server:queue-triage-core-server",
+    ],
+)
+
+java_library(
+    name = "spring-core",
+    exported_deps = [
+        ":spring-context",
+        ":spring-core-jar",
+        ":spring-aop",
+        ":spring-beans",
+        ":spring-expression",
+        "//lib:commons-logging",
+    ],
+    visibility = [
+        "PUBLIC",
+    ],
+)

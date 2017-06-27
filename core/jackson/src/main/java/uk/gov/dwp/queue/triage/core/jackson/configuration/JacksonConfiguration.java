@@ -7,17 +7,22 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
+import uk.gov.dwp.migration.mongo.demo.cxf.client.CxfConfiguration;
 import uk.gov.dwp.queue.triage.id.Id;
 import uk.gov.dwp.queue.triage.core.jackson.ISO8601DateFormatWithMilliSeconds;
 import uk.gov.dwp.queue.triage.core.jackson.IdDeserializer;
 import uk.gov.dwp.queue.triage.core.jackson.IdSerializer;
 
 @Configuration
+@Import({
+        CxfConfiguration.class
+})
 public class JacksonConfiguration {
 
     @Bean
-    public JacksonJsonProvider jacksonJsonProvider(ObjectMapper objectMapper) {
-        return new JacksonJsonProvider(objectMapper);
+    public JacksonJsonProvider jacksonJsonProvider(CxfConfiguration cxfConfiguration, ObjectMapper objectMapper) {
+        return cxfConfiguration.providerRegistry().add(new JacksonJsonProvider(objectMapper));
     }
 
     @Bean
