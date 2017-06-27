@@ -8,11 +8,10 @@ java_library(
         '//core/jackson:queue-triage-core-jackson',
         '//lib/jackson:jackson-databind',
         '//lib/mongo:mongodb-driver',
-        '//lib:spring-beans',
-        '//lib:spring-boot',
-        '//lib:spring-context',
+        '//lib/spring:spring-boot',
     ],
     visibility = [
+        '//core/component-test:queue-triage-core-component-test',
         '//core/dao-mongo-test-support:queue-triage-core-dao-mongo-test-support',
         '//core/server:queue-triage-core-server',
     ]
@@ -32,14 +31,9 @@ java_test(
         '//lib:commons-logging',
         '//lib/javax:javax-ws-rs-api',
         '//lib/mongo:mongodb-driver',
-        '//lib:spring-aop',
-        '//lib:spring-beans',
-        '//lib:spring-boot-autoconfigure',
-        '//lib:spring-boot-test',
-        '//lib:spring-context',
-        '//lib:spring-core',
-        '//lib:spring-expression',
-        '//lib:spring-test',
+        '//lib/spring:spring-boot',
+        '//lib/spring:spring-boot-test',
+        '//lib/spring:spring-test',
     ],
     visibility = [
     ]

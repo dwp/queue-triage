@@ -8,7 +8,7 @@ java_library(
         '//lib/test:hamcrest-library',
     ],
     visibility = [
-        # Ideally I would like to limit this to test modules only
-        'PUBLIC'
+        "//core/dao-mongo:test",
+        "//core/server:test",
     ],
 )

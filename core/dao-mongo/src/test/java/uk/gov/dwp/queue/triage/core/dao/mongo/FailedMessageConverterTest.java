@@ -51,7 +51,7 @@ public class FailedMessageConverterTest {
 
     @Before
     public void setUp() {
-        failedMessageBuilder = FailedMessageBuilder.aFailedMessage()
+        failedMessageBuilder = FailedMessageBuilder.newFailedMessage()
                 .withFailedMessageId(FAILED_MESSAGE_ID)
                 .withDestination(SOME_DESTINATION)
                 .withContent("Hello")

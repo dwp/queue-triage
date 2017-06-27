@@ -8,7 +8,10 @@ java_library(
         '//lib/jackson:jackson-databind',
     ],
     visibility = [
-        'PUBLIC'
+        '//core/dao-mongo:queue-triage-core-dao-mongo',
+        '//core/dao-mongo:test',
+        '//core/server:queue-triage-core-server',
+        '//core/server:test',
     ]
 )
 
@@ -22,6 +25,6 @@ java_test(
         '//lib/jackson:jackson-core',
         '//lib/jackson:jackson-databind',
         '//lib:json-path-matchers-incl-deps',
-        '//lib:slf4j-api',
+        '//lib/slf4j:slf4j-api',
     ]
 )

@@ -7,7 +7,7 @@ import javax.ws.rs.*;
 @Consumes("application/json")
 @Produces("application/json")
 @Path("/failed-message")
-public interface FailedMessageResource {
+public interface SearchFailedMessageClient {
 
     @GET
     @Path("/{failedMessageId}")

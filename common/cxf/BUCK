@@ -1,0 +1,32 @@
+java_library(
+    name = "queue-triage-cxf-client",
+    srcs = glob(["src/main/java/**/client/*.java"]),
+    deps = [
+        "//lib/spring:spring-context",
+    ],
+    visibility = [
+        "//core/jackson:queue-triage-core-jackson",
+        "//core/server:queue-triage-core-server",
+    ]
+)
+
+java_library(
+    name = "queue-triage-cxf",
+    srcs = glob(
+        ["src/main/java/**/*.java"],
+        excludes = [
+            "src/main/java/**/client/*.java"
+        ]
+    ),
+    deps = [
+        ":queue-triage-cxf-client",
+        "//lib/apache-cxf:cxf-rt-transports-http-jetty",
+        "//lib/spring:spring-boot",
+        "//lib/spring:spring-context",
+        "//lib/javax:javax-servlet-api",
+    ],
+    visibility = [
+        "//core/component-test:test",
+        "//core/server:queue-triage-core-server",
+    ],
+)
