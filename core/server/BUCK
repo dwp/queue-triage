@@ -1,10 +1,15 @@
 java_library(
     name = "queue-triage-core-server",
     srcs = glob(["src/main/java/**/*.java"]),
-    resources = glob(['src/main/resources/**/*']),
+    resources = [
+        'src/main/resources/application.properties',
+    ],
     resources_root = 'src/main/resources',
     deps = [
         '//core/client:queue-triage-core-client',
+        '//core/dao:queue-triage-core-dao',
+        '//core/dao-mongo:queue-triage-core-dao-mongo',
+        '//core/jackson:queue-triage-core-jackson',
         '//lib:slf4j-api',
         '//lib:spring-boot-starter',
         '//lib:spring-boot-starter-jetty',
@@ -13,30 +18,17 @@ java_library(
         '//lib:asm',
         '//lib:asm-commons',
         '//lib:asm-tree',
-        '//lib:javax-websocket-client-impl',
-        '//lib:javax-websocket-server-impl',
-        '//lib:javax-annotation-api',
-        '//lib:javax-servlet-api',
-        '//lib:javax-websocket-api',
+        '//lib/apache-cxf:cxf-rt-transports-http-jetty',
+        '//lib/jackson:jackson-jaxrs-json-provider',
+        '//lib/javax:javax-annotation-api',
+        '//lib/javax:javax-servlet-api',
         '//lib:jcl-over-slf4j',
-        '//lib:jetty-annotations',
-        '//lib:jetty-client',
-        '//lib:jetty-continuation',
-        '//lib:jetty-http',
-        '//lib:jetty-io',
-        '//lib:jetty-plus',
-        '//lib:jetty-security',
-        '//lib:jetty-server',
-        '//lib:jetty-servlet',
-        '//lib:jetty-servlets',
-        '//lib:jetty-util',
-        '//lib:jetty-webapp',
-        '//lib:jetty-xml',
+        '//lib/jetty:jetty-server',
         '//lib:jul-to-slf4j',
         '//lib:log4j-over-slf4j',
         '//lib:logback-classic',
         '//lib:logback-core',
-        '//lib:mongodb-driver-incl-deps',
+        '//lib/mongo:mongodb-driver',
         '//lib:snakeyaml',
         '//lib:spring-aop',
         '//lib:spring-beans',
@@ -46,11 +38,6 @@ java_library(
         '//lib:spring-context',
         '//lib:spring-core',
         '//lib:spring-expression',
-        '//lib:websocket-api',
-        '//lib:websocket-client',
-        '//lib:websocket-common',
-        '//lib:websocket-server',
-        '//lib:websocket-servlet',
     ],
     visibility = [
         "PUBLIC"
@@ -64,10 +51,23 @@ java_test(
         '//core/client:queue-triage-core-client',
         '//core/domain-test-support:queue-triage-core-domain-test-support',
         '//core/server:queue-triage-core-server',
-        '//lib:common-test',
+        '//lib/test:common',
         '//lib:commons-lang3',
-        '//lib:javax-servlet-api',
+        '//lib/javax:javax-servlet-api',
     ],
-    visibility = [
-    ],
+)
+
+mainClass="uk.gov.dwp.queue.triage.core.QueueTriageCoreApplication"
+
+cmd=[
+    "echo $(classpath :queue-triage-core-server)",
+    "&&",
+    "java -cp $(classpath :queue-triage-core-server) uk.gov.dwp.queue.triage.core.QueueTriageCoreApplication > $OUT",
+]
+
+genrule(
+name="start",
+cmd="".join(cmd),
+out="startMicroservice.log",
+executable=True,
 )

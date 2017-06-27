@@ -2,10 +2,8 @@ package uk.gov.dwp.queue.triage.core.client;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import org.hibernate.validator.constraints.NotEmpty;
 import uk.gov.dwp.queue.triage.id.FailedMessageId;
 
-import javax.validation.constraints.NotNull;
 import java.time.ZonedDateTime;
 import java.util.Map;
 
@@ -13,17 +11,12 @@ import static org.apache.commons.lang3.builder.ToStringBuilder.reflectionToStrin
 
 public class FailedMessageResponse {
 
-    @NotNull
     private final FailedMessageId failedMessageId;
-    @NotEmpty
     private final String broker;
-    @NotEmpty
     private final String destination;
     private final ZonedDateTime sentAt;
     private final ZonedDateTime failedAt;
-    @NotEmpty
     private final String content;
-    @NotNull
     @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS)
     private final Map<String, Object> properties;
 

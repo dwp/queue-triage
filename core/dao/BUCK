@@ -4,8 +4,8 @@ java_library(
     deps =[
         "//common/id:queue-triage-common-id",
         '//core/domain:queue-triage-core-domain',
-        '//lib:jackson-core',
-        '//lib:jackson-databind',
+        '//lib/jackson:jackson-core',
+        '//lib/jackson:jackson-databind',
     ],
     visibility = [
         'PUBLIC'
@@ -18,9 +18,9 @@ java_test(
     deps = [
         '//core/dao:queue-triage-core-dao',
         '//core/jackson:queue-triage-core-jackson',
-        '//lib:common-test',
-        '//lib:jackson-core',
-        '//lib:jackson-databind',
+        '//lib/test:common',
+        '//lib/jackson:jackson-core',
+        '//lib/jackson:jackson-databind',
         '//lib:json-path-matchers-incl-deps',
         '//lib:slf4j-api',
     ]

@@ -2,7 +2,7 @@ java_library(
     name = "queue-triage-common-id",
     srcs = glob(["**/*.java"]),
     deps = [
-        '//lib:jackson-annotations',
+        '//lib/jackson:jackson-annotations',
     ],
     visibility = [
         "PUBLIC",

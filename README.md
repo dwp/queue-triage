@@ -18,3 +18,9 @@ buck fetch //...
 buck test //...
 ```
 
+To run the `queue-triage-core-server` from the command line run:
+
+```bash
+buck run start-core
+```
+

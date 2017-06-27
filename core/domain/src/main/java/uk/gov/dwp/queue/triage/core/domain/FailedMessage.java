@@ -1,9 +1,7 @@
 package uk.gov.dwp.queue.triage.core.domain;
 
-import org.hibernate.validator.constraints.NotEmpty;
 import uk.gov.dwp.queue.triage.id.FailedMessageId;
 
-import javax.validation.constraints.NotNull;
 import java.time.ZonedDateTime;
 import java.util.Map;
 
@@ -11,14 +9,11 @@ import static org.apache.commons.lang3.builder.ToStringBuilder.reflectionToStrin
 
 public class FailedMessage {
 
-    @NotNull
     private final FailedMessageId failedMessageId;
     private final Destination destination;
     private final ZonedDateTime sentAt;
     private final ZonedDateTime failedAt;
-    @NotEmpty
     private final String content;
-    @NotNull
     private final Map<String, Object> properties;
 
     FailedMessage(FailedMessageId failedMessageId,
