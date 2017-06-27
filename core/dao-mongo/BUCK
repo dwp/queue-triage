@@ -30,6 +30,7 @@ java_test(
         '//core/dao-mongo-test-support:queue-triage-core-dao-mongo-test-support',
         '//lib/test:common',
         '//lib:commons-logging',
+        '//lib/javax:javax-ws-rs-api',
         '//lib/mongo:mongodb-driver',
         '//lib:spring-aop',
         '//lib:spring-beans',
