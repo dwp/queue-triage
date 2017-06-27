@@ -1,0 +1,17 @@
+addons:
+  apt:
+    packages:
+    - default-jdk
+    - ant
+    - python2
+    - git
+
+before_script:
+  - git clone https://github.com/facebook/buck.git
+  - pushd buck && ant && popd
+  - export PATH=~/buck/bin:$PATH
+  - buck --version
+
+script:
+  - buck fetch //...
+  - buck test //...
