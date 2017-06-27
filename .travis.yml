@@ -1,7 +1,7 @@
 addons:
   apt:
     packages:
-    - default-jdk
+    - openjdk-8-jdk
     - ant
     - python2.7
     - git
