@@ -9,17 +9,12 @@ addons:
     - git
 
 before_script:
-  # Install Linuxbrew
-  - LINUXBREW_HOME=$HOME/tools/linuxbrew
-  - git clone https://github.com/Linuxbrew/brew.git $LINUXBREW_HOME
-  - PATH="$LINUXBREW_HOME/bin:$PATH"
-  - echo 'export PATH="$LINUXBREW_HOME/bin:$PATH"' >>~/.bash_profile
-  - export MANPATH="$(brew --prefix)/share/man:$MANPATH"
-  - export INFOPATH="$(brew --prefix)/share/info:$INFOPATH"
-  - brew --version
   # Install Buck
-  - brew tap facebook/fb
-  - brew install buck
+  - pushd $HOME
+  - git clone --branch v2017.05.31.01 --depth 1 https://github.com/facebook/buck.git
+  - cd buck && ant && popd
+  - export PATH=$HOME/buck/bin:$PATH
+  # Verify Buck installation
   - buck --version
 
 script:
@@ -29,7 +24,3 @@ script:
 services:
   - mongodb
 
-cache:
-  directories:
-  - $HOME/buck/bin
-  - $HOME/buck/programs
