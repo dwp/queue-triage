@@ -54,6 +54,7 @@ java_test(
         '//lib/test:common',
         '//lib:commons-lang3',
         '//lib/javax:javax-servlet-api',
+        '//lib/javax:javax-ws-rs-api',
     ],
 )
 
