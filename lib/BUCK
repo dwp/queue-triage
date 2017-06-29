@@ -3,88 +3,28 @@ prebuilt_jar(name='apache-el', binary_jar=':apache-el-mvn', visibility=["PUBLIC"
 prebuilt_jar(name='asm', binary_jar=':asm-mvn', visibility=["PUBLIC"])
 prebuilt_jar(name='asm-commons', binary_jar=':asm-commons-mvn', visibility=["PUBLIC"])
 prebuilt_jar(name='asm-tree', binary_jar=':asm-tree-mvn', visibility=["PUBLIC"])
-prebuilt_jar(name='bson', binary_jar=':bson-mvn', visibility=['PUBLIC'])
 prebuilt_jar(name='commons-lang3', binary_jar=':commons-lang3-mvn', visibility=['PUBLIC'])
 prebuilt_jar(name='commons-logging', binary_jar=':commons-logging-mvn', visibility=["PUBLIC"])
 prebuilt_jar(name='gson', binary_jar=':gson-mvn', visibility=["PUBLIC"])
 prebuilt_jar(name='guava', binary_jar=':guava-mvn', visibility=["PUBLIC"])
-prebuilt_jar(name='jcl-over-slf4j', binary_jar=':jcl-over-slf4j-mvn', visibility=["PUBLIC"])
 prebuilt_jar(name='json-path', binary_jar=':json-path-mvn', visibility=['PUBLIC'])
 prebuilt_jar(name='json-path-matchers', binary_jar=':json-path-matchers-mvn', visibility=['PUBLIC'])
 prebuilt_jar(name='json-smart', binary_jar=':json-smart-mvn', visibility=['PUBLIC'])
-prebuilt_jar(name='jul-to-slf4j', binary_jar=':jul-to-slf4j-mvn', visibility=["PUBLIC"])
-prebuilt_jar(name='log4j-over-slf4j', binary_jar=':log4j-over-slf4j-mvn', visibility=["PUBLIC"])
-prebuilt_jar(name='logback-classic', binary_jar=':logback-classic-mvn', visibility=["PUBLIC"])
-prebuilt_jar(name='logback-core', binary_jar=':logback-core-mvn', visibility=["PUBLIC"])
-prebuilt_jar(name='mongodb-driver', binary_jar=':mongodb-driver-mvn', visibility=['PUBLIC'])
-prebuilt_jar(name='mongodb-driver-core', binary_jar=':mongodb-driver-core-mvn', visibility=['PUBLIC'])
-prebuilt_jar(name='slf4j-api', binary_jar=':slf4j-api-mvn', visibility=["PUBLIC"])
-prebuilt_jar(name='slf4j-simple', binary_jar=':slf4j-simple-mvn', visibility=["PUBLIC"])
 prebuilt_jar(name='snakeyaml', binary_jar=':snakeyaml-mvn', visibility=["PUBLIC"])
-prebuilt_jar(name='spring-aop', binary_jar=':spring-aop-mvn', visibility=["PUBLIC"])
-prebuilt_jar(name='spring-beans', binary_jar=':spring-beans-mvn', visibility=["PUBLIC"])
-prebuilt_jar(name='spring-boot', binary_jar=':spring-boot-mvn', visibility=["PUBLIC"])
-prebuilt_jar(name='spring-boot-autoconfigure', binary_jar=':spring-boot-autoconfigure-mvn', visibility=["PUBLIC"])
-prebuilt_jar(name='spring-boot-starter', binary_jar=':spring-boot-starter-mvn', visibility=["PUBLIC"])
-prebuilt_jar(name='spring-boot-starter-jetty', binary_jar=':spring-boot-starter-jetty-mvn', visibility=["PUBLIC"])
-prebuilt_jar(name='spring-boot-starter-logging', binary_jar=':spring-boot-starter-logging-mvn', visibility=["PUBLIC"])
-prebuilt_jar(name='spring-boot-test', binary_jar=':spring-boot-test-mvn', visibility=["PUBLIC"])
-prebuilt_jar(name='spring-context', binary_jar=':spring-context-mvn', visibility=["PUBLIC"])
-prebuilt_jar(name='spring-core', binary_jar=':spring-core-mvn', source_jar=':spring-core-src', visibility=["PUBLIC"])
-prebuilt_jar(name='spring-expression', binary_jar=':spring-expression-mvn', visibility=["PUBLIC"])
-prebuilt_jar(name='spring-web', binary_jar=':spring-web-mvn', visibility=["PUBLIC"])
-prebuilt_jar(name='spring-test', binary_jar=':spring-test-mvn', visibility=["PUBLIC"])
 
 remote_file(name='accessors-smart-mvn', out='accessors-smart-1.2.jar', url='mvn:net.minidev:accessors-smart:jar:1.2', sha1='c592b500269bfde36096641b01238a8350f8aa31')
 remote_file(name='apache-el-mvn', out='apache-el-8.0.33.jar', url='mvn:org.mortbay.jasper:apache-el:jar:8.0.33', sha1='1b8fa2179b3937cada939317bb135815e79c0ac2')
 remote_file(name='asm-mvn', out='asm-5.1.jar', url='mvn:org.ow2.asm:asm:jar:5.1', sha1='5ef31c4fe953b1fd00b8a88fa1d6820e8785bb45')
 remote_file(name='asm-commons-mvn', out='asm-commons-5.1.jar', url='mvn:org.ow2.asm:asm-commons:jar:5.1', sha1='25d8a575034dd9cfcb375a39b5334f0ba9c8474e')
 remote_file(name='asm-tree-mvn', out='asm-tree-5.1.jar', url='mvn:org.ow2.asm:asm-tree:jar:5.1', sha1='87b38c12a0ea645791ead9d3e74ae5268d1d6c34')
-remote_file(name='bson-mvn', out='bson-3.4.2.jar', url='mvn:org.mongodb:bson:jar:3.4.2', sha1='8455e0c6926ff2bf444325ea46fd8b74adaf0362')
 remote_file(name='commons-lang3-mvn', out='commons-lang3-3.5.jar', url='mvn:org.apache.commons:commons-lang3:jar:3.5', sha1='6c6c702c89bfff3cd9e80b04d668c5e190d588c6')
 remote_file(name='commons-logging-mvn', out='commons-logging-1.2.jar', url='mvn:commons-logging:commons-logging:jar:1.2', sha1='4bfc12adfe4842bf07b657f0369c4cb522955686')
 remote_file(name='gson-mvn', out='gson-2.8.1.jar', url='mvn:com.google.code.gson:gson:jar:2.8.1', sha1='02a8e0aa38a2e21cb39e2f5a7d6704cbdc941da0')
 remote_file(name='guava-mvn', out='guava-19.0.jar', url='mvn:com.google.guava:guava:jar:19.0', sha1='6ce200f6b23222af3d8abb6b6459e6c44f4bb0e9')
-remote_file(name='jcl-over-slf4j-mvn', out='jcl-over-slf4j-1.7.25.jar', url='mvn:org.slf4j:jcl-over-slf4j:jar:1.7.25', sha1='f8c32b13ff142a513eeb5b6330b1588dcb2c0461')
 remote_file(name='json-path-mvn', out='json-path-2.2.0.jar', url='mvn:com.jayway.jsonpath:json-path:jar:2.2.0', sha1='22290d17944bd239fabf5ac69005a60a7ecbbbcb')
 remote_file(name='json-path-matchers-mvn', out='json-path-matchers-1.1.jar', url='mvn:org.valid4j:json-path-matchers:jar:1.1', sha1='e12365d144e4818384e99823160a06e314d26290')
 remote_file(name='json-smart-mvn', out='json-smart-2.3.jar', url='mvn:net.minidev:json-smart:jar:2.3', sha1='007396407491352ce4fa30de92efb158adb76b5b')
-remote_file(name='jul-to-slf4j-mvn', out='jul-to-slf4j-1.7.25.jar', url='mvn:org.slf4j:jul-to-slf4j:jar:1.7.25', sha1='0af5364cd6679bfffb114f0dec8a157aaa283b76')
-remote_file(name='log4j-over-slf4j-mvn', out='log4j-over-slf4j-1.7.25.jar', url='mvn:org.slf4j:log4j-over-slf4j:jar:1.7.25', sha1='a87bb47468f47ee7aabbd54f93e133d4215769c3')
-remote_file(name='logback-classic-mvn', out='logback-classic-1.1.11.jar', url='mvn:ch.qos.logback:logback-classic:jar:1.1.11', sha1='ccedfbacef4a6515d2983e3f89ed753d5d4fb665')
-remote_file(name='logback-core-mvn', out='logback-core-1.1.11.jar', url='mvn:ch.qos.logback:logback-core:jar:1.1.11', sha1='88b8df40340eed549fb07e2613879bf6b006704d')
-remote_file(name='mongodb-driver-mvn', out='mongodb-driver-3.4.2.jar', url='mvn:org.mongodb:mongodb-driver:jar:3.4.2', sha1='d565cc4db7fd756973b1500424577a503d17f48a')
-remote_file(name='mongodb-driver-core-mvn', out='mongodb-driver-core-3.4.2.jar', url='mvn:org.mongodb:mongodb-driver-core:jar:3.4.2', sha1='d0a18b4e46fe79467a71d7f9f1bc5932de670829')
-remote_file(name='slf4j-api-mvn', out='slf4j-api-1.7.25.jar', url='mvn:org.slf4j:slf4j-api:jar:1.7.25', sha1='da76ca59f6a57ee3102f8f9bd9cee742973efa8a')
-remote_file(name='slf4j-simple-mvn', out='slf4j-simple-1.7.25.jar', url='mvn:org.slf4j:slf4j-simple:jar:1.7.25', sha1='8dacf9514f0c707cbbcdd6fd699e8940d42fb54e')
 remote_file(name='snakeyaml-mvn', out='snakeyaml-1.17.jar', url='mvn:org.yaml:snakeyaml:jar:1.17', sha1='7a27ea250c5130b2922b86dea63cbb1cc10a660c')
-remote_file(name='spring-aop-mvn', out='spring-aop-4.3.8.RELEASE.jar', url='mvn:org.springframework:spring-aop:jar:4.3.8.RELEASE', sha1='2ee7e60f8838bff13c5def48fab571ab10553e5d')
-remote_file(name='spring-beans-mvn', out='spring-beans-4.3.8.RELEASE.jar', url='mvn:org.springframework:spring-beans:jar:4.3.8.RELEASE', sha1='9d39133bb80e13d643bfefd731fe86cab3aa2bd7')
-remote_file(name='spring-boot-mvn', out='spring-boot-1.5.3.RELEASE.jar', url='mvn:org.springframework.boot:spring-boot:jar:1.5.3.RELEASE', sha1='5fedde3489afd5dbd82f9122aaec4c9f6da3d564')
-remote_file(name='spring-boot-autoconfigure-mvn', out='spring-boot-autoconfigure-1.5.3.RELEASE.jar', url='mvn:org.springframework.boot:spring-boot-autoconfigure:jar:1.5.3.RELEASE', sha1='b2b4d4a704f039bf22787cc412b1dd34741821fc')
-remote_file(name='spring-boot-starter-mvn', out='spring-boot-starter-1.5.3.RELEASE.jar', url='mvn:org.springframework.boot:spring-boot-starter:jar:1.5.3.RELEASE', sha1='03b966d5e3d422474b7af2e73ae0d371ae02718b')
-remote_file(name='spring-boot-starter-jetty-mvn', out='spring-boot-starter-jetty-1.5.3.RELEASE.jar', url='mvn:org.springframework.boot:spring-boot-starter-jetty:jar:1.5.3.RELEASE', sha1='e9f9c691966cfcacad7dbdf830afd3aee228bd88')
-remote_file(name='spring-boot-starter-logging-mvn', out='spring-boot-starter-logging-1.5.3.RELEASE.jar', url='mvn:org.springframework.boot:spring-boot-starter-logging:jar:1.5.3.RELEASE', sha1='ae7f1d938755553b228dd7a7f98aebb0a683c099')
-remote_file(name='spring-boot-test-mvn', out='spring-boot-test-1.5.3.RELEASE.jar', url='mvn:org.springframework.boot:spring-boot-test:jar:1.5.3.RELEASE', sha1='ad57d8bacb4fc147ded7c99806f8693855f5fe29')
-remote_file(name='spring-context-mvn', out='spring-context-4.3.8.RELEASE.jar', url='mvn:org.springframework:spring-context:jar:4.3.8.RELEASE', sha1='944073ac58ab78b78a7694d2c53d4ae9f634c815')
-remote_file(name='spring-core-mvn', out='spring-core-4.3.8.RELEASE.jar', url='mvn:org.springframework:spring-core:jar:4.3.8.RELEASE', sha1='cce6c251249e48f0a86aa578c2a0e262efa5a1e0')
-remote_file(name='spring-core-src', out='spring-core-4.3.8.RELEASE-sources.jar', url='mvn:org.springframework:spring-core:src:4.3.8.RELEASE', sha1='b278822fc694d9b5a943fef1d4c9fd28ad2b92a6')
-remote_file(name='spring-expression-mvn', out='spring-expression-4.3.8.RELEASE.jar', url='mvn:org.springframework:spring-expression:jar:4.3.8.RELEASE', sha1='0204f7e241f42f46b16baa3d190752703efd7797')
-remote_file(name='spring-test-mvn', out='spring-test-4.3.8.RELEASE.jar', url='mvn:org.springframework:spring-test:jar:4.3.8.RELEASE', sha1='37e3896fb1d3fa08235224b1a7528f806de717cc')
-remote_file(name='spring-web-mvn', out='spring-web-4.3.8.RELEASE.jar', url='mvn:org.springframework:spring-web:jar:4.3.8.RELEASE', sha1='ec1b675c2e234b0c776d36ed56c691520030026f')
-
-java_library(
-    name = 'mongodb-driver-incl-deps',
-    deps = [],
-    exported_deps = [
-        ':bson',
-        ':mongodb-driver',
-        ':mongodb-driver-core',
-    ],
-    visibility = [
-        'PUBLIC',
-    ]
-)
 
 java_library(
     name = 'json-path-matchers-incl-deps',

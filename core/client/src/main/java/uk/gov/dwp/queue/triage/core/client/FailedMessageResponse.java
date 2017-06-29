@@ -20,13 +20,13 @@ public class FailedMessageResponse {
     @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS)
     private final Map<String, Object> properties;
 
-    FailedMessageResponse(@JsonProperty("failedMessageId") FailedMessageId failedMessageId,
-                          @JsonProperty("broker") String broker,
-                          @JsonProperty("destination") String destination,
-                          @JsonProperty("sentAt") ZonedDateTime sentAt,
-                          @JsonProperty("failedAt") ZonedDateTime failedAt,
-                          @JsonProperty("content") String content,
-                          @JsonProperty("properties") Map<String, Object> properties) {
+    public FailedMessageResponse(@JsonProperty("failedMessageId") FailedMessageId failedMessageId,
+                                 @JsonProperty("broker") String broker,
+                                 @JsonProperty("destination") String destination,
+                                 @JsonProperty("sentAt") ZonedDateTime sentAt,
+                                 @JsonProperty("failedAt") ZonedDateTime failedAt,
+                                 @JsonProperty("content") String content,
+                                 @JsonProperty("properties") Map<String, Object> properties) {
         this.failedMessageId = failedMessageId;
         this.broker = broker;
         this.destination = destination;

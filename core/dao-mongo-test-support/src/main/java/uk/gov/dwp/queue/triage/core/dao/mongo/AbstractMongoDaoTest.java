@@ -20,6 +20,7 @@ import uk.gov.dwp.queue.triage.core.dao.mongo.configuration.DaoProperties;
 @ContextConfiguration(
         classes = {
                 DaoConfig.class,
+                DaoProperties.class,
                 MongoAutoConfiguration.class},
         initializers = ConfigFileApplicationContextInitializer.class)
 @TestPropertySource(locations = "classpath:mongo-dao-test.properties")

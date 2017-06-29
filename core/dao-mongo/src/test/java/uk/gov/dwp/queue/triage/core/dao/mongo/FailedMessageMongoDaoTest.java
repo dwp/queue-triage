@@ -26,7 +26,7 @@ import static uk.gov.dwp.queue.triage.core.dao.util.HashMapBuilder.newHashMap;
 public class FailedMessageMongoDaoTest extends AbstractMongoDaoTest {
 
     private final FailedMessageId failedMessageId = newFailedMessageId();
-    private final FailedMessageBuilder failedMessageBuilder = FailedMessageBuilder.aFailedMessage()
+    private final FailedMessageBuilder failedMessageBuilder = FailedMessageBuilder.newFailedMessage()
             .withFailedMessageId(failedMessageId)
             .withDestination(new Destination("broker", "queue.name"))
             .withContent("Hello")
