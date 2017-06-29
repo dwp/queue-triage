@@ -1,7 +1,11 @@
 [alias]
+  core-component = //core/component-test:test
   core-server = //core/server:queue-triage-core-server
   start-core = //core/server:start
   web  = //web:queue-triage-web
+
+[download]
+  in_build = True
 
 [java]
   src_roots = src
