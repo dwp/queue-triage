@@ -79,6 +79,6 @@ public class FailedMessageMongoDaoTest extends AbstractMongoDaoTest {
 
     @Override
     protected String getCollectionName() {
-        return daoProperties.getCollection().getFailedMessage();
+        return daoProperties.getFailedMessage().getName();
     }
 }

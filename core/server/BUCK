@@ -2,7 +2,7 @@ java_library(
     name = "queue-triage-core-server",
     srcs = glob(["src/main/java/**/*.java"]),
     resources = [
-        'src/main/resources/application.properties',
+        'src/main/resources/application.yml',
     ],
     resources_root = 'src/main/resources',
     deps = [

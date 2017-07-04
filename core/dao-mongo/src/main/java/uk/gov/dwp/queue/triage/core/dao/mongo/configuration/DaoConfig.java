@@ -9,8 +9,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.context.annotation.Import;
-import uk.gov.dwp.queue.triage.core.domain.Destination;
-import uk.gov.dwp.queue.triage.id.Id;
 import uk.gov.dwp.queue.triage.core.dao.FailedMessageDao;
 import uk.gov.dwp.queue.triage.core.dao.ObjectConverter;
 import uk.gov.dwp.queue.triage.core.dao.PropertiesConverter;
@@ -18,7 +16,9 @@ import uk.gov.dwp.queue.triage.core.dao.mongo.DBObjectConverter;
 import uk.gov.dwp.queue.triage.core.dao.mongo.DestinationDBObjectConverter;
 import uk.gov.dwp.queue.triage.core.dao.mongo.FailedMessageConverter;
 import uk.gov.dwp.queue.triage.core.dao.mongo.FailedMessageMongoDao;
+import uk.gov.dwp.queue.triage.core.domain.Destination;
 import uk.gov.dwp.queue.triage.core.jackson.configuration.JacksonConfiguration;
+import uk.gov.dwp.queue.triage.id.Id;
 
 import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
@@ -45,9 +45,15 @@ public class DaoConfig {
 
     @Bean
     @DependsOn("daoProperties")
+    public MongoClient mongoClient(DaoProperties daoProperties) {
+        return new MongoClient(daoProperties.getHost(), daoProperties.getPort());
+    }
+
+    @Bean
+    @DependsOn("daoProperties")
     public FailedMessageDao failedMessageDao(MongoClient mongoClient, DaoProperties daoProperties, FailedMessageConverter failedMessageConverter) {
         return new FailedMessageMongoDao(
-                mongoClient.getDB(daoProperties.getDbName()).getCollection(daoProperties.getCollection().getFailedMessage()),
+                mongoClient.getDB(daoProperties.getDbName()).getCollection(daoProperties.getFailedMessage().getName()),
                 failedMessageConverter
         );
     }

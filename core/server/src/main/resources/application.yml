@@ -1,0 +1,10 @@
+server:
+  port: 9991
+
+dao:
+  mongo:
+    host: localhost
+    port: 27017
+    dbName: queue-triage
+    failedMessage:
+      name: failedMessage
