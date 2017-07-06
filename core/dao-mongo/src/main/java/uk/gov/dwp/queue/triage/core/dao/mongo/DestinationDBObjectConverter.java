@@ -4,6 +4,8 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 import uk.gov.dwp.queue.triage.core.domain.Destination;
 
+import java.util.Optional;
+
 public class DestinationDBObjectConverter implements DBObjectConverter<Destination> {
 
     static final String BROKER_NAME = "brokerName";
@@ -11,13 +13,13 @@ public class DestinationDBObjectConverter implements DBObjectConverter<Destinati
 
     @Override
     public Destination convertToObject(DBObject dbObject) {
-        return new Destination((String)dbObject.get(BROKER_NAME), (String)dbObject.get(NAME));
+        return new Destination((String)dbObject.get(BROKER_NAME), Optional.of((String)dbObject.get(NAME)));
     }
 
     @Override
     public DBObject convertFromObject(Destination item) {
         return new BasicDBObject()
                 .append(BROKER_NAME, item.getBrokerName())
-                .append(NAME, item.getName());
+                .append(NAME, item.getName().orElse(null));
     }
 }

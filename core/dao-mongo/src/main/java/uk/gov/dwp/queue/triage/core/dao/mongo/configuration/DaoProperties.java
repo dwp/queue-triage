@@ -12,10 +12,10 @@ import static java.util.Optional.ofNullable;
 @ConfigurationProperties(prefix = "dao.mongo")
 public class DaoProperties {
 
-    private Optional<String> host;
-    private Optional<Integer> port;
-    private Optional<String> dbName;
-    private Collection failedMessage;
+    private Optional<String> host = Optional.empty();
+    private Optional<Integer> port = Optional.empty();
+    private Optional<String> dbName = Optional.empty();
+    private Collection failedMessage = new Collection();
 
     public String getHost() {
         return host.orElse(ServerAddress.defaultHost());
@@ -50,7 +50,7 @@ public class DaoProperties {
 
     public static class Collection {
 
-        private String name;
+        private String name = "failedMessage";
 
         public String getName() {
             return name;

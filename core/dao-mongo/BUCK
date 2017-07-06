@@ -3,12 +3,13 @@ java_library(
     srcs = glob(["src/main/java/**/*.java"]),
     deps = [
         "//common/id:queue-triage-common-id",
-        '//core/domain:queue-triage-core-domain',
         '//core/dao:queue-triage-core-dao',
+        '//core/domain:queue-triage-core-domain',
         '//core/jackson:queue-triage-core-jackson',
         '//lib/jackson:jackson-databind',
         '//lib/mongo:mongodb-driver',
         '//lib/spring:spring-boot',
+        '//lib/spring:spring-context',
     ],
     visibility = [
         '//core/component-test:queue-triage-core-component-test',
@@ -22,18 +23,18 @@ java_test(
     srcs = glob([ 'src/test/java/**/*Test.java']),
     deps = [
         "//common/id:queue-triage-common-id",
-        '//core/domain:queue-triage-core-domain',
-        '//core/domain-test-support:queue-triage-core-domain-test-support',
         '//core/dao:queue-triage-core-dao',
         '//core/dao-mongo:queue-triage-core-dao-mongo',
         '//core/dao-mongo-test-support:queue-triage-core-dao-mongo-test-support',
-        '//lib/test:common',
+        '//core/domain:queue-triage-core-domain',
+        '//core/domain-test-support:queue-triage-core-domain-test-support',
         '//lib:commons-logging',
         '//lib/javax:javax-ws-rs-api',
         '//lib/mongo:mongodb-driver',
-        '//lib/spring:spring-boot',
         '//lib/spring:spring-boot-test',
+        '//lib/spring:spring-boot-with-dependencies',
         '//lib/spring:spring-test',
+        '//lib/test:common',
     ],
     visibility = [
     ]

@@ -9,11 +9,10 @@ import uk.gov.dwp.queue.triage.core.FailedMessageResourceStage;
 import uk.gov.dwp.queue.triage.id.FailedMessageId;
 
 import java.time.ZoneId;
-import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.util.Collections;
+import java.util.Optional;
 
-import static java.time.ZoneOffset.UTC;
 import static org.hamcrest.Matchers.equalTo;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 import static uk.gov.dwp.queue.triage.core.domain.FailedMessageResponseMatcher.aFailedMessage;
@@ -44,7 +43,7 @@ public class FailedMessageResourceComponentTest extends SimpleSpringRuleScenario
                 .withFailedMessageId(equalTo(failedMessageId))
                 .withContent(equalTo("Hello World"))
                 .withBroker(equalTo("broker"))
-                .withDestination(equalTo("queue"))
+                .withDestination(equalTo(Optional.of("queue")))
                 .withFailedAt(equalTo(NOW.withZoneSameInstant(ZoneId.of("UTC"))))
                 .withProperties(Matchers.hasEntry("foo", "bar"))
                 .withSentAt(equalTo(NOW.withZoneSameInstant(ZoneId.of("UTC")))));

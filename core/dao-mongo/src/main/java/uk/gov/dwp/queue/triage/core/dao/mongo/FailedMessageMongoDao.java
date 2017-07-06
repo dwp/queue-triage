@@ -1,10 +1,14 @@
 package uk.gov.dwp.queue.triage.core.dao.mongo;
 
+import com.mongodb.BasicDBObject;
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
+import uk.gov.dwp.queue.triage.core.dao.FailedMessageDao;
 import uk.gov.dwp.queue.triage.core.domain.FailedMessage;
 import uk.gov.dwp.queue.triage.id.FailedMessageId;
-import uk.gov.dwp.queue.triage.core.dao.FailedMessageDao;
+
+import static uk.gov.dwp.queue.triage.core.dao.mongo.DestinationDBObjectConverter.BROKER_NAME;
+import static uk.gov.dwp.queue.triage.core.dao.mongo.FailedMessageConverter.DESTINATION;
 
 public class FailedMessageMongoDao implements FailedMessageDao {
 
@@ -25,5 +29,10 @@ public class FailedMessageMongoDao implements FailedMessageDao {
     public FailedMessage findById(FailedMessageId failedMessageId) {
         DBObject failedMessage = collection.findOne(failedMessageConverter.createId(failedMessageId));
         return failedMessageConverter.convertToObject(failedMessage);
+    }
+
+    @Override
+    public long findNumberOfMessagesForBroker(String broker) {
+        return collection.count(new BasicDBObject(DESTINATION + "." + BROKER_NAME, broker));
     }
 }

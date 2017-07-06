@@ -1,0 +1,61 @@
+java_library(
+    name = "queue-triage-core-activemq",
+    srcs = glob(["src/main/java/**/*.java"]),
+    exported_deps =[
+        "//core/domain:queue-triage-core-domain",
+        "//core/jms:queue-triage-core-jms",
+        "//core/service:queue-triage-core-service",
+        "//lib/activemq:activemq-client",
+        "//lib/activemq:geronimo-jms",
+        "//lib/slf4j:slf4j-api",
+        "//lib/spring:spring-beans",
+        "//lib/spring:spring-boot",
+        "//lib/spring:spring-context",
+        "//lib/spring:spring-core",
+        "//lib/spring:spring-jms",
+    ],
+    visibility = [
+        "//core/component-test:queue-triage-core-component-test",
+        "//core/component-test:test",
+        "//core/server:queue-triage-core-server",
+        "//core/server:test",
+    ]
+)
+
+java_library(
+    name = "test-resources",
+    srcs = [],
+    resources = [
+        "src/test/resources/single-broker.yml",
+        "src/test/resources/multiple-brokers.yml",
+    ],
+    resources_root = "src/test/resources",
+    visibility = [
+        "//core/activemq:test",
+    ],
+)
+
+java_test(
+    name = "test",
+    srcs = glob([ "src/test/java/**/*.java", "src/test/java/*.yml" ]),
+#     resources = [
+#         "src/test/resources/single-broker.yml",
+#         "src/test/resources/multiple-brokers.yml",
+#     ],
+    deps = [
+        ":test-resources",
+        "//core/activemq:queue-triage-core-activemq",
+        "//core/domain:queue-triage-core-domain",
+        "//core/domain-test-support:queue-triage-core-domain-test-support",
+        "//core/jms:queue-triage-core-jms",
+        "//lib:commons-lang3",
+        "//lib:snakeyaml",
+        "//lib/activemq:activemq-client-with-dependencies",
+        "//lib/spring:spring-core",
+        "//lib/spring:spring-core-dependencies",
+        "//lib/spring:spring-jms",
+        "//lib/spring:spring-test",
+        "//lib/spring:spring-tx",
+        "//lib/test:common",
+    ],
+)

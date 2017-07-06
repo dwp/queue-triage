@@ -36,6 +36,11 @@ public class FailedMessageBuilder {
         return new FailedMessage(failedMessageId, destination, sentDateTime, failedDateTime, content, properties);
     }
 
+    public FailedMessageBuilder withNewFailedMessageId() {
+        this.failedMessageId = FailedMessageId.newFailedMessageId();
+        return this;
+    }
+
     public FailedMessageBuilder withFailedMessageId(FailedMessageId failedMessageId) {
         this.failedMessageId = failedMessageId;
         return this;

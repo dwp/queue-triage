@@ -9,6 +9,7 @@ import uk.gov.dwp.queue.triage.id.FailedMessageId;
 
 import java.time.ZonedDateTime;
 import java.util.Map;
+import java.util.Optional;
 
 import static org.hamcrest.Matchers.equalTo;
 
@@ -17,7 +18,7 @@ public class FailedMessageResponseMatcher extends TypeSafeMatcher<FailedMessageR
     private Matcher<FailedMessageId> failedMessageIdMatcher = new IsAnything<>();
     private Matcher<String> contentMatcher = new IsAnything<>();
     private Matcher<String> brokerMatcher = new IsAnything<>();
-    private Matcher<String> destinationMatcher = new IsAnything<>();
+    private Matcher<Optional<String>> destinationMatcher = new IsAnything<>();
     private Matcher<ZonedDateTime> sentAtMatcher = new IsAnything<>();
     private Matcher<ZonedDateTime> failedAtMatcher = new IsAnything<>();
     private Matcher<Map<? extends String, ? extends Object>> propertiesMatcher = new IsAnything<>();
@@ -43,7 +44,7 @@ public class FailedMessageResponseMatcher extends TypeSafeMatcher<FailedMessageR
         return this;
     }
 
-    public FailedMessageResponseMatcher withDestination(Matcher<String> destinationNameMatcher) {
+    public FailedMessageResponseMatcher withDestination(Matcher<Optional<String>> destinationNameMatcher) {
         this.destinationMatcher = destinationNameMatcher;
         return this;
     }

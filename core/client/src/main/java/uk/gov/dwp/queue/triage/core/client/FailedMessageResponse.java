@@ -6,6 +6,7 @@ import uk.gov.dwp.queue.triage.id.FailedMessageId;
 
 import java.time.ZonedDateTime;
 import java.util.Map;
+import java.util.Optional;
 
 import static org.apache.commons.lang3.builder.ToStringBuilder.reflectionToString;
 
@@ -13,7 +14,7 @@ public class FailedMessageResponse {
 
     private final FailedMessageId failedMessageId;
     private final String broker;
-    private final String destination;
+    private final Optional<String> destination;
     private final ZonedDateTime sentAt;
     private final ZonedDateTime failedAt;
     private final String content;
@@ -22,7 +23,7 @@ public class FailedMessageResponse {
 
     public FailedMessageResponse(@JsonProperty("failedMessageId") FailedMessageId failedMessageId,
                                  @JsonProperty("broker") String broker,
-                                 @JsonProperty("destination") String destination,
+                                 @JsonProperty("destination") Optional<String> destination,
                                  @JsonProperty("sentAt") ZonedDateTime sentAt,
                                  @JsonProperty("failedAt") ZonedDateTime failedAt,
                                  @JsonProperty("content") String content,
@@ -44,7 +45,7 @@ public class FailedMessageResponse {
         return broker;
     }
 
-    public String getDestination() {
+    public Optional<String> getDestination() {
         return destination;
     }
 

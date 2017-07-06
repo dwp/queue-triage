@@ -6,9 +6,12 @@ java_library(
         '//core/domain:queue-triage-core-domain',
         '//lib/test:hamcrest-core',
         '//lib/test:hamcrest-library',
+        '//lib/test:hamcrest-optional',
     ],
     visibility = [
+        "//core/activemq:test",
         "//core/dao-mongo:test",
+        "//core/jms:test",
         "//core/server:test",
     ],
 )

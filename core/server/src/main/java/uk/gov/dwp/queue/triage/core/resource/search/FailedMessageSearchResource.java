@@ -29,4 +29,9 @@ public class FailedMessageSearchResource implements SearchFailedMessageClient {
         }
         return failedMessageResponseFactory.create(failedMessage);
     }
+
+    @Override
+    public long getNumberOfFailedMessages(String broker) {
+        return failedMessageDao.findNumberOfMessagesForBroker(broker);
+    }
 }

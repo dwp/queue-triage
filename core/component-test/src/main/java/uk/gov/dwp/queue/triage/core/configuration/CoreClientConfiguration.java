@@ -6,13 +6,24 @@ import org.springframework.context.annotation.Configuration;
 import uk.gov.dwp.queue.triage.core.client.CreateFailedMessageClient;
 import uk.gov.dwp.queue.triage.core.client.FailedMessageResponse;
 import uk.gov.dwp.queue.triage.core.client.SearchFailedMessageClient;
+import uk.gov.dwp.queue.triage.id.FailedMessageId;
 
 @Configuration
 public class CoreClientConfiguration {
 
     @Bean
     public SearchFailedMessageClient searchFailedMessageClient(TestRestTemplate testRestTemplate) {
-        return failedMessageId -> testRestTemplate.getForObject("/core/failed-message/" + failedMessageId, FailedMessageResponse.class);
+        return new SearchFailedMessageClient() {
+            @Override
+            public FailedMessageResponse getFailedMessage(FailedMessageId failedMessageId) {
+                return testRestTemplate.getForObject("/core/failed-message/" + failedMessageId, FailedMessageResponse.class);
+            }
+
+            @Override
+            public long getNumberOfFailedMessages(String broker) {
+                return testRestTemplate.getForObject("/core/failed-message/" + broker + "/count", Long.class);
+            }
+        };
     }
 
     @Bean

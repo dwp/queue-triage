@@ -12,6 +12,8 @@ java_library(
         '//core/dao-mongo:test',
         '//core/server:queue-triage-core-server',
         '//core/server:test',
+        '//core/service:queue-triage-core-service',
+        '//core/service:test',
     ]
 )
 
@@ -21,10 +23,10 @@ java_test(
     deps = [
         '//core/dao:queue-triage-core-dao',
         '//core/jackson:queue-triage-core-jackson',
-        '//lib/test:common',
+        '//lib:json-path-matchers-incl-deps',
         '//lib/jackson:jackson-core',
         '//lib/jackson:jackson-databind',
-        '//lib:json-path-matchers-incl-deps',
         '//lib/slf4j:slf4j-api',
+        '//lib/test:common',
     ]
 )

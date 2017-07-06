@@ -1,0 +1,16 @@
+java_library(
+    name = "queue-triage-core-service",
+    srcs = glob(["src/main/java/**/*.java"]),
+    deps =[
+        "//core/dao:queue-triage-core-dao",
+        "//core/domain:queue-triage-core-domain",
+        "//lib/slf4j:slf4j-api",
+    ],
+    visibility = [
+        "//core/jms:queue-triage-core-jms",
+        "//core/jms:test",
+        "//core/activemq:queue-triage-core-activemq",
+        "//core/server:queue-triage-core-server",
+        "//core/server:test",
+    ]
+)
