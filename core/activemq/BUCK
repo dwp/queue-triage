@@ -37,7 +37,7 @@ java_library(
 
 java_test(
     name = "test",
-    srcs = glob([ "src/test/java/**/*.java", "src/test/java/*.yml" ]),
+    srcs = glob([ "src/test/java/**/*.java" ]),
 #     resources = [
 #         "src/test/resources/single-broker.yml",
 #         "src/test/resources/multiple-brokers.yml",

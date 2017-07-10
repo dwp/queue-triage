@@ -1,14 +1,45 @@
-prebuilt_jar(name="activemq-client", binary_jar=":activemq-client-mvn",  visibility=["PUBLIC"])
-prebuilt_jar(name="geronimo-j2ee-managements-spec", binary_jar=":geronimo-j2ee-managements-spec-mvn")
-prebuilt_jar(name="geronimo-jms", binary_jar=":geronimo-jms-mvn", visibility = [
-    "//core/activemq:queue-triage-core-activemq",
-    "//core/activemq:test",
-    "//core/jms:queue-triage-core-jms",
-    "//core/jms:test",
-])
-prebuilt_jar(name="hawtbuf", binary_jar=":hawtbuf-mvn")
+prebuilt_jar(
+    name="activemq-client",
+    binary_jar=":activemq-client-mvn",
+    visibility=[
+        "PUBLIC"
+    ],
+)
+prebuilt_jar(
+    name="activemq-broker",
+    binary_jar=":activemq-broker-mvn",
+)
+prebuilt_jar(
+    name="activemq-kahadb-store",
+    binary_jar=":activemq-kahadb-store-mvn",
+)
+prebuilt_jar(
+    name="activemq-protobuf",
+    binary_jar=":activemq-protobuf-mvn"
+)
+prebuilt_jar(
+    name="geronimo-j2ee-managements-spec",
+    binary_jar=":geronimo-j2ee-managements-spec-mvn"
+)
+prebuilt_jar(
+    name="geronimo-jms",
+    binary_jar=":geronimo-jms-mvn",
+    visibility = [
+        "//core/activemq:queue-triage-core-activemq",
+        "//core/activemq:test",
+        "//core/jms:queue-triage-core-jms",
+        "//core/jms:test",
+    ],
+)
+prebuilt_jar(
+    name="hawtbuf",
+    binary_jar=":hawtbuf-mvn",
+)
 
 remote_file(name="activemq-client-mvn", out="activemq-client-5.14.5.jar", url="mvn:org.apache.activemq:activemq-client:jar:5.14.5", sha1="91a01f066d436c26ae9e5bcc5c58787e639dbd84")
+remote_file(name="activemq-broker-mvn", out="activemq-broker-5.15.5.jar", url="mvn:org.apache.activemq:activemq-broker:jar:5.14.5", sha1="b0d4ab85db6ae612ad74fc7b489f17ac2599be9d")
+remote_file(name="activemq-kahadb-store-mvn", out="activemq-kahadb-store-5.15.5.jar", url="mvn:org.apache.activemq:activemq-kahadb-store:jar:5.15.0", sha1="699dbadaa7dc3b06f20528deaec19c7d17cd045a")
+remote_file(name="activemq-protobuf-mvn", out="activemq-protobuf-1.1.jar", url="mvn:org.apache.activemq.protobuf:activemq-protobuf:jar:1.1", sha1="26682eb801f70563511f7c424dc10e8b3e66340e")
 # remote_file(name="commons-logging-mvn", out="commons-logging-1.2.jar", url="mvn:commons-logging:commons-logging:jar:1.2", sha1="4bfc12adfe4842bf07b657f0369c4cb522955686")
 remote_file(name="geronimo-j2ee-managements-spec-mvn", out="geronimo-j2ee-management_1.1_spec-1.0.1.jar", url="mvn:org.apache.geronimo.specs:geronimo-j2ee-management_1.1_spec:jar:1.0.1", sha1="5372615b0c04c1913c95c34a0414cef720ca2855")
 remote_file(name="geronimo-jms-mvn", out="geronimo-jms_1.1_spec.jar", url="mvn:org.apache.geronimo.specs:geronimo-jms_1.1_spec:jar:1.1.1", sha1="c872b46c601d8dc03633288b81269f9e42762cea")
@@ -27,5 +58,16 @@ java_library(
         "//core/activemq:test",
         "//core/component-test:test",
         "//core/server:queue-triage-core-server",
+    ]
+)
+java_library(
+    name = "activemq-broker-with-dependencies",
+    exported_deps = [
+        ":activemq-broker",
+        ":activemq-kahadb-store",
+        ":activemq-protobuf"
+    ],
+    visibility = [
+        "//core/component-test:test",
     ]
 )
