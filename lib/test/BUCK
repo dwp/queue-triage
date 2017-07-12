@@ -1,6 +1,13 @@
+prebuilt_jar(
+    name='awaitility',
+    binary_jar=':awaitility-mvn',
+    visibility=[
+        '//core/component-test:queue-triage-core-component-test',
+    ])
 prebuilt_jar(name='byte-buddy', binary_jar=':byte-buddy-mvn')
 prebuilt_jar(name='hamcrest-core', binary_jar=':hamcrest-core-mvn', visibility=["PUBLIC"])
 prebuilt_jar(name='hamcrest-library', binary_jar=':hamcrest-library-mvn', visibility=["PUBLIC"])
+prebuilt_jar(name='hamcrest-optional', binary_jar=':hamcrest-optional-mvn', visibility=["PUBLIC"])
 prebuilt_jar(name='jansi', binary_jar=':jansi-mvn')
 prebuilt_jar(name='jgiven-core', binary_jar=':jgiven-core-mvn')
 prebuilt_jar(name='jgiven-junit', binary_jar=':jgiven-junit-mvn')
@@ -11,9 +18,11 @@ prebuilt_jar(name='mockito-core', binary_jar=':mockito-core-mvn')
 prebuilt_jar(name='objenesis', binary_jar=':objenesis-mvn')
 prebuilt_jar(name='paranamer', binary_jar=':paranamer-mvn')
 
+remote_file(name='awaitility-mvn', out='awaitility-3.0.0.jar', url='mvn:org.awaitility:awaitility:jar:3.0.0', sha1='7e6b79f2b1e57eaa967b229791f31ca55aea668a')
 remote_file(name='byte-buddy-mvn', out='byte-buddy-1.6.14.jar', url='mvn:net.bytebuddy:byte-buddy:jar:1.6.14', sha1='871c3e49dc6183d0d361601c2f1d11abb1a6b48c')
 remote_file(name='hamcrest-core-mvn', out='hamcrest-core-1.3.jar', url='mvn:org.hamcrest:hamcrest-core:jar:1.3', sha1='42a25dc3219429f0e5d060061f71acb49bf010a0')
 remote_file(name='hamcrest-library-mvn', out='hamcrest-library-1.3.jar', url='mvn:org.hamcrest:hamcrest-library:jar:1.3', sha1='4785a3c21320980282f9f33d0d1264a69040538f')
+remote_file(name='hamcrest-optional-mvn', out='hamcrest-optional-1.0.2.jar', url='mvn:com.spotify:hamcrest-optional:jar:1.0.2', sha1='7b5261ec45db30fad35847022bd89901b7216df4')
 remote_file(name='jansi-mvn', out='jansi-1.15.jar', url='mvn:org.fusesource.jansi:jansi:jar:1.15', sha1='5292bc138cb1412ea940551c667f8ec4da52d249')
 remote_file(name='jgiven-core-mvn', out='jgiven-core-0.15.1.jar', url='mvn:com.tngtech.jgiven:jgiven-core:jar:0.15.1', sha1='fc2880aa9d74adc6f8a72b5696439d13b8f530dc')
 remote_file(name='jgiven-html5-report-mvn', out='jgiven-html5-report-0.15.1.jar', url='mvn:com.tngtech.jgiven:jgiven-html5-report:jar:0.15.1', sha1='6d011ce29cdf5f6ab1c5863ba523fa9973463b29')
@@ -44,13 +53,13 @@ java_library(
     name = 'jgiven',
     deps = [],
     exported_deps = [
-        '//lib:guava',
-        '//lib:gson',
         ':jansi',
         ':jgiven-core',
-        ':jgiven-junit',
         ':jgiven-html5-report',
+        ':jgiven-junit',
         ':paranamer',
+        '//lib:gson',
+        '//lib:guava',
     ],
     visibility = [
         "PUBLIC",

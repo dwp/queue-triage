@@ -6,12 +6,17 @@ java_library(
         '//lib:commons-lang3',
     ],
     visibility = [
-        "//core/server:queue-triage-core-server",
-        "//core/server:test",
+        "//core/activemq:queue-triage-core-activemq",
+        "//core/activemq:test",
         "//core/component-test:queue-triage-core-component-test",
         "//core/dao:queue-triage-core-dao",
         "//core/dao-mongo:queue-triage-core-dao-mongo",
         "//core/dao-mongo:test",
         "//core/domain-test-support:queue-triage-core-domain-test-support",
+        "//core/jms:queue-triage-core-jms",
+        "//core/jms:test",
+        "//core/server:queue-triage-core-server",
+        "//core/server:test",
+        "//core/service:queue-triage-core-service",
     ]
 )

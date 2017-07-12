@@ -9,14 +9,15 @@ remote_file(name="mongodb-driver-core-mvn", out="mongodb-driver-core-3.4.2.jar",
 java_library(
     name = "mongodb-driver",
     exported_deps = [
-        ":mongodb-driver-jar",
         ":bson",
         ":mongodb-driver-core",
+        ":mongodb-driver-jar",
     ],
     visibility = [
         "//core/dao-mongo:queue-triage-core-dao-mongo",
         "//core/dao-mongo:test",
         "//core/dao-mongo-test-support:queue-triage-core-dao-mongo-test-support",
+        "//core/component-test:queue-triage-core-component-test",
         "//core/server:queue-triage-core-server",
     ]
 )

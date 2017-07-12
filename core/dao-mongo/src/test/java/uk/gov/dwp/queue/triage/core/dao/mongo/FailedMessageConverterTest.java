@@ -4,17 +4,18 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 import org.junit.Before;
 import org.junit.Test;
+import uk.gov.dwp.queue.triage.core.dao.ObjectConverter;
+import uk.gov.dwp.queue.triage.core.dao.mongo.configuration.DaoConfig;
 import uk.gov.dwp.queue.triage.core.domain.Destination;
 import uk.gov.dwp.queue.triage.core.domain.FailedMessageBuilder;
 import uk.gov.dwp.queue.triage.id.FailedMessageId;
-import uk.gov.dwp.queue.triage.core.dao.mongo.configuration.DaoConfig;
-import uk.gov.dwp.queue.triage.core.dao.ObjectConverter;
 
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
+import static java.util.Optional.of;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
@@ -22,13 +23,13 @@ import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import static uk.gov.dwp.queue.triage.id.FailedMessageId.newFailedMessageId;
 import static uk.gov.dwp.queue.triage.core.dao.mongo.DBObjectMatcher.hasField;
 import static uk.gov.dwp.queue.triage.core.dao.mongo.FailedMessageConverter.CONTENT;
 import static uk.gov.dwp.queue.triage.core.dao.mongo.FailedMessageConverter.DESTINATION;
 import static uk.gov.dwp.queue.triage.core.dao.mongo.FailedMessageConverter.PROPERTIES;
 import static uk.gov.dwp.queue.triage.core.domain.DestinationMatcher.aDestination;
 import static uk.gov.dwp.queue.triage.core.domain.FailedMessageMatcher.aFailedMessage;
+import static uk.gov.dwp.queue.triage.id.FailedMessageId.newFailedMessageId;
 
 public class FailedMessageConverterTest {
 
@@ -37,7 +38,7 @@ public class FailedMessageConverterTest {
     private static final Map<String, Object> SOME_PROPERTIES = new HashMap<String, Object>() {{
         put("propertyName", "propertyValue");
     }};
-    private static final Destination SOME_DESTINATION = new Destination("broker", "queue.name");
+    private static final Destination SOME_DESTINATION = new Destination("broker", of("queue.name"));
     private static final BasicDBObject DESTINATION_DB_OBJECT = new BasicDBObject();
     private static final ZonedDateTime SENT_AT = ZonedDateTime.now(ZoneOffset.ofHours(1));
     private static final ZonedDateTime FAILED_AT = ZonedDateTime.now();

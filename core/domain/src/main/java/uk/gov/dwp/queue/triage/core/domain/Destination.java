@@ -1,11 +1,13 @@
 package uk.gov.dwp.queue.triage.core.domain;
 
+import java.util.Optional;
+
 public class Destination {
 
     private final String brokerName;
-    private final String name;
+    private final Optional<String> name;
 
-    public Destination(String brokerName, String name) {
+    public Destination(String brokerName, Optional<String> name) {
         this.brokerName = brokerName;
         this.name = name;
     }
@@ -14,7 +16,7 @@ public class Destination {
         return brokerName;
     }
 
-    public String getName() {
+    public Optional<String> getName() {
         return name;
     }
 

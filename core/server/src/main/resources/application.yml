@@ -1,0 +1,17 @@
+server:
+  port: 9991
+
+dao:
+  mongo:
+    host: localhost
+    port: 27017
+    dbName: queue-triage
+    failedMessage:
+      name: failedMessage
+
+jms:
+  activemq:
+    brokers:
+      - name: internal-broker
+        url: tcp://localhost:61616
+        queue: ActiveMQ.DLQ

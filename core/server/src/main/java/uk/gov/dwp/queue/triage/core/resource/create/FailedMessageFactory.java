@@ -5,16 +5,18 @@ import uk.gov.dwp.queue.triage.core.domain.Destination;
 import uk.gov.dwp.queue.triage.core.domain.FailedMessage;
 import uk.gov.dwp.queue.triage.core.domain.FailedMessageBuilder;
 
+import static java.util.Optional.ofNullable;
+
 public class FailedMessageFactory {
 
-        public FailedMessage create(CreateFailedMessageRequest request) {
-            return FailedMessageBuilder.newFailedMessage()
-                    .withFailedMessageId(request.getFailedMessageId())
-                    .withContent(request.getContent())
-                    .withDestination(new Destination(request.getBrokerName(), request.getDestinationName()))
-                    .withFailedDateTime(request.getFailedAt())
-                    .withProperties(request.getProperties())
-                    .withSentDateTime(request.getSentAt())
-                    .build();
-        }
+    public FailedMessage create(CreateFailedMessageRequest request) {
+        return FailedMessageBuilder.newFailedMessage()
+                .withFailedMessageId(request.getFailedMessageId())
+                .withContent(request.getContent())
+                .withDestination(new Destination(request.getBrokerName(), ofNullable(request.getDestinationName())))
+                .withFailedDateTime(request.getFailedAt())
+                .withProperties(request.getProperties())
+                .withSentDateTime(request.getSentAt())
+                .build();
     }
+}

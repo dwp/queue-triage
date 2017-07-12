@@ -1,0 +1,6 @@
+jms:
+  activemq:
+    brokers:
+      - name: broker-one
+        url: tcp://localhost:1111
+        queue: ActiveMQ.DLQ

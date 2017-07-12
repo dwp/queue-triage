@@ -4,19 +4,23 @@ import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
 
+import java.util.Optional;
+
+import static com.spotify.hamcrest.optional.OptionalMatchers.optionalWithValue;
+import static org.hamcrest.Matchers.any;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.notNullValue;
 
 public class DestinationMatcher extends TypeSafeMatcher<Destination> {
 
     private Matcher<String> brokerMatcher;
-    private Matcher<String> destinationNameMatcher;
+    private Matcher<Optional<? extends String>> destinationNameMatcher;
 
     public static DestinationMatcher aDestination() {
-        return new DestinationMatcher(notNullValue(String.class), notNullValue(String.class));
+        return new DestinationMatcher(notNullValue(String.class), optionalWithValue(any(String.class)));
     }
 
-    public DestinationMatcher(Matcher<String> brokerMatcher, Matcher<String> destinationNameMatcher) {
+    public DestinationMatcher(Matcher<String> brokerMatcher, Matcher<Optional<? extends String>> destinationNameMatcher) {
         this.brokerMatcher = brokerMatcher;
         this.destinationNameMatcher = destinationNameMatcher;
     }
@@ -27,7 +31,12 @@ public class DestinationMatcher extends TypeSafeMatcher<Destination> {
     }
 
     public DestinationMatcher withName(String queueName) {
-        this.destinationNameMatcher = equalTo(queueName);
+        this.destinationNameMatcher = optionalWithValue(equalTo(queueName));
+        return this;
+    }
+
+    public DestinationMatcher withNoName() {
+        this.destinationNameMatcher = equalTo(Optional.empty());
         return this;
     }
 

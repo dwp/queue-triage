@@ -9,4 +9,5 @@ public interface FailedMessageDao {
 
     FailedMessage findById(FailedMessageId failedMessageId);
 
+    long findNumberOfMessagesForBroker(String broker);
 }

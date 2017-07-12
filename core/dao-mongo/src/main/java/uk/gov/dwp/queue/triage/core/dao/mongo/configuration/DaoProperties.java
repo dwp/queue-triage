@@ -1,41 +1,63 @@
 package uk.gov.dwp.queue.triage.core.dao.mongo.configuration;
 
+import com.mongodb.ServerAddress;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
+import java.util.Optional;
+
+import static java.util.Optional.ofNullable;
+
 @Component
-@ConfigurationProperties(prefix = "queue.triage.db")
+@ConfigurationProperties(prefix = "dao.mongo")
 public class DaoProperties {
+
+    private Optional<String> host = Optional.empty();
+    private Optional<Integer> port = Optional.empty();
+    private Optional<String> dbName = Optional.empty();
+    private Collection failedMessage = new Collection();
+
+    public String getHost() {
+        return host.orElse(ServerAddress.defaultHost());
+    }
+
+    public void setHost(String host) {
+        this.host = ofNullable(host);
+    }
+
+    public Integer getPort() {
+        return port.orElse(ServerAddress.defaultPort());
+    }
+
+    public void setPort(Integer port) {
+        this.port = ofNullable(port);
+    }
+
+    public String getDbName() {
+        return dbName.orElse("queue-triage");
+    }
+
+    public void setDbName(String dbName) { this.dbName = ofNullable(dbName);
+    }
+
+    public Collection getFailedMessage() {
+        return failedMessage;
+    }
+
+    public void setFailedMessage(Collection failedMessage) {
+        this.failedMessage = failedMessage;
+    }
 
     public static class Collection {
 
-        private String failedMessage;
+        private String name = "failedMessage";
 
-        public String getFailedMessage() {
-            return failedMessage;
+        public String getName() {
+            return name;
         }
 
-        public void setFailedMessage(String failedMessage) {
-            this.failedMessage = failedMessage;
+        public void setName(String name) {
+            this.name = name;
         }
-    }
-
-    private String dbName;
-    private Collection collection;
-
-    public String getDbName() {
-        return dbName;
-    }
-
-    public void setDbName(String dbName) {
-        this.dbName = dbName;
-    }
-
-    public Collection getCollection() {
-        return collection;
-    }
-
-    public void setCollection(Collection collection) {
-        this.collection = collection;
     }
 }

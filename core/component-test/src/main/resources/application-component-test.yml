@@ -1,0 +1,5 @@
+jms:
+  activemq:
+    brokers:
+      - name: internal-broker
+        url: vm://localhost
