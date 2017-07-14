@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import uk.gov.dwp.queue.triage.id.FailedMessageId;
 
-import java.time.ZonedDateTime;
+import java.time.Instant;
 import java.util.Map;
 import java.util.Optional;
 
@@ -15,8 +15,8 @@ public class FailedMessageResponse {
     private final FailedMessageId failedMessageId;
     private final String broker;
     private final Optional<String> destination;
-    private final ZonedDateTime sentAt;
-    private final ZonedDateTime failedAt;
+    private final Instant sentAt;
+    private final Instant failedAt;
     private final String content;
     @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS)
     private final Map<String, Object> properties;
@@ -24,8 +24,8 @@ public class FailedMessageResponse {
     public FailedMessageResponse(@JsonProperty("failedMessageId") FailedMessageId failedMessageId,
                                  @JsonProperty("broker") String broker,
                                  @JsonProperty("destination") Optional<String> destination,
-                                 @JsonProperty("sentAt") ZonedDateTime sentAt,
-                                 @JsonProperty("failedAt") ZonedDateTime failedAt,
+                                 @JsonProperty("sentAt") Instant sentAt,
+                                 @JsonProperty("failedAt") Instant failedAt,
                                  @JsonProperty("content") String content,
                                  @JsonProperty("properties") Map<String, Object> properties) {
         this.failedMessageId = failedMessageId;
@@ -49,11 +49,11 @@ public class FailedMessageResponse {
         return destination;
     }
 
-    public ZonedDateTime getSentAt() {
+    public Instant getSentAt() {
         return sentAt;
     }
 
-    public ZonedDateTime getFailedAt() {
+    public Instant getFailedAt() {
         return failedAt;
     }
 

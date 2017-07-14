@@ -2,7 +2,7 @@ package uk.gov.dwp.queue.triage.core.domain;
 
 import uk.gov.dwp.queue.triage.id.FailedMessageId;
 
-import java.time.ZonedDateTime;
+import java.time.Instant;
 import java.util.Map;
 
 import static org.apache.commons.lang3.builder.ToStringBuilder.reflectionToString;
@@ -11,15 +11,15 @@ public class FailedMessage {
 
     private final FailedMessageId failedMessageId;
     private final Destination destination;
-    private final ZonedDateTime sentAt;
-    private final ZonedDateTime failedAt;
+    private final Instant sentAt;
+    private final Instant failedAt;
     private final String content;
     private final Map<String, Object> properties;
 
     FailedMessage(FailedMessageId failedMessageId,
                   Destination destination,
-                  ZonedDateTime sentAt,
-                  ZonedDateTime failedAt,
+                  Instant sentAt,
+                  Instant failedAt,
                   String content,
                   Map<String, Object> properties) {
         this.failedMessageId = failedMessageId;
@@ -38,11 +38,11 @@ public class FailedMessage {
         return destination;
     }
 
-    public ZonedDateTime getSentAt() {
+    public Instant getSentAt() {
         return sentAt;
     }
 
-    public ZonedDateTime getFailedAt() {
+    public Instant getFailedAt() {
         return failedAt;
     }
 

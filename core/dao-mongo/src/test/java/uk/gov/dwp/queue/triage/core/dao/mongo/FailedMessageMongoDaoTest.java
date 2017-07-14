@@ -8,8 +8,8 @@ import uk.gov.dwp.queue.triage.core.domain.FailedMessage;
 import uk.gov.dwp.queue.triage.core.domain.FailedMessageBuilder;
 import uk.gov.dwp.queue.triage.id.FailedMessageId;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
-import java.time.ZonedDateTime;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.UUID;
@@ -31,8 +31,8 @@ public class FailedMessageMongoDaoTest extends AbstractMongoDaoTest {
             .withFailedMessageId(failedMessageId)
             .withDestination(new Destination("broker", of("queue.name")))
             .withContent("Hello")
-            .withSentDateTime(ZonedDateTime.now())
-            .withFailedDateTime(ZonedDateTime.now());
+            .withSentDateTime(Instant.now())
+            .withFailedDateTime(Instant.now());
 
     @Autowired
     private FailedMessageMongoDao underTest;

@@ -12,9 +12,6 @@ import uk.gov.dwp.queue.triage.core.jms.MessageTextExtractor;
 
 import javax.jms.Message;
 import java.time.Instant;
-import java.time.ZonedDateTime;
-
-import static java.time.ZoneOffset.UTC;
 
 public class ActiveMQFailedMessageFactory implements FailedMessageFactory {
 
@@ -58,7 +55,7 @@ public class ActiveMQFailedMessageFactory implements FailedMessageFactory {
         }
     }
 
-    private ZonedDateTime extractTimestamp(long ms) {
-        return (ms != 0) ? ZonedDateTime.from(ZonedDateTime.ofInstant(Instant.ofEpochMilli(ms), UTC)) : null;
+    private Instant extractTimestamp(long ms) {
+        return (ms != 0) ? Instant.ofEpochMilli(ms) : null;
     }
 }

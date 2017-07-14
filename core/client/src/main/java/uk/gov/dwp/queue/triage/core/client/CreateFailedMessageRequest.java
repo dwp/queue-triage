@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import uk.gov.dwp.queue.triage.id.FailedMessageId;
 
-import java.time.ZonedDateTime;
+import java.time.Instant;
 import java.util.Map;
 
 public class CreateFailedMessageRequest {
@@ -12,8 +12,8 @@ public class CreateFailedMessageRequest {
     private final FailedMessageId failedMessageId;
     private final String brokerName;
     private final String destination;
-    private final ZonedDateTime sentAt;
-    private final ZonedDateTime failedAt;
+    private final Instant sentAt;
+    private final Instant failedAt;
     private final String content;
     @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS)
     private final Map<String, Object> properties;
@@ -21,8 +21,8 @@ public class CreateFailedMessageRequest {
     CreateFailedMessageRequest(@JsonProperty("failedMessageId") FailedMessageId failedMessageId,
                                @JsonProperty("brokerName") String brokerName,
                                @JsonProperty("destinationName") String destination,
-                               @JsonProperty("sentAt") ZonedDateTime sentAt,
-                               @JsonProperty("failedAt") ZonedDateTime failedAt,
+                               @JsonProperty("sentAt") Instant sentAt,
+                               @JsonProperty("failedAt") Instant failedAt,
                                @JsonProperty("content") String content,
                                @JsonProperty("properties") Map<String, Object> properties) {
         this.failedMessageId = failedMessageId;
@@ -50,11 +50,11 @@ public class CreateFailedMessageRequest {
         return destination;
     }
 
-    public ZonedDateTime getSentAt() {
+    public Instant getSentAt() {
         return sentAt;
     }
 
-    public ZonedDateTime getFailedAt() {
+    public Instant getFailedAt() {
         return failedAt;
     }
 
@@ -70,8 +70,8 @@ public class CreateFailedMessageRequest {
         private FailedMessageId failedMessageId;
         private String brokerName;
         private String destinationName;
-        private ZonedDateTime sentDateTime;
-        private ZonedDateTime failedDateTime;
+        private Instant sentDateTime;
+        private Instant failedDateTime;
         private String content;
         private Map<String, Object> properties;
 
@@ -97,12 +97,12 @@ public class CreateFailedMessageRequest {
             return this;
         }
 
-        public CreateFailedMessageRequestBuilder withSentDateTime(ZonedDateTime sentDateTime) {
+        public CreateFailedMessageRequestBuilder withSentDateTime(Instant sentDateTime) {
             this.sentDateTime = sentDateTime;
             return this;
         }
 
-        public CreateFailedMessageRequestBuilder withFailedDateTime(ZonedDateTime failedDateTime) {
+        public CreateFailedMessageRequestBuilder withFailedDateTime(Instant failedDateTime) {
             this.failedDateTime = failedDateTime;
             return this;
         }

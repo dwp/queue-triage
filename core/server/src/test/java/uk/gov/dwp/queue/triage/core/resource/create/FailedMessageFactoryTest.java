@@ -6,7 +6,7 @@ import uk.gov.dwp.queue.triage.core.domain.DestinationMatcher;
 import uk.gov.dwp.queue.triage.core.domain.FailedMessage;
 import uk.gov.dwp.queue.triage.id.FailedMessageId;
 
-import java.time.ZonedDateTime;
+import java.time.Instant;
 import java.util.Collections;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -16,7 +16,7 @@ import static uk.gov.dwp.queue.triage.core.domain.FailedMessageMatcher.aFailedMe
 
 public class FailedMessageFactoryTest {
 
-    private static final ZonedDateTime NOW = ZonedDateTime.now();
+    private static final Instant NOW = Instant.now();
     private static final FailedMessageId FAILED_MESSAGE_ID = FailedMessageId.newFailedMessageId();
     private final FailedMessageFactory underTest = new FailedMessageFactory();
 
