@@ -2,12 +2,12 @@ package uk.gov.dwp.queue.triage.core.dao.mongo;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
+import uk.gov.dwp.queue.triage.core.dao.ObjectConverter;
 import uk.gov.dwp.queue.triage.core.domain.Destination;
 import uk.gov.dwp.queue.triage.core.domain.FailedMessage;
 import uk.gov.dwp.queue.triage.id.FailedMessageId;
-import uk.gov.dwp.queue.triage.core.dao.ObjectConverter;
 
-import java.time.ZonedDateTime;
+import java.time.Instant;
 import java.util.Map;
 
 import static uk.gov.dwp.queue.triage.core.domain.FailedMessageBuilder.newFailedMessage;
@@ -39,8 +39,8 @@ public class FailedMessageConverter implements DBObjectWithIdConverter<FailedMes
         return newFailedMessage()
                 .withFailedMessageId(fromString(basicDBObject.getString("_id")))
                 .withDestination(destinationDBObjectMapper.convertToObject((DBObject) basicDBObject.get(DESTINATION)))
-                .withSentDateTime((ZonedDateTime)basicDBObject.get(SENT_DATE_TIME))
-                .withFailedDateTime((ZonedDateTime)basicDBObject.get(FAILED_DATE_TIME))
+                .withSentDateTime((Instant)basicDBObject.get(SENT_DATE_TIME))
+                .withFailedDateTime((Instant)basicDBObject.get(FAILED_DATE_TIME))
                 .withContent(basicDBObject.getString(CONTENT))
                 .withProperties(propertiesMongoMapper.convertToObject(basicDBObject.getString(PROPERTIES)))
                 .build();

@@ -2,7 +2,7 @@ package uk.gov.dwp.queue.triage.core.domain;
 
 import uk.gov.dwp.queue.triage.id.FailedMessageId;
 
-import java.time.ZonedDateTime;
+import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -10,8 +10,8 @@ public class FailedMessageBuilder {
 
     private FailedMessageId failedMessageId = FailedMessageId.newFailedMessageId();
     private Destination destination;
-    private ZonedDateTime sentDateTime;
-    private ZonedDateTime failedDateTime;
+    private Instant sentDateTime;
+    private Instant failedDateTime;
     private String content;
     private Map<String, Object> properties = new HashMap<>();
 
@@ -51,12 +51,12 @@ public class FailedMessageBuilder {
         return this;
     }
 
-    public FailedMessageBuilder withSentDateTime(ZonedDateTime sentDateTime) {
+    public FailedMessageBuilder withSentDateTime(Instant sentDateTime) {
         this.sentDateTime = sentDateTime;
         return this;
     }
 
-    public FailedMessageBuilder withFailedDateTime(ZonedDateTime failedDateTime) {
+    public FailedMessageBuilder withFailedDateTime(Instant failedDateTime) {
         this.failedDateTime = failedDateTime;
         return this;
     }

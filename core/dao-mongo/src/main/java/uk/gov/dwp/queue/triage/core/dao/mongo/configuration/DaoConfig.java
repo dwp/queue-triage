@@ -20,8 +20,8 @@ import uk.gov.dwp.queue.triage.core.domain.Destination;
 import uk.gov.dwp.queue.triage.core.jackson.configuration.JacksonConfiguration;
 import uk.gov.dwp.queue.triage.id.Id;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
-import java.time.ZonedDateTime;
 import java.util.Date;
 import java.util.Map;
 import java.util.TimeZone;
@@ -37,10 +37,10 @@ public class DaoConfig {
         TimeZone.setDefault(TimeZone.getTimeZone(UTC));
         BSON.addDecodingHook(LocalDateTime.class, new LocalDateTimeTransformer());
         BSON.addEncodingHook(LocalDateTime.class, new LocalDateTimeTransformer());
-        BSON.addDecodingHook(ZonedDateTime.class, new ZonedDateTimeTransformer());
-        BSON.addEncodingHook(ZonedDateTime.class, new ZonedDateTimeTransformer());
+        BSON.addDecodingHook(Instant.class, new InstantTransformer());
+        BSON.addEncodingHook(Instant.class, new InstantTransformer());
         BSON.addEncodingHook(Id.class, new IdTransformer());
-        BSON.addDecodingHook(Date.class, new ZonedDateTimeTransformer());
+        BSON.addDecodingHook(Date.class, new InstantTransformer());
     }
 
     @Bean
@@ -86,16 +86,16 @@ public class DaoConfig {
         }
     }
 
-    public static class ZonedDateTimeTransformer implements Transformer {
+    public static class InstantTransformer implements Transformer {
 
         @Override
         public Object transform(Object objectToTransform) {
-            if (objectToTransform instanceof ZonedDateTime) {
-                return Date.from(((ZonedDateTime)objectToTransform).toInstant());
+            if (objectToTransform instanceof Instant) {
+                return Date.from(((Instant)objectToTransform));
             } else if (objectToTransform instanceof Date) {
-                return ZonedDateTime.ofInstant(((Date) objectToTransform).toInstant(), UTC);
+                return ((Date) objectToTransform).toInstant();
             }
-            throw new IllegalArgumentException("ZonedDateTimeTransformer can only be used with ZonedDateTime or Date");
+            throw new IllegalArgumentException("InstantTransformer can only be used with Instant or Date");
         }
     }
 

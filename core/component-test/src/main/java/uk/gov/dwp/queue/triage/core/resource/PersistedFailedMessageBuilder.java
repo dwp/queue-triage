@@ -4,7 +4,7 @@ import uk.gov.dwp.queue.triage.core.client.CreateFailedMessageClient;
 import uk.gov.dwp.queue.triage.core.client.CreateFailedMessageRequest.CreateFailedMessageRequestBuilder;
 import uk.gov.dwp.queue.triage.id.FailedMessageId;
 
-import java.time.ZonedDateTime;
+import java.time.Instant;
 import java.util.Map;
 
 import static uk.gov.dwp.queue.triage.core.client.CreateFailedMessageRequest.newCreateFailedMessageRequest;
@@ -42,12 +42,12 @@ public class PersistedFailedMessageBuilder {
         return this;
     }
 
-    public PersistedFailedMessageBuilder withSentDateTime(ZonedDateTime sentDateTime) {
+    public PersistedFailedMessageBuilder withSentDateTime(Instant sentDateTime) {
         failedMessageBuilder.withSentDateTime(sentDateTime);
         return this;
     }
 
-    public PersistedFailedMessageBuilder withFailedDateTime(ZonedDateTime failedDateTime) {
+    public PersistedFailedMessageBuilder withFailedDateTime(Instant failedDateTime) {
         failedMessageBuilder.withFailedDateTime(failedDateTime);
         return this;
     }

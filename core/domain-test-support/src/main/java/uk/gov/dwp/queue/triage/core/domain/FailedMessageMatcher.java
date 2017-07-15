@@ -6,7 +6,7 @@ import org.hamcrest.TypeSafeMatcher;
 import org.hamcrest.core.IsAnything;
 import uk.gov.dwp.queue.triage.id.FailedMessageId;
 
-import java.time.ZonedDateTime;
+import java.time.Instant;
 import java.util.Map;
 
 import static org.hamcrest.Matchers.equalTo;
@@ -16,8 +16,8 @@ public class FailedMessageMatcher extends TypeSafeMatcher<FailedMessage> {
     private Matcher<FailedMessageId> failedMessageIdMatcher = new IsAnything<>();
     private Matcher<String> contentMatcher = new IsAnything<>();
     private Matcher<Destination> destinationMatcher = new IsAnything<>();
-    private Matcher<ZonedDateTime> sentAtMatcher = new IsAnything<>();
-    private Matcher<ZonedDateTime> failedAtMatcher = new IsAnything<>();
+    private Matcher<Instant> sentAtMatcher = new IsAnything<>();
+    private Matcher<Instant> failedAtMatcher = new IsAnything<>();
     private Matcher<Map<? extends String, ? extends Object>> propertiesMatcher = new IsAnything<>();
 
     private FailedMessageMatcher() { }
@@ -41,22 +41,22 @@ public class FailedMessageMatcher extends TypeSafeMatcher<FailedMessage> {
         return this;
     }
 
-    public FailedMessageMatcher withSentAt(ZonedDateTime sentAt) {
+    public FailedMessageMatcher withSentAt(Instant sentAt) {
         this.sentAtMatcher = equalTo(sentAt);
         return this;
     }
 
-    public FailedMessageMatcher withSentAt(Matcher<ZonedDateTime> sentAtMatcher) {
+    public FailedMessageMatcher withSentAt(Matcher<Instant> sentAtMatcher) {
         this.sentAtMatcher = sentAtMatcher;
         return this;
     }
 
-    public FailedMessageMatcher withFailedAt(ZonedDateTime failedAt) {
+    public FailedMessageMatcher withFailedAt(Instant failedAt) {
         this.failedAtMatcher = equalTo(failedAt);
         return this;
     }
 
-    public FailedMessageMatcher withFailedAt(Matcher<ZonedDateTime> failedAtMatcher) {
+    public FailedMessageMatcher withFailedAt(Matcher<Instant> failedAtMatcher) {
         this.failedAtMatcher = failedAtMatcher;
         return this;
     }

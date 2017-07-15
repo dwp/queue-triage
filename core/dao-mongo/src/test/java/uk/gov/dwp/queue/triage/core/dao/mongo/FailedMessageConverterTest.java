@@ -10,8 +10,8 @@ import uk.gov.dwp.queue.triage.core.domain.Destination;
 import uk.gov.dwp.queue.triage.core.domain.FailedMessageBuilder;
 import uk.gov.dwp.queue.triage.id.FailedMessageId;
 
-import java.time.ZoneOffset;
-import java.time.ZonedDateTime;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -40,8 +40,8 @@ public class FailedMessageConverterTest {
     }};
     private static final Destination SOME_DESTINATION = new Destination("broker", of("queue.name"));
     private static final BasicDBObject DESTINATION_DB_OBJECT = new BasicDBObject();
-    private static final ZonedDateTime SENT_AT = ZonedDateTime.now(ZoneOffset.ofHours(1));
-    private static final ZonedDateTime FAILED_AT = ZonedDateTime.now();
+    private static final Instant SENT_AT = Instant.now().minus(5, ChronoUnit.MINUTES);
+    private static final Instant FAILED_AT = Instant.now();
 
     private final DBObjectConverter<Destination> destinationDBObjectConverter = mock(DBObjectConverter.class);
     private final ObjectConverter<Map<String, Object>, String> propertiesConverter = mock(ObjectConverter.class);

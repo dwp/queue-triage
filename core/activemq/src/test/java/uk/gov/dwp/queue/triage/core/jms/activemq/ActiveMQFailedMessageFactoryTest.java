@@ -12,11 +12,10 @@ import uk.gov.dwp.queue.triage.core.jms.MessageTextExtractor;
 
 import javax.jms.JMSException;
 import javax.jms.Message;
-import java.time.ZonedDateTime;
+import java.time.Instant;
 import java.util.Enumeration;
 
-import static java.time.ZoneOffset.UTC;
-import static java.time.ZonedDateTime.now;
+import static java.time.Instant.now;
 import static java.util.Collections.emptyMap;
 import static java.util.Optional.of;
 import static org.hamcrest.Matchers.equalTo;
@@ -30,7 +29,7 @@ import static uk.gov.dwp.queue.triage.core.domain.FailedMessageMatcher.aFailedMe
 
 public class ActiveMQFailedMessageFactoryTest {
 
-    private static final ZonedDateTime NOW = now(UTC);
+    private static final Instant NOW = now();
 
     private final MessageTextExtractor messageTextExtractor = mock(MessageTextExtractor.class);
     private final DestinationExtractor destinationExtractor = mock(DestinationExtractor.class);
@@ -64,8 +63,8 @@ public class ActiveMQFailedMessageFactoryTest {
         when(messageTextExtractor.extractText(message)).thenReturn("Some text");
         when(destinationExtractor.extractDestination(message)).thenReturn(new Destination("broker.name", of("queue.name")));
         when(messagePropertyExtractor.extractProperties(message)).thenReturn(emptyMap());
-        when(message.getTimestamp()).thenReturn(NOW.minusSeconds(5).toInstant().toEpochMilli());
-        when(message.getBrokerInTime()).thenReturn(NOW.toInstant().toEpochMilli());
+        when(message.getTimestamp()).thenReturn(NOW.minusSeconds(5).toEpochMilli());
+        when(message.getBrokerInTime()).thenReturn(NOW.toEpochMilli());
 
         FailedMessage failedMessage = underTest.createFailedMessage(message);
 

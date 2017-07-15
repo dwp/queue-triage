@@ -7,7 +7,7 @@ import org.hamcrest.core.IsAnything;
 import uk.gov.dwp.queue.triage.core.client.FailedMessageResponse;
 import uk.gov.dwp.queue.triage.id.FailedMessageId;
 
-import java.time.ZonedDateTime;
+import java.time.Instant;
 import java.util.Map;
 import java.util.Optional;
 
@@ -19,8 +19,8 @@ public class FailedMessageResponseMatcher extends TypeSafeMatcher<FailedMessageR
     private Matcher<String> contentMatcher = new IsAnything<>();
     private Matcher<String> brokerMatcher = new IsAnything<>();
     private Matcher<Optional<String>> destinationMatcher = new IsAnything<>();
-    private Matcher<ZonedDateTime> sentAtMatcher = new IsAnything<>();
-    private Matcher<ZonedDateTime> failedAtMatcher = new IsAnything<>();
+    private Matcher<Instant> sentAtMatcher = new IsAnything<>();
+    private Matcher<Instant> failedAtMatcher = new IsAnything<>();
     private Matcher<Map<? extends String, ? extends Object>> propertiesMatcher = new IsAnything<>();
 
     private FailedMessageResponseMatcher() { }
@@ -49,22 +49,22 @@ public class FailedMessageResponseMatcher extends TypeSafeMatcher<FailedMessageR
         return this;
     }
 
-    public FailedMessageResponseMatcher withSentAt(ZonedDateTime sentAt) {
+    public FailedMessageResponseMatcher withSentAt(Instant sentAt) {
         this.sentAtMatcher = equalTo(sentAt);
         return this;
     }
 
-    public FailedMessageResponseMatcher withSentAt(Matcher<ZonedDateTime> sentAtMatcher) {
+    public FailedMessageResponseMatcher withSentAt(Matcher<Instant> sentAtMatcher) {
         this.sentAtMatcher = sentAtMatcher;
         return this;
     }
 
-    public FailedMessageResponseMatcher withFailedAt(ZonedDateTime failedAt) {
+    public FailedMessageResponseMatcher withFailedAt(Instant failedAt) {
         this.failedAtMatcher = equalTo(failedAt);
         return this;
     }
 
-    public FailedMessageResponseMatcher withFailedAt(Matcher<ZonedDateTime> failedAtMatcher) {
+    public FailedMessageResponseMatcher withFailedAt(Matcher<Instant> failedAtMatcher) {
         this.failedAtMatcher = failedAtMatcher;
         return this;
     }
