@@ -15,8 +15,13 @@ public class PersistedFailedMessageBuilder {
     private final CreateFailedMessageRequestBuilder failedMessageBuilder;
 
     public PersistedFailedMessageBuilder(CreateFailedMessageClient createFailedMessageClient) {
+        this(createFailedMessageClient, newCreateFailedMessageRequest());
+    }
+
+    public PersistedFailedMessageBuilder(CreateFailedMessageClient createFailedMessageClient,
+                                         CreateFailedMessageRequestBuilder failedMessageBuilder) {
         this.createFailedMessageClient = createFailedMessageClient;
-        this.failedMessageBuilder = newCreateFailedMessageRequest();
+        this.failedMessageBuilder = failedMessageBuilder;
     }
 
     public void exists() {

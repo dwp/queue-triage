@@ -5,7 +5,7 @@ import com.mongodb.DBObject;
 import org.junit.Before;
 import org.junit.Test;
 import uk.gov.dwp.queue.triage.core.dao.ObjectConverter;
-import uk.gov.dwp.queue.triage.core.dao.mongo.configuration.DaoConfig;
+import uk.gov.dwp.queue.triage.core.dao.mongo.configuration.MongoDaoConfig;
 import uk.gov.dwp.queue.triage.core.domain.Destination;
 import uk.gov.dwp.queue.triage.core.domain.FailedMessageBuilder;
 import uk.gov.dwp.queue.triage.id.FailedMessageId;
@@ -46,7 +46,7 @@ public class FailedMessageConverterTest {
     private final DBObjectConverter<Destination> destinationDBObjectConverter = mock(DBObjectConverter.class);
     private final ObjectConverter<Map<String, Object>, String> propertiesConverter = mock(ObjectConverter.class);
 
-    private final FailedMessageConverter underTest = new DaoConfig().failedMessageConverter(destinationDBObjectConverter, propertiesConverter);
+    private final FailedMessageConverter underTest = new MongoDaoConfig().failedMessageConverter(destinationDBObjectConverter, propertiesConverter);
 
     private FailedMessageBuilder failedMessageBuilder;
 

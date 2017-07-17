@@ -1,4 +1,4 @@
-package uk.gov.dwp.queue.triage.core.health;
+package uk.gov.dwp.queue.triage.core.search;
 
 import com.tngtech.jgiven.integration.spring.EnableJGiven;
 import com.tngtech.jgiven.integration.spring.SimpleSpringRuleScenarioTest;

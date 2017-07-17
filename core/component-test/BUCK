@@ -7,6 +7,7 @@ java_library(
     resources_root = "src/main/resources",
     deps = [
         '//common/id:queue-triage-common-id',
+        '//common/jgiven:jgiven',
         '//core/activemq:queue-triage-core-activemq',
         '//core/client:queue-triage-core-client',
         '//core/client-test-support:queue-triage-core-client-test-support',
@@ -20,6 +21,7 @@ java_library(
         '//lib/apache-cxf:cxf-rt-transports-http',
         '//lib/jackson:jackson-annotations',
         '//lib/jackson:jackson-jaxrs-json-provider',
+        '//lib/javax:javax-ws-rs-api',
         '//lib/mongo:mongodb-driver',
         '//lib/slf4j:slf4j-api',
         '//lib/spring:spring-boot-test',
@@ -46,6 +48,8 @@ java_test(
     deps = [
         '//common/cxf:queue-triage-cxf',
         '//common/id:queue-triage-common-id',
+        '//common/jgiven:jgiven',
+        '//core/client:queue-triage-core-client',
         '//core/client-test-support:queue-triage-core-client-test-support',
         '//core/component-test:queue-triage-core-component-test',
         '//core/server:queue-triage-core-server',

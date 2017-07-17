@@ -10,13 +10,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
-import uk.gov.dwp.queue.triage.core.dao.mongo.configuration.DaoConfig;
-import uk.gov.dwp.queue.triage.core.dao.mongo.configuration.DaoProperties;
+import uk.gov.dwp.queue.triage.core.dao.mongo.configuration.MongoDaoConfig;
+import uk.gov.dwp.queue.triage.core.dao.mongo.configuration.MongoDaoProperties;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = {
-        DaoProperties.class,
-        DaoConfig.class,
+        MongoDaoProperties.class,
+        MongoDaoConfig.class,
 })
 @TestPropertySource("/mongo-dao-test.properties")
 public abstract class AbstractMongoDaoTest {
@@ -24,12 +24,12 @@ public abstract class AbstractMongoDaoTest {
     @Autowired
     protected MongoClient mongoClient;
     @Autowired
-    protected DaoProperties daoProperties;
+    protected MongoDaoProperties mongoDaoProperties;
     protected DBCollection collection;
 
     @Before
     public void setUp() {
-        collection = mongoClient.getDB(daoProperties.getDbName()).getCollection(getCollectionName());
+        collection = mongoClient.getDB(mongoDaoProperties.getDbName()).getCollection(getCollectionName());
         collection.remove(new BasicDBObject());
     }
 

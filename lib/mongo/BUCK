@@ -18,6 +18,9 @@ java_library(
         "//core/dao-mongo:test",
         "//core/dao-mongo-test-support:queue-triage-core-dao-mongo-test-support",
         "//core/component-test:queue-triage-core-component-test",
+        "//core/search:queue-triage-core-search-mongo",
+        "//core/search:queue-triage-core-search-mongo-spring",
+        "//core/search:test-mongo",
         "//core/server:queue-triage-core-server",
     ]
 )

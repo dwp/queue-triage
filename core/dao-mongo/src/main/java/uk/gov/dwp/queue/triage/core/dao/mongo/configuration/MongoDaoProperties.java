@@ -10,7 +10,7 @@ import static java.util.Optional.ofNullable;
 
 @Component
 @ConfigurationProperties(prefix = "dao.mongo")
-public class DaoProperties {
+public class MongoDaoProperties {
 
     private Optional<String> host = Optional.empty();
     private Optional<Integer> port = Optional.empty();

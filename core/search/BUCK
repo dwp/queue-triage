@@ -1,0 +1,64 @@
+java_library(
+    name = "queue-triage-core-search",
+    srcs = glob(["src/main/java/**/search/*.java"]),
+    deps =[
+        "//common/id:queue-triage-common-id",
+        '//core/client:queue-triage-core-client',
+    ],
+    visibility = [
+        "//core/server:queue-triage-core-server",
+        "//core/server:test",
+    ]
+)
+
+java_library(
+    name = "queue-triage-core-search-mongo",
+    srcs = glob(["src/main/java/**/mongo/*.java"]),
+    deps =[
+        "//common/id:queue-triage-common-id",
+        "//core/search:queue-triage-core-search",
+        '//core/client:queue-triage-core-client',
+        '//core/dao:queue-triage-core-dao',
+        '//core/dao-mongo:queue-triage-core-dao-mongo',
+        '//core/domain:queue-triage-core-domain',
+        '//core/jackson:queue-triage-core-jackson',
+        '//lib/jackson:jackson-databind',
+        '//lib/mongo:mongodb-driver',
+    ],
+    visibility = [
+        "//core/server:queue-triage-core-server",
+    ]
+)
+
+java_library(
+    name = "queue-triage-core-search-mongo-spring",
+    srcs = glob(["src/main/java/**/mongo/spring/*.java"]),
+    deps =[
+        "//core/search:queue-triage-core-search",
+        "//core/search:queue-triage-core-search-mongo",
+        '//core/dao-mongo:queue-triage-core-dao-mongo',
+        '//lib/mongo:mongodb-driver',
+        '//lib/spring:spring-boot',
+        '//lib/spring:spring-context',
+    ],
+    visibility = [
+        "//core/server:queue-triage-core-server",
+    ]
+)
+
+java_test(
+    name = "test-mongo",
+    srcs = glob(["src/test/java/**/mongo/*.java"]),
+    deps = [
+        "//common/id:queue-triage-common-id",
+        "//core/client:queue-triage-core-client",
+        "//core/dao:queue-triage-core-dao",
+        "//core/dao-mongo:queue-triage-core-dao-mongo",
+        "//core/dao-mongo-test-support:queue-triage-core-dao-mongo-test-support",
+        "//core/domain:queue-triage-core-domain",
+        "//core/search:queue-triage-core-search",
+        "//core/search:queue-triage-core-search-mongo",
+        "//lib/mongo:mongodb-driver",
+        "//lib/test:common",
+    ],
+)
