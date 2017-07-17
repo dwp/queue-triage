@@ -12,6 +12,7 @@ prebuilt_jar(
         "//core/activemq:queue-triage-core-activemq",
         "//core/component-test:queue-triage-core-component-test",
         "//core/dao-mongo:queue-triage-core-dao-mongo",
+        "//core/search:queue-triage-core-search-mongo-spring",
     ]
 )
 prebuilt_jar(name="spring-boot-autoconfigure", binary_jar = ":spring-boot-autoconfigure-mvn", visibility=["PUBLIC"])
@@ -24,6 +25,7 @@ prebuilt_jar(
     visibility=[
         "//core/activemq:queue-triage-core-activemq",
         "//core/activemq:test",
+        "//core/search:queue-triage-core-search-mongo-spring",
     ],
 )
 prebuilt_jar(name='spring-expression', binary_jar=':spring-expression-mvn')

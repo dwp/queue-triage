@@ -8,6 +8,7 @@ java_library(
     deps = [
         '//core/dao-mongo:queue-triage-core-dao-mongo',
         '//lib/mongo:mongodb-driver',
+        '//lib/slf4j:slf4j-api',
         '//lib/spring:spring-beans',
         '//lib/spring:spring-boot-autoconfigure',
         '//lib/spring:spring-boot-test',
@@ -19,5 +20,6 @@ java_library(
     visibility = [
         '//core/component-test:queue-triage-core-component-test',
         '//core/dao-mongo:test',
+        '//core/search:test-mongo',
     ]
 )

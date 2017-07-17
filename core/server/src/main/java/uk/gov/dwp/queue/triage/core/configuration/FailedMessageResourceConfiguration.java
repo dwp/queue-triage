@@ -6,15 +6,16 @@ import org.springframework.context.annotation.Import;
 import uk.gov.dwp.migration.mongo.demo.cxf.client.CxfConfiguration;
 import uk.gov.dwp.migration.mongo.demo.cxf.client.ResourceRegistry;
 import uk.gov.dwp.queue.triage.core.dao.FailedMessageDao;
-import uk.gov.dwp.queue.triage.core.dao.mongo.configuration.DaoConfig;
+import uk.gov.dwp.queue.triage.core.dao.mongo.configuration.MongoDaoConfig;
 import uk.gov.dwp.queue.triage.core.resource.create.CreateFailedMessageResource;
 import uk.gov.dwp.queue.triage.core.resource.create.FailedMessageFactory;
 import uk.gov.dwp.queue.triage.core.resource.search.FailedMessageResponseFactory;
 import uk.gov.dwp.queue.triage.core.resource.search.FailedMessageSearchResource;
+import uk.gov.dwp.queue.triage.core.search.FailedMessageSearchService;
 
 @Configuration
 @Import({
-        DaoConfig.class,
+        MongoDaoConfig.class,
         CxfConfiguration.class,
 })
 public class FailedMessageResourceConfiguration {
@@ -25,7 +26,9 @@ public class FailedMessageResourceConfiguration {
     }
 
     @Bean
-    public FailedMessageSearchResource searchFailedMessageResource(ResourceRegistry resourceRegistry, FailedMessageDao failedMessageDao) {
-        return resourceRegistry.add(new FailedMessageSearchResource(failedMessageDao,  new FailedMessageResponseFactory()));
+    public FailedMessageSearchResource searchFailedMessageResource(ResourceRegistry resourceRegistry,
+                                                                   FailedMessageDao failedMessageDao,
+                                                                   FailedMessageSearchService failedMessageSearchService) {
+        return resourceRegistry.add(new FailedMessageSearchResource(failedMessageDao,  new FailedMessageResponseFactory(), failedMessageSearchService));
     }
 }

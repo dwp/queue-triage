@@ -9,7 +9,7 @@ prebuilt_jar(name='hamcrest-core', binary_jar=':hamcrest-core-mvn', visibility=[
 prebuilt_jar(name='hamcrest-library', binary_jar=':hamcrest-library-mvn', visibility=["PUBLIC"])
 prebuilt_jar(name='hamcrest-optional', binary_jar=':hamcrest-optional-mvn', visibility=["PUBLIC"])
 prebuilt_jar(name='jansi', binary_jar=':jansi-mvn')
-prebuilt_jar(name='jgiven-core', binary_jar=':jgiven-core-mvn')
+prebuilt_jar(name='jgiven-core', binary_jar=':jgiven-core-mvn', visibility=["PUBLIC"])
 prebuilt_jar(name='jgiven-junit', binary_jar=':jgiven-junit-mvn')
 prebuilt_jar(name='jgiven-html5-report', binary_jar=':jgiven-html5-report-mvn')
 prebuilt_jar(name='jgiven-spring', binary_jar=':jgiven-spring-mvn', visibility=["PUBLIC"])

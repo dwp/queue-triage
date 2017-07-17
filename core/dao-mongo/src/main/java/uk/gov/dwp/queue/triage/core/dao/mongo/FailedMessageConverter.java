@@ -15,11 +15,11 @@ import static uk.gov.dwp.queue.triage.id.FailedMessageId.fromString;
 
 public class FailedMessageConverter implements DBObjectWithIdConverter<FailedMessage, FailedMessageId> {
 
-    static final String DESTINATION = "destination";
-    static final String SENT_DATE_TIME = "sentDateTime";
-    static final String FAILED_DATE_TIME = "failedDateTime";
-    static final String CONTENT = "content";
-    static final String PROPERTIES = "properties";
+    public static final String DESTINATION = "destination";
+    public static final String SENT_DATE_TIME = "sentDateTime";
+    public static final String FAILED_DATE_TIME = "failedDateTime";
+    public static final String CONTENT = "content";
+    public static final String PROPERTIES = "properties";
 
     private final ObjectConverter<Destination, DBObject> destinationDBObjectMapper;
     private final ObjectConverter<Map<String, Object>, String> propertiesMongoMapper;
@@ -37,13 +37,33 @@ public class FailedMessageConverter implements DBObjectWithIdConverter<FailedMes
         }
         BasicDBObject basicDBObject = (BasicDBObject)dbObject;
         return newFailedMessage()
-                .withFailedMessageId(fromString(basicDBObject.getString("_id")))
-                .withDestination(destinationDBObjectMapper.convertToObject((DBObject) basicDBObject.get(DESTINATION)))
-                .withSentDateTime((Instant)basicDBObject.get(SENT_DATE_TIME))
-                .withFailedDateTime((Instant)basicDBObject.get(FAILED_DATE_TIME))
-                .withContent(basicDBObject.getString(CONTENT))
+                .withFailedMessageId(getFailedMessageId(basicDBObject))
+                .withDestination(getDestination(basicDBObject))
+                .withSentDateTime(getSentDateTime(basicDBObject))
+                .withFailedDateTime(getFailedDateTime(basicDBObject))
+                .withContent(getContent(basicDBObject))
                 .withProperties(propertiesMongoMapper.convertToObject(basicDBObject.getString(PROPERTIES)))
                 .build();
+    }
+
+    public FailedMessageId getFailedMessageId(BasicDBObject basicDBObject) {
+        return fromString(basicDBObject.getString("_id"));
+    }
+
+    public Destination getDestination(BasicDBObject basicDBObject) {
+        return destinationDBObjectMapper.convertToObject((DBObject) basicDBObject.get(DESTINATION));
+    }
+
+    public String getContent(BasicDBObject basicDBObject) {
+        return basicDBObject.getString(CONTENT);
+    }
+
+    public Instant getFailedDateTime(BasicDBObject basicDBObject) {
+        return (Instant) basicDBObject.get(FAILED_DATE_TIME);
+    }
+
+    public Instant getSentDateTime(BasicDBObject basicDBObject) {
+        return (Instant) basicDBObject.get(SENT_DATE_TIME);
     }
 
     @Override

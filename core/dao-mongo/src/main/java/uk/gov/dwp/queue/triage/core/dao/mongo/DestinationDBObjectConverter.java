@@ -8,8 +8,8 @@ import java.util.Optional;
 
 public class DestinationDBObjectConverter implements DBObjectConverter<Destination> {
 
-    static final String BROKER_NAME = "brokerName";
-    static final String NAME = "name";
+    public static final String BROKER_NAME = "brokerName";
+    public static final String NAME = "name";
 
     @Override
     public Destination convertToObject(DBObject dbObject) {

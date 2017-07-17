@@ -15,7 +15,7 @@ import javax.jms.MessageListener;
 @Configuration
 public class TestAppJmsConfiguration {
 
-    @Bean
+    @Bean(destroyMethod = "shutdown")
     public DefaultMessageListenerContainer dummyAppMessageListenerContainer(JmsListenerProperties jmsListenerProperties) {
         ConnectionFactory connectionFactory = createConnectionFactory(jmsListenerProperties, "internal-broker");
         DefaultMessageListenerContainer defaultMessageListenerContainer = new DefaultMessageListenerContainer();

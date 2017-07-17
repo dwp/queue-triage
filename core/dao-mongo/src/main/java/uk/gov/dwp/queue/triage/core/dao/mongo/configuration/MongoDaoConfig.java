@@ -30,8 +30,8 @@ import static java.time.ZoneOffset.UTC;
 
 @Configuration
 @Import(JacksonConfiguration.class)
-@EnableConfigurationProperties(DaoProperties.class)
-public class DaoConfig {
+@EnableConfigurationProperties(MongoDaoProperties.class)
+public class MongoDaoConfig {
 
     static {
         TimeZone.setDefault(TimeZone.getTimeZone(UTC));
@@ -44,16 +44,16 @@ public class DaoConfig {
     }
 
     @Bean
-    @DependsOn("daoProperties")
-    public MongoClient mongoClient(DaoProperties daoProperties) {
-        return new MongoClient(daoProperties.getHost(), daoProperties.getPort());
+    @DependsOn("mongoDaoProperties")
+    public MongoClient mongoClient(MongoDaoProperties mongoDaoProperties) {
+        return new MongoClient(mongoDaoProperties.getHost(), mongoDaoProperties.getPort());
     }
 
     @Bean
-    @DependsOn("daoProperties")
-    public FailedMessageDao failedMessageDao(MongoClient mongoClient, DaoProperties daoProperties, FailedMessageConverter failedMessageConverter) {
+    @DependsOn("mongoDaoProperties")
+    public FailedMessageDao failedMessageDao(MongoClient mongoClient, MongoDaoProperties mongoDaoProperties, FailedMessageConverter failedMessageConverter) {
         return new FailedMessageMongoDao(
-                mongoClient.getDB(daoProperties.getDbName()).getCollection(daoProperties.getFailedMessage().getName()),
+                mongoClient.getDB(mongoDaoProperties.getDbName()).getCollection(mongoDaoProperties.getFailedMessage().getName()),
                 failedMessageConverter
         );
     }
