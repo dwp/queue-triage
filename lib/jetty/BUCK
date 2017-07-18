@@ -39,7 +39,6 @@ remote_file(name='websocket-servlet-mvn', out='websocket-servlet-9.4.4.v20170414
 java_library(
     name = "jetty-server",
     exported_deps = [
-        ":jetty-server-jar",
         ":javax-websocket-api",
         ":javax-websocket-client-impl",
         ":javax-websocket-server-impl",
@@ -48,6 +47,7 @@ java_library(
         ":jetty-http",
         ":jetty-io",
         ":jetty-security",
+        ":jetty-server-jar",
         ":jetty-servlet",
         ":jetty-servlets",
         ":jetty-util",
@@ -61,6 +61,6 @@ java_library(
     ],
     visibility = [
         "//core/server:queue-triage-core-server",
+        "//web/server:queue-triage-web-server",
     ],
-
 )

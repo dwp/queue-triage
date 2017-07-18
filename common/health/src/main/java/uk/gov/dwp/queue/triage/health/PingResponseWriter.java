@@ -1,4 +1,4 @@
-package uk.gov.dwp.queue.triage.core.health;
+package uk.gov.dwp.queue.triage.health;
 
 import java.io.PrintWriter;
 

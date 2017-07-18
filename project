@@ -13,3 +13,4 @@ sed --in-place 's#"file://$MODULE_DIR$/src" isTestSource="false"#"file://$MODULE
 sed --in-place 's#"file://$MODULE_DIR$/src" isTestSource="false"#"file://$MODULE_DIR$/src/main/resources" type="java-resource"#' core/dao-mongo-test-support/core_dao_mongo_test_support.iml
 sed --in-place 's#"file://$MODULE_DIR$/src" isTestSource="false"#"file://$MODULE_DIR$/src/main/resources" type="java-resource"#' core/component-test/core_component_test.iml
 sed --in-place 's#/src/test" isTestSource="true"#/src/test/java" isTestSource="true"#' core/jms/core_jms.iml
+sed --in-place 's#"file://$MODULE_DIR$/src" isTestSource="false"#"file://$MODULE_DIR$/src/main/resources" type="java-resource"#' web/server/web_server.iml
