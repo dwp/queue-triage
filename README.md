@@ -2,7 +2,7 @@
 
 An application to manage dead lettered messages across multiple brokers
 
-## Building
+## Building [![Build Status](https://travis-ci.org/dwpdigitaltech/queue-triage.svg?branch=master)](https://travis-ci.org/dwpdigitaltech/queue-triage)
 queue-triage uses [Buck](https://buckbuild.com/) as a build tool.  Please refer to the [Getting Started Guide]() for installation and usage of Buck.
 
 To configure the project for IntelliJ run:
