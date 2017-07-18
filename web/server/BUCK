@@ -1,0 +1,20 @@
+java_library(
+    name = "queue-triage-web-server",
+    srcs = glob(["src/main/java/**/*.java"]),
+    resources = [
+        "src/main/resources/application.yml"
+    ],
+    deps = [
+        "//lib/spring:spring-boot-autoconfigure",
+        "//lib/spring:spring-boot-with-dependencies",
+        "//lib/spring:spring-web",
+        '//common/health:queue-triage-health',
+        '//core/client:queue-triage-core-client',
+        '//lib:snakeyaml',
+        '//lib/javax:javax-servlet-api',
+        '//lib/jetty:jetty-server',
+    ],
+    visibility = [
+        "//web/component-test:test",
+    ]
+)

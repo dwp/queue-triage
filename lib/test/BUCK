@@ -60,6 +60,7 @@ java_library(
         ':paranamer',
         '//lib:gson',
         '//lib:guava',
+        '//lib/slf4j:slf4j-api',
     ],
     visibility = [
         "PUBLIC",

@@ -1,4 +1,4 @@
-package uk.gov.dwp.queue.triage.core.configuration;
+package uk.gov.dwp.queue.triage.web.server.configuration;
 
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.context.annotation.Bean;

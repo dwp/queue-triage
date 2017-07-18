@@ -2,7 +2,8 @@
   core-component = //core/component-test:test
   core-server = //core/server:queue-triage-core-server
   start-core = //core/server:start
-  web  = //web:queue-triage-web
+  web-component  = //web/component-test:test
+  web-server  = //web/server:queue-triage-web-server
 
 [download]
   in_build = True

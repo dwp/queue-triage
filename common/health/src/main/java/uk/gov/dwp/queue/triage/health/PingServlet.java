@@ -1,4 +1,4 @@
-package uk.gov.dwp.queue.triage.core.health;
+package uk.gov.dwp.queue.triage.health;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;

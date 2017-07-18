@@ -3,6 +3,7 @@
 buck-out/
 classes/
 jgiven-reports/
+activemq-data/
 
 # Files
 *.iml
