@@ -21,6 +21,9 @@ script:
   - buck fetch //...
   - buck test //...
 
+after_script:
+  - echo "Finished"
+
 services:
   - mongodb
 
