@@ -8,6 +8,9 @@ addons:
     - python2.7
     - git
 
+notifications:
+    slack: dwp-queue-triage:tZldFanXMyzLxAlLjMZQeWY1
+    
 before_script:
   # Install Buck
   - pushd $HOME
