@@ -17,11 +17,11 @@ java_library(
     deps =[
         "//common/id:queue-triage-common-id",
         "//core/search:queue-triage-core-search",
-        '//common/jackson:queue-triage-common-jackson',
         '//core/client:queue-triage-core-client',
         '//core/dao:queue-triage-core-dao',
         '//core/dao-mongo:queue-triage-core-dao-mongo',
         '//core/domain:queue-triage-core-domain',
+        '//core/jackson:queue-triage-core-jackson',
         '//lib/jackson:jackson-databind',
         '//lib/mongo:mongodb-driver',
     ],
