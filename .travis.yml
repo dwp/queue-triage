@@ -9,8 +9,9 @@ addons:
     - git
 
 notifications:
-    slack: dwp-queue-triage:tZldFanXMyzLxAlLjMZQeWY1
-    
+  rooms:
+    secure: ohN6+k44mRc/zGQrZwAwkllwfExA9sPKeoSkZ4F0CxFBkpLW4dDingsAtkchs/x0KsBd11yVe1X/iySE0U9UbyNDjEYBHrAtV1FogPwU/OPnlLfg4QNTGgfU3jDGMAp6jKVEg4hYsjsnzNvj3rF+VA4vJh7MxFwH0ZdVX4t1F3eO0CENJyrNTjNV6H5RpmTNhYg3bs7tQHRLeA9NynfX/YH3eixAVItD3efJQWeJdaBwhl4GMd8/jQViZ8SrrAEB9QyIkCDvjEeP2dG8RtOVXCKE20zFAYuxtLG45GbpChkkPXN/Wo1l+SztrNd8XpIVBQQfawMwUgOIA2M3+7iw2weRl8YLceMK2J/rb1nQsJdbYtBB/hEusrCqLJz3XeX0hVMjufodJsvzV5l1hy32ApGh66qhtwGjCvXBnW5jFW1hrr1/f/ztVlaKy+fIo2W60yod4wMQ1uKvaS6oHQoKakYzhB+b6DJg/eNN6kvkQ7AjohW/jH9dHbXIXY9u6QGs63bHHqsr2CB8kiDUqkEcSeflWQJflM0+ncpvfEDBM39DT2ldi6g7Qs/dMr/bQ/AwDLUmPI/7goRlY4efRdw1/agHyTQcNVHS/FrqfUYumCTB0+cLdKwB1/qXBELaKfRXnfOCtQkdUmTu7SBaS1dAVbatfbmH8ayHDCC7JQ0rbdA
+
 before_script:
   # Install Buck
   - pushd $HOME
