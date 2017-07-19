@@ -1,4 +1,4 @@
-package uk.gov.dwp.queue.triage.core.jackson;
+package uk.gov.dwp.queue.triage.jackson;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
