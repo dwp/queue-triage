@@ -2,7 +2,7 @@ package uk.gov.dwp.queue.triage.core.dao;
 
 import org.junit.Test;
 import uk.gov.dwp.queue.triage.core.dao.util.HashMapBuilder;
-import uk.gov.dwp.queue.triage.core.jackson.configuration.JacksonConfiguration;
+import uk.gov.dwp.queue.triage.jackson.configuration.JacksonConfiguration;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -15,7 +15,9 @@ import java.util.UUID;
 import static java.time.ZoneOffset.UTC;
 import static java.time.temporal.ChronoField.MILLI_OF_SECOND;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.allOf;
+import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.Matchers.equalTo;
 import static org.valid4j.matchers.jsonpath.JsonPathMatchers.hasJsonPath;
 import static uk.gov.dwp.queue.triage.core.dao.util.HashMapBuilder.newHashMap;
 

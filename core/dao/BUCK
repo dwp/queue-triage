@@ -23,8 +23,8 @@ java_test(
     name = 'test',
     srcs = glob(['src/test/java/**/*.java']),
     deps = [
+        '//common/jackson:queue-triage-common-jackson-spring',
         '//core/dao:queue-triage-core-dao',
-        '//core/jackson:queue-triage-core-jackson',
         '//lib:json-path-matchers-incl-deps',
         '//lib/jackson:jackson-core',
         '//lib/jackson:jackson-databind',

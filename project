@@ -9,6 +9,7 @@ buck project //...
 # With:
 #   <sourceFolder url="file://$MODULE_DIR$/src/main/resources" type="java-resource" />
 sed --in-place 's#"file://$MODULE_DIR$/src" isTestSource="false"#"file://$MODULE_DIR$/src/test/resources" type="java-test-resource"#' core/activemq/core_activemq.iml
+sed --in-place 's#"file://$MODULE_DIR$/src" isTestSource="false"#"file://$MODULE_DIR$/src/test/resources" type="java-test-resource"#' web/mustache/web_mustache.iml
 sed --in-place 's#"file://$MODULE_DIR$/src" isTestSource="false"#"file://$MODULE_DIR$/src/main/resources" type="java-resource"#' core/server/core_server.iml
 sed --in-place 's#"file://$MODULE_DIR$/src" isTestSource="false"#"file://$MODULE_DIR$/src/main/resources" type="java-resource"#' core/dao-mongo-test-support/core_dao_mongo_test_support.iml
 sed --in-place 's#"file://$MODULE_DIR$/src" isTestSource="false"#"file://$MODULE_DIR$/src/main/resources" type="java-resource"#' core/component-test/core_component_test.iml

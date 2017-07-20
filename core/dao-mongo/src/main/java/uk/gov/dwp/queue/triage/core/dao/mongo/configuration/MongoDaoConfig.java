@@ -17,8 +17,8 @@ import uk.gov.dwp.queue.triage.core.dao.mongo.DestinationDBObjectConverter;
 import uk.gov.dwp.queue.triage.core.dao.mongo.FailedMessageConverter;
 import uk.gov.dwp.queue.triage.core.dao.mongo.FailedMessageMongoDao;
 import uk.gov.dwp.queue.triage.core.domain.Destination;
-import uk.gov.dwp.queue.triage.core.jackson.configuration.JacksonConfiguration;
 import uk.gov.dwp.queue.triage.id.Id;
+import uk.gov.dwp.queue.triage.jackson.configuration.JacksonConfiguration;
 
 import java.time.Instant;
 import java.time.LocalDateTime;

@@ -1,4 +1,4 @@
-package uk.gov.dwp.queue.triage.core.jackson;
+package uk.gov.dwp.queue.triage.jackson;
 
 import com.fasterxml.jackson.databind.util.ISO8601DateFormat;
 import com.fasterxml.jackson.databind.util.ISO8601Utils;

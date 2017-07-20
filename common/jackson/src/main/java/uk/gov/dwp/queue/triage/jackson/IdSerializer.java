@@ -1,4 +1,4 @@
-package uk.gov.dwp.queue.triage.core.jackson;
+package uk.gov.dwp.queue.triage.jackson;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;

@@ -1,0 +1,26 @@
+java_library(
+    name = "queue-triage-common-jackson",
+    srcs = glob(["src/main/java/**/*.java"], excludes = ["src/main/java/**/configuration/*.java"]),
+    exported_deps =[
+        "//common/cxf:queue-triage-cxf-client",
+        "//common/id:queue-triage-common-id",
+        "//lib/javax:javax-ws-rs-api",
+        '//lib/jackson:jackson-datatype-jdk8',
+        '//lib/jackson:jackson-jaxrs-json-provider',
+    ],
+    visibility = [
+        "PUBLIC",
+    ]
+)
+
+java_library(
+    name = "queue-triage-common-jackson-spring",
+    srcs = glob(["src/main/java/**/configuration/*.java"]),
+    exported_deps = [
+        "//common/jackson:queue-triage-common-jackson",
+        "//lib/spring:spring-context",
+    ],
+    visibility = [
+        "PUBLIC",
+    ]
+)
