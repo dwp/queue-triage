@@ -1,0 +1,54 @@
+dn: dc=dwp,dc=gov,dc=uk
+objectClass: top
+objectClass: domain
+objectClass: extensibleObject
+dc: dwp
+
+dn: ou=Users,dc=dwp,dc=gov,dc=uk
+objectClass: organizationalUnit
+objectClass: top
+description: Contains entries which describe users of the system
+ou: Users
+
+dn: ou=Groups,dc=dwp,dc=gov,dc=uk
+objectClass: organizationalUnit
+objectClass: top
+description: Contains entries which describe groups with the system (admins, for example)
+ou: Groups
+
+dn: uid=postmanpat,ou=Users,dc=dwp,dc=gov,dc=uk
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+objectClass: top
+cn: Postman Pat
+givenName: Postman
+sn: Pat
+uid: postmanpat
+userPassword: jess
+
+dn: uid=bobbuilder,ou=Users,dc=dwp,dc=gov,dc=uk
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+objectClass: top
+cn: Bob Builder
+givenName: Bob
+sn: Builder
+uid: bobbuilder
+userPassword: fixit
+
+dn: cn=developers,ou=Groups,dc=dwp,dc=gov,dc=uk
+objectClass: top
+objectClass: groupOfUniqueNames
+cn: developers
+ou: developer
+uniqueMember: uid=bobbuilder,ou=people,dc=dwp,dc=gov,dc=uk
+uniqueMember: uid=postmanpat,ou=people,dc=dwp,dc=gov,dc=uk
+
+dn: cn=administrators,ou=Groups,dc=dwp,dc=gov,dc=uk
+objectClass: top
+objectClass: groupOfUniqueNames
+cn: administrators
+ou: administrator
+uniqueMember: uid=bobbuilder,ou=people,dc=dwp,dc=gov,dc=uk
