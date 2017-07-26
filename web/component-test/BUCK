@@ -2,6 +2,10 @@ java_library(
     name = "queue-triage-web-component-test",
     srcs = glob(['src/main/java/**/*.java']),
     deps = [
+        '//common/jgiven:jgiven',
+        '//common/ldap-test-support:queue-traige-ldap-test-support',
+        '//lib/selenide:selenide',
+        '//lib/selenium:selenium-api',
         '//lib/spring:spring-boot-test',
         '//lib/spring:spring-boot-with-dependencies',
         '//lib/spring:spring-web',
@@ -19,6 +23,10 @@ java_test(
     name = "test",
     srcs = glob(['src/test/java/**/*Test.java']),
     deps = [
+        '//lib/selenide:selenide',
+        '//lib/selenide:selenide-dependencies',
+        '//lib/selenium/htmlunit-driver:htmlunit-driver-with-dependencies',
+#         '//lib/selenium/firefox-driver:selenium-firefox-driver-with-dependencies',
         '//lib/spring:spring-beans',
         '//lib/spring:spring-boot-test',
         '//lib/spring:spring-test',
@@ -27,5 +35,10 @@ java_test(
         '//lib/test:jgiven-spring',
         '//web/component-test:queue-triage-web-component-test',
         '//web/server:queue-triage-web-server',
+    ],
+    vm_args = [
+        "-Dbrowser=htmlunit",
+#         "-Dbrowser=marionette",
+#         "-Dwebdriver.gecko.driver=/opt/geckodriver/current/geckodriver"
     ]
 )

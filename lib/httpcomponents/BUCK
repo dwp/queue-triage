@@ -1,0 +1,41 @@
+prebuilt_jar(
+    name = "httpcore",
+    binary_jar = ":httpcore-mvn",
+    visibility = [
+        "PUBLIC",
+    ]
+)
+remote_file(
+    name = "httpcore-mvn",
+    out  = "httpcore-4.4.6.jar",
+    url  = "mvn:org.apache.httpcomponents:httpcore:jar:4.4.6",
+    sha1 = "e3fd8ced1f52c7574af952e2e6da0df8df08eb82",
+)
+
+prebuilt_jar(
+    name = "httpclient",
+    binary_jar = ":httpclient-mvn",
+    visibility = [
+        "PUBLIC",
+    ]
+)
+remote_file(
+    name = "httpclient-mvn",
+    out  = "httpclient-4.5.3.jar",
+    url  = "mvn:org.apache.httpcomponents:httpclient:jar:4.5.3",
+    sha1 = "d1577ae15f01ef5438c5afc62162457c00a34713",
+)
+
+prebuilt_jar(
+    name = "httpmime",
+    binary_jar = ":httpmime-mvn",
+    visibility = [
+        "PUBLIC"
+    ],
+)
+remote_file(
+    name = "httpmime-mvn",
+    out  = "httpmime-4.5.3.jar",
+    url  = "mvn:org.apache.httpcomponents:httpmime:jar:4.5.3",
+    sha1 = "889fd6d061bb63b99dd5c6aba35a555ae863de52",
+)

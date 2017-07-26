@@ -8,6 +8,7 @@ buck project //...
 #   <sourceFolder url="file://$MODULE_DIR$/src" isTestSource="false" />
 # With:
 #   <sourceFolder url="file://$MODULE_DIR$/src/main/resources" type="java-resource" />
+sed --in-place 's#"file://$MODULE_DIR$/src" isTestSource="false"#"file://$MODULE_DIR$/src/main/resources" type="java-resource"#' common/ldap-test-support/common_ldap_test_support.iml
 sed --in-place 's#"file://$MODULE_DIR$/src" isTestSource="false"#"file://$MODULE_DIR$/src/test/resources" type="java-test-resource"#' core/activemq/core_activemq.iml
 sed --in-place 's#"file://$MODULE_DIR$/src" isTestSource="false"#"file://$MODULE_DIR$/src/test/resources" type="java-test-resource"#' web/mustache/web_mustache.iml
 sed --in-place 's#"file://$MODULE_DIR$/src" isTestSource="false"#"file://$MODULE_DIR$/src/main/resources" type="java-resource"#' core/server/core_server.iml

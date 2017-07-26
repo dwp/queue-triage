@@ -4,6 +4,7 @@ import com.tngtech.jgiven.integration.spring.EnableJGiven;
 import com.tngtech.jgiven.integration.spring.SimpleSpringRuleScenarioTest;
 import org.junit.Test;
 import org.springframework.boot.test.context.SpringBootTest;
+import uk.gov.dwp.queue.triage.web.component.ComponentTestContext;
 import uk.gov.dwp.queue.triage.web.server.QueueTriageWebApplication;
 
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
@@ -13,7 +14,7 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
         webEnvironment = RANDOM_PORT,
         classes = {
                 QueueTriageWebApplication.class,
-                PingTestContext.class
+                ComponentTestContext.class
         })
 public class PingComponentTest extends SimpleSpringRuleScenarioTest<PingStage> {
 
