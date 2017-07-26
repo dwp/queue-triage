@@ -1,0 +1,32 @@
+prebuilt_jar(
+    name = "selenide",
+    binary_jar = ":selenide-mvn",
+    visibility = [
+        "//web/component-test:queue-triage-web-component-test",
+        "//web/component-test:test",
+    ]
+)
+remote_file(
+    name = "selenide-mvn",
+    out = "selenide-4.5.1.jar",
+    url = "mvn:com.codeborne:selenide:jar:4.5.1",
+    sha1 = "c99b650f98572adbc331fda2cb5b7b77a0a52608"
+)
+
+
+java_library(
+    name = "selenide-dependencies",
+    exported_deps = [
+        "//lib:commons-codec",
+        "//lib/httpcomponents:httpcore",
+        "//lib/selenium:selenium-api",
+        "//lib/selenium:selenium-java",
+        "//lib/selenium:selenium-remote-driver",
+        "//lib/selenium:selenium-support",
+    ],
+    visibility = [
+        "//web/component-test:queue-triage-web-component-test",
+        "//web/component-test:test",
+    ],
+)
+

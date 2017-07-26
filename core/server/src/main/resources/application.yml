@@ -1,6 +1,9 @@
 server:
   port: 9991
 
+cxf:
+  contextPath: /core
+
 dao:
   mongo:
     host: localhost

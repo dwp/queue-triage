@@ -35,7 +35,6 @@ remote_file(name='paranamer-mvn', out='paranamer-2.8.jar', url='mvn:com.thoughtw
 
 java_library(
     name = 'common',
-    deps = [],
     exported_deps = [
         ':byte-buddy',
         ':hamcrest-core',
@@ -51,7 +50,6 @@ java_library(
 
 java_library(
     name = 'jgiven',
-    deps = [],
     exported_deps = [
         ':jansi',
         ':jgiven-core',

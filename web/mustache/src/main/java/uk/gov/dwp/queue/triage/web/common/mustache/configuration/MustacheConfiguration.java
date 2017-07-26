@@ -4,9 +4,14 @@ import com.github.mustachejava.DefaultMustacheFactory;
 import com.github.mustachejava.MustacheFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
+import uk.gov.dwp.migration.mongo.demo.cxf.client.CxfConfiguration;
+import uk.gov.dwp.migration.mongo.demo.cxf.client.ProviderRegistry;
 import uk.gov.dwp.queue.triage.web.common.mustache.MustachePageRenderer;
+import uk.gov.dwp.queue.triage.web.common.mustache.PageMessageBodyWriter;
 
 @Configuration
+@Import(CxfConfiguration.class)
 public class MustacheConfiguration {
 
     @Bean
@@ -17,5 +22,11 @@ public class MustacheConfiguration {
     @Bean
     public MustachePageRenderer mustacheRender() {
         return new MustachePageRenderer(mustacheFactory());
+    }
+
+    @Bean
+    public PageMessageBodyWriter pageMessageBodyWriter(ProviderRegistry providerRegistry) {
+        return providerRegistry
+                .add(new PageMessageBodyWriter(mustacheRender()));
     }
 }

@@ -2,19 +2,60 @@ java_library(
     name = "queue-triage-web-server",
     srcs = glob(["src/main/java/**/*.java"]),
     resources = [
-        "src/main/resources/application.yml"
+        "src/main/resources/application.yml",
+        "src/main/resources/logback.xml",
+        "src/main/resources/mustache/home.mustache",
+        "src/main/resources/mustache/login.mustache",
+        "src/main/resources/static/css/queue-triage.css",
     ],
+    resources_root = "src/main/resources",
     deps = [
+        "//common/jackson:queue-triage-common-jackson-spring",
         "//lib/spring:spring-boot-autoconfigure",
         "//lib/spring:spring-boot-with-dependencies",
         "//lib/spring:spring-web",
+        "//web/mustache:queue-triage-web-mustache-spring",
+        "//web/spring-security:queue-triage-web-spring-security",
+        "//web/spring-security:queue-triage-web-spring-security-ldap",
+        '//common/cxf:queue-triage-cxf',
         '//common/health:queue-triage-health',
         '//core/client:queue-triage-core-client',
         '//lib:snakeyaml',
         '//lib/javax:javax-servlet-api',
         '//lib/jetty:jetty-server',
+        '//lib/logback:logback-classic',
+        '//lib/logback:logback-core',
+        '//lib/slf4j:jcl-over-slf4j',
+        '//lib/slf4j:jul-to-slf4j',
+        '//lib/slf4j:log4j-over-slf4j',
     ],
     visibility = [
         "//web/component-test:test",
     ]
+)
+
+java_test(
+    name = "test",
+    srcs = glob(["src/test/java/**/*.java"]),
+    deps = [
+        ":queue-triage-web-server",
+        "//lib/javax:javax-servlet-api",
+        "//lib/spring:spring-security-core",
+        "//lib/spring:spring-security-web",
+        "//lib/test:common",
+        "//web/mustache:queue-triage-web-mustache-spring",
+    ]
+)
+
+cmd=[
+    "echo $(classpath :queue-triage-web-server)",
+    "&&",
+    "java -cp $(classpath :queue-triage-web-server) uk.gov.dwp.queue.triage.web.server.QueueTriageWebApplication > $OUT",
+]
+
+genrule(
+name="start",
+cmd="".join(cmd),
+out="startMicroservice.log",
+executable=True,
 )

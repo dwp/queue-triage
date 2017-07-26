@@ -1,0 +1,13 @@
+prebuilt_jar(
+    name = "unboundid-ldapsdk",
+    binary_jar=":unboundid-ldapsdk-mvn",
+    visibility = [
+        "PUBLIC"
+    ]
+)
+remote_file(
+    name = "unboundid-ldapsdk-mvn",
+    out  = "unboundid-ldapsdk-4.0.0.jar",
+    url  = "mvn:com.unboundid:unboundid-ldapsdk:jar:4.0.0",
+    sha1 = "f3cd04b89542d4409d67b00157543c556bd812bc"
+)

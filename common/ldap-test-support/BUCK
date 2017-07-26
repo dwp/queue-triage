@@ -1,0 +1,15 @@
+java_library(
+    name = "queue-traige-ldap-test-support",
+    srcs = glob(["src/main/java/**/*.java"]),
+    resources = [
+        "src/main/resources/example.ldif"
+    ],
+    resources_root = 'src/main/resources',
+    exported_deps = [
+        "//lib/ldap:unboundid-ldapsdk",
+        "//lib/slf4j:slf4j-api",
+    ],
+    visibility = [
+        "PUBLIC"
+    ],
+)

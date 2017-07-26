@@ -1,9 +1,11 @@
 # Directories
+.buckd/
 .idea/
+activemq-data/
 buck-out/
+build/
 classes/
 jgiven-reports/
-activemq-data/
 
 # Files
 *.iml
