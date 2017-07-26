@@ -19,6 +19,7 @@ public class FailedMessageMatcher extends TypeSafeMatcher<FailedMessage> {
     private Matcher<Instant> sentAtMatcher = new IsAnything<>();
     private Matcher<Instant> failedAtMatcher = new IsAnything<>();
     private Matcher<Map<? extends String, ? extends Object>> propertiesMatcher = new IsAnything<>();
+    private Matcher<FailedMessageStatus> failedMessageStatusMatcher = new IsAnything<>();
 
     private FailedMessageMatcher() { }
 
@@ -66,6 +67,11 @@ public class FailedMessageMatcher extends TypeSafeMatcher<FailedMessage> {
         return this;
     }
 
+    public FailedMessageMatcher withFailedMessageStatus(Matcher<FailedMessageStatus> failedMessageStatusMatcher) {
+        this.failedMessageStatusMatcher = failedMessageStatusMatcher;
+        return this;
+    }
+
     @Override
     protected boolean matchesSafely(FailedMessage item) {
         return failedMessageIdMatcher.matches(item.getFailedMessageId())
@@ -73,7 +79,9 @@ public class FailedMessageMatcher extends TypeSafeMatcher<FailedMessage> {
                 && destinationMatcher.matches(item.getDestination())
                 && sentAtMatcher.matches(item.getSentAt())
                 && failedAtMatcher.matches(item.getFailedAt())
-                && propertiesMatcher.matches(item.getProperties());
+                && propertiesMatcher.matches(item.getProperties())
+                && failedMessageStatusMatcher.matches(item.getFailedMessageStatus())
+                ;
     }
 
     @Override
@@ -85,6 +93,7 @@ public class FailedMessageMatcher extends TypeSafeMatcher<FailedMessage> {
                 .appendText(" sentAt is ").appendDescriptionOf(sentAtMatcher)
                 .appendText(" failedAt is ").appendDescriptionOf(failedAtMatcher)
                 .appendText(" properties are ").appendDescriptionOf(propertiesMatcher)
+                .appendText(" status is ").appendDescriptionOf(failedMessageStatusMatcher)
         ;
     }
 }

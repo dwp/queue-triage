@@ -1,5 +1,6 @@
 package uk.gov.dwp.queue.triage.core.domain;
 
+import uk.gov.dwp.queue.triage.core.domain.FailedMessageStatus.Status;
 import uk.gov.dwp.queue.triage.id.FailedMessageId;
 
 import java.time.Instant;
@@ -14,12 +15,14 @@ public class FailedMessageBuilder {
     private Instant failedDateTime;
     private String content;
     private Map<String, Object> properties = new HashMap<>();
+    private FailedMessageStatus failedMessageStatus;
 
     private FailedMessageBuilder() {
     }
 
     public static FailedMessageBuilder newFailedMessage() {
-        return new FailedMessageBuilder();
+        return new FailedMessageBuilder()
+                .withFailedMessageStatus(Status.FAILED);
     }
 
     public static FailedMessageBuilder clone(FailedMessage failedMessage) {
@@ -29,11 +32,12 @@ public class FailedMessageBuilder {
                 .withSentDateTime(failedMessage.getSentAt())
                 .withFailedDateTime(failedMessage.getFailedAt())
                 .withContent(failedMessage.getContent())
-                .withProperties(failedMessage.getProperties());
+                .withProperties(failedMessage.getProperties())
+                .withFailedMessageStatus(failedMessage.getFailedMessageStatus());
     }
 
     public FailedMessage build() {
-        return new FailedMessage(failedMessageId, destination, sentDateTime, failedDateTime, content, properties);
+        return new FailedMessage(failedMessageId, destination, sentDateTime, failedDateTime, content, properties, failedMessageStatus);
     }
 
     public FailedMessageBuilder withNewFailedMessageId() {
@@ -73,6 +77,16 @@ public class FailedMessageBuilder {
 
     public FailedMessageBuilder withProperty(String key, Object value) {
         this.properties.put(key, value);
+        return this;
+    }
+
+    public FailedMessageBuilder withFailedMessageStatus(Status status) {
+        this.failedMessageStatus = FailedMessageStatus.failedMessageStatus(status);
+        return this;
+    }
+
+    public FailedMessageBuilder withFailedMessageStatus(FailedMessageStatus failedMessageStatus) {
+        this.failedMessageStatus = failedMessageStatus;
         return this;
     }
 }

@@ -5,9 +5,11 @@ import com.mongodb.DBObject;
 import uk.gov.dwp.queue.triage.core.dao.ObjectConverter;
 import uk.gov.dwp.queue.triage.core.domain.Destination;
 import uk.gov.dwp.queue.triage.core.domain.FailedMessage;
+import uk.gov.dwp.queue.triage.core.domain.FailedMessageStatus;
 import uk.gov.dwp.queue.triage.id.FailedMessageId;
 
 import java.time.Instant;
+import java.util.Collections;
 import java.util.Map;
 
 import static uk.gov.dwp.queue.triage.core.domain.FailedMessageBuilder.newFailedMessage;
@@ -20,14 +22,18 @@ public class FailedMessageConverter implements DBObjectWithIdConverter<FailedMes
     public static final String FAILED_DATE_TIME = "failedDateTime";
     public static final String CONTENT = "content";
     public static final String PROPERTIES = "properties";
+    public static final String STATUS_HISTORY = "statusHistory";
 
-    private final ObjectConverter<Destination, DBObject> destinationDBObjectMapper;
+    private final DBObjectConverter<Destination> destinationDBObjectMapper;
+    private final DBObjectConverter<FailedMessageStatus> failedMessageStatusDBObjectMapper;
     private final ObjectConverter<Map<String, Object>, String> propertiesMongoMapper;
 
     public FailedMessageConverter(DBObjectConverter<Destination> destinationDBObjectMapper,
+                                  DBObjectConverter<FailedMessageStatus> failedMessageStatusDBObjectMapper,
                                   ObjectConverter<Map<String, Object>, String> propertiesMongoMapper) {
         this.destinationDBObjectMapper = destinationDBObjectMapper;
         this.propertiesMongoMapper = propertiesMongoMapper;
+        this.failedMessageStatusDBObjectMapper = failedMessageStatusDBObjectMapper;
     }
 
     @Override
@@ -73,7 +79,9 @@ public class FailedMessageConverter implements DBObjectWithIdConverter<FailedMes
                 .append(SENT_DATE_TIME, item.getSentAt())
                 .append(FAILED_DATE_TIME, item.getFailedAt())
                 .append(CONTENT, item.getContent())
-                .append(PROPERTIES, propertiesMongoMapper.convertFromObject(item.getProperties()));
+                .append(PROPERTIES, propertiesMongoMapper.convertFromObject(item.getProperties()))
+                .append(STATUS_HISTORY, Collections.singletonList(failedMessageStatusDBObjectMapper.convertFromObject(item.getFailedMessageStatus())))
+                ;
     }
 
     @Override

@@ -16,7 +16,9 @@ import uk.gov.dwp.queue.triage.core.dao.mongo.DBObjectConverter;
 import uk.gov.dwp.queue.triage.core.dao.mongo.DestinationDBObjectConverter;
 import uk.gov.dwp.queue.triage.core.dao.mongo.FailedMessageConverter;
 import uk.gov.dwp.queue.triage.core.dao.mongo.FailedMessageMongoDao;
+import uk.gov.dwp.queue.triage.core.dao.mongo.FailedMessageStatusDBObjectConverter;
 import uk.gov.dwp.queue.triage.core.domain.Destination;
+import uk.gov.dwp.queue.triage.core.domain.FailedMessageStatus;
 import uk.gov.dwp.queue.triage.id.Id;
 import uk.gov.dwp.queue.triage.jackson.configuration.JacksonConfiguration;
 
@@ -51,16 +53,21 @@ public class MongoDaoConfig {
 
     @Bean
     @DependsOn("mongoDaoProperties")
-    public FailedMessageDao failedMessageDao(MongoClient mongoClient, MongoDaoProperties mongoDaoProperties, FailedMessageConverter failedMessageConverter) {
+    public FailedMessageDao failedMessageDao(MongoClient mongoClient,
+                                             MongoDaoProperties mongoDaoProperties,
+                                             FailedMessageConverter failedMessageConverter,
+                                             DBObjectConverter<FailedMessageStatus> failedMessageStatusDBObjectConverter) {
         return new FailedMessageMongoDao(
                 mongoClient.getDB(mongoDaoProperties.getDbName()).getCollection(mongoDaoProperties.getFailedMessage().getName()),
-                failedMessageConverter
-        );
+                failedMessageConverter,
+                failedMessageStatusDBObjectConverter);
     }
 
     @Bean
-    public FailedMessageConverter failedMessageConverter(DBObjectConverter<Destination> destinationDBObjectConverter, ObjectConverter<Map<String, Object>, String> propertiesObjectConverter) {
-        return new FailedMessageConverter(destinationDBObjectConverter, propertiesObjectConverter);
+    public FailedMessageConverter failedMessageConverter(DBObjectConverter<Destination> destinationDBObjectConverter,
+                                                         DBObjectConverter<FailedMessageStatus> failedMessageStatusDBObjectConverter,
+                                                         ObjectConverter<Map<String, Object>, String> propertiesObjectConverter) {
+        return new FailedMessageConverter(destinationDBObjectConverter, failedMessageStatusDBObjectConverter, propertiesObjectConverter);
     }
 
     @Bean
@@ -71,6 +78,11 @@ public class MongoDaoConfig {
     @Bean
     public DestinationDBObjectConverter destinationDBObjectConverter() {
         return new DestinationDBObjectConverter();
+    }
+
+    @Bean
+    public FailedMessageStatusDBObjectConverter failedMessageStatusDBObjectConverter() {
+        return new FailedMessageStatusDBObjectConverter();
     }
 
     public static class LocalDateTimeTransformer implements Transformer {
