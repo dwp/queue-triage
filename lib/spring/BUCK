@@ -24,6 +24,7 @@ prebuilt_jar(
     binary_jar=":spring-core-mvn",
     source_jar=":spring-core-src",
     visibility=[
+        "//common/cxf:queue-triage-cxf",
         "//core/activemq:queue-triage-core-activemq",
         "//core/activemq:test",
         "//core/search:queue-triage-core-search-mongo-spring",

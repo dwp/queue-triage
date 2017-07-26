@@ -42,7 +42,6 @@ java_library(
         '//lib/mongo:mongodb-driver',
         '//lib/slf4j:jcl-over-slf4j',
         '//lib/slf4j:jul-to-slf4j',
-        # Spring JMS with deps
         '//lib/slf4j:log4j-over-slf4j',
         '//lib/slf4j:slf4j-api'
     ],
