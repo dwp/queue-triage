@@ -1,12 +1,7 @@
 sudo: false
 dist: trusty
-addons:
-  apt:
-    packages:
-    - openjdk-8-jdk
-    - ant
-    - python2.7
-    - git
+jdk:
+  - openjdk8
 
 notifications:
   slack:
