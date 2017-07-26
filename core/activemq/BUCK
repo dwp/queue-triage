@@ -24,7 +24,6 @@ java_library(
 
 java_library(
     name = "test-resources",
-    srcs = [],
     resources = [
         "src/test/resources/single-broker.yml",
         "src/test/resources/multiple-brokers.yml",

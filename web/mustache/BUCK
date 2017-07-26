@@ -27,7 +27,6 @@ java_library(
 
 java_library(
     name="test-resources",
-    srcs = [],
     resources = [
         "src/test/resources/mustache/testPage.mustache",
     ],
