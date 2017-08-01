@@ -6,6 +6,7 @@ import uk.gov.dwp.queue.triage.core.dao.util.HashMapBuilder;
 import uk.gov.dwp.queue.triage.core.domain.Destination;
 import uk.gov.dwp.queue.triage.core.domain.FailedMessage;
 import uk.gov.dwp.queue.triage.core.domain.FailedMessageBuilder;
+import uk.gov.dwp.queue.triage.core.domain.FailedMessageStatusMatcher;
 import uk.gov.dwp.queue.triage.id.FailedMessageId;
 
 import java.time.Instant;
@@ -17,11 +18,15 @@ import java.util.UUID;
 import static java.util.Collections.emptyMap;
 import static java.util.Optional.of;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
 import static uk.gov.dwp.queue.triage.core.dao.util.HashMapBuilder.newHashMap;
 import static uk.gov.dwp.queue.triage.core.domain.FailedMessageMatcher.aFailedMessage;
+import static uk.gov.dwp.queue.triage.core.domain.FailedMessageStatus.Status.FAILED;
+import static uk.gov.dwp.queue.triage.core.domain.FailedMessageStatus.Status.RESEND;
+import static uk.gov.dwp.queue.triage.core.domain.FailedMessageStatus.failedMessageStatus;
 import static uk.gov.dwp.queue.triage.id.FailedMessageId.newFailedMessageId;
 
 public class FailedMessageMongoDaoTest extends AbstractMongoDaoTest {
@@ -52,6 +57,7 @@ public class FailedMessageMongoDaoTest extends AbstractMongoDaoTest {
                 .withFailedMessageId(equalTo(failedMessageId))
                 .withContent(equalTo("Hello"))
                 .withProperties(equalTo(emptyMap()))
+                .withFailedMessageStatus(FailedMessageStatusMatcher.equalTo(FAILED))
         ));
     }
 
@@ -75,6 +81,7 @@ public class FailedMessageMongoDaoTest extends AbstractMongoDaoTest {
                 .withFailedMessageId(equalTo(failedMessageId))
                 .withContent(equalTo("Hello"))
                 .withProperties(equalTo(properties))
+                .withFailedMessageStatus(FailedMessageStatusMatcher.equalTo(FAILED))
         ));
     }
 
@@ -100,6 +107,17 @@ public class FailedMessageMongoDaoTest extends AbstractMongoDaoTest {
                 .build());
 
         assertThat(underTest.findNumberOfMessagesForBroker("brokerA"), is(0L));
+    }
+
+    @Test
+    public void updateStatus() throws Exception {
+        underTest.insert(failedMessageBuilder.build());
+        underTest.updateStatus(failedMessageId, failedMessageStatus(RESEND));
+
+        assertThat(underTest.getStatusHistory(failedMessageId), contains(
+                FailedMessageStatusMatcher.equalTo(RESEND),
+                FailedMessageStatusMatcher.equalTo(FAILED)
+        ));
     }
 
     @Override

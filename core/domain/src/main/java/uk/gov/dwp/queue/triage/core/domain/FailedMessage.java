@@ -15,19 +15,22 @@ public class FailedMessage {
     private final Instant failedAt;
     private final String content;
     private final Map<String, Object> properties;
+    private final FailedMessageStatus failedMessageStatus;
 
     FailedMessage(FailedMessageId failedMessageId,
                   Destination destination,
                   Instant sentAt,
                   Instant failedAt,
                   String content,
-                  Map<String, Object> properties) {
+                  Map<String, Object> properties,
+                  FailedMessageStatus failedMessageStatus) {
         this.failedMessageId = failedMessageId;
         this.destination = destination;
         this.sentAt = sentAt;
         this.failedAt = failedAt;
         this.content = content;
         this.properties = properties;
+        this.failedMessageStatus = failedMessageStatus;
     }
 
     public FailedMessageId getFailedMessageId() {
@@ -61,5 +64,9 @@ public class FailedMessage {
     @Override
     public String toString() {
         return reflectionToString(this);
+    }
+
+    public FailedMessageStatus getFailedMessageStatus() {
+        return failedMessageStatus;
     }
 }
