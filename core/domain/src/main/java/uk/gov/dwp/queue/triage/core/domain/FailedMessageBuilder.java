@@ -71,7 +71,7 @@ public class FailedMessageBuilder {
     }
 
     public FailedMessageBuilder withProperties(Map<String, Object> properties) {
-        this.properties = properties;
+        this.properties = (properties != null) ? properties : new HashMap<>();
         return this;
     }
 
