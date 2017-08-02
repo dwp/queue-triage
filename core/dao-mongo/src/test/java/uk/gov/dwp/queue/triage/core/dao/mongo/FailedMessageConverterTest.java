@@ -97,10 +97,10 @@ public class FailedMessageConverterTest {
 
         DBObject dbObject = underTest.convertFromObject(failedMessageBuilder.build());
         assertThat(dbObject, allOf(
-                hasField("_id", FAILED_MESSAGE_ID_AS_STRING),
-                hasField(CONTENT, "Hello"),
-                hasField(DESTINATION, DESTINATION_DB_OBJECT),
-                hasField(PROPERTIES, "{ \"propertyName\": \"propertyValue\" }")
+                hasField("_id", equalTo(FAILED_MESSAGE_ID_AS_STRING)),
+                hasField(CONTENT, equalTo("Hello")),
+                hasField(DESTINATION, equalTo(DESTINATION_DB_OBJECT)),
+                hasField(PROPERTIES, equalTo("{ \"propertyName\": \"propertyValue\" }"))
         ));
 
         assertThat(underTest.convertToObject(dbObject), is(aFailedMessage()
