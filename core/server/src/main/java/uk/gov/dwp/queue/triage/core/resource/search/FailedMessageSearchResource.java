@@ -7,11 +7,13 @@ import uk.gov.dwp.queue.triage.core.client.search.SearchFailedMessageResponse;
 import uk.gov.dwp.queue.triage.core.dao.FailedMessageDao;
 import uk.gov.dwp.queue.triage.core.domain.FailedMessage;
 import uk.gov.dwp.queue.triage.core.search.FailedMessageSearchService;
+import uk.gov.dwp.queue.triage.core.search.SearchFailedMessageResponseAdapter;
 import uk.gov.dwp.queue.triage.id.FailedMessageId;
 
 import javax.ws.rs.BadRequestException;
 import javax.ws.rs.NotFoundException;
 import java.util.Collection;
+import java.util.stream.Collectors;
 
 import static java.lang.String.format;
 
@@ -20,13 +22,16 @@ public class FailedMessageSearchResource implements SearchFailedMessageClient {
     private final FailedMessageDao failedMessageDao;
     private final FailedMessageResponseFactory failedMessageResponseFactory;
     private final FailedMessageSearchService failedMessageSearchService;
+    private final SearchFailedMessageResponseAdapter searchFailedMessageResponseAdapter;
 
     public FailedMessageSearchResource(FailedMessageDao failedMessageDao,
                                        FailedMessageResponseFactory failedMessageResponseFactory,
-                                       FailedMessageSearchService failedMessageSearchService) {
+                                       FailedMessageSearchService failedMessageSearchService,
+                                       SearchFailedMessageResponseAdapter searchFailedMessageResponseAdapter) {
         this.failedMessageDao = failedMessageDao;
         this.failedMessageResponseFactory = failedMessageResponseFactory;
         this.failedMessageSearchService = failedMessageSearchService;
+        this.searchFailedMessageResponseAdapter = searchFailedMessageResponseAdapter;
     }
 
     @Override
@@ -44,6 +49,9 @@ public class FailedMessageSearchResource implements SearchFailedMessageClient {
         if (request.getBroker() == null) {
             throw new BadRequestException("broker cannot be null");
         }
-        return failedMessageSearchService.search(request);
+        return failedMessageSearchService.search(request)
+                .stream()
+                .map(searchFailedMessageResponseAdapter::toResponse)
+                .collect(Collectors.toList());
     }
 }

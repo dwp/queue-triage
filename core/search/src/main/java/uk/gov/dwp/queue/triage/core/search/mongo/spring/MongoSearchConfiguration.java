@@ -10,7 +10,6 @@ import uk.gov.dwp.queue.triage.core.dao.mongo.configuration.MongoDaoProperties;
 import uk.gov.dwp.queue.triage.core.search.FailedMessageSearchService;
 import uk.gov.dwp.queue.triage.core.search.mongo.MongoFailedMessageSearchService;
 import uk.gov.dwp.queue.triage.core.search.mongo.MongoSearchRequestAdapter;
-import uk.gov.dwp.queue.triage.core.search.mongo.MongoSearchResponseAdapter;
 
 @Configuration
 @Import(MongoDaoConfig.class)
@@ -23,7 +22,7 @@ public class MongoSearchConfiguration {
         return new MongoFailedMessageSearchService(
                 mongoClient.getDB(mongoDaoProperties.getDbName()).getCollection(mongoDaoProperties.getFailedMessage().getName()),
                 new MongoSearchRequestAdapter(),
-                new MongoSearchResponseAdapter(failedMessageConverter)
+                failedMessageConverter
         );
     }
 }
