@@ -34,7 +34,7 @@ import static uk.gov.dwp.queue.triage.core.dao.mongo.FailedMessageConverter.DEST
 import static uk.gov.dwp.queue.triage.core.dao.mongo.FailedMessageConverter.PROPERTIES;
 import static uk.gov.dwp.queue.triage.core.domain.DestinationMatcher.aDestination;
 import static uk.gov.dwp.queue.triage.core.domain.FailedMessageMatcher.aFailedMessage;
-import static uk.gov.dwp.queue.triage.core.domain.FailedMessageStatus.Status.FAILED;
+import static uk.gov.dwp.queue.triage.core.domain.FailedMessageStatus.Status.SENT;
 import static uk.gov.dwp.queue.triage.core.domain.FailedMessageStatus.failedMessageStatus;
 import static uk.gov.dwp.queue.triage.id.FailedMessageId.newFailedMessageId;
 
@@ -50,7 +50,7 @@ public class FailedMessageConverterTest {
     }};
     private static final Destination SOME_DESTINATION = new Destination("broker", of("queue.name"));
     private static final BasicDBObject DESTINATION_DB_OBJECT = new BasicDBObject();
-    private static final FailedMessageStatus SOME_STATUS = failedMessageStatus(FAILED);
+    private static final FailedMessageStatus SOME_STATUS = failedMessageStatus(SENT);
     private static final BasicDBObject STATUS_DB_OBJECT = new BasicDBObject();
     private static final Instant SENT_AT = Instant.now().minus(5, ChronoUnit.MINUTES);
     private static final Instant FAILED_AT = Instant.now();
@@ -110,7 +110,7 @@ public class FailedMessageConverterTest {
                 .withSentAt(SENT_AT)
                 .withFailedAt(FAILED_AT)
                 .withProperties(equalTo(SOME_PROPERTIES))
-                .withFailedMessageStatus(FailedMessageStatusMatcher.equalTo(FAILED).withUpdatedDateTime(notNullValue(Instant.class)))
+                .withFailedMessageStatus(FailedMessageStatusMatcher.equalTo(SENT).withUpdatedDateTime(notNullValue(Instant.class)))
         ));
     }
 

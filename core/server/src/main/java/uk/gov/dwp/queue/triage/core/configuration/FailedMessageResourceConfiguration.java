@@ -9,11 +9,13 @@ import uk.gov.dwp.queue.triage.core.dao.FailedMessageDao;
 import uk.gov.dwp.queue.triage.core.dao.mongo.configuration.MongoDaoConfig;
 import uk.gov.dwp.queue.triage.core.resource.create.CreateFailedMessageResource;
 import uk.gov.dwp.queue.triage.core.resource.create.FailedMessageFactory;
+import uk.gov.dwp.queue.triage.core.resource.resend.ResendFailedMessageResource;
 import uk.gov.dwp.queue.triage.core.resource.search.FailedMessageResponseFactory;
 import uk.gov.dwp.queue.triage.core.resource.search.FailedMessageSearchResource;
 import uk.gov.dwp.queue.triage.core.resource.search.FailedMessageStatusAdapter;
 import uk.gov.dwp.queue.triage.core.search.FailedMessageSearchService;
 import uk.gov.dwp.queue.triage.core.search.SearchFailedMessageResponseAdapter;
+import uk.gov.dwp.queue.triage.core.service.FailedMessageService;
 
 @Configuration
 @Import({
@@ -37,6 +39,14 @@ public class FailedMessageResourceConfiguration {
                 new FailedMessageResponseFactory(new FailedMessageStatusAdapter()),
                 failedMessageSearchService,
                 new SearchFailedMessageResponseAdapter()
+        ));
+    }
+
+    @Bean
+    public ResendFailedMessageResource resendFailedMessageResource(ResourceRegistry resourceRegistry,
+                                                                   FailedMessageService failedMessageService) {
+        return resourceRegistry.add(new ResendFailedMessageResource(
+                failedMessageService
         ));
     }
 }
