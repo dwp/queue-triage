@@ -15,10 +15,12 @@ java_library(
         "//core/domain-test-support:queue-triage-core-domain-test-support",
         "//core/jms:queue-triage-core-jms",
         "//core/jms:test",
+        "//core/search:queue-triage-core-search",
         "//core/search:queue-triage-core-search-mongo",
         "//core/search:test-mongo",
         "//core/server:queue-triage-core-server",
         "//core/server:test",
         "//core/service:queue-triage-core-service",
+        "//core/service:test",
     ]
 )

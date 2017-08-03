@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import uk.gov.dwp.queue.triage.id.FailedMessageId;
 
 import java.time.Instant;
+import java.util.HashMap;
 import java.util.Map;
 
 public class CreateFailedMessageRequest {
@@ -73,7 +74,7 @@ public class CreateFailedMessageRequest {
         private Instant sentDateTime;
         private Instant failedDateTime;
         private String content;
-        private Map<String, Object> properties;
+        private Map<String, Object> properties = new HashMap<>();
 
         private CreateFailedMessageRequestBuilder() {
         }
@@ -113,7 +114,7 @@ public class CreateFailedMessageRequest {
         }
 
         public CreateFailedMessageRequestBuilder withProperties(Map<String, Object> properties) {
-            this.properties = properties;
+            this.properties = (properties != null) ? properties : new HashMap<>();
             return this;
         }
 

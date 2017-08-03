@@ -1,12 +1,18 @@
 package uk.gov.dwp.queue.triage.core.dao;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.Map;
 
 public class PropertiesConverter implements ObjectConverter<Map<String, Object>, String> {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(PropertiesConverter.class);
 
     private final ObjectMapper objectMapper;
 
@@ -17,12 +23,15 @@ public class PropertiesConverter implements ObjectConverter<Map<String, Object>,
 
     @Override
     public Map<String, Object> convertToObject(String value) {
-        try {
-            return objectMapper.readValue(value, Map.class);
-        } catch (IOException e) {
-            e.printStackTrace();
+        if (value == null) {
+            return Collections.emptyMap();
         }
-        return null;
+        try {
+            return objectMapper.readValue(value, new TypeReference<Map<String, Object>>() {});
+        } catch (IOException e) {
+            LOGGER.error("Could read the following properties: " + value, e);
+        }
+        return Collections.emptyMap();
     }
 
     @Override
@@ -33,7 +42,7 @@ public class PropertiesConverter implements ObjectConverter<Map<String, Object>,
         try {
             return objectMapper.writeValueAsString(item);
         } catch (JsonProcessingException e) {
-            e.printStackTrace();
+            LOGGER.error("Could not convert the following Map: " + item, e);
         }
         return null;
     }

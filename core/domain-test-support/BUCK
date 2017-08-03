@@ -13,5 +13,6 @@ java_library(
         "//core/dao-mongo:test",
         "//core/jms:test",
         "//core/server:test",
+        "//core/service:test",
     ],
 )

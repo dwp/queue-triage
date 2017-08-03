@@ -1,18 +1,24 @@
 package uk.gov.dwp.queue.triage.core.client.search;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import uk.gov.dwp.queue.triage.core.client.FailedMessageStatus;
 
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
 
 public class SearchFailedMessageRequest {
 
     private final String broker;
     private final Optional<String> destination;
+    private final Set<FailedMessageStatus> statuses;
 
     private SearchFailedMessageRequest(@JsonProperty("broker") String broker,
-                                       @JsonProperty("destination") Optional<String> destination) {
+                                       @JsonProperty("destination") Optional<String> destination,
+                                       @JsonProperty("statuses") Set<FailedMessageStatus> statuses) {
         this.broker = broker;
         this.destination = destination;
+        this.statuses = statuses;
     }
 
     public String getBroker() {
@@ -23,14 +29,20 @@ public class SearchFailedMessageRequest {
         return destination;
     }
 
+    public Set<FailedMessageStatus> getStatuses() {
+        return statuses;
+    }
+
     public static SearchFailedMessageRequestBuilder newSearchFailedMessageRequest() {
-        return new SearchFailedMessageRequestBuilder();
+        return new SearchFailedMessageRequestBuilder()
+                .withStatus(FailedMessageStatus.FAILED);
     }
 
     public static class SearchFailedMessageRequestBuilder {
 
         private String broker;
         private Optional<String> destination = Optional.empty();
+        private Set<FailedMessageStatus> statuses = new HashSet<>();
 
         private SearchFailedMessageRequestBuilder() {}
 
@@ -49,8 +61,18 @@ public class SearchFailedMessageRequest {
             return this;
         }
 
+        public SearchFailedMessageRequestBuilder withStatuses(Set<FailedMessageStatus> statuses) {
+            this.statuses = statuses;
+            return this;
+        }
+
+        public SearchFailedMessageRequestBuilder withStatus(FailedMessageStatus status) {
+            this.statuses.add(status);
+            return this;
+        }
+
         public SearchFailedMessageRequest build() {
-            return new SearchFailedMessageRequest(broker, destination);
+            return new SearchFailedMessageRequest(broker, destination, statuses);
         }
     }
 }
