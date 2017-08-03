@@ -10,6 +10,7 @@ import uk.gov.dwp.queue.triage.id.FailedMessageId;
 
 import java.time.Instant;
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 
 import static uk.gov.dwp.queue.triage.core.domain.FailedMessageBuilder.newFailedMessage;
@@ -48,8 +49,14 @@ public class FailedMessageConverter implements DBObjectWithIdConverter<FailedMes
                 .withSentDateTime(getSentDateTime(basicDBObject))
                 .withFailedDateTime(getFailedDateTime(basicDBObject))
                 .withContent(getContent(basicDBObject))
+                .withFailedMessageStatus(getFailedMessageStatus(basicDBObject))
                 .withProperties(propertiesMongoMapper.convertToObject(basicDBObject.getString(PROPERTIES)))
                 .build();
+    }
+
+    public FailedMessageStatus getFailedMessageStatus(BasicDBObject basicDBObject) {
+        List statusHistory = (List)basicDBObject.get(STATUS_HISTORY);
+        return failedMessageStatusDBObjectMapper.convertToObject((BasicDBObject)statusHistory.get(0));
     }
 
     public FailedMessageId getFailedMessageId(BasicDBObject basicDBObject) {

@@ -4,6 +4,7 @@ java_library(
     deps =[
         "//common/id:queue-triage-common-id",
         '//core/client:queue-triage-core-client',
+        '//core/domain:queue-triage-core-domain',
     ],
     visibility = [
         "//core/server:queue-triage-core-server",

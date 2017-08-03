@@ -62,6 +62,7 @@ java_test(
         '//core/domain-test-support:queue-triage-core-domain-test-support',
         '//core/search:queue-triage-core-search',
         '//core/server:queue-triage-core-server',
+        '//core/service:queue-triage-core-service',
         '//lib:commons-lang3',
         '//lib/javax:javax-servlet-api',
         '//lib/javax:javax-ws-rs-api',

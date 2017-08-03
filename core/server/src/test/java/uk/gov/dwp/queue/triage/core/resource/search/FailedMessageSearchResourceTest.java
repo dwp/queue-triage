@@ -6,16 +6,21 @@ import org.junit.rules.ExpectedException;
 import org.mockito.Mockito;
 import uk.gov.dwp.queue.triage.core.client.FailedMessageResponse;
 import uk.gov.dwp.queue.triage.core.client.search.SearchFailedMessageRequest;
+import uk.gov.dwp.queue.triage.core.client.search.SearchFailedMessageResponse;
 import uk.gov.dwp.queue.triage.core.dao.FailedMessageDao;
 import uk.gov.dwp.queue.triage.core.domain.FailedMessage;
 import uk.gov.dwp.queue.triage.core.search.FailedMessageSearchService;
+import uk.gov.dwp.queue.triage.core.search.SearchFailedMessageResponseAdapter;
 import uk.gov.dwp.queue.triage.id.FailedMessageId;
 
 import javax.ws.rs.BadRequestException;
 import javax.ws.rs.NotFoundException;
+import java.util.Collection;
 
+import static java.util.Collections.singletonList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.contains;
 import static org.junit.rules.ExpectedException.none;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -35,11 +40,13 @@ public class FailedMessageSearchResourceTest {
     private final FailedMessage failedMessage = mock(FailedMessage.class);
     private final FailedMessageResponse failedMessageResponse = mock(FailedMessageResponse.class);
     private final FailedMessageSearchService failedMessageSearchService = mock(FailedMessageSearchService.class);
+    private final SearchFailedMessageResponseAdapter searchFailedMessageResponseAdapter = mock(SearchFailedMessageResponseAdapter.class);
 
     private final FailedMessageSearchResource underTest = new FailedMessageSearchResource(
             failedMessageDao,
             failedMessageResponseFactory,
-            failedMessageSearchService
+            failedMessageSearchService,
+            searchFailedMessageResponseAdapter
     );
 
     @Test
@@ -71,11 +78,17 @@ public class FailedMessageSearchResourceTest {
 
     @Test
     public void validSearch() {
-        SearchFailedMessageRequest searchFailedMessageRequest = newSearchFailedMessageRequest()
-                .withBroker("broker")
-                .build();
-        underTest.search(searchFailedMessageRequest);
+        FailedMessage failedMessage = mock(FailedMessage.class);
+        SearchFailedMessageResponse searchFailedMessageResponse = mock(SearchFailedMessageResponse.class);
+        SearchFailedMessageRequest searchFailedMessageRequest = mock(SearchFailedMessageRequest.class);
+        when(searchFailedMessageRequest.getBroker()).thenReturn("broker");
 
+        when(failedMessageSearchService.search(searchFailedMessageRequest)).thenReturn(singletonList(failedMessage));
+        when(searchFailedMessageResponseAdapter.toResponse(failedMessage)).thenReturn(searchFailedMessageResponse);
+
+        final Collection<SearchFailedMessageResponse> results = underTest.search(searchFailedMessageRequest);
+
+        assertThat(results, contains(searchFailedMessageResponse));
         verify(failedMessageSearchService).search(Mockito.refEq(searchFailedMessageRequest));
     }
 }
