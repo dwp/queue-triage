@@ -46,8 +46,7 @@ public class SearchFailedMessageStage extends Stage<SearchFailedMessageStage> {
                 "/core/failed-message/search",
                 HttpMethod.POST,
                 new HttpEntity<>(requestBuilder.build()),
-                new ParameterizedTypeReference<Collection<SearchFailedMessageResponse>>() {
-                });
+                new ParameterizedTypeReference<Collection<SearchFailedMessageResponse>>() {});
         return this;
     }
 

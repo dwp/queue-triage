@@ -18,6 +18,7 @@ public class FailedMessageResponse {
     private final Instant sentAt;
     private final Instant failedAt;
     private final String content;
+    private final FailedMessageStatus currentStatus;
     @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS)
     private final Map<String, Object> properties;
 
@@ -27,6 +28,7 @@ public class FailedMessageResponse {
                                  @JsonProperty("sentAt") Instant sentAt,
                                  @JsonProperty("failedAt") Instant failedAt,
                                  @JsonProperty("content") String content,
+                                 @JsonProperty("currentStatus") FailedMessageStatus currentStatus,
                                  @JsonProperty("properties") Map<String, Object> properties) {
         this.failedMessageId = failedMessageId;
         this.broker = broker;
@@ -34,6 +36,7 @@ public class FailedMessageResponse {
         this.sentAt = sentAt;
         this.failedAt = failedAt;
         this.content = content;
+        this.currentStatus = currentStatus;
         this.properties = properties;
     }
 
@@ -59,6 +62,10 @@ public class FailedMessageResponse {
 
     public String getContent() {
         return content;
+    }
+
+    public FailedMessageStatus getCurrentStatus() {
+        return currentStatus;
     }
 
     public Map<String, Object> getProperties() {

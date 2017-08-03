@@ -19,3 +19,16 @@ java_library(
         "//web/server:queue-triage-web-server",
     ]
 )
+
+java_test(
+    name = "test",
+    srcs = glob(["src/test/java/**/*.java"]),
+    deps = [
+        "//core/client:queue-triage-core-client",
+        "//core/client-test-support:queue-triage-core-client-test-support",
+        "//lib/jackson:jackson-core",
+        "//lib/jackson:jackson-databind",
+        "//lib/jackson:jackson-datatype-jdk8",
+        "//lib/test:common",
+    ]
+)

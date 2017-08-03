@@ -5,6 +5,7 @@ import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
 import org.hamcrest.core.IsAnything;
 import uk.gov.dwp.queue.triage.core.client.FailedMessageResponse;
+import uk.gov.dwp.queue.triage.core.client.FailedMessageStatus;
 import uk.gov.dwp.queue.triage.id.FailedMessageId;
 
 import java.time.Instant;
@@ -21,6 +22,7 @@ public class FailedMessageResponseMatcher extends TypeSafeMatcher<FailedMessageR
     private Matcher<Optional<String>> destinationMatcher = new IsAnything<>();
     private Matcher<Instant> sentAtMatcher = new IsAnything<>();
     private Matcher<Instant> failedAtMatcher = new IsAnything<>();
+    private Matcher<FailedMessageStatus> statusMatcher = new IsAnything<>();
     private Matcher<Map<? extends String, ? extends Object>> propertiesMatcher = new IsAnything<>();
 
     private FailedMessageResponseMatcher() { }
@@ -69,6 +71,11 @@ public class FailedMessageResponseMatcher extends TypeSafeMatcher<FailedMessageR
         return this;
     }
 
+    public FailedMessageResponseMatcher withStatus(FailedMessageStatus failedMessageStatus) {
+        this.statusMatcher = equalTo(failedMessageStatus);
+        return this;
+    }
+
     public FailedMessageResponseMatcher withProperties(Matcher<Map<? extends String, ? extends Object>> propertiesMatcher) {
         this.propertiesMatcher = propertiesMatcher;
         return this;
@@ -82,6 +89,7 @@ public class FailedMessageResponseMatcher extends TypeSafeMatcher<FailedMessageR
                 && destinationMatcher.matches(item.getDestination())
                 && sentAtMatcher.matches(item.getSentAt())
                 && failedAtMatcher.matches(item.getFailedAt())
+                && statusMatcher.matches(item.getCurrentStatus())
                 && propertiesMatcher.matches(item.getProperties());
     }
 
@@ -94,6 +102,7 @@ public class FailedMessageResponseMatcher extends TypeSafeMatcher<FailedMessageR
                 .appendText(" destination is ").appendDescriptionOf(destinationMatcher)
                 .appendText(" sentAt is ").appendDescriptionOf(sentAtMatcher)
                 .appendText(" failedAt is ").appendDescriptionOf(failedAtMatcher)
+                .appendText(" status is").appendDescriptionOf(statusMatcher)
                 .appendText(" properties are ").appendDescriptionOf(propertiesMatcher)
         ;
     }

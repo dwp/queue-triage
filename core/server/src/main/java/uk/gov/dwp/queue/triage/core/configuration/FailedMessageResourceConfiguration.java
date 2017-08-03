@@ -11,6 +11,7 @@ import uk.gov.dwp.queue.triage.core.resource.create.CreateFailedMessageResource;
 import uk.gov.dwp.queue.triage.core.resource.create.FailedMessageFactory;
 import uk.gov.dwp.queue.triage.core.resource.search.FailedMessageResponseFactory;
 import uk.gov.dwp.queue.triage.core.resource.search.FailedMessageSearchResource;
+import uk.gov.dwp.queue.triage.core.resource.search.FailedMessageStatusAdapter;
 import uk.gov.dwp.queue.triage.core.search.FailedMessageSearchService;
 
 @Configuration
@@ -29,6 +30,10 @@ public class FailedMessageResourceConfiguration {
     public FailedMessageSearchResource searchFailedMessageResource(ResourceRegistry resourceRegistry,
                                                                    FailedMessageDao failedMessageDao,
                                                                    FailedMessageSearchService failedMessageSearchService) {
-        return resourceRegistry.add(new FailedMessageSearchResource(failedMessageDao,  new FailedMessageResponseFactory(), failedMessageSearchService));
+        return resourceRegistry.add(new FailedMessageSearchResource(
+                failedMessageDao,
+                new FailedMessageResponseFactory(new FailedMessageStatusAdapter()),
+                failedMessageSearchService)
+        );
     }
 }

@@ -21,7 +21,7 @@ public class FailedMessageResponseFactoryTest {
     private static final Instant NOW = Instant.now();
     private static final FailedMessageId FAILED_MESSAGE_ID = FailedMessageId.newFailedMessageId();
 
-    private final FailedMessageResponseFactory underTest = new FailedMessageResponseFactory();
+    private final FailedMessageResponseFactory underTest = new FailedMessageResponseFactory(new FailedMessageStatusAdapter());
 
     @Test
     public void createFailedMessageResponseFromAFailedMessage() throws Exception {
