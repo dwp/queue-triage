@@ -2,7 +2,6 @@ package uk.gov.dwp.queue.triage.core.jms;
 
 import com.tngtech.jgiven.annotation.ScenarioStage;
 import org.hamcrest.Matcher;
-import org.hamcrest.Matchers;
 import org.hamcrest.collection.IsIterableContainingInOrder;
 import org.junit.Test;
 import uk.gov.dwp.queue.triage.core.BaseCoreComponentTest;
@@ -15,6 +14,7 @@ import uk.gov.dwp.queue.triage.jgiven.ReflectionArgumentFormatter;
 import java.util.Arrays;
 import java.util.Optional;
 
+import static org.hamcrest.Matchers.equalTo;
 import static uk.gov.dwp.queue.triage.core.client.search.SearchFailedMessageRequest.newSearchFailedMessageRequest;
 import static uk.gov.dwp.queue.triage.core.domain.SearchFailedMessageResponseMatcher.aFailedMessage;
 
@@ -25,14 +25,17 @@ public class FailedMessageListenerComponentTest extends BaseCoreComponentTest<Jm
 
     @Test
     public void deadLetteredMessageIsProcessedByTheApplication() throws Exception {
-        given().anApplicationIsListeningTo$OnBroker$("some-queue", "internal-broker");
+        given().aMessageWithContent$WillDeadLetter("poison");
+        given().and().aMessageWithContent$WillBeConsumedSuccessfully("elixir");
 
-        when().anInvalidMessageIsSentTo$OnBroker$("some-queue", "internal-broker");
+        when().aMessageWithContent$IsSentTo$OnBroker$("poison", "some-queue", "internal-broker");
+        when().and().aMessageWithContent$IsSentTo$OnBroker$("elixir", "some-queue", "internal-broker");
         searchFailedMessageStage.and().aSearchIsRequested(newSearchFailedMessageRequest().withBroker("internal-broker"));
 
         searchFailedMessageStage.then().theSearchResultsContain(contains(
-                aFailedMessage().withBroker(Matchers.equalTo("internal-broker"))
-                .withDestination(Matchers.equalTo(Optional.of("some-queue")))
+                aFailedMessage().withBroker(equalTo("internal-broker"))
+                .withDestination(equalTo(Optional.of("some-queue")))
+                .withContent(equalTo("poison"))
         ));
     }
 
@@ -44,5 +47,4 @@ public class FailedMessageListenerComponentTest extends BaseCoreComponentTest<Jm
             }
         };
     }
-
 }

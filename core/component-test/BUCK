@@ -14,6 +14,7 @@ java_library(
         '//core/client-test-support:queue-triage-core-client-test-support',
         '//core/dao-mongo-test-support:queue-triage-core-dao-mongo-test-support',
         '//core/domain:queue-triage-core-domain',
+        '//core/message-classification:queue-triage-core-message-classification',
         '//core/server:queue-triage-core-server',
         '//lib/activemq:activemq-client',
         '//lib/apache-cxf:cxf-core',

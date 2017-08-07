@@ -15,6 +15,8 @@ java_library(
         "//core/domain-test-support:queue-triage-core-domain-test-support",
         "//core/jms:queue-triage-core-jms",
         "//core/jms:test",
+        "//core/message-classification:queue-triage-core-message-classification",
+        "//core/message-classification:test",
         "//core/search:queue-triage-core-search",
         "//core/search:queue-triage-core-search-mongo",
         "//core/search:test-mongo",
