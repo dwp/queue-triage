@@ -6,6 +6,10 @@ java_library(
         "//lib:commons-lang3",
         "//lib/jackson:jackson-annotations",
     ],
+    visibility = [
+        "//core/component-test:queue-triage-core-component-test",
+        "//core/component-test:test",
+    ],
 )
 
 java_test(
