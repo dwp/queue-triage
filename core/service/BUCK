@@ -11,6 +11,8 @@ java_library(
         "//core/jms:queue-triage-core-jms",
         "//core/jms:test",
         "//core/activemq:queue-triage-core-activemq",
+        "//core/resend:queue-triage-core-resend",
+        "//core/resend:test",
         "//core/server:queue-triage-core-server",
         "//core/server:test",
     ]

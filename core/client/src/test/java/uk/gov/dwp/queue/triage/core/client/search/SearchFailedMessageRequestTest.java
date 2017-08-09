@@ -28,7 +28,7 @@ public class SearchFailedMessageRequestTest {
 
         assertThat(OBJECT_MAPPER.readValue(json, SearchFailedMessageRequest.class), is(
                 aSearchRequest()
-                        .withBrokerMatcher(equalTo("broker"))
+                        .withBroker(equalTo("broker"))
                         .withDestination(equalTo(Optional.empty()))
                         .withStatusMatcher(contains(FAILED))
         ));
@@ -45,7 +45,7 @@ public class SearchFailedMessageRequestTest {
 
         assertThat(OBJECT_MAPPER.readValue(json, SearchFailedMessageRequest.class), is(
                 aSearchRequest()
-                        .withBrokerMatcher(equalTo("broker"))
+                        .withBroker(equalTo("broker"))
                         .withDestination(equalTo(Optional.of("queue")))
                         .withStatusMatcher(contains(FAILED))
         ));

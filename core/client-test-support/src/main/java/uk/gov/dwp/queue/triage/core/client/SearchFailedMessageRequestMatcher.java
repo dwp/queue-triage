@@ -3,6 +3,7 @@ package uk.gov.dwp.queue.triage.core.domain;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
+import org.hamcrest.core.IsAnything;
 import uk.gov.dwp.queue.triage.core.client.FailedMessageStatus;
 import uk.gov.dwp.queue.triage.core.client.search.SearchFailedMessageRequest;
 
@@ -10,9 +11,9 @@ import java.util.Optional;
 
 public class SearchFailedMessageRequestMatcher extends TypeSafeMatcher<SearchFailedMessageRequest> {
 
-    private Matcher<String> brokerMatcher;
-    private Matcher<Iterable<? extends FailedMessageStatus>> statusMatcher;
-    private Matcher<Optional<String>> destinationMatcher;
+    private Matcher<String> brokerMatcher = new IsAnything<>();
+    private Matcher<Iterable<? extends FailedMessageStatus>> statusMatcher = new IsAnything<>();
+    private Matcher<Optional<String>> destinationMatcher = new IsAnything<>();
 
     @Override
     protected boolean matchesSafely(SearchFailedMessageRequest searchFailedMessageRequest) {
@@ -31,7 +32,7 @@ public class SearchFailedMessageRequestMatcher extends TypeSafeMatcher<SearchFai
         return new SearchFailedMessageRequestMatcher();
     }
 
-    public SearchFailedMessageRequestMatcher withBrokerMatcher(Matcher<String> brokerMatcher) {
+    public SearchFailedMessageRequestMatcher withBroker(Matcher<String> brokerMatcher) {
         this.brokerMatcher = brokerMatcher;
         return this;
     }

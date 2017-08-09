@@ -3,6 +3,7 @@ package uk.gov.dwp.queue.triage.core.search.mongo;
 import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
+import org.slf4j.Logger;
 import uk.gov.dwp.queue.triage.core.client.search.SearchFailedMessageRequest;
 import uk.gov.dwp.queue.triage.core.dao.mongo.FailedMessageConverter;
 import uk.gov.dwp.queue.triage.core.domain.FailedMessage;
@@ -12,7 +13,11 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import static org.slf4j.LoggerFactory.getLogger;
+
 public class MongoFailedMessageSearchService implements FailedMessageSearchService {
+
+    private static final Logger LOGGER = getLogger(MongoFailedMessageSearchService.class);
 
     private final DBCollection dbCollection;
     private final MongoSearchRequestAdapter mongoSearchRequestAdapter;
@@ -35,6 +40,7 @@ public class MongoFailedMessageSearchService implements FailedMessageSearchServi
             responses.add(failedMessageConverter.convertToObject(dbObject));
         }
         dbCursor.close();
+        LOGGER.debug("Found {} results", responses.size());
         return responses;
     }
 }

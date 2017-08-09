@@ -7,7 +7,7 @@ import static org.springframework.beans.factory.support.BeanDefinitionBuilder.ge
 
 public class ActiveMQConnectionFactoryBeanDefinitionFactory {
 
-    static final String ACTIVE_MQ_CONNECTION_FACTORY_BEAN_NAME_PREFIX = "activeMqConnectionFactory-";
+    public static final String ACTIVE_MQ_CONNECTION_FACTORY_BEAN_NAME_PREFIX = "activeMqConnectionFactory-";
 
     public AbstractBeanDefinition create(String url) {
         return genericBeanDefinition(ActiveMQConnectionFactory.class)

@@ -39,6 +39,11 @@ public class FailedMessageResourceStage extends Stage<FailedMessageResourceStage
         return this;
     }
 
+    /**
+     * @deprecated Use {@link FailedMessageResourceStage#aFailedMessage(CreateFailedMessageRequestBuilder)} instead
+     * @return
+     */
+    @Deprecated
     public PersistedFailedMessageBuilder aFailedMessage() {
         return new PersistedFailedMessageBuilder(createFailedMessageClient);
     }
@@ -50,6 +55,7 @@ public class FailedMessageResourceStage extends Stage<FailedMessageResourceStage
         return new PersistedFailedMessageBuilder(createFailedMessageClient, failedMessageBuilder);
     }
 
+    // TODO: Remove 'then'
     public void thenTheFailedMessageReturned(FailedMessageResponseMatcher failedMessageResponseMatcher) {
         assertThat(failedMessage, failedMessageResponseMatcher);
     }

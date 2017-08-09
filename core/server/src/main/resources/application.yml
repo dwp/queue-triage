@@ -18,3 +18,6 @@ jms:
       - name: internal-broker
         url: tcp://localhost:61616
         queue: ActiveMQ.DLQ
+        resend:
+          frequency: 60
+          timeUnit: SECONDS

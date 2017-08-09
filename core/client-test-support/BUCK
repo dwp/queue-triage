@@ -10,6 +10,7 @@ java_library(
     visibility = [
         '//core/client:test',
         '//core/component-test/...',
+        '//core/resend:test',
         '//core/server:test',
     ],
 )
