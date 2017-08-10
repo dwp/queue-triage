@@ -28,7 +28,9 @@ prebuilt_jar(
         "//core/activemq:queue-triage-core-activemq",
         "//core/activemq:test",
         "//core/jms:queue-triage-core-jms",
+        "//core/jms:queue-triage-core-jms-spring",
         "//core/jms:test",
+        "//core/jms:test-spring",
     ],
 )
 prebuilt_jar(
@@ -57,6 +59,7 @@ java_library(
         "//core/activemq:queue-triage-core-activemq",
         "//core/activemq:test",
         "//core/component-test:test",
+        "//core/resend:test-spring",
         "//core/server:queue-triage-core-server",
     ]
 )

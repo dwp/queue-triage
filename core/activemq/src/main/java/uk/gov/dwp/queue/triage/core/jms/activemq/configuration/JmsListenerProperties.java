@@ -1,6 +1,5 @@
 package uk.gov.dwp.queue.triage.core.jms.activemq.configuration;
 
-import org.springframework.beans.factory.BeanFactory;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
@@ -10,7 +9,6 @@ import java.util.List;
 @ConfigurationProperties(prefix = "jms.activemq")
 public class JmsListenerProperties {
 
-    private BeanFactory beanFactory;
     private List<BrokerProperties> brokers;
 
     public List<BrokerProperties> getBrokers() {
@@ -25,6 +23,7 @@ public class JmsListenerProperties {
         private String name;
         private String url;
         private String queue;
+        private ResendProperties resend;
 
         public String getName() {
             return name;
@@ -48,6 +47,26 @@ public class JmsListenerProperties {
 
         public void setQueue(String queue) {
             this.queue = queue;
+        }
+
+        public ResendProperties getResend() {
+            return resend;
+        }
+
+        public void setResend(ResendProperties resend) {
+            this.resend = resend;
+        }
+
+        public static class ResendProperties {
+            private long frequency;
+
+            public long getFrequency() {
+                return frequency;
+            }
+
+            public void setFrequency(long frequency) {
+                this.frequency = frequency;
+            }
         }
     }
 }

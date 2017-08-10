@@ -17,6 +17,8 @@ java_library(
     visibility = [
         "//core/component-test:queue-triage-core-component-test",
         "//core/component-test:test",
+        "//core/resend:queue-triage-core-resend-spring",
+        "//core/resend:test-spring",
         "//core/server:queue-triage-core-server",
         "//core/server:test",
     ]

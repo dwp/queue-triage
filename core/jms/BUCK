@@ -1,6 +1,12 @@
 java_library(
     name = "queue-triage-core-jms",
-    srcs = glob(["src/main/java/**/*.java"]),
+    srcs = glob([
+            "src/main/java/**/*.java",
+        ],
+        excludes = [
+            "src/main/java/**/spring/**/*.java",
+        ]
+    ),
     deps =[
         "//core/domain:queue-triage-core-domain",
         "//core/service:queue-triage-core-service",
@@ -10,14 +16,43 @@ java_library(
     visibility = [
         "//core/activemq:queue-triage-core-activemq",
         "//core/activemq:test",
+        "//core/resend:queue-triage-core-resend",
+        "//core/resend:test",
+        "//core/resend:test-spring",
         "//core/server:queue-triage-core-server",
         "//core/server:test",
     ],
 )
 
+java_library(
+    name = "queue-triage-core-jms-spring",
+    srcs = glob(["src/main/java/**/spring/**/*.java"]),
+    deps = [
+        ":queue-triage-core-jms",
+        "//common/id:queue-triage-common-id",
+        "//core/domain:queue-triage-core-domain",
+        "//lib/activemq:geronimo-jms",
+        "//lib/slf4j:slf4j-api",
+        "//lib/spring:spring-beans",
+        "//lib/spring:spring-core",
+        "//lib/spring:spring-jms",
+    ],
+    visibility = [
+        "//core/resend:queue-triage-core-resend-spring",
+        "//core/resend:test-spring",
+        "//core/server:queue-triage-core-server",
+    ]
+)
+
 java_test(
     name = "test",
-    srcs = glob(["src/test/java/**/*Test.java"]),
+    srcs = glob([
+            "src/test/java/**/*Test.java"
+        ],
+        excludes = [
+            "src/test/java/**/spring/**/*.java",
+        ]
+    ),
     deps = [
         "//core/domain:queue-triage-core-domain",
         "//core/jms:queue-triage-core-jms",
@@ -26,7 +61,20 @@ java_test(
         "//lib/activemq:geronimo-jms",
         "//lib/test:common",
     ],
-    visibility = [
-        "PUBLIC",
+)
+
+java_test(
+    name = "test-spring",
+    srcs = glob(["src/test/java/**/spring/**/*.java"]),
+    deps = [
+        "//core/domain:queue-triage-core-domain",
+        "//core/jms:queue-triage-core-jms",
+        "//core/jms:queue-triage-core-jms-spring",
+        "//lib/activemq:geronimo-jms",
+        "//lib/spring:spring-beans",
+        "//lib/spring:spring-core",
+        "//lib/spring:spring-jms",
+        "//lib/spring:spring-tx",
+        "//lib/test:common",
     ],
 )

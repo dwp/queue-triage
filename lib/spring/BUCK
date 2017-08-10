@@ -18,7 +18,12 @@ prebuilt_jar(
 )
 prebuilt_jar(name="spring-boot-autoconfigure", binary_jar = ":spring-boot-autoconfigure-mvn", visibility=["PUBLIC"])
 prebuilt_jar(name="spring-boot-test", binary_jar=":spring-boot-test-mvn", visibility=["PUBLIC"])
-prebuilt_jar(name="spring-context", binary_jar=":spring-context-mvn", visibility=["PUBLIC"])
+prebuilt_jar(
+    name = "spring-context",
+    binary_jar = ":spring-context-mvn",
+    source_jar = ":spring-context-src",
+    visibility = ["PUBLIC"],
+)
 prebuilt_jar(
     name="spring-core",
     binary_jar=":spring-core-mvn",
@@ -27,6 +32,10 @@ prebuilt_jar(
         "//common/cxf:queue-triage-cxf",
         "//core/activemq:queue-triage-core-activemq",
         "//core/activemq:test",
+        "//core/jms:queue-triage-core-jms-spring",
+        "//core/jms:test-spring",
+        "//core/resend:queue-triage-core-resend-spring",
+        "//core/resend:test-spring",
         "//core/search:queue-triage-core-search-mongo-spring",
     ],
 )
@@ -40,6 +49,8 @@ prebuilt_jar(
         "//core/activemq:test",
         "//core/component-test:test",
         "//core/component-test:queue-triage-core-component-test",
+        "//core/jms:queue-triage-core-jms-spring",
+        "//core/jms:test-spring",
         "//core/server:queue-triage-core-server",
     ],
 )
@@ -64,6 +75,7 @@ remote_file(name="spring-boot-mvn", out="spring-boot-1.5.3.RELEASE.jar", url="mv
 remote_file(name="spring-boot-src", out="spring-boot-1.5.3.RELEASE-sources.jar", url="mvn:org.springframework.boot:spring-boot:src:1.5.3.RELEASE", sha1="048c2b8c7728069f168769d856b019fff6b5b998")
 remote_file(name='spring-boot-test-mvn', out='spring-boot-test-1.5.3.RELEASE.jar', url='mvn:org.springframework.boot:spring-boot-test:jar:1.5.3.RELEASE', sha1='ad57d8bacb4fc147ded7c99806f8693855f5fe29')
 remote_file(name="spring-context-mvn", out="spring-context-4.3.8.RELEASE.jar", url="mvn:org.springframework:spring-context:jar:4.3.8.RELEASE", sha1="944073ac58ab78b78a7694d2c53d4ae9f634c815")
+remote_file(name="spring-context-src", out="spring-context-4.3.8.RELEASE-sources.jar", url="mvn:org.springframework:spring-context:src:4.3.8.RELEASE", sha1="717681088e22206f927dc8cec10a3ed1954da527")
 remote_file(name="spring-core-mvn", out="spring-core-4.3.8.RELEASE.jar", url="mvn:org.springframework:spring-core:jar:4.3.8.RELEASE", sha1="cce6c251249e48f0a86aa578c2a0e262efa5a1e0")
 remote_file(name="spring-core-src", out="spring-core-4.3.8.RELEASE-sources.jar", url="mvn:org.springframework:spring-core:src:4.3.8.RELEASE", sha1="b278822fc694d9b5a943fef1d4c9fd28ad2b92a6")
 remote_file(name='spring-expression-mvn', out='spring-expression-4.3.8.RELEASE.jar', url='mvn:org.springframework:spring-expression:jar:4.3.8.RELEASE', sha1='0204f7e241f42f46b16baa3d190752703efd7797')

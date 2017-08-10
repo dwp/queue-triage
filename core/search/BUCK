@@ -7,6 +7,9 @@ java_library(
         '//core/domain:queue-triage-core-domain',
     ],
     visibility = [
+        "//core/resend:queue-triage-core-resend",
+        "//core/resend:test",
+        "//core/resend:test-spring",
         "//core/server:queue-triage-core-server",
         "//core/server:test",
     ]
@@ -25,6 +28,7 @@ java_library(
         '//core/domain:queue-triage-core-domain',
         '//lib/jackson:jackson-databind',
         '//lib/mongo:mongodb-driver',
+        '//lib/slf4j:slf4j-api',
     ],
     visibility = [
         "//core/server:queue-triage-core-server",
