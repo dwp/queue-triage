@@ -3,8 +3,14 @@ package uk.gov.dwp.queue.triage.core.configuration;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
+import uk.gov.dwp.migration.mongo.demo.cxf.client.CxfConfiguration;
+import uk.gov.dwp.migration.mongo.demo.cxf.client.ResourceRegistry;
 import uk.gov.dwp.queue.triage.core.dao.FailedMessageDao;
+import uk.gov.dwp.queue.triage.core.dao.mongo.configuration.MongoDaoConfig;
 import uk.gov.dwp.queue.triage.core.remove.RemoveFailedMessageService;
+import uk.gov.dwp.queue.triage.core.resource.delete.DeleteFailedMessageResource;
+import uk.gov.dwp.queue.triage.core.service.FailedMessageService;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -15,6 +21,11 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 @Configuration
+@Import({
+        CxfConfiguration.class,
+        MongoDaoConfig.class,
+        FailedMessageServiceConfiguration.class
+})
 public class RemoveFailedMessageConfiguration {
 
     private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(RemoveFailedMessageConfiguration.class);
@@ -22,6 +33,12 @@ public class RemoveFailedMessageConfiguration {
     @Bean
     public RemoveFailedMessageService removeFailedMessageService(FailedMessageDao failedMessageDao) {
         return new RemoveFailedMessageService(failedMessageDao);
+    }
+
+    @Bean
+    public DeleteFailedMessageResource removeFailedMessageResource(ResourceRegistry resourceRegistry,
+                                                                   FailedMessageService failedMessageService) {
+        return resourceRegistry.add(new DeleteFailedMessageResource(failedMessageService));
     }
 
     @Bean(destroyMethod = "shutdown")

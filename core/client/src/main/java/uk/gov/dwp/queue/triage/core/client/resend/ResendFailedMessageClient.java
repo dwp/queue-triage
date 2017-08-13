@@ -14,6 +14,6 @@ import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 public interface ResendFailedMessageClient {
 
     @PUT
-    @Path("/${failedMessageId}")
+    @Path("/{failedMessageId}")
     void resendFailedMessage(@PathParam("failedMessageId") FailedMessageId failedMessageId);
 }

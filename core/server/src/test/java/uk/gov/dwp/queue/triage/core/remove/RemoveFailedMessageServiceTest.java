@@ -24,7 +24,6 @@ public class RemoveFailedMessageServiceTest {
         underTest.removeFailedMessages();
 
         verify(failedMessageDao).removeFailedMessages();
-        verify(logger).debug("Successfully removed {} messages", NUMBER_OF_MESSAGES_REMOVED);
     }
 
     @Test
