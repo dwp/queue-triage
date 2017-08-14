@@ -6,6 +6,7 @@ import uk.gov.dwp.queue.triage.core.dao.util.HashMapBuilder;
 import uk.gov.dwp.queue.triage.core.domain.Destination;
 import uk.gov.dwp.queue.triage.core.domain.FailedMessage;
 import uk.gov.dwp.queue.triage.core.domain.FailedMessageBuilder;
+import uk.gov.dwp.queue.triage.core.domain.FailedMessageStatus;
 import uk.gov.dwp.queue.triage.core.domain.FailedMessageStatusMatcher;
 import uk.gov.dwp.queue.triage.id.FailedMessageId;
 
@@ -15,6 +16,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.UUID;
 
+import static java.time.Instant.now;
+import static java.time.temporal.ChronoUnit.DAYS;
 import static java.util.Collections.emptyMap;
 import static java.util.Optional.of;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -24,20 +27,25 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
 import static uk.gov.dwp.queue.triage.core.dao.util.HashMapBuilder.newHashMap;
 import static uk.gov.dwp.queue.triage.core.domain.FailedMessageMatcher.aFailedMessage;
+import static uk.gov.dwp.queue.triage.core.domain.FailedMessageStatus.Status.DELETED;
 import static uk.gov.dwp.queue.triage.core.domain.FailedMessageStatus.Status.FAILED;
 import static uk.gov.dwp.queue.triage.core.domain.FailedMessageStatus.Status.RESEND;
+import static uk.gov.dwp.queue.triage.core.domain.FailedMessageStatus.Status.SENT;
 import static uk.gov.dwp.queue.triage.core.domain.FailedMessageStatus.failedMessageStatus;
 import static uk.gov.dwp.queue.triage.id.FailedMessageId.newFailedMessageId;
 
 public class FailedMessageMongoDaoTest extends AbstractMongoDaoTest {
+
+    private static final Instant SIX_DAYS_AGO =  now().minus(6, DAYS);
+    private static final Instant EIGHT_DAYS_AGO =  now().minus(8, DAYS);
 
     private final FailedMessageId failedMessageId = newFailedMessageId();
     private final FailedMessageBuilder failedMessageBuilder = FailedMessageBuilder.newFailedMessage()
             .withFailedMessageId(failedMessageId)
             .withDestination(new Destination("broker", of("queue.name")))
             .withContent("Hello")
-            .withSentDateTime(Instant.now())
-            .withFailedDateTime(Instant.now());
+            .withSentDateTime(now())
+            .withFailedDateTime(now());
 
     @Autowired
     private FailedMessageMongoDao underTest;
@@ -118,6 +126,42 @@ public class FailedMessageMongoDaoTest extends AbstractMongoDaoTest {
                 FailedMessageStatusMatcher.equalTo(RESEND),
                 FailedMessageStatusMatcher.equalTo(FAILED)
         ));
+    }
+
+    @Test
+    public void removeOnAnEmptyCollection() throws Exception {
+        assertThat(underTest.removeFailedMessages(), is(0));
+    }
+
+    @Test
+    public void removeWhenNoEligibleRecords() throws Exception {
+        underTest.insert(newFailedMessageWithStatus(FAILED, EIGHT_DAYS_AGO));
+        underTest.insert(newFailedMessageWithStatus(RESEND, EIGHT_DAYS_AGO));
+        underTest.insert(newFailedMessageWithStatus(SENT, EIGHT_DAYS_AGO));
+
+        assertThat(underTest.removeFailedMessages(), is(0));
+        assertThat(collection.count(), is(3L));
+    }
+
+    @Test
+    public void successfullyRemoveDeletedRecordsMoreThan7DaysOld() throws Exception {
+        underTest.insert(newFailedMessageWithStatus(FAILED, EIGHT_DAYS_AGO));
+        underTest.insert(newFailedMessageWithStatus(RESEND, EIGHT_DAYS_AGO));
+        underTest.insert(newFailedMessageWithStatus(SENT, EIGHT_DAYS_AGO));
+        underTest.insert(newFailedMessageWithStatus(DELETED, SIX_DAYS_AGO));
+
+        underTest.insert(newFailedMessageWithStatus(DELETED, EIGHT_DAYS_AGO));
+        underTest.insert(newFailedMessageWithStatus(DELETED, EIGHT_DAYS_AGO));
+
+        assertThat(underTest.removeFailedMessages(), is(2));
+        assertThat(collection.count(), is(4L));
+    }
+
+    public FailedMessage newFailedMessageWithStatus(FailedMessageStatus.Status status, Instant instant) {
+        return failedMessageBuilder
+                .withNewFailedMessageId()
+                .withFailedMessageStatus(new FailedMessageStatus(status, instant))
+                .build();
     }
 
     @Override

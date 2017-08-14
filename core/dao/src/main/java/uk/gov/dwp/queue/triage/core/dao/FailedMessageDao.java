@@ -17,4 +17,6 @@ public interface FailedMessageDao {
     void updateStatus(FailedMessageId failedMessageId, FailedMessageStatus failedMessageStatus);
 
     List<FailedMessageStatus> getStatusHistory(FailedMessageId failedMessageId);
+
+    int removeFailedMessages();
 }

@@ -23,13 +23,16 @@ public class FailedMessageMongoDao implements FailedMessageDao {
     private final DBCollection collection;
     private final FailedMessageConverter failedMessageConverter;
     private final DBObjectConverter<FailedMessageStatus> failedMessageStatusConverter;
+    private final RemoveRecordsQueryFactory removeRecordsQueryFactory;
 
     public FailedMessageMongoDao(DBCollection collection,
                                  FailedMessageConverter failedMessageConverter,
-                                 DBObjectConverter<FailedMessageStatus> failedMessageStatusConverter) {
+                                 DBObjectConverter<FailedMessageStatus> failedMessageStatusConverter,
+                                 RemoveRecordsQueryFactory removeRecordsQueryFactory) {
         this.collection = collection;
         this.failedMessageConverter = failedMessageConverter;
         this.failedMessageStatusConverter = failedMessageStatusConverter;
+        this.removeRecordsQueryFactory = removeRecordsQueryFactory;
     }
 
     @Override
@@ -67,5 +70,10 @@ public class FailedMessageMongoDao implements FailedMessageDao {
     @Override
     public long findNumberOfMessagesForBroker(String broker) {
         return collection.count(new BasicDBObject(DESTINATION + "." + BROKER_NAME, broker));
+    }
+
+    @Override
+    public int removeFailedMessages() {
+        return collection.remove(removeRecordsQueryFactory.create()).getN();
     }
 }

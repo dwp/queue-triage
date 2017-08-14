@@ -12,6 +12,7 @@ import uk.gov.dwp.queue.triage.id.FailedMessageId;
 
 import java.time.Instant;
 
+import static uk.gov.dwp.queue.triage.core.domain.FailedMessageStatus.Status.DELETED;
 import static uk.gov.dwp.queue.triage.core.domain.FailedMessageStatus.Status.RESEND;
 
 public class FailedMessageServiceTest {
@@ -37,6 +38,16 @@ public class FailedMessageServiceTest {
         Mockito.verify(failedMessageDao).updateStatus(
                 Mockito.eq(FAILED_MESSAGE_ID),
                 argThat(FailedMessageStatusMatcher.equalTo(RESEND).withUpdatedDateTime(Matchers.notNullValue(Instant.class)))
+        );
+    }
+
+    @Test
+    public void deleteFailedMessage() {
+        underTest.delete(FAILED_MESSAGE_ID);
+
+        Mockito.verify(failedMessageDao).updateStatus(
+                Mockito.eq(FAILED_MESSAGE_ID),
+                argThat(FailedMessageStatusMatcher.equalTo(DELETED).withUpdatedDateTime(Matchers.notNullValue(Instant.class)))
         );
     }
 

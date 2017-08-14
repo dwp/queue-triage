@@ -67,6 +67,7 @@ java_test(
         '//lib:commons-lang3',
         '//lib/javax:javax-servlet-api',
         '//lib/javax:javax-ws-rs-api',
+        '//lib/slf4j:slf4j-api',
         '//lib/test:common',
     ],
 )

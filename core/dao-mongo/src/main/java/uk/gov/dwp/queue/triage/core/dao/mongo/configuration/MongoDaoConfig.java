@@ -17,6 +17,7 @@ import uk.gov.dwp.queue.triage.core.dao.mongo.DestinationDBObjectConverter;
 import uk.gov.dwp.queue.triage.core.dao.mongo.FailedMessageConverter;
 import uk.gov.dwp.queue.triage.core.dao.mongo.FailedMessageMongoDao;
 import uk.gov.dwp.queue.triage.core.dao.mongo.FailedMessageStatusDBObjectConverter;
+import uk.gov.dwp.queue.triage.core.dao.mongo.RemoveRecordsQueryFactory;
 import uk.gov.dwp.queue.triage.core.domain.Destination;
 import uk.gov.dwp.queue.triage.core.domain.FailedMessageStatus;
 import uk.gov.dwp.queue.triage.id.Id;
@@ -60,7 +61,7 @@ public class MongoDaoConfig {
         return new FailedMessageMongoDao(
                 mongoClient.getDB(mongoDaoProperties.getDbName()).getCollection(mongoDaoProperties.getFailedMessage().getName()),
                 failedMessageConverter,
-                failedMessageStatusDBObjectConverter);
+                failedMessageStatusDBObjectConverter, new RemoveRecordsQueryFactory());
     }
 
     @Bean
