@@ -3,3 +3,7 @@ server:
 
 cxf:
   contextPath: /web
+
+client:
+  core:
+   url: http://localhost:9991/core

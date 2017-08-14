@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>JMS Manager - Failed Messages</title>
+    <link rel="stylesheet" type="text/css" href="/static/css/w2ui-1.5.rc1.css" />
+    <link rel="stylesheet" type="text/css" href="/static/css/queue-triage.css" />
+    <script type="text/javascript" src="/static/js/jquery-2.1.0.min.js"></script>
+    <script type="text/javascript" src="/static/js/w2ui-1.5.rc1.js"></script>
+</head>
+<body>
+
+<div id="grid" style="width: 100%; height: 250px;"></div>
+
+<script type="text/javascript">
+    w2utils.settings['dataType'] = 'JSON';
+    $(function () {
+        $('#grid').w2grid({
+            name: 'grid',
+            url: {
+                get: '/web/failed-messages/data'
+            },
+            show: {
+                selectColumn: true,
+                toolbar: true,
+                toolbarSearch: false
+//                toolbarDelete: true,
+//                toolbarSave: true
+            },
+            columns: [
+                { field: 'recid', caption: 'Failed Message Id', size: '220px', sortable: true },
+                { field: 'broker', caption: 'Broker', size: '10%', sortable: true },
+                { field: 'destination', caption: 'Queue', size: '10%', sortable: true },
+                { field: 'sentDateTime', caption: 'Originally Sent', size: '160px', sortable: true },
+                { field: 'failedDateTime', caption: 'Failed', size: '160px', sortable: true },
+                { field: 'content', caption: 'Content', size: '80%', sortable: true },
+            ]
+        });
+    });
+</script>
+</body>
+</html>

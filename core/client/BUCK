@@ -19,6 +19,7 @@ java_library(
         "//core/server:queue-triage-core-server",
         "//core/server:test",
         "//web/server:queue-triage-web-server",
+        '//web/server:test',
     ]
 )
 

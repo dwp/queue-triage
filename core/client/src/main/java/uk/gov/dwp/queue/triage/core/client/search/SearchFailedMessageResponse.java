@@ -61,7 +61,7 @@ public class SearchFailedMessageResponse {
 
         private FailedMessageId failedMessageId;
         private String broker;
-        private Optional<String> destination;
+        private Optional<String> destination = Optional.empty();
         private Instant sentDateTime;
         private Instant failedDateTime;
         private String content;
