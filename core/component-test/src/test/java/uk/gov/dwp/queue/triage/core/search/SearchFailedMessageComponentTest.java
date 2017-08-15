@@ -26,13 +26,6 @@ public class SearchFailedMessageComponentTest extends BaseCoreComponentTest<Sear
     private FailedMessageResourceStage failedMessageResourceStage;
 
     @Test
-    public void searchWithNoBrokerThrowsServerError() throws Exception {
-        when().aSearchIsRequested(newSearchFailedMessageRequest()
-                .withBroker(null));
-        then().a$HttpResponseCodeIsReceived(BAD_REQUEST);
-    }
-
-    @Test
     public void searchByBrokerResultsNoResultsWhenNoFailedMessagesExist() throws Exception {
 
         when().aSearchIsRequested(newSearchFailedMessageRequest()
@@ -67,7 +60,7 @@ public class SearchFailedMessageComponentTest extends BaseCoreComponentTest<Sear
                         .withFailedMessageId(equalTo(failedMessageId))));
     }
 
-    public static Matcher<Iterable<? extends SearchFailedMessageResponse>> contains(SearchFailedMessageResponseMatcher... searchResultMatcher) {
+    private static Matcher<Iterable<? extends SearchFailedMessageResponse>> contains(SearchFailedMessageResponseMatcher... searchResultMatcher) {
         return new IsIterableContainingInOrder<SearchFailedMessageResponse>(Arrays.asList(searchResultMatcher)) {
             @Override
             public String toString() {

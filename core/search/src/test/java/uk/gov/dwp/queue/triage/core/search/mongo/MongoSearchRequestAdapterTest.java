@@ -16,13 +16,13 @@ public class MongoSearchRequestAdapterTest {
     private final MongoSearchRequestAdapter underTest = new MongoSearchRequestAdapter();
 
     @Test
-    public void searchRequestWithDestinationAndListOfStatuses() {
+    public void searchRequestWithAllParametersSpecified() {
         final DBObject dbObject = underTest.toQuery(newSearchFailedMessageRequest()
                 .withBroker("broker-name")
+                .withDestination("mars")
                 .withStatus(FailedMessageStatus.FAILED)
                 .withStatus(FailedMessageStatus.RESENDING)
                 .withStatus(FailedMessageStatus.SENT)
-                .withDestination("mars")
                 .build()
         );
         assertThat(dbObject, Matchers.allOf(
@@ -33,13 +33,10 @@ public class MongoSearchRequestAdapterTest {
     }
 
     @Test
-    public void searchRequestWithoutDestinationAndDefaultStatus() throws Exception {
-        final DBObject dbObject = underTest.toQuery(newSearchFailedMessageRequest()
-                .withBroker("broker-name")
-                .build()
-        );
+    public void searchRequestWithoutDestinationAndBrokerAndDefaultStatus() throws Exception {
+        final DBObject dbObject = underTest.toQuery(newSearchFailedMessageRequest().build());
+
         assertThat(dbObject, Matchers.allOf(
-                hasField("destination.brokerName", equalTo("broker-name")),
                 hasField("statusHistory.0.status", hasField("$in", hasItems("FAILED")))
         ));
     }

@@ -16,6 +16,7 @@ import uk.gov.dwp.queue.triage.id.FailedMessageId;
 import javax.ws.rs.BadRequestException;
 import javax.ws.rs.NotFoundException;
 import java.util.Collection;
+import java.util.Optional;
 
 import static java.util.Collections.singletonList;
 import static org.hamcrest.CoreMatchers.is;
@@ -69,19 +70,11 @@ public class FailedMessageSearchResourceTest {
     }
 
     @Test
-    public void searchWithNullBrokerThrowsBadRequestException() {
-        expectedException.expect(BadRequestException.class);
-        expectedException.expectMessage("broker cannot be null");
-
-        underTest.search(newSearchFailedMessageRequest().build());
-    }
-
-    @Test
     public void validSearch() {
         FailedMessage failedMessage = mock(FailedMessage.class);
         SearchFailedMessageResponse searchFailedMessageResponse = mock(SearchFailedMessageResponse.class);
         SearchFailedMessageRequest searchFailedMessageRequest = mock(SearchFailedMessageRequest.class);
-        when(searchFailedMessageRequest.getBroker()).thenReturn("broker");
+        when(searchFailedMessageRequest.getBroker()).thenReturn(Optional.of("broker"));
 
         when(failedMessageSearchService.search(searchFailedMessageRequest)).thenReturn(singletonList(failedMessage));
         when(searchFailedMessageResponseAdapter.toResponse(failedMessage)).thenReturn(searchFailedMessageResponse);

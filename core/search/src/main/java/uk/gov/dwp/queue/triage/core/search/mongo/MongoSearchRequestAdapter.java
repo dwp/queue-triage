@@ -15,13 +15,14 @@ import static uk.gov.dwp.queue.triage.core.dao.mongo.FailedMessageStatusDBObject
 public class MongoSearchRequestAdapter {
 
     public DBObject toQuery(SearchFailedMessageRequest request) {
-        BasicDBObject query = new BasicDBObject()
-                .append(DESTINATION + "." + BROKER_NAME, request.getBroker())
-                .append(STATUS_HISTORY + ".0." + STATUS, statusList(request));
+        BasicDBObject query = new BasicDBObject();
+        request.getBroker().ifPresent(broker -> query.append(DESTINATION + "." + BROKER_NAME, broker));
         request.getDestination().ifPresent(destination -> query.append(DESTINATION + "." + NAME, destination));
+        query.append(STATUS_HISTORY + ".0." + STATUS, statusList(request));
         return query;
     }
 
+    // TODO: Introduce a proper adapter from client.FailedMessageStatus -> domain.FailedMessageStatus$Status
     private BasicDBObject statusList(SearchFailedMessageRequest request) {
         return new BasicDBObject(IN, request.getStatuses().stream().map(Enum::name).collect(toList()));
     }
