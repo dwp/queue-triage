@@ -45,10 +45,6 @@ public class FailedMessageSearchResource implements SearchFailedMessageClient {
 
     @Override
     public Collection<SearchFailedMessageResponse> search(SearchFailedMessageRequest request) {
-        // TODO: Introduce javax.validation
-        if (request.getBroker() == null) {
-            throw new BadRequestException("broker cannot be null");
-        }
         return failedMessageSearchService.search(request)
                 .stream()
                 .map(searchFailedMessageResponseAdapter::toResponse)

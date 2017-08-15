@@ -7,6 +7,8 @@ import uk.gov.dwp.queue.triage.core.domain.FailedMessage;
 import uk.gov.dwp.queue.triage.core.jms.MessageSender;
 import uk.gov.dwp.queue.triage.core.search.FailedMessageSearchService;
 
+import java.util.Optional;
+
 import static java.util.Arrays.asList;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.equalTo;
@@ -35,7 +37,7 @@ public class ResendFailedMessageServiceTest {
     @Test
     public void successfullyResendFailedMessages() throws Exception {
         SearchFailedMessageRequest searchRequest = argThat(new HamcrestArgumentMatcher<>(aSearchRequest()
-                .withBroker(equalTo(BROKER_NAME))
+                .withBroker(equalTo(Optional.of(BROKER_NAME)))
                 .withStatusMatcher(contains(FAILED))));
 
         when(failedMessageSearchService.search(searchRequest)).thenReturn(asList(failedMessage, anotherFailedMessage));

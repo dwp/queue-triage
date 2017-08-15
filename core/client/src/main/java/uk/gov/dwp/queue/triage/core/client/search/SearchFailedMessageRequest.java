@@ -9,11 +9,11 @@ import java.util.Set;
 
 public class SearchFailedMessageRequest {
 
-    private final String broker;
+    private final Optional<String> broker;
     private final Optional<String> destination;
     private final Set<FailedMessageStatus> statuses;
 
-    private SearchFailedMessageRequest(@JsonProperty("broker") String broker,
+    private SearchFailedMessageRequest(@JsonProperty("broker") Optional<String> broker,
                                        @JsonProperty("destination") Optional<String> destination,
                                        @JsonProperty("statuses") Set<FailedMessageStatus> statuses) {
         this.broker = broker;
@@ -21,7 +21,7 @@ public class SearchFailedMessageRequest {
         this.statuses = statuses;
     }
 
-    public String getBroker() {
+    public Optional<String> getBroker() {
         return broker;
     }
 
@@ -40,13 +40,18 @@ public class SearchFailedMessageRequest {
 
     public static class SearchFailedMessageRequestBuilder {
 
-        private String broker;
+        private Optional<String> broker = Optional.empty();
         private Optional<String> destination = Optional.empty();
         private Set<FailedMessageStatus> statuses = new HashSet<>();
 
         private SearchFailedMessageRequestBuilder() {}
 
         public SearchFailedMessageRequestBuilder withBroker(String broker) {
+            this.broker = Optional.ofNullable(broker);
+            return this;
+        }
+
+        public SearchFailedMessageRequestBuilder withBroker(Optional<String> broker) {
             this.broker = broker;
             return this;
         }

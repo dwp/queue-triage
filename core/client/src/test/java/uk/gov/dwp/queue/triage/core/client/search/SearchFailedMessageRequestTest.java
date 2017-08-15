@@ -22,13 +22,12 @@ public class SearchFailedMessageRequestTest {
     public void serialiseAndDeserialiseWithOptionalFieldsMissing() throws Exception {
         String json = OBJECT_MAPPER.writeValueAsString(
                 SearchFailedMessageRequest.newSearchFailedMessageRequest()
-                        .withBroker("broker")
                         .withStatus(FAILED)
                         .build());
 
         assertThat(OBJECT_MAPPER.readValue(json, SearchFailedMessageRequest.class), is(
                 aSearchRequest()
-                        .withBroker(equalTo("broker"))
+                        .withBroker(equalTo(Optional.empty()))
                         .withDestination(equalTo(Optional.empty()))
                         .withStatusMatcher(contains(FAILED))
         ));
@@ -45,7 +44,7 @@ public class SearchFailedMessageRequestTest {
 
         assertThat(OBJECT_MAPPER.readValue(json, SearchFailedMessageRequest.class), is(
                 aSearchRequest()
-                        .withBroker(equalTo("broker"))
+                        .withBroker(equalTo(Optional.of("broker")))
                         .withDestination(equalTo(Optional.of("queue")))
                         .withStatusMatcher(contains(FAILED))
         ));

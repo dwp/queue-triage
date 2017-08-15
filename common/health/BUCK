@@ -11,7 +11,15 @@ java_library(
     ]
 )
 
-java_test(
+def java_jgiven_test(
+    name,
+    **kwargs
+):
+    java_test( name, **kwargs )
+    print 'Hello World'
+    print '$(location :name)'
+
+java_jgiven_test(
     name = "test",
     srcs = glob(['src/test/java/**/*Test.java']),
     deps = [
@@ -20,3 +28,5 @@ java_test(
         '//lib/test:common',
     ],
 )
+
+

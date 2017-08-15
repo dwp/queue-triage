@@ -11,7 +11,7 @@ import java.util.Optional;
 
 public class SearchFailedMessageRequestMatcher extends TypeSafeMatcher<SearchFailedMessageRequest> {
 
-    private Matcher<String> brokerMatcher = new IsAnything<>();
+    private Matcher<Optional<String>> brokerMatcher = new IsAnything<>();
     private Matcher<Iterable<? extends FailedMessageStatus>> statusMatcher = new IsAnything<>();
     private Matcher<Optional<String>> destinationMatcher = new IsAnything<>();
 
@@ -32,7 +32,7 @@ public class SearchFailedMessageRequestMatcher extends TypeSafeMatcher<SearchFai
         return new SearchFailedMessageRequestMatcher();
     }
 
-    public SearchFailedMessageRequestMatcher withBroker(Matcher<String> brokerMatcher) {
+    public SearchFailedMessageRequestMatcher withBroker(Matcher<Optional<String>> brokerMatcher) {
         this.brokerMatcher = brokerMatcher;
         return this;
     }

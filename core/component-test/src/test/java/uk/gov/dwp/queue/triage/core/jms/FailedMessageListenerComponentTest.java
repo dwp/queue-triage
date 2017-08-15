@@ -33,9 +33,10 @@ public class FailedMessageListenerComponentTest extends BaseCoreComponentTest<Jm
         searchFailedMessageStage.and().aSearchIsRequested(newSearchFailedMessageRequest().withBroker("internal-broker"));
 
         searchFailedMessageStage.then().theSearchResultsContain(contains(
-                aFailedMessage().withBroker(equalTo("internal-broker"))
-                .withDestination(equalTo(Optional.of("some-queue")))
-                .withContent(equalTo("poison"))
+                aFailedMessage()
+                        .withBroker(equalTo("internal-broker"))
+                        .withDestination(equalTo(Optional.of("some-queue")))
+                        .withContent(equalTo("poison"))
         ));
     }
 
