@@ -9,13 +9,13 @@
 </head>
 <body>
 
-<div id="grid" style="width: 100%; height: 250px;"></div>
+<div id="failed-message-list-grid" style="width: 100%; height: 250px;"></div>
 
 <script type="text/javascript">
     w2utils.settings['dataType'] = 'JSON';
     $(function () {
-        $('#grid').w2grid({
-            name: 'grid',
+        $('#failed-message-list-grid').w2grid({
+            name: 'failed-message-list-grid',
             url: {
                 get: '/web/failed-messages/data'
             },

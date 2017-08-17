@@ -26,7 +26,7 @@ public class LoginComponentTest extends BaseWebComponentTest<LoginStage> {
         given().user$Exists(aUser().withUsername("postmanpat").withPassword("jess"));
         given().theUserIsOnTheLoginPage();
         when().user$AuthenticatesWithPassword$("postmanpat", "jess");
-        then().theUserIsRedirectedToTheHomePage();
+        then().theUserIsRedirectedToTheFailedMessageListPage();
     }
 
     @Test
