@@ -29,10 +29,11 @@ java_test(
     deps = [
         '//lib/selenide:selenide',
         '//lib/selenide:selenide-dependencies',
-        '//lib/selenium/htmlunit-driver:htmlunit-driver-with-dependencies',
+        '//lib/selenium/phantomjs-driver:phantomjs-driver-with-dependencies',
         '//lib/spring:spring-beans',
-        '//lib/spring:spring-boot-test',
+#         '//lib/selenium/htmlunit-driver:htmlunit-driver-with-dependencies',
 #         '//lib/selenium/firefox-driver:selenium-firefox-driver-with-dependencies',
+        '//lib/spring:spring-boot-test',
         '//lib/spring:spring-context',
         '//lib/spring:spring-test',
         '//lib/test:common',
@@ -42,8 +43,9 @@ java_test(
         '//web/server:queue-triage-web-server',
     ],
     vm_args = [
-        "-Dbrowser=htmlunit",
+#         "-Dbrowser=htmlunit",
 #         "-Dbrowser=marionette",
 #         "-Dwebdriver.gecko.driver=/opt/geckodriver/current/geckodriver"
+        "-Dbrowser=phantomjs",
     ]
 )

@@ -1,6 +1,5 @@
 package uk.gov.dwp.queue.triage.web.component.list;
 
-import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.Selenide;
 import com.tngtech.jgiven.Stage;
 import com.tngtech.jgiven.annotation.ProvidedScenarioState;
@@ -24,8 +23,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
+import static com.codeborne.selenide.CollectionCondition.size;
+import static com.codeborne.selenide.Condition.exist;
+import static com.codeborne.selenide.Condition.not;
+import static com.codeborne.selenide.Condition.visible;
 import static org.mockito.ArgumentMatchers.any;
 
 @JGivenStage
@@ -71,33 +72,22 @@ public class ListFailedMessagesStage extends Stage<ListFailedMessagesStage> {
 
     public ListFailedMessagesStage theMessageListIsEmpty() {
         LOGGER.debug("Asserting the MessageList is empty");
-        assertThat(Selenide.$$(By.cssSelector("tr[recid]")).size(), is(0));
+        Selenide.$$(By.cssSelector("tr[recid]")).shouldHave(size(0));
         return this;
     }
 
-    public ListFailedMessagesStage theMessageListContainsAFailedMessageWithId(FailedMessageId failedMessageId) {
-        LOGGER.debug("Asserting the Messagelist contains: {}", failedMessageId);
-//        assertThat(Selenide.$(By.cssSelector("tr[recid='" + failedMessageId.toString() + "']")).exists(), is(true));
-        Selenide.$(By.cssSelector("tr[recid='" + failedMessageId.toString() + "']")).waitUntil(Condition.exist, 5000);
+    public ListFailedMessagesStage theMessageListContainsAFailedMessageWithId(FailedMessageId failedMessageId) throws InterruptedException {
+        LOGGER.debug("Asserting FailedMessageId: {} is in the MessageList", failedMessageId);
+        Selenide.$(By.cssSelector("tr[recid='" + failedMessageId.toString() + "']")).should(exist);
         return this;
     }
 
     public ListFailedMessagesStage theUserClicksTheReloadButton() {
-        LOGGER.debug("User is about to click the Reload Button");
-        Selenide.$(By.className("w2ui-icon-reload")).click();
-        LOGGER.debug("User has clicked the Reload Button");
-//        SelenideElement refreshingSpinner = Selenide.$(By.className("w2ui-lock-msg"));
-//        int count = 0;
-//        while (refreshingSpinner.isDisplayed() && count++ < 20) {
-//            try {
-//                Thread.sleep(100);
-//                refreshingSpinner = Selenide.$(By.className("w2ui-lock-msg")).waitUntil(Condition.not(Condition.visible), 2000);
-//            } catch (InterruptedException e) {
-//                e.printStackTrace();
-//            }
-//        }
-        Selenide.$(By.className("w2ui-lock-msg")).waitUntil(Condition.not(Condition.visible), 5000);
-        LOGGER.debug("Spinner no longer visible");
+        // TODO: Investigate why this doesn't work with htmlunit-driver
+        Selenide.$(By.id("tb_grid_toolbar_item_w2ui-reload"))
+                .find(By.className("w2ui-button"))
+                .click();
+        Selenide.$(By.className("w2ui-lock-msg")).waitUntil(not(visible), 5000);
         return this;
     }
 }

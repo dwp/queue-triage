@@ -11,14 +11,6 @@
         <appender-ref ref="STDOUT" />
     </logger>
 
-    <!--<logger name="org.springframework.security" level="debug" additivity="false">-->
-        <!--<appender-ref ref="STDOUT" />-->
-    <!--</logger>-->
-
-    <!--<logger name="org.springframework.ldap" level="debug" additivity="false">-->
-        <!--<appender-ref ref="STDOUT" />-->
-    <!--</logger>-->
-
     <logger name="org.apache.cxf.interceptor" level="warn" additivity="false">
         <appender-ref ref="STDOUT" />
     </logger>
