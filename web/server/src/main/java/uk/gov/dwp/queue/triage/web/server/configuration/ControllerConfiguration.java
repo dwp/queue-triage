@@ -6,16 +6,18 @@ import org.springframework.context.annotation.Import;
 import uk.gov.dwp.migration.mongo.demo.cxf.client.CxfConfiguration;
 import uk.gov.dwp.migration.mongo.demo.cxf.client.ResourceRegistry;
 import uk.gov.dwp.queue.triage.core.client.SearchFailedMessageClient;
+import uk.gov.dwp.queue.triage.jackson.configuration.JacksonConfiguration;
 import uk.gov.dwp.queue.triage.web.server.home.HomeController;
 import uk.gov.dwp.queue.triage.web.server.list.FailedMessageListController;
-import uk.gov.dwp.queue.triage.web.server.list.FailedMessagesJsonSerializer;
+import uk.gov.dwp.queue.triage.web.server.list.FailedMessageListItemAdapter;
 import uk.gov.dwp.queue.triage.web.server.login.AuthenticationExceptionAdapter;
 import uk.gov.dwp.queue.triage.web.server.login.LoginController;
 
 @Configuration
 @Import({
         CxfConfiguration.class,
-        CoreClientConfiguration.class
+        CoreClientConfiguration.class,
+        JacksonConfiguration.class
 })
 public class ControllerConfiguration {
 
@@ -34,7 +36,7 @@ public class ControllerConfiguration {
                                                                    SearchFailedMessageClient searchFailedMessageClient) {
         return resourceRegistry.add(new FailedMessageListController(
                 searchFailedMessageClient,
-                new FailedMessagesJsonSerializer()
+                new FailedMessageListItemAdapter()
         ));
     }
 }

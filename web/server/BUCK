@@ -5,6 +5,7 @@ java_library(
         "src/main/resources/application.yml",
         "src/main/resources/logback.xml",
         "src/main/resources/mustache/home.mustache",
+        "src/main/resources/mustache/list.mustache",
         "src/main/resources/mustache/login.mustache",
         "src/main/resources/static/css/queue-triage.css",
         "src/main/resources/static/css/w2ui-1.5.rc1.css",
@@ -12,7 +13,7 @@ java_library(
         "src/main/resources/static/js/w2ui-1.5.rc1.js",
     ],
     resources_root = "src/main/resources",
-    deps = [
+    exported_deps = [
         "//common/jackson:queue-triage-common-jackson-spring",
         "//lib/spring:spring-boot-autoconfigure",
         "//lib/spring:spring-boot-with-dependencies",
@@ -22,6 +23,7 @@ java_library(
         "//web/spring-security:queue-triage-web-spring-security-ldap",
         '//common/cxf:queue-triage-cxf',
         '//common/health:queue-triage-health',
+        '//common/id:queue-triage-common-id',
         '//core/client:queue-triage-core-client',
         '//lib:snakeyaml',
         '//lib/apache-cxf:cxf-rt-rs-client',

@@ -46,7 +46,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .ignoring()
                 .antMatchers("/static/**")
                 .antMatchers("/ping")
-                .antMatchers("/web/failed-messages/**")
         ;
     }
 

@@ -6,9 +6,13 @@ import java.util.List;
 
 public class BaseW2UIRequest {
 
+    @JsonProperty
     private final List<String> selected;
+    @JsonProperty
     private final String cmd;
+    @JsonProperty
     private final Integer limit;
+    @JsonProperty
     private final Integer offset;
 
     public BaseW2UIRequest(@JsonProperty("cmd") String cmd,

@@ -1,8 +1,11 @@
 package uk.gov.dwp.queue.triage.web.server.list;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Test;
 import uk.gov.dwp.queue.triage.core.client.search.SearchFailedMessageResponse;
 import uk.gov.dwp.queue.triage.id.FailedMessageId;
+import uk.gov.dwp.queue.triage.jackson.configuration.JacksonConfiguration;
 
 import java.time.Instant;
 import java.time.LocalDate;
@@ -19,16 +22,17 @@ import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.equalTo;
 import static org.valid4j.matchers.jsonpath.JsonPathMatchers.hasJsonPath;
 
-public class FailedMessagesJsonSerializerTest {
+public class FailedMessageListItemAdapterTest {
 
+    private static final ObjectMapper OBJECT_MAPPER = new JacksonConfiguration().objectMapper();
     private static final Instant EPOCH = Instant.ofEpochMilli(0);
     private static final Instant SOME_DATE_TIME = Instant.from(ZonedDateTime.of(LocalDate.of(2016, 2, 8), LocalTime.of(14, 43, 0), UTC));
     private static final String FAILED_MESSAGE_ID_1 = UUID.randomUUID().toString();
     private static final String FAILED_MESSAGE_ID_2 = UUID.randomUUID().toString();
-    private final FailedMessagesJsonSerializer underTest = new FailedMessagesJsonSerializer();
+    private final FailedMessageListItemAdapter underTest = new FailedMessageListItemAdapter();
 
     @Test
-    public void failedMessageWithNoProperties() {
+    public void failedMessageWithNoProperties() throws JsonProcessingException {
         SearchFailedMessageResponse failedMessage1 = SearchFailedMessageResponse.newSearchFailedMessageResponse()
                 .withFailedMessageId(FailedMessageId.fromString(FAILED_MESSAGE_ID_1))
                 .withBroker("internal-broker")
@@ -45,7 +49,8 @@ public class FailedMessagesJsonSerializerTest {
                 .withFailedDateTime(SOME_DATE_TIME.with(MILLI_OF_SECOND, 123))
                 .withContent("More Content")
                 .build();
-        String json = underTest.asJson(Arrays.asList(failedMessage1, failedMessage2));
+
+        String json = OBJECT_MAPPER.writeValueAsString(underTest.adapt(Arrays.asList(failedMessage1, failedMessage2)));
 
         assertThat(json, allOf(
                 hasJsonPath("$.[0].recid", equalTo(FAILED_MESSAGE_ID_1)),
