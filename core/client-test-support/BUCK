@@ -12,5 +12,6 @@ java_library(
         '//core/component-test/...',
         '//core/resend:test',
         '//core/server:test',
+        '//web/server:test',
     ],
 )

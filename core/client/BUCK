@@ -18,7 +18,10 @@ java_library(
         "//core/resend:test",
         "//core/server:queue-triage-core-server",
         "//core/server:test",
+        "//web/component-test:queue-triage-web-component-test",
+        "//web/component-test:test",
         "//web/server:queue-triage-web-server",
+        '//web/server:test',
     ]
 )
 

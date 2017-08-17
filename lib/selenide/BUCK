@@ -1,6 +1,7 @@
 prebuilt_jar(
     name = "selenide",
     binary_jar = ":selenide-mvn",
+    source_jar = ":selenide-src-mvn",
     visibility = [
         "//web/component-test:queue-triage-web-component-test",
         "//web/component-test:test",
@@ -11,6 +12,12 @@ remote_file(
     out = "selenide-4.5.1.jar",
     url = "mvn:com.codeborne:selenide:jar:4.5.1",
     sha1 = "c99b650f98572adbc331fda2cb5b7b77a0a52608"
+)
+remote_file(
+    name = "selenide-src-mvn",
+    out = "selenide-4.5.1-sources.jar",
+    url = "mvn:com.codeborne:selenide:src:4.5.1",
+    sha1 = "0dfb82c2bc9aa2e22a4bf528b3a4e707544ba687"
 )
 
 

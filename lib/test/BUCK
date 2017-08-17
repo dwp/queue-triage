@@ -14,7 +14,13 @@ prebuilt_jar(name='jgiven-junit', binary_jar=':jgiven-junit-mvn')
 prebuilt_jar(name='jgiven-html5-report', binary_jar=':jgiven-html5-report-mvn')
 prebuilt_jar(name='jgiven-spring', binary_jar=':jgiven-spring-mvn', visibility=["PUBLIC"])
 prebuilt_jar(name='junit', binary_jar=':junit-mvn', visibility=["PUBLIC"])
-prebuilt_jar(name='mockito-core', binary_jar=':mockito-core-mvn')
+prebuilt_jar(
+    name = 'mockito-core',
+    binary_jar = ':mockito-core-mvn',
+    visibility = [
+        '//web/component-test:queue-triage-web-component-test',
+    ],
+)
 prebuilt_jar(name='objenesis', binary_jar=':objenesis-mvn')
 prebuilt_jar(name='paranamer', binary_jar=':paranamer-mvn')
 

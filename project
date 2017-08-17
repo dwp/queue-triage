@@ -1,7 +1,7 @@
 buck project //...
 
 function replace {
-  sed -i '.bak' 's#$1#$2#' $3 && rm $3.bak
+  sed -i'.bak' 's#$1#$2#' $3 && rm $3.bak
 }
 
 # In the following modules:
@@ -12,11 +12,12 @@ function replace {
 #   <sourceFolder url="file://$MODULE_DIR$/src" isTestSource="false" />
 # With:
 #   <sourceFolder url="file://$MODULE_DIR$/src/main/resources" type="java-resource" />
-replace '"file://$MODULE_DIR$/src" isTestSource="false"' '"file://$MODULE_DIR$/src/main/resources" type="java-resource"' common/ldap-test-support/common_ldap_test_support.iml
-replace '"file://$MODULE_DIR$/src" isTestSource="false"' '"file://$MODULE_DIR$/src/test/resources" type="java-test-resource"' core/activemq/core_activemq.iml
-replace '"file://$MODULE_DIR$/src" isTestSource="false"' '"file://$MODULE_DIR$/src/test/resources" type="java-test-resource"' web/mustache/web_mustache.iml
-replace '"file://$MODULE_DIR$/src" isTestSource="false"' '"file://$MODULE_DIR$/src/main/resources" type="java-resource"' core/server/core_server.iml
-replace '"file://$MODULE_DIR$/src" isTestSource="false"' '"file://$MODULE_DIR$/src/main/resources" type="java-resource"' core/dao-mongo-test-support/core_dao_mongo_test_support.iml
-replace '"file://$MODULE_DIR$/src" isTestSource="false"' '"file://$MODULE_DIR$/src/main/resources" type="java-resource"' core/component-test/core_component_test.iml
-replace '/src/test" isTestSource="true"'                 '/src/test/java" isTestSource="true"'                           core/jms/core_jms.iml
-replace '"file://$MODULE_DIR$/src" isTestSource="false"' '"file://$MODULE_DIR$/src/main/resources" type="java-resource"' web/server/web_server.iml
+sed --in-place 's#"file://$MODULE_DIR$/src" isTestSource="false"#"file://$MODULE_DIR$/src/main/resources" type="java-resource"#' common/ldap-test-support/common_ldap_test_support.iml
+sed --in-place 's#"file://$MODULE_DIR$/src" isTestSource="false"#"file://$MODULE_DIR$/src/test/resources" type="java-test-resource"#' core/activemq/core_activemq.iml
+sed --in-place 's#"file://$MODULE_DIR$/src" isTestSource="false"#"file://$MODULE_DIR$/src/test/resources" type="java-test-resource"#' web/mustache/web_mustache.iml
+sed --in-place 's#"file://$MODULE_DIR$/src" isTestSource="false"#"file://$MODULE_DIR$/src/main/resources" type="java-resource"#' core/server/core_server.iml
+sed --in-place 's#"file://$MODULE_DIR$/src" isTestSource="false"#"file://$MODULE_DIR$/src/main/resources" type="java-resource"#' core/dao-mongo-test-support/core_dao_mongo_test_support.iml
+sed --in-place 's#"file://$MODULE_DIR$/src" isTestSource="false"#"file://$MODULE_DIR$/src/main/resources" type="java-resource"#' core/component-test/core_component_test.iml
+sed --in-place 's#/src/test" isTestSource="true"#/src/test/java" isTestSource="true"#' core/jms/core_jms.iml
+sed --in-place 's#"file://$MODULE_DIR$/src" isTestSource="false"#"file://$MODULE_DIR$/src/test/resources" type="java-test-resource"#' core/resend/core_resend.iml
+sed --in-place 's#"file://$MODULE_DIR$/src" isTestSource="false"#"file://$MODULE_DIR$/src/main/resources" type="java-resource"#' web/server/web_server.iml
