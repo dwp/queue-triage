@@ -10,6 +10,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.http.ResponseEntity;
 import uk.gov.dwp.queue.triage.jgiven.ReflectionArgumentFormatter;
 import uk.gov.dwp.queue.triage.web.component.home.HomePage;
+import uk.gov.dwp.queue.triage.web.component.list.ListFailedMessagesPage;
 import uk.gov.dwp.queue.triage.web.component.login.LoginStage.User.UserBuilder;
 import uk.gov.dwp.queue.triage.web.component.util.PageSupport;
 
@@ -76,8 +77,8 @@ public class LoginStage extends Stage<LoginStage> {
         return this;
     }
 
-    public LoginStage theUserIsRedirectedToTheHomePage() {
-        HomePage.ensureLoaded();
+    public LoginStage theUserIsRedirectedToTheFailedMessageListPage() {
+        ListFailedMessagesPage.ensureLoaded();
         return this;
     }
 

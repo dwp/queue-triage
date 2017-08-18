@@ -28,7 +28,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .formLogin()
                 .loginPage("/web/login")
                 .permitAll()
-                .successHandler(new SimpleUrlAuthenticationSuccessHandler("/web/home"))
+                .successHandler(new SimpleUrlAuthenticationSuccessHandler("/web/failed-messages"))
                 .and()
 //        httpSecurity
                 .logout()
