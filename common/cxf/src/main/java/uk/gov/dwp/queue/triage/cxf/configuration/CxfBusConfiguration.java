@@ -1,7 +1,6 @@
 package uk.gov.dwp.migration.mongo.demo.cxf.configuration;
 
 import org.apache.cxf.Bus;
-import org.apache.cxf.endpoint.Server;
 import org.apache.cxf.feature.LoggingFeature;
 import org.apache.cxf.jaxrs.JAXRSServerFactoryBean;
 import org.apache.cxf.transport.servlet.CXFServlet;
@@ -12,10 +11,9 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.ImportResource;
 import uk.gov.dwp.migration.mongo.demo.cxf.client.CxfConfiguration;
+import uk.gov.dwp.migration.mongo.demo.cxf.client.FeatureRegistry;
 import uk.gov.dwp.migration.mongo.demo.cxf.client.ProviderRegistry;
 import uk.gov.dwp.migration.mongo.demo.cxf.client.ResourceRegistry;
-
-import java.util.Arrays;
 
 @Configuration
 @Import({
@@ -32,8 +30,9 @@ public class CxfBusConfiguration {
         return cxfServlet;
     }
 
-    @Bean
-    public Server server(Bus bus,
+    @Bean(initMethod = "create")
+    public JAXRSServerFactoryBean server(Bus bus,
+                         FeatureRegistry featureRegistry,
                          ProviderRegistry providerRegistry,
                          ResourceRegistry resourceRegistry,
                          CxfProperties cxfProperties) {
@@ -42,12 +41,13 @@ public class CxfBusConfiguration {
         endpoint.setAddress(cxfProperties.getContextPath());
         endpoint.setProviders(providerRegistry.getProviders());
         endpoint.setBus(bus);
-        endpoint.setFeatures(Arrays.asList(loggingFeature()));
-        return endpoint.create();
+        endpoint.setFeatures(featureRegistry.getFeatures());
+        return endpoint;
     }
 
     @Bean
-    public LoggingFeature loggingFeature() {
-        return new LoggingFeature();
+    public LoggingFeature loggingFeature(FeatureRegistry featureRegistry) {
+        return featureRegistry.add(new LoggingFeature());
     }
+
 }

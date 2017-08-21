@@ -15,4 +15,9 @@ public class CxfConfiguration {
     public ResourceRegistry resourceRegistry() {
         return new ResourceRegistry();
     }
+
+    @Bean
+    public FeatureRegistry featureRegistry() {
+        return new FeatureRegistry();
+    }
 }

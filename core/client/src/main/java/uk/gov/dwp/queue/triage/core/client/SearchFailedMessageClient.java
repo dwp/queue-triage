@@ -1,5 +1,6 @@
 package uk.gov.dwp.queue.triage.core.client;
 
+import io.swagger.annotations.Api;
 import uk.gov.dwp.queue.triage.core.client.search.SearchFailedMessageRequest;
 import uk.gov.dwp.queue.triage.core.client.search.SearchFailedMessageResponse;
 import uk.gov.dwp.queue.triage.id.FailedMessageId;
@@ -14,6 +15,7 @@ import java.util.Collection;
 
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 
+@Api(value = "search")
 @Consumes(APPLICATION_JSON)
 @Produces(APPLICATION_JSON)
 @Path("/failed-message")

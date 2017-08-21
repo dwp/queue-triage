@@ -9,12 +9,14 @@ import org.springframework.boot.autoconfigure.security.SecurityAutoConfiguration
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Import;
 import uk.gov.dwp.migration.mongo.demo.cxf.configuration.CxfBusConfiguration;
+import uk.gov.dwp.queue.triage.swagger.configuration.SwaggerConfiguration;
 
 import java.util.Arrays;
 
 @SpringBootApplication
 @Import({
-        CxfBusConfiguration.class
+        SwaggerConfiguration.class,
+        CxfBusConfiguration.class,
 })
 @EnableAutoConfiguration(
         exclude = {
