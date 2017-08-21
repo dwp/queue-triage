@@ -4,6 +4,7 @@ import org.apache.cxf.Bus;
 import org.apache.cxf.endpoint.Server;
 import org.apache.cxf.feature.LoggingFeature;
 import org.apache.cxf.jaxrs.JAXRSServerFactoryBean;
+import org.apache.cxf.jaxrs.swagger.Swagger2Feature;
 import org.apache.cxf.transport.servlet.CXFServlet;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
@@ -42,12 +43,17 @@ public class CxfBusConfiguration {
         endpoint.setAddress(cxfProperties.getContextPath());
         endpoint.setProviders(providerRegistry.getProviders());
         endpoint.setBus(bus);
-        endpoint.setFeatures(Arrays.asList(loggingFeature()));
+        endpoint.setFeatures(Arrays.asList(loggingFeature(), swaggerFeature()));
         return endpoint.create();
     }
 
     @Bean
     public LoggingFeature loggingFeature() {
         return new LoggingFeature();
+    }
+
+    @Bean
+    public Swagger2Feature swaggerFeature() {
+        return new Swagger2Feature();
     }
 }

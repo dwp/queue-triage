@@ -17,6 +17,17 @@ remote_file(name="cxf-rt-rs-client-mvn", out="cxf-rt-rs-client-3.1.11.jar", url=
 remote_file(name="cxf-rt-transports-http-mvn", out="cxf-rt-transports-http-3.1.11.jar", url="mvn:org.apache.cxf:cxf-rt-transports-http:jar:3.1.11", sha1="c87e71ce60f3b0db67169a4b22898a6d49f1d5de")
 remote_file(name="cxf-rt-transports-http-jetty-mvn", out="cxf-rt-transports-http-jetty-3.1.11.jar", url="mvn:org.apache.cxf:cxf-rt-transports-http-jetty:jar:3.1.11", sha1="f8ffbe0b98e52f182677688a316b38587ef269c0")
 
+prebuilt_jar(
+    name = "cxf-rt-rs-service-description-swagger-jar",
+    binary_jar = ":cxf-rt-rs-service-description-swagger-mvn",
+)
+remote_file(
+    name = "cxf-rt-rs-service-description-swagger-mvn",
+    out  = "cxf-rt-rs-service-description-swagger-3.1.11.jar",
+    url  = "mvn:org.apache.cxf:cxf-rt-rs-service-description-swagger:jar:3.1.11",
+    sha1 = "7a711a7d3d8f40b2f8c60832f15805dfffbb36c5"
+)
+
 java_library(
     name = "cxf-rt-transports-http-jetty",
     exported_deps = [
@@ -32,5 +43,25 @@ java_library(
         "//common/cxf:queue-triage-cxf",
         "//core/component-test:test",
         "//core/server:queue-triage-core-server",
+    ]
+)
+
+java_library(
+    name = "cxf-rt-rs-service-description-swagger",
+    exported_deps = [
+        ":cxf-rt-rs-service-description-swagger-jar",
+        "//lib:guava",
+        "//lib:javassist",
+        "//lib:reflections",
+        "//lib/jackson:jackson-dataformat-yaml",
+        "//lib/javax:javax-annotation-api",
+        "//lib/javax:javax-ws-rs-api",
+        "//lib/swagger:swagger-annotations",
+        "//lib/swagger:swagger-core",
+        "//lib/swagger:swagger-jaxrs",
+        "//lib/swagger:swagger-models",
+    ],
+    visibility = [
+        "//common/cxf:queue-triage-cxf"
     ]
 )
