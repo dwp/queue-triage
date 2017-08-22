@@ -18,8 +18,8 @@ before_script:
   - buck --version
 
 script:
-  - buck fetch //...
-  - buck test //...
+  - buck fetch //... > /dev/null
+  - buck test //... > /dev/null
 
 services:
   - mongodb
