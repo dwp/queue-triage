@@ -2,6 +2,7 @@ package uk.gov.dwp.migration.mongo.demo.cxf.configuration;
 
 import org.apache.cxf.Bus;
 import org.apache.cxf.endpoint.Server;
+import org.apache.cxf.feature.Feature;
 import org.apache.cxf.feature.LoggingFeature;
 import org.apache.cxf.jaxrs.JAXRSServerFactoryBean;
 import org.apache.cxf.transport.servlet.CXFServlet;
@@ -15,7 +16,7 @@ import uk.gov.dwp.migration.mongo.demo.cxf.client.CxfConfiguration;
 import uk.gov.dwp.migration.mongo.demo.cxf.client.ProviderRegistry;
 import uk.gov.dwp.migration.mongo.demo.cxf.client.ResourceRegistry;
 
-import java.util.Arrays;
+import java.util.List;
 
 @Configuration
 @Import({
@@ -34,6 +35,7 @@ public class CxfBusConfiguration {
 
     @Bean
     public Server server(Bus bus,
+                         List<Feature> features,
                          ProviderRegistry providerRegistry,
                          ResourceRegistry resourceRegistry,
                          CxfProperties cxfProperties) {
@@ -42,7 +44,7 @@ public class CxfBusConfiguration {
         endpoint.setAddress(cxfProperties.getContextPath());
         endpoint.setProviders(providerRegistry.getProviders());
         endpoint.setBus(bus);
-        endpoint.setFeatures(Arrays.asList(loggingFeature()));
+        endpoint.setFeatures(features);
         return endpoint.create();
     }
 

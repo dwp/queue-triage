@@ -1,0 +1,24 @@
+prebuilt_jar(
+    name = 'hibernate-validator-jar',
+    binary_jar = ':hibernate-validator-mvn'
+)
+
+remote_file(
+    name = 'hibernate-validator-mvn',
+    out  = 'hibernate-validator-5.4.1.Final.jar',
+    url  = 'mvn:org.hibernate:hibernate-validator:jar:5.4.1.Final',
+    sha1 = 'fc71e53520e1030d278f682b796c88265b94c699'
+)
+
+java_library(
+    name = 'hibernate-validator',
+    exported_deps = [
+        ':hibernate-validator-jar',
+        '//lib/javax:javax-validation-api',
+        '//lib:jboss-logging',
+        '//lib:classmate',
+    ],
+    visibility = [
+        'PUBLIC',
+    ],
+)

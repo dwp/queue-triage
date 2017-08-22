@@ -3,15 +3,20 @@ package uk.gov.dwp.queue.triage.core.client.search;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import uk.gov.dwp.queue.triage.id.FailedMessageId;
 
+import javax.validation.constraints.NotNull;
 import java.time.Instant;
 import java.util.Optional;
 
 public class SearchFailedMessageResponse {
 
+    @NotNull
     private final FailedMessageId failedMessageId;
+    @NotNull
     private final String broker;
     private final Optional<String> destination;
+    @NotNull
     private final Instant sentDateTime;
+    @NotNull
     private final Instant lastFailedDateTime;
     private final String content;
 
