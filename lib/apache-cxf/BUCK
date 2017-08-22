@@ -20,12 +20,19 @@ remote_file(name="cxf-rt-transports-http-jetty-mvn", out="cxf-rt-transports-http
 prebuilt_jar(
     name = "cxf-rt-rs-service-description-swagger-jar",
     binary_jar = ":cxf-rt-rs-service-description-swagger-mvn",
+    source_jar = ":cxf-rt-rs-service-description-swagger-src",
 )
 remote_file(
     name = "cxf-rt-rs-service-description-swagger-mvn",
     out  = "cxf-rt-rs-service-description-swagger-3.1.11.jar",
     url  = "mvn:org.apache.cxf:cxf-rt-rs-service-description-swagger:jar:3.1.11",
     sha1 = "7a711a7d3d8f40b2f8c60832f15805dfffbb36c5"
+)
+remote_file(
+    name = "cxf-rt-rs-service-description-swagger-src",
+    out  = "cxf-rt-rs-service-description-swagger-3.1.11-sources.jar",
+    url  = "mvn:org.apache.cxf:cxf-rt-rs-service-description-swagger:src:3.1.11",
+    sha1 = "7447ea2956df52dac53a10f8aaad7f23426620fb"
 )
 
 java_library(

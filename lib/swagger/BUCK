@@ -15,6 +15,7 @@ remote_file(
 prebuilt_jar(
     name = "swagger-jaxrs",
     binary_jar = ":swagger-jaxrs-mvn",
+    source_jar = ":swagger-jaxrs-src",
     visibility = [
         "//lib/apache-cxf:cxf-rt-rs-service-description-swagger",
     ],
@@ -24,6 +25,12 @@ remote_file(
     out  = "swagger-jaxrs-1.5.16.jar",
     url  = "mvn:io.swagger:swagger-jaxrs:jar:1.5.16",
     sha1 = "1b128a766d85e87329b6351beda90a990584e9ad",
+)
+remote_file(
+    name = "swagger-jaxrs-src",
+    out  = "swagger-jaxrs-1.5.16-sources.jar",
+    url  = "mvn:io.swagger:swagger-jaxrs:src:1.5.16",
+    sha1 = "15bf249e8689caece350a426e8ea1edc2e32e487",
 )
 
 prebuilt_jar(
@@ -43,6 +50,7 @@ remote_file(
 prebuilt_jar(
     name = "swagger-models",
     binary_jar = ":swagger-models-mvn",
+    source_jar = ":swagger-models-src",
     visibility = [
         "//lib/apache-cxf:cxf-rt-rs-service-description-swagger",
     ],
@@ -52,4 +60,10 @@ remote_file(
     out  = "swagger-models-1.5.16.jar",
     url  = "mvn:io.swagger:swagger-models:jar:1.5.16",
     sha1 = "9ab9141fab67ba48b5a60a66a8b0c4fd31944d1b",
+)
+remote_file(
+    name = "swagger-models-src",
+    out  = "swagger-models-1.5.16-sources.jar",
+    url  = "mvn:io.swagger:swagger-models:src:1.5.16",
+    sha1 = "1cea57d2218690f0be910fc8c842dd2101a04835",
 )

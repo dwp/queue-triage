@@ -57,6 +57,7 @@ java_test(
         '//lib/activemq:activemq-broker-with-dependencies',
         '//lib/activemq:activemq-client-with-dependencies',
         '//lib/apache-cxf:cxf-rt-transports-http-jetty',
+        "//lib/hibernate-validator:hibernate-validator",
         '//lib/jackson:jackson-annotations',
         '//lib/javax:javax-servlet-api',
         '//lib/spring:spring-beans',
