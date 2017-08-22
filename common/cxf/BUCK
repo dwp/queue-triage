@@ -23,7 +23,6 @@ java_library(
     exported_deps = [
         ":queue-triage-cxf-client",
         "//lib/apache-cxf:cxf-rt-transports-http-jetty",
-        "//lib/apache-cxf:cxf-rt-rs-service-description-swagger",
         "//lib/javax:javax-servlet-api",
         "//lib/spring:spring-boot",
         "//lib/spring:spring-context",

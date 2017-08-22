@@ -5,6 +5,7 @@ java_library(
         '//common/id:queue-triage-common-id',
         '//lib:commons-lang3',
         '//lib/jackson:jackson-annotations',
+        '//lib/javax:javax-validation-api',
         '//lib/javax:javax-ws-rs-api',
         '//lib/swagger:swagger-annotations',
     ],

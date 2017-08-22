@@ -4,17 +4,24 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import uk.gov.dwp.queue.triage.id.FailedMessageId;
 
+import javax.validation.constraints.NotNull;
 import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
 
 public class CreateFailedMessageRequest {
 
+    @NotNull
     private final FailedMessageId failedMessageId;
+    @NotNull
     private final String brokerName;
+    @NotNull
     private final String destination;
+    @NotNull
     private final Instant sentAt;
+    @NotNull
     private final Instant failedAt;
+    @NotNull
     private final String content;
     @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS)
     private final Map<String, Object> properties;
