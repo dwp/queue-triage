@@ -1,9 +1,12 @@
 java_library(
     name = "queue-triage-core-domain",
-    srcs = glob(["**/*.java"]),
+    srcs = glob(["src/main/java/**/*.java"]),
     deps = [
-        "//common/id:queue-triage-common-id",
+        '//common/id:queue-triage-common-id',
+        '//core/client:queue-triage-core-client',
         '//lib:commons-lang3',
+        '//lib:guava',
+        '//lib/slf4j:slf4j-api',
     ],
     visibility = [
         "//core/activemq:queue-triage-core-activemq",
@@ -18,7 +21,9 @@ java_library(
         "//core/jms:test",
         "//core/jms:test-spring",
         "//core/message-classification:queue-triage-core-message-classification",
+        "//core/message-classification:queue-triage-core-message-classification-server",
         "//core/message-classification:test",
+        "//core/message-classification:test-server",
         "//core/resend:queue-triage-core-resend",
         "//core/resend:test",
         "//core/search:queue-triage-core-search",
@@ -28,5 +33,16 @@ java_library(
         "//core/server:test",
         "//core/service:queue-triage-core-service",
         "//core/service:test",
+    ]
+)
+
+java_test(
+    name = 'test',
+    srcs = glob(["src/test/java/**/*.java"]),
+    deps = [
+        ':queue-triage-core-domain',
+        '//core/client:queue-triage-core-client',
+        '//lib:guava',
+        '//lib/test:common',
     ]
 )

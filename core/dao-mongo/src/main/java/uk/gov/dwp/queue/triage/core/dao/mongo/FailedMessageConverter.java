@@ -1,6 +1,7 @@
 package uk.gov.dwp.queue.triage.core.dao.mongo;
 
 import com.mongodb.BasicDBObject;
+import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import uk.gov.dwp.queue.triage.core.dao.ObjectConverter;
 import uk.gov.dwp.queue.triage.core.domain.Destination;
@@ -9,6 +10,7 @@ import uk.gov.dwp.queue.triage.core.domain.FailedMessageStatus;
 import uk.gov.dwp.queue.triage.id.FailedMessageId;
 
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -52,6 +54,15 @@ public class FailedMessageConverter implements DBObjectWithIdConverter<FailedMes
                 .withFailedMessageStatus(getFailedMessageStatus(basicDBObject))
                 .withProperties(propertiesMongoMapper.convertToObject(basicDBObject.getString(PROPERTIES)))
                 .build();
+    }
+
+    public List<FailedMessage> convertToList(DBCursor dbCursor) {
+        List<FailedMessage> responses = new ArrayList<>();
+        for (DBObject dbObject : dbCursor) {
+            responses.add(convertToObject(dbObject));
+        }
+        dbCursor.close();
+        return responses;
     }
 
     public FailedMessageStatus getFailedMessageStatus(BasicDBObject basicDBObject) {

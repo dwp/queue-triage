@@ -44,12 +44,11 @@ public class StubAppJmsConfiguration {
     }
 
     private MessageClassifier defaultMessageClassifier() {
-        return new MessageClassifier(
-                failedMessage -> true,
-                failedMessage -> {
+        return MessageClassifier
+                .when(failedMessage -> true)
+                .then(failedMessage -> {
                     throw new RuntimeException("Head Shot!");
-                }
-        );
+                });
     }
 
     @Bean(destroyMethod = "shutdown")

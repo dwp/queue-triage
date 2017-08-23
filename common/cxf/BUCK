@@ -8,6 +8,7 @@ java_library(
         "//common/jackson:queue-triage-common-jackson",
         "//common/swagger:queue-triage-common-swagger-cxf",
         "//core/server:queue-triage-core-server",
+        "//core/message-classification:queue-triage-core-message-classification-server",
         "//web/mustache:queue-triage-web-mustache-spring",
     ]
 )

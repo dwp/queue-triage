@@ -4,6 +4,7 @@ import org.hamcrest.Matchers;
 import org.junit.Test;
 import uk.gov.dwp.queue.triage.core.client.FailedMessageResponse;
 import uk.gov.dwp.queue.triage.core.domain.Destination;
+import uk.gov.dwp.queue.triage.core.domain.FailedMessageStatusAdapter;
 import uk.gov.dwp.queue.triage.id.FailedMessageId;
 
 import java.time.Instant;

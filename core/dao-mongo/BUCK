@@ -32,6 +32,7 @@ java_test(
         '//core/domain:queue-triage-core-domain',
         '//core/domain-test-support:queue-triage-core-domain-test-support',
         '//lib:commons-logging',
+        '//lib:guava',
         '//lib/javax:javax-ws-rs-api',
         '//lib/mongo:mongodb-driver',
         '//lib/spring:spring-boot-test',
