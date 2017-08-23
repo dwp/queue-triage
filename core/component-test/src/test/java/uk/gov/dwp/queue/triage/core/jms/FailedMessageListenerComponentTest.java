@@ -30,10 +30,10 @@ public class FailedMessageListenerComponentTest extends BaseCoreComponentTest<Jm
 
         when().aMessageWithContent$IsSentTo$OnBroker$("poison", "some-queue", "internal-broker");
         when().and().aMessageWithContent$IsSentTo$OnBroker$("elixir", "some-queue", "internal-broker");
-        searchFailedMessageStage.and().aSearchIsRequested(newSearchFailedMessageRequest().withBroker("internal-broker"));
 
-        searchFailedMessageStage.then().theSearchResultsContain(contains(
-                aFailedMessage()
+        searchFailedMessageStage.then().aSearch$WillContain$(
+                newSearchFailedMessageRequest().withBroker("internal-broker"),
+                contains(aFailedMessage()
                         .withBroker(equalTo("internal-broker"))
                         .withDestination(equalTo(Optional.of("some-queue")))
                         .withContent(equalTo("poison"))
@@ -44,7 +44,7 @@ public class FailedMessageListenerComponentTest extends BaseCoreComponentTest<Jm
         return new IsIterableContainingInOrder<SearchFailedMessageResponse>(Arrays.asList(searchResultMatcher)) {
             @Override
             public String toString() {
-                return new ReflectionArgumentFormatter().format(searchResultMatcher, "broker", "destination");
+                return "a message " + new ReflectionArgumentFormatter().format(searchResultMatcher, "broker", "destination");
             }
         };
     }
