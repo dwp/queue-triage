@@ -12,8 +12,10 @@ import java.util.function.Predicate;
 
 public class MessageClassifier implements Predicate<FailedMessage>, Consumer<FailedMessage> {
 
-    private final FailedMessageAction action;
+    @JsonProperty
     private final List<FailedMessagePredicate> predicates;
+    @JsonProperty
+    private final FailedMessageAction action;
 
     private MessageClassifier(@JsonProperty("predicates") List<FailedMessagePredicate> predicates,
                               @JsonProperty("action") FailedMessageAction action) {

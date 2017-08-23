@@ -56,6 +56,7 @@ public class SearchFailedMessageStage extends Stage<SearchFailedMessageStage> {
     }
 
     public SearchFailedMessageStage theSearchResultsContain(Matcher<Iterable<? extends SearchFailedMessageResponse>> resultsMatcher) {
+//        await().atMost(5, SECONDS).until()
         assertThat(searchResponse.getStatusCodeValue(), is(Status.OK.getStatusCode()));
         assertThat(searchResponse.getBody(), resultsMatcher);
         return this;

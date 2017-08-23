@@ -1,6 +1,7 @@
 package uk.gov.dwp.queue.triage.jackson.configuration;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.InjectableValues;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
@@ -27,6 +28,11 @@ public class JacksonConfiguration {
     }
 
     @Bean
+    public InjectableValues.Std jacksonInjectableValues() {
+        return new InjectableValues.Std();
+    }
+
+    @Bean
     public ObjectMapper objectMapper() {
         return new ObjectMapper()
                 .configure(DeserializationFeature.READ_DATE_TIMESTAMPS_AS_NANOSECONDS, false)
@@ -35,6 +41,7 @@ public class JacksonConfiguration {
                 .registerModule(new JavaTimeModule())
                 .registerModule(new SimpleModule()
                         .addSerializer(Id.class, new IdSerializer())
-                        .addDeserializer(Id.class, new IdDeserializer()));
+                        .addDeserializer(Id.class, new IdDeserializer()))
+                .setInjectableValues(jacksonInjectableValues());
     }
 }

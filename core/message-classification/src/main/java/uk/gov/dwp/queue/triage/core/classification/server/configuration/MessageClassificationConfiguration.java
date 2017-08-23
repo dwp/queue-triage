@@ -39,13 +39,14 @@ public class MessageClassificationConfiguration {
     }
 
     @Bean(initMethod = "start", destroyMethod = "stop")
-    public MessageClassificationExecutorService messageClassificationExecutorService(MessageClassificationService messageClassificationService) {
-        return new MessageClassificationExecutorService(
+    public MessageClassificationExecutorService messageClassificationExecutorService(MessageClassificationService messageClassificationService,
+                                                                                     ResourceRegistry resourceRegistry) {
+        return resourceRegistry.add(new MessageClassificationExecutorService(
                 Executors.newSingleThreadScheduledExecutor(),
                 messageClassificationService,
                 0,
                 60,
                 TimeUnit.SECONDS
-        );
+        ));
     }
 }

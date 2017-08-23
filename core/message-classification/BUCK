@@ -50,6 +50,7 @@ java_library(
     srcs = glob(['src/main/java/**/server/**/*.java']),
     deps = [
         "//common/cxf:queue-triage-cxf-client",
+        "//lib/javax:javax-ws-rs-api",
         "//lib/slf4j:slf4j-api",
         "//lib/spring:spring-beans",
         "//lib/spring:spring-context",
