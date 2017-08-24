@@ -40,6 +40,7 @@ public class MessageClassificationService {
                 .forEach(failedMessage -> messageClassifiers
                         .stream()
                         .filter(messageClassifier -> messageClassifier.test(failedMessage))
+                        .peek(messageClassifier -> LOGGER.debug("Applying MessageClassifier to FailedMessageId: {}", failedMessage.getFailedMessageId()))
                         .findFirst()
                         .ifPresent(messageClassifier -> messageClassifier.accept(failedMessage)));
     }

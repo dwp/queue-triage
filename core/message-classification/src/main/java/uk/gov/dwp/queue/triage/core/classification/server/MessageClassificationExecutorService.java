@@ -56,10 +56,7 @@ public class MessageClassificationExecutorService {
     @POST
     @Path("/execute")
     public void execute() {
-        if (futureTask != null) {
-            LOGGER.info("Cancelling next execution of the MessageClassificationService");
-            futureTask.cancel(true);
-        }
+        cancelFutureTask();
         LOGGER.info("Executing the MessageClassificationService immediately and then scheduling to execute every {} {}",
                 executionFrequency,
                 timeUnit
@@ -71,16 +68,20 @@ public class MessageClassificationExecutorService {
     @Path("/pause")
     public void pause() {
         LOGGER.info("Pausing execution of the MessageClassificationService");
-        if (futureTask != null) {
+        cancelFutureTask();
+        LOGGER.info("Execution of the MessageClassificationService paused");
+    }
+
+    private void cancelFutureTask() {
+        if (futureTask != null && !futureTask.isCancelled()) {
             futureTask.cancel(true);
         }
-        LOGGER.info("Execution of the MessageClassificationService of paused");
     }
 
     public void stop() {
         LOGGER.info("Stopping execution of the MessageClassificationService");
         scheduledExecutorService.shutdown();
-        LOGGER.info("Execution of the MessageClassificationService paused");
+        LOGGER.info("Execution of the MessageClassificationService stopped");
     }
 
     private void scheduleAtAFixedRate(long initialDelay) {

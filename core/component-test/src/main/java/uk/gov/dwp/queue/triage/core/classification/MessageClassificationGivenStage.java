@@ -27,7 +27,7 @@ public class MessageClassificationGivenStage extends GivenStage<MessageClassific
         if (!"any".equalsIgnoreCase(broker)) {
             predicateBuilder.and(new BrokerEqualsPredicate(broker));
         }
-        if (!"any".equalsIgnoreCase(broker)) {
+        if (!"any".equalsIgnoreCase(queue)) {
             predicateBuilder.and(new DestinationEqualsPredicate(Optional.of(queue)));
         }
         testRestTemplate.postForLocation(
@@ -43,5 +43,9 @@ public class MessageClassificationGivenStage extends GivenStage<MessageClassific
                 HttpEntity.EMPTY
         );
         return super.self();
+    }
+
+    public void noMessageClassifiersExist() {
+        testRestTemplate.delete("/core/message-classification");
     }
 }

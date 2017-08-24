@@ -41,7 +41,7 @@ public class MessageClassificationExecutorServiceTest {
 
     @Test
     public void jobCanBeExecutedOnDemand() {
-        underTest = new MessageClassificationExecutorService(
+        MessageClassificationExecutorService underTest = new MessageClassificationExecutorService(
                 Executors.newSingleThreadScheduledExecutor(),
                 messageClassificationService,
                 1,
