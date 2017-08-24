@@ -55,6 +55,7 @@ java_library(
         "//lib/spring:spring-beans",
         "//lib/spring:spring-context",
         ':queue-triage-core-message-classification',
+        '//common/id:queue-triage-common-id',
         '//core/domain:queue-triage-core-domain',
         '//core/search:queue-triage-core-search',
     ],
