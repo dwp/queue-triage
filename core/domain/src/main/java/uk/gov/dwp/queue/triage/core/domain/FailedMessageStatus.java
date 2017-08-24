@@ -26,6 +26,7 @@ public class FailedMessageStatus {
 
     public enum Status {
         FAILED,
+        CLASSIFIED,
         RESEND,
         SENT,
         DELETED,

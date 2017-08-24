@@ -1,5 +1,6 @@
 package uk.gov.dwp.queue.triage.core.configuration;
 
+import com.fasterxml.jackson.databind.InjectableValues;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import uk.gov.dwp.queue.triage.core.dao.FailedMessageDao;
@@ -9,7 +10,10 @@ import uk.gov.dwp.queue.triage.core.service.FailedMessageService;
 public class FailedMessageServiceConfiguration {
 
     @Bean
-    public FailedMessageService failedMessageService(FailedMessageDao failedMessageDao) {
-        return new FailedMessageService(failedMessageDao);
+    public FailedMessageService failedMessageService(FailedMessageDao failedMessageDao,
+                                                     InjectableValues.Std jacksonInjectableValues) {
+        FailedMessageService failedMessageService = new FailedMessageService(failedMessageDao);
+        jacksonInjectableValues.addValue(FailedMessageService.class, failedMessageService);
+        return failedMessageService;
     }
 }

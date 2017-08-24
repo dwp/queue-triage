@@ -1,15 +1,14 @@
 package uk.gov.dwp.queue.triage.core.search.mongo;
 
 import com.mongodb.DBCollection;
-import com.mongodb.DBCursor;
-import com.mongodb.DBObject;
 import org.slf4j.Logger;
 import uk.gov.dwp.queue.triage.core.client.search.SearchFailedMessageRequest;
 import uk.gov.dwp.queue.triage.core.dao.mongo.FailedMessageConverter;
+import uk.gov.dwp.queue.triage.core.dao.mongo.MongoStatusHistoryQueryBuilder;
 import uk.gov.dwp.queue.triage.core.domain.FailedMessage;
+import uk.gov.dwp.queue.triage.core.domain.FailedMessageStatus;
 import uk.gov.dwp.queue.triage.core.search.FailedMessageSearchService;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -22,24 +21,30 @@ public class MongoFailedMessageSearchService implements FailedMessageSearchServi
     private final DBCollection dbCollection;
     private final MongoSearchRequestAdapter mongoSearchRequestAdapter;
     private final FailedMessageConverter failedMessageConverter;
+    private final MongoStatusHistoryQueryBuilder mongoStatusHistoryQueryBuilder;
 
     public MongoFailedMessageSearchService(DBCollection dbCollection,
                                            MongoSearchRequestAdapter mongoSearchRequestAdapter,
-                                           FailedMessageConverter failedMessageConverter) {
+                                           FailedMessageConverter failedMessageConverter,
+                                           MongoStatusHistoryQueryBuilder mongoStatusHistoryQueryBuilder) {
         this.dbCollection = dbCollection;
         this.mongoSearchRequestAdapter = mongoSearchRequestAdapter;
         this.failedMessageConverter = failedMessageConverter;
+        this.mongoStatusHistoryQueryBuilder = mongoStatusHistoryQueryBuilder;
     }
 
     @Override
     public Collection<FailedMessage> search(SearchFailedMessageRequest request) {
-        // TODO: Consider adding FailedMessageConverter#convertToObjects(DBCursor dbCursor, Class<T extends Collection> collection)
-        DBCursor dbCursor = dbCollection.find(mongoSearchRequestAdapter.toQuery(request));
-        List<FailedMessage> responses = new ArrayList<>();
-        for (DBObject dbObject : dbCursor) {
-            responses.add(failedMessageConverter.convertToObject(dbObject));
-        }
-        dbCursor.close();
+        List<FailedMessage> responses = failedMessageConverter
+                .convertToList(dbCollection.find(mongoSearchRequestAdapter.toQuery(request)));
+        LOGGER.debug("Found {} results", responses.size());
+        return responses;
+    }
+
+    @Override
+    public Collection<FailedMessage> findByStatus(FailedMessageStatus.Status status) {
+        List<FailedMessage> responses = failedMessageConverter
+                .convertToList(dbCollection.find(mongoStatusHistoryQueryBuilder.currentStatusEqualTo(status)));
         LOGGER.debug("Found {} results", responses.size());
         return responses;
     }

@@ -7,6 +7,8 @@ java_library(
         '//core/domain:queue-triage-core-domain',
     ],
     visibility = [
+        "//core/message-classification:queue-triage-core-message-classification-server",
+        "//core/message-classification:test-server",
         "//core/resend:queue-triage-core-resend",
         "//core/resend:test",
         "//core/resend:test-spring",

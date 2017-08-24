@@ -9,13 +9,13 @@ public class ResendScheduledExecutorService {
 
     public ResendScheduledExecutorService(ScheduledExecutorService scheduledExecutorService,
                                           ResendFailedMessageService resendFailedMessageService,
-                                          long initalDelay,
+                                          long initialDelay,
                                           long executionFrequency,
                                           TimeUnit timeUnit) {
         this.scheduledExecutorService = scheduledExecutorService;
         this.scheduledExecutorService.scheduleAtFixedRate(
                 resendFailedMessageService::resendMessages,
-                initalDelay,
+                initialDelay,
                 executionFrequency,
                 timeUnit
         );

@@ -22,6 +22,8 @@ import uk.gov.dwp.queue.triage.jgiven.ReflectionArgumentFormatter;
 import javax.ws.rs.core.Response.Status;
 import java.util.Collection;
 
+import static java.util.concurrent.TimeUnit.SECONDS;
+import static org.awaitility.Awaitility.await;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
@@ -46,12 +48,27 @@ public class SearchFailedMessageStage extends Stage<SearchFailedMessageStage> {
                 "/core/failed-message/search",
                 HttpMethod.POST,
                 new HttpEntity<>(requestBuilder.build()),
-                new ParameterizedTypeReference<Collection<SearchFailedMessageResponse>>() {});
+                new ParameterizedTypeReference<Collection<SearchFailedMessageResponse>>() {
+                });
         return this;
     }
 
     public SearchFailedMessageStage a$HttpResponseCodeIsReceived(Status statusCode) {
         assertThat(searchResponse.getStatusCodeValue(), is(statusCode.getStatusCode()));
+        return this;
+    }
+
+    public SearchFailedMessageStage aSearch$WillContain$(
+            @Format(value = ReflectionArgumentFormatter.class, args = {"broker", "destination"}) SearchFailedMessageRequestBuilder requestBuilder,
+            Matcher<Iterable<? extends SearchFailedMessageResponse>> resultsMatcher
+    ) {
+        await().atMost(5, SECONDS)
+                .until(testRestTemplate.exchange(
+                                "/core/failed-message/search",
+                                HttpMethod.POST,
+                                new HttpEntity<>(requestBuilder.build()),
+                                new ParameterizedTypeReference<Collection<SearchFailedMessageResponse>>() {})::getBody,
+                       resultsMatcher);
         return this;
     }
 

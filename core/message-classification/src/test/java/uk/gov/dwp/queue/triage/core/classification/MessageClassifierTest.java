@@ -5,8 +5,6 @@ import uk.gov.dwp.queue.triage.core.classification.action.FailedMessageAction;
 import uk.gov.dwp.queue.triage.core.classification.predicate.FailedMessagePredicate;
 import uk.gov.dwp.queue.triage.core.domain.FailedMessage;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
@@ -20,14 +18,18 @@ public class MessageClassifierTest {
 
     @Test
     public void actionIsExecutedIfThePredicateIsTrue() throws Exception {
-        assertThat(new MessageClassifier(alwaysTrue, failedMessageAction).classify(failedMessage), is(true));
+        MessageClassifier underTest = MessageClassifier.when(alwaysTrue).then(failedMessageAction);
+
+        underTest.accept(failedMessage);
 
         verify(failedMessageAction).accept(failedMessage);
     }
 
     @Test
     public void actionIsNotExecutedIfThePredicateIsFalse() {
-        assertThat(new MessageClassifier(alwaysFalse, failedMessageAction).classify(failedMessage), is(false));
+        MessageClassifier underTest = MessageClassifier.when(alwaysFalse).then(failedMessageAction);
+
+        underTest.accept(failedMessage);
 
         verifyZeroInteractions(failedMessageAction);
     }

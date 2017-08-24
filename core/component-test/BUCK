@@ -53,6 +53,7 @@ java_test(
         '//core/client:queue-triage-core-client',
         '//core/client-test-support:queue-triage-core-client-test-support',
         '//core/component-test:queue-triage-core-component-test',
+        '//core/message-classification:queue-triage-core-message-classification-server',
         '//core/server:queue-triage-core-server',
         '//lib/activemq:activemq-broker-with-dependencies',
         '//lib/activemq:activemq-client-with-dependencies',

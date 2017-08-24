@@ -5,6 +5,7 @@ import org.hamcrest.Matchers;
 import org.junit.Test;
 import uk.gov.dwp.queue.triage.core.client.FailedMessageStatus;
 
+import static com.mongodb.QueryOperators.IN;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasItems;
@@ -27,7 +28,7 @@ public class MongoSearchRequestAdapterTest {
         );
         assertThat(dbObject, Matchers.allOf(
                 hasField("destination.brokerName", equalTo("broker-name")),
-                hasField("statusHistory.0.status", hasField("$in", hasItems("FAILED", "RESENDING", "SENT"))),
+                hasField("statusHistory.0.status", hasField(IN, hasItems("FAILED", "CLASSIFIED", "RESEND", "SENT"))),
                 hasField("destination.name", equalTo("mars"))
         ));
     }
@@ -37,7 +38,7 @@ public class MongoSearchRequestAdapterTest {
         final DBObject dbObject = underTest.toQuery(newSearchFailedMessageRequest().build());
 
         assertThat(dbObject, Matchers.allOf(
-                hasField("statusHistory.0.status", hasField("$in", hasItems("FAILED")))
+                hasField("statusHistory.0.status", hasField("$in", hasItems("FAILED", "CLASSIFIED")))
         ));
     }
 }

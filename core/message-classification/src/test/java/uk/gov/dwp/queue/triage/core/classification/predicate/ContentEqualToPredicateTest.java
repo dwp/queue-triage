@@ -24,7 +24,7 @@ public class ContentEqualToPredicateTest {
     }
 
     @Test
-    public void contentIsMessageIsNull() {
+    public void contentInMessageIsNull() {
         when(failedMessage.getContent()).thenReturn(null);
         underTest = new ContentEqualToPredicate("foo");
 

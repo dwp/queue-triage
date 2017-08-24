@@ -1,28 +1,81 @@
 java_library(
-    name = "queue-triage-core-message-classification",
-    srcs = glob(["src/main/java/**/*.java"]),
+    name = 'queue-triage-core-message-classification',
+    srcs = glob([
+            'src/main/java/**/*.java',
+        ],
+        excludes = [
+            'src/main/java/**/server/**/*.java'
+        ]
+    ),
     deps = [
-        "//core/domain:queue-triage-core-domain",
-        "//lib:commons-lang3",
-        "//lib/jackson:jackson-annotations",
+        '//common/id:queue-triage-common-id',
+        '//core/domain:queue-triage-core-domain',
+        '//core/service:queue-triage-core-service',
+        '//lib:commons-lang3',
+        '//lib/jackson:jackson-annotations',
+        '//lib/javax:javax-ws-rs-api',
     ],
     visibility = [
-        "//core/component-test:queue-triage-core-component-test",
-        "//core/component-test:test",
+        '//core/component-test:queue-triage-core-component-test',
+        '//core/component-test:test',
+        '//core/server:queue-triage-core-server',
     ],
 )
 
 java_test(
-    name = "test",
-    srcs = glob(["src/test/java/**/*.java"]),
+    name = 'test',
+    srcs = glob(
+        [
+            'src/test/java/**/*.java',
+        ],
+        excludes = [
+            'src/test/java/**/server/**/*.java',
+        ],
+    ),
     deps = [
-        "//common/jackson:queue-triage-common-jackson",
-        "//common/jackson:queue-triage-common-jackson-spring",
-        "//common/matchers:queue-triage-common-matchers",
-        "//core/domain:queue-triage-core-domain",
-        "//core/message-classification:queue-triage-core-message-classification",
-        "//lib:commons-lang3",
-        "//lib/jackson:jackson-annotations",
-        "//lib/test:common",
+        '//common/jackson:queue-triage-common-jackson',
+        '//common/jackson:queue-triage-common-jackson-spring',
+        '//common/matchers:queue-triage-common-matchers',
+        '//core/domain:queue-triage-core-domain',
+        '//core/message-classification:queue-triage-core-message-classification',
+        '//core/service:queue-triage-core-service',
+        '//lib:commons-lang3',
+        '//lib/jackson:jackson-annotations',
+        '//lib/test:common',
+    ],
+)
+
+java_library(
+    name = 'queue-triage-core-message-classification-server',
+    srcs = glob(['src/main/java/**/server/**/*.java']),
+    deps = [
+        "//common/cxf:queue-triage-cxf-client",
+        "//lib/javax:javax-ws-rs-api",
+        "//lib/slf4j:slf4j-api",
+        "//lib/spring:spring-beans",
+        "//lib/spring:spring-context",
+        ':queue-triage-core-message-classification',
+        '//common/id:queue-triage-common-id',
+        '//core/domain:queue-triage-core-domain',
+        '//core/search:queue-triage-core-search',
+    ],
+    visibility = [
+        '//core/component-test:queue-triage-core-component-test',
+        '//core/component-test:test',
+        '//core/server:queue-triage-core-server',
+    ],
+)
+
+java_test(
+    name = 'test-server',
+    srcs = glob(['src/test/java/**/server/**/*.java']),
+    deps = [
+        ':queue-triage-core-message-classification',
+        ':queue-triage-core-message-classification-server',
+        '//core/domain:queue-triage-core-domain',
+        '//core/search:queue-triage-core-search',
+        '//lib:commons-lang3',
+        '//lib/jackson:jackson-annotations',
+        '//lib/test:common',
     ],
 )

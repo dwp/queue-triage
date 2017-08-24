@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import uk.gov.dwp.queue.triage.core.dao.mongo.FailedMessageConverter;
+import uk.gov.dwp.queue.triage.core.dao.mongo.MongoStatusHistoryQueryBuilder;
 import uk.gov.dwp.queue.triage.core.dao.mongo.configuration.MongoDaoConfig;
 import uk.gov.dwp.queue.triage.core.dao.mongo.configuration.MongoDaoProperties;
 import uk.gov.dwp.queue.triage.core.search.FailedMessageSearchService;
@@ -22,7 +23,7 @@ public class MongoSearchConfiguration {
         return new MongoFailedMessageSearchService(
                 mongoClient.getDB(mongoDaoProperties.getDbName()).getCollection(mongoDaoProperties.getFailedMessage().getName()),
                 new MongoSearchRequestAdapter(),
-                failedMessageConverter
-        );
+                failedMessageConverter,
+                new MongoStatusHistoryQueryBuilder());
     }
 }

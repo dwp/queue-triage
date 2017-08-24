@@ -51,10 +51,10 @@ public class JmsStage extends Stage<JmsStage> {
     }
 
     public void addMessageClassifierWithContent(String content, FailedMessageAction failedMessageAction) {
-        stubMessageClassifierResource.addMessageClassifier(new MessageClassifier(
-                new ContentEqualToPredicate(content),
-                failedMessageAction
-        ));
+        stubMessageClassifierResource.addMessageClassifier(MessageClassifier
+                .when(new ContentEqualToPredicate(content))
+                .then(failedMessageAction)
+        );
     }
 
     public JmsStage aMessageWithContent$IsSentTo$OnBroker$(String content, String destination, String brokerName) {

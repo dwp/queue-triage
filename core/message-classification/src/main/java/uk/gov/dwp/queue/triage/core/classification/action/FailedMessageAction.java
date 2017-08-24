@@ -5,6 +5,6 @@ import uk.gov.dwp.queue.triage.core.domain.FailedMessage;
 
 import java.util.function.Consumer;
 
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "action")
+@JsonTypeInfo(use = JsonTypeInfo.Id.MINIMAL_CLASS, property = "action")
 public interface FailedMessageAction extends Consumer<FailedMessage> {
 }

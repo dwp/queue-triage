@@ -34,6 +34,6 @@ public class StubMessageListener implements MessageListener {
                 .filter(classifier -> classifier.test(failedMessage))
                 .findFirst()
                 .orElse(defaultMessageClassifier)
-                .classify(failedMessage);
+                .accept(failedMessage);
     }
 }
