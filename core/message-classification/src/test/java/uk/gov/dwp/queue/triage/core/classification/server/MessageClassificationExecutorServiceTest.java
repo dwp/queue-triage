@@ -26,7 +26,7 @@ public class MessageClassificationExecutorServiceTest {
     @Test
     public void jobExecutesSuccessfully() throws Exception {
         underTest.start();
-        verify(messageClassificationService, times(1, timeout(25))).classifyFailedMessages();
+        verify(messageClassificationService, times(1, timeout(50))).classifyFailedMessages();
         underTest.stop();
     }
 
@@ -36,7 +36,9 @@ public class MessageClassificationExecutorServiceTest {
 
         underTest.start();
 
-        verify(messageClassificationService, times(2, timeout(75))).classifyFailedMessages();
+        verify(messageClassificationService, times(2, timeout(80))).classifyFailedMessages();
+
+        underTest.stop();
     }
 
     @Test
@@ -59,7 +61,7 @@ public class MessageClassificationExecutorServiceTest {
     @Test
     public void executorCanBePausedAndResumed() {
         underTest.start();
-        verify(messageClassificationService, times(1, timeout(25))).classifyFailedMessages();
+        verify(messageClassificationService, times(1, timeout(50))).classifyFailedMessages();
         underTest.pause();
         verify(messageClassificationService, times(1, timeout(75))).classifyFailedMessages();
         underTest.start();
