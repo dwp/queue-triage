@@ -53,7 +53,7 @@ public class MessageClassificationExecutorServiceTest {
 
         verify(messageClassificationService, timeout(50).times(0)).classifyFailedMessages();
         underTest.execute();
-        verify(messageClassificationService, timeout(75).times(1)).classifyFailedMessages();
+        verify(messageClassificationService, timeout(150).times(1)).classifyFailedMessages();
         underTest.stop();
     }
 
