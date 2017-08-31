@@ -4,6 +4,7 @@ RESEND_DEPENDENCIES = [
     "//core/jms:queue-triage-core-jms",
     "//core/search:queue-triage-core-search",
     "//core/service:queue-triage-core-service",
+    "//lib/javax:javax-ws-rs-api",
     "//lib/slf4j:slf4j-api",
 ]
 
@@ -55,7 +56,13 @@ java_library(
     name = "queue-triage-core-resend-spring",
     srcs = glob(["src/main/java/**/spring/**/*.java"]),
     deps = RESEND_SPRING_DEPENDENCIES + [
+        "//common/cxf:queue-triage-cxf-client",
         "//core/jms:queue-triage-core-jms-spring",
+    ],
+    visibility = [
+        "//core/component-test:queue-triage-component-test",
+        "//core/component-test:test",
+        "//core/server:queue-triage-core-server",
     ]
 )
 

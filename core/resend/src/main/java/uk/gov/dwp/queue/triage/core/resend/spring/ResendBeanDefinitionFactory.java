@@ -9,15 +9,22 @@ import org.springframework.core.env.Environment;
 import uk.gov.dwp.queue.triage.core.jms.activemq.spring.ActiveMQConnectionFactoryBeanDefinitionFactory;
 import uk.gov.dwp.queue.triage.core.jms.spring.JmsTemplateBeanDefinitionFactory;
 import uk.gov.dwp.queue.triage.core.jms.spring.SpringMessageSenderBeanDefinitionFactory;
+import uk.gov.dwp.queue.triage.core.resend.ResendScheduledExecutorService;
+import uk.gov.dwp.queue.triage.core.resend.ResendScheduledExecutorsResource;
 
+import java.util.Map;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class ResendBeanDefinitionFactory implements BeanDefinitionRegistryPostProcessor {
 
     private final Environment environment;
     private final ActiveMQConnectionFactoryBeanDefinitionFactory activeMQConnectionFactoryBeanDefinitionFactory;
     private final ResendFailedMessageServiceBeanDefinitionFactory resendFailedMessageServiceBeanDefinitionFactory;
+    private final FailedMessageSenderBeanDefinitionFactory failedMessageSenderBeanDefinitionFactory;
     private final SpringMessageSenderBeanDefinitionFactory springMessageSenderBeanDefinitionFactory;
     private final JmsTemplateBeanDefinitionFactory jmsTemplateBeanDefinitionFactory;
     private final ResendScheduledExecutorServiceBeanDefinitionFactory resendScheduledExecutorServiceBeanDefinitionFactory;
@@ -25,12 +32,14 @@ public class ResendBeanDefinitionFactory implements BeanDefinitionRegistryPostPr
     public ResendBeanDefinitionFactory(Environment environment,
                                        ActiveMQConnectionFactoryBeanDefinitionFactory activeMQConnectionFactoryBeanDefinitionFactory,
                                        ResendFailedMessageServiceBeanDefinitionFactory resendFailedMessageServiceBeanDefinitionFactory,
+                                       FailedMessageSenderBeanDefinitionFactory failedMessageSenderBeanDefinitionFactory,
                                        SpringMessageSenderBeanDefinitionFactory springMessageSenderBeanDefinitionFactory,
                                        JmsTemplateBeanDefinitionFactory jmsTemplateBeanDefinitionFactory,
                                        ResendScheduledExecutorServiceBeanDefinitionFactory resendScheduledExecutorServiceBeanDefinitionFactory) {
         this.environment = environment;
         this.activeMQConnectionFactoryBeanDefinitionFactory = activeMQConnectionFactoryBeanDefinitionFactory;
         this.resendFailedMessageServiceBeanDefinitionFactory = resendFailedMessageServiceBeanDefinitionFactory;
+        this.failedMessageSenderBeanDefinitionFactory = failedMessageSenderBeanDefinitionFactory;
         this.springMessageSenderBeanDefinitionFactory = springMessageSenderBeanDefinitionFactory;
         this.jmsTemplateBeanDefinitionFactory = jmsTemplateBeanDefinitionFactory;
         this.resendScheduledExecutorServiceBeanDefinitionFactory = resendScheduledExecutorServiceBeanDefinitionFactory;
@@ -57,18 +66,25 @@ public class ResendBeanDefinitionFactory implements BeanDefinitionRegistryPostPr
                     jmsTemplateBeanDefinitionFactory.create(connectionFactoryBeanName)
             );
 
-            // Create MessageSender
+            // Create SpringMessageSender
             String springMessageSenderBeanName = springMessageSenderBeanDefinitionFactory.createBeanName(brokerName);
             registry.registerBeanDefinition(
                     springMessageSenderBeanName,
                     springMessageSenderBeanDefinitionFactory.create(jmsTemplateBeanName)
             );
 
+            // Create FailedMessageSender
+            String failedMessageSenderBeanName = failedMessageSenderBeanDefinitionFactory.createBeanName(brokerName);
+            registry.registerBeanDefinition(
+                    failedMessageSenderBeanName,
+                    failedMessageSenderBeanDefinitionFactory.create(springMessageSenderBeanName)
+            );
+
             // Create a ResendFailedMessageService
             String resendFailedMessageServiceBeanName = resendFailedMessageServiceBeanDefinitionFactory.createBeanName(brokerName);
             registry.registerBeanDefinition(
                     resendFailedMessageServiceBeanName,
-                    resendFailedMessageServiceBeanDefinitionFactory.create(brokerName, springMessageSenderBeanName)
+                    resendFailedMessageServiceBeanDefinitionFactory.create(brokerName, failedMessageSenderBeanName)
             );
 
             // Create a ScheduledExecutor
@@ -82,13 +98,13 @@ public class ResendBeanDefinitionFactory implements BeanDefinitionRegistryPostPr
     }
 
     private AbstractBeanDefinition createResendScheduledExecutorBeanDefinition(int index,
-                                                                              String resendFailedMessageServiceBeanName) {
+                                                                               String resendFailedMessageServiceBeanName) {
         Long initialDelay = environment.getProperty(
                 getPropertyKey(index, "resend.initialDelay"),
                 Long.class,
                 0L);
         Long executionFrequency = environment.getProperty(
-                getPropertyKey(index,"resend.frequency"),
+                getPropertyKey(index, "resend.frequency"),
                 Long.class,
                 60L);
         TimeUnit timeUnit = environment.getProperty(
@@ -105,7 +121,14 @@ public class ResendBeanDefinitionFactory implements BeanDefinitionRegistryPostPr
 
     @Override
     public void postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory) throws BeansException {
-
+        final Map<String, ResendScheduledExecutorService> resendScheduledExecutors =
+                Stream.of(beanFactory.getBeanNamesForType(ResendScheduledExecutorService.class))
+                        .map(beanName -> beanFactory.getBean(beanName, ResendScheduledExecutorService.class))
+                        .collect(Collectors.toMap(
+                                ResendScheduledExecutorService::getBrokerName,
+                                Function.identity()
+                        ));
+        beanFactory.getBean(ResendScheduledExecutorsResource.class).setResendScheduledExecutors(resendScheduledExecutors);
     }
 
     private boolean hasMoreBrokers(int index) {

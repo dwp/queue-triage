@@ -38,7 +38,7 @@ public class MongoSearchRequestAdapterTest {
         final DBObject dbObject = underTest.toQuery(newSearchFailedMessageRequest().build());
 
         assertThat(dbObject, Matchers.allOf(
-                hasField("statusHistory.0.status", hasField("$in", hasItems("FAILED", "CLASSIFIED")))
+                hasField("statusHistory.0.status", hasField("$ne", equalTo("DELETED")))
         ));
     }
 }

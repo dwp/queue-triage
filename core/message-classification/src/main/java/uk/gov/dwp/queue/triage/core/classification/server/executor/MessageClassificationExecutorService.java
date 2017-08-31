@@ -1,7 +1,8 @@
-package uk.gov.dwp.queue.triage.core.classification.server;
+package uk.gov.dwp.queue.triage.core.classification.server.executor;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import uk.gov.dwp.queue.triage.core.classification.server.MessageClassificationService;
 
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
@@ -31,6 +32,7 @@ public class MessageClassificationExecutorService {
         this.scheduledExecutorService = scheduledExecutorService;
         this.runnable = () -> {
             try {
+                LOGGER.debug("Executing the Classify Failed Messages Job");
                 messageClassificationService.classifyFailedMessages();
             } catch (Throwable t) {
                 LOGGER.error("An error occurred classifying FailedMessages", t);

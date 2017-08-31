@@ -7,6 +7,7 @@ java_library(
     visibility = [
         "//common/jackson:queue-triage-common-jackson",
         "//common/swagger:queue-triage-common-swagger-cxf",
+        "//core/resend:queue-triage-core-resend-spring",
         "//core/server:queue-triage-core-server",
         "//core/message-classification:queue-triage-core-message-classification-server",
         "//web/mustache:queue-triage-web-mustache-spring",

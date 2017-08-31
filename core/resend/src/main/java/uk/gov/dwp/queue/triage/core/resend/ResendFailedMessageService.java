@@ -2,10 +2,10 @@ package uk.gov.dwp.queue.triage.core.resend;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import uk.gov.dwp.queue.triage.core.client.FailedMessageStatus;
 import uk.gov.dwp.queue.triage.core.jms.MessageSender;
 import uk.gov.dwp.queue.triage.core.search.FailedMessageSearchService;
 
+import static uk.gov.dwp.queue.triage.core.client.FailedMessageStatus.RESENDING;
 import static uk.gov.dwp.queue.triage.core.client.search.SearchFailedMessageRequest.newSearchFailedMessageRequest;
 
 public class ResendFailedMessageService {
@@ -25,14 +25,16 @@ public class ResendFailedMessageService {
     }
 
     public void resendMessages() {
-        LOGGER.debug("Executing the ResendFailedMessageService for: ", brokerName);
+        LOGGER.debug("Resending FailedMessages to: {}", brokerName);
         failedMessageSearchService
                 .search(newSearchFailedMessageRequest()
                         .withBroker(brokerName)
-                        .withStatus(FailedMessageStatus.FAILED)
+                        .withStatus(RESENDING)
                         .build())
                 .forEach(messageSender::send);
     }
 
-
+    public String getBrokerName() {
+        return brokerName;
+    }
 }

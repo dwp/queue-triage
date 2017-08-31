@@ -23,7 +23,7 @@ public class ResendScheduledExecutorServiceBeanDefinitionFactory {
                 .addConstructorArgValue(initialDelay)
                 .addConstructorArgValue(executionFrequency)
                 .addConstructorArgValue(timeUnit)
-                .setDestroyMethodName("shutdown")
+                .setDestroyMethodName("stop")
                 .getBeanDefinition();
     }
 

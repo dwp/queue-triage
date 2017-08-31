@@ -8,7 +8,9 @@ import uk.gov.dwp.queue.triage.core.JmsStage;
 import uk.gov.dwp.queue.triage.id.FailedMessageId;
 
 import static uk.gov.dwp.queue.triage.core.client.CreateFailedMessageRequest.newCreateFailedMessageRequest;
+import static uk.gov.dwp.queue.triage.core.client.FailedMessageStatus.FAILED;
 import static uk.gov.dwp.queue.triage.core.client.FailedMessageStatus.RESENDING;
+import static uk.gov.dwp.queue.triage.core.client.FailedMessageStatus.SENT;
 import static uk.gov.dwp.queue.triage.core.domain.FailedMessageResponseMatcher.aFailedMessage;
 import static uk.gov.dwp.queue.triage.id.FailedMessageId.newFailedMessageId;
 
@@ -17,21 +19,37 @@ public class ResendFailedMessageComponentTest extends BaseCoreComponentTest<JmsS
     @ScenarioStage
     private FailedMessageResourceStage failedMessageResourceStage;
     @ScenarioStage
+    private ResendFailedMessageGivenStage resendFailedMessageGivenStage;
+    @ScenarioStage
     private ResendFailedMessageWhenStage resendFailedMessageWhenStage;
+    @ScenarioStage
+    private JmsStage jmsStage;
 
     @Test
-    public void name() throws Exception {
-        FailedMessageId failedMessageId = newFailedMessageId();
+    public void markMessageForResending() throws Exception {
+        FailedMessageId failedMessageId = FailedMessageId.newFailedMessageId();
+        FailedMessageId failedMessageIdToResend = newFailedMessageId();
 
         failedMessageResourceStage.given().aFailedMessage(newCreateFailedMessageRequest()
                 .withFailedMessageId(failedMessageId)
-                .withBrokerName("internal")
+                .withBrokerName("internal-broker")
                 .withDestinationName("some-queue")
         ).exists();
+        failedMessageResourceStage.given().aFailedMessage(newCreateFailedMessageRequest()
+                .withFailedMessageId(failedMessageIdToResend)
+                .withBrokerName("internal-broker")
+                .withDestinationName("some-queue")
+                .withContent("elixir")
+        ).exists();
+        resendFailedMessageGivenStage.given().theResendFailedMessageJobIsPausedForBroker$("internal-broker");
 
-        resendFailedMessageWhenStage.when().aFailedMessageWithId$IsResent(failedMessageId);
-        failedMessageResourceStage.and().aMessageWithId$IsSelected(failedMessageId);
+        jmsStage.aMessageWithContent$WillBeConsumedSuccessfully("elixir");
+        resendFailedMessageWhenStage.when().aFailedMessageWithId$IsMarkedForResend(failedMessageIdToResend);
 
-        failedMessageResourceStage.thenTheFailedMessageReturned(aFailedMessage().withStatus(RESENDING));
+        failedMessageResourceStage.then().aFailedMessageWithId$Has(failedMessageIdToResend, aFailedMessage().withStatus(RESENDING));
+        failedMessageResourceStage.then().aFailedMessageWithId$Has(failedMessageId, aFailedMessage().withStatus(FAILED));
+
+        resendFailedMessageWhenStage.when().theResendFailedMessageJobExecutesForBroker$("internal-broker");
+        failedMessageResourceStage.then().aFailedMessageWithId$Has(failedMessageIdToResend, aFailedMessage().withStatus(SENT));
     }
 }

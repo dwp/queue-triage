@@ -5,6 +5,7 @@ import org.junit.Test;
 
 import static com.google.common.collect.Sets.immutableEnumSet;
 import static com.mongodb.QueryOperators.IN;
+import static com.mongodb.QueryOperators.NE;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.equalTo;
@@ -13,6 +14,7 @@ import static uk.gov.dwp.queue.triage.core.dao.mongo.DBObjectMatcher.hasField;
 import static uk.gov.dwp.queue.triage.core.dao.mongo.FailedMessageConverter.STATUS_HISTORY;
 import static uk.gov.dwp.queue.triage.core.dao.mongo.FailedMessageStatusDBObjectConverter.STATUS;
 import static uk.gov.dwp.queue.triage.core.domain.FailedMessageStatus.Status.CLASSIFIED;
+import static uk.gov.dwp.queue.triage.core.domain.FailedMessageStatus.Status.DELETED;
 import static uk.gov.dwp.queue.triage.core.domain.FailedMessageStatus.Status.FAILED;
 
 public class MongoStatusHistoryQueryBuilderTest {
@@ -40,5 +42,11 @@ public class MongoStatusHistoryQueryBuilderTest {
         BasicDBObject actualDBObject = underTest.currentStatusIn(basicDBObject, immutableEnumSet(FAILED, CLASSIFIED));
         assertThat(actualDBObject, expectedDBObject);
         assertThat(actualDBObject, is(basicDBObject));
+    }
+
+    @Test
+    public void currentStatusNotEqualTo() {
+        assertThat(underTest.currentStatusNotEqualTo(DELETED),
+                hasField(STATUS_HISTORY + ".0." + STATUS, hasField(NE, equalTo(DELETED.name()))));
     }
 }
