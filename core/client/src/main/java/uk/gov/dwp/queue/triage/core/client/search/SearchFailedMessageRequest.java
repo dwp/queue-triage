@@ -34,8 +34,7 @@ public class SearchFailedMessageRequest {
     }
 
     public static SearchFailedMessageRequestBuilder newSearchFailedMessageRequest() {
-        return new SearchFailedMessageRequestBuilder()
-                .withStatus(FailedMessageStatus.FAILED);
+        return new SearchFailedMessageRequestBuilder();
     }
 
     public static class SearchFailedMessageRequestBuilder {

@@ -8,6 +8,7 @@ import uk.gov.dwp.queue.triage.core.dao.mongo.MongoStatusHistoryQueryBuilder;
 import static uk.gov.dwp.queue.triage.core.dao.mongo.DestinationDBObjectConverter.BROKER_NAME;
 import static uk.gov.dwp.queue.triage.core.dao.mongo.DestinationDBObjectConverter.NAME;
 import static uk.gov.dwp.queue.triage.core.dao.mongo.FailedMessageConverter.DESTINATION;
+import static uk.gov.dwp.queue.triage.core.domain.FailedMessageStatus.Status.DELETED;
 import static uk.gov.dwp.queue.triage.core.domain.FailedMessageStatusAdapter.fromFailedMessageStatus;
 
 public class MongoSearchRequestAdapter {
@@ -19,15 +20,14 @@ public class MongoSearchRequestAdapter {
     }
 
     public DBObject toQuery(SearchFailedMessageRequest request) {
-        BasicDBObject query = new BasicDBObject();
+        BasicDBObject query;
+        if (request.getStatuses().size() > 0) {
+            query = mongoStatusHistoryQueryBuilder.currentStatusIn(fromFailedMessageStatus(request.getStatuses()));
+        } else {
+            query = mongoStatusHistoryQueryBuilder.currentStatusNotEqualTo(DELETED);
+        }
         request.getBroker().ifPresent(broker -> query.append(DESTINATION + "." + BROKER_NAME, broker));
         request.getDestination().ifPresent(destination -> query.append(DESTINATION + "." + NAME, destination));
-        if (request.getStatuses().size() > 0) {
-            mongoStatusHistoryQueryBuilder.currentStatusIn(
-                    query,
-                    fromFailedMessageStatus(request.getStatuses())
-            );
-        }
         return query;
     }
 }
