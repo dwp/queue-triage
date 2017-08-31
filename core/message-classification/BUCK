@@ -77,7 +77,7 @@ java_test(
         '//lib:commons-lang3',
         '//lib/jackson:jackson-annotations',
         '//lib/slf4j:slf4j-api',
-        '//lib/slf4j:slf4j-simple',
+#         '//lib/slf4j:slf4j-simple',
         '//lib/test:common',
     ],
     vm_args = [

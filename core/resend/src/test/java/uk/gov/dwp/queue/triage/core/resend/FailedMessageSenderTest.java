@@ -11,14 +11,14 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static uk.gov.dwp.queue.triage.core.domain.FailedMessageStatus.Status.SENT;
 
-public class FailedMessageResenderTest {
+public class FailedMessageSenderTest {
 
     private static final FailedMessageId FAILED_MESSAGE_ID = FailedMessageId.newFailedMessageId();
     private final MessageSender messageSender = mock(MessageSender.class);
     private final FailedMessageService failedMessageService = mock(FailedMessageService.class);
     private final FailedMessage failedMessage = mock(FailedMessage.class);
 
-    private final FailedMessageResender underTest = new FailedMessageResender(
+    private final FailedMessageSender underTest = new FailedMessageSender(
             messageSender,
             failedMessageService
     );

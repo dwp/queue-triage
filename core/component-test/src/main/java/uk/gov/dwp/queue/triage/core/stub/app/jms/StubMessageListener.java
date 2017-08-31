@@ -1,5 +1,7 @@
 package uk.gov.dwp.queue.triage.core.stub.app.jms;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import uk.gov.dwp.queue.triage.core.classification.MessageClassifier;
 import uk.gov.dwp.queue.triage.core.domain.FailedMessage;
 import uk.gov.dwp.queue.triage.core.jms.FailedMessageFactory;
@@ -9,6 +11,8 @@ import javax.jms.Message;
 import javax.jms.MessageListener;
 
 public class StubMessageListener implements MessageListener {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(StubMessageListener.class);
 
     private final String brokerName;
     private final FailedMessageFactory failedMessageFactory;
@@ -28,6 +32,7 @@ public class StubMessageListener implements MessageListener {
     @Override
     public void onMessage(Message message) {
         FailedMessage failedMessage = failedMessageFactory.createFailedMessage(message);
+        LOGGER.debug("Received failedMessage with content: {}", failedMessage.getContent());
         messageClassifierRepository
                 .getClassifiers(brokerName)
                 .stream()

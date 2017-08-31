@@ -1,4 +1,4 @@
-package uk.gov.dwp.queue.triage.core.classification.server.executor;
+package uk.gov.dwp.queue.triage.core.resend;
 
 import org.junit.After;
 import org.junit.Before;
@@ -6,7 +6,6 @@ import org.junit.Test;
 import org.mockito.stubbing.Answer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import uk.gov.dwp.queue.triage.core.classification.server.MessageClassificationService;
 
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Executors;
@@ -18,18 +17,18 @@ import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
 
-public class MessageClassificationExecutorServiceTest {
+public class ResendScheduledExecutorServiceTest {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(MessageClassificationExecutorServiceTest.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ResendScheduledExecutorServiceTest.class);
 
-    private final MessageClassificationService messageClassificationService = mock(MessageClassificationService.class);
+    private final ResendFailedMessageService resendFailedMessageService = mock(ResendFailedMessageService.class);
     private final ScheduledExecutorService scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
 
     private CountDownLatch countDownLatch = new CountDownLatch(1);
 
-    private MessageClassificationExecutorService underTest = new MessageClassificationExecutorService(
+    private ResendScheduledExecutorService underTest = new ResendScheduledExecutorService(
             scheduledExecutorService,
-            messageClassificationService,
+            resendFailedMessageService,
             0,
             100,
             TimeUnit.MILLISECONDS
@@ -38,8 +37,8 @@ public class MessageClassificationExecutorServiceTest {
     @Before
     public void setUp() {
         doAnswer(decrementCountdownLatch())
-                .when(messageClassificationService)
-                .classifyFailedMessages();
+                .when(resendFailedMessageService)
+                .resendMessages();
     }
 
     @After
@@ -58,8 +57,8 @@ public class MessageClassificationExecutorServiceTest {
     @Test
     public void jobContinuesToExecuteIfExceptionIsThrown() throws InterruptedException {
         doAnswer(decrementCountdownLatchAndThrowException())
-                .when(messageClassificationService)
-                .classifyFailedMessages();
+                .when(resendFailedMessageService)
+                .resendMessages();
 
         underTest.start();
 
@@ -69,9 +68,9 @@ public class MessageClassificationExecutorServiceTest {
 
     @Test
     public void jobCanBeExecutedOnDemand() throws InterruptedException {
-        MessageClassificationExecutorService underTest = new MessageClassificationExecutorService(
+        ResendScheduledExecutorService underTest = new ResendScheduledExecutorService(
                 scheduledExecutorService,
-                messageClassificationService,
+                resendFailedMessageService,
                 1,
                 1,
                 TimeUnit.HOURS
@@ -114,9 +113,9 @@ public class MessageClassificationExecutorServiceTest {
     }
 
     private void verifyMessageClassificationServiceExecutions(int timeoutInMillis) throws InterruptedException {
-        LOGGER.debug("Verifying messageClassificationService has been called within {}ms", timeoutInMillis);
+        LOGGER.debug("Verifying resendFailedMessageService has been called within {}ms", timeoutInMillis);
         assertThat(countDownLatch.await(timeoutInMillis, TimeUnit.MILLISECONDS), is(true));
-        LOGGER.debug("Verified messageClassificationService has been called");
+        LOGGER.debug("Verified resendFailedMessageService has been called");
         countDownLatch = new CountDownLatch(1);
     }
 }

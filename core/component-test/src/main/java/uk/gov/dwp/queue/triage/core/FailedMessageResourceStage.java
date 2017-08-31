@@ -15,6 +15,8 @@ import uk.gov.dwp.queue.triage.core.resource.PersistedFailedMessageBuilder;
 import uk.gov.dwp.queue.triage.id.FailedMessageId;
 import uk.gov.dwp.queue.triage.jgiven.ReflectionArgumentFormatter;
 
+import static java.util.concurrent.TimeUnit.MILLISECONDS;
+import static org.awaitility.Awaitility.await;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
@@ -32,11 +34,15 @@ public class FailedMessageResourceStage extends Stage<FailedMessageResourceStage
     private FailedMessageResponse failedMessage;
 
     public FailedMessageResourceStage aMessageWithId$IsSelected(FailedMessageId failedMessageId) {
-        failedMessage = testRestTemplate.getForObject(
+        failedMessage = findFailedMessageById(failedMessageId);
+        return this;
+    }
+
+    private FailedMessageResponse findFailedMessageById(FailedMessageId failedMessageId) {
+        return testRestTemplate.getForObject(
                 "/core/failed-message/{failedMessageId}",
                 FailedMessageResponse.class,
                 failedMessageId);
-        return this;
     }
 
     /**
@@ -58,6 +64,12 @@ public class FailedMessageResourceStage extends Stage<FailedMessageResourceStage
     // TODO: Remove 'then'
     public void thenTheFailedMessageReturned(FailedMessageResponseMatcher failedMessageResponseMatcher) {
         assertThat(failedMessage, failedMessageResponseMatcher);
+    }
+
+    public FailedMessageResourceStage aFailedMessageWithId$Has(FailedMessageId failedMessageId,
+                                                               FailedMessageResponseMatcher failedMessageResponseMatcher) {
+        await().pollDelay(500, MILLISECONDS).until(() -> findFailedMessageById(failedMessageId),  failedMessageResponseMatcher);
+        return this;
     }
 
     public void noDataIsReturned() {

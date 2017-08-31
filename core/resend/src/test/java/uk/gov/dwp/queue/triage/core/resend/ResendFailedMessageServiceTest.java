@@ -17,7 +17,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
-import static uk.gov.dwp.queue.triage.core.client.FailedMessageStatus.FAILED;
+import static uk.gov.dwp.queue.triage.core.client.FailedMessageStatus.RESENDING;
 import static uk.gov.dwp.queue.triage.core.domain.SearchFailedMessageRequestMatcher.aSearchRequest;
 
 public class ResendFailedMessageServiceTest {
@@ -38,7 +38,7 @@ public class ResendFailedMessageServiceTest {
     public void successfullyResendFailedMessages() throws Exception {
         SearchFailedMessageRequest searchRequest = argThat(new HamcrestArgumentMatcher<>(aSearchRequest()
                 .withBroker(equalTo(Optional.of(BROKER_NAME)))
-                .withStatusMatcher(contains(FAILED))));
+                .withStatusMatcher(contains(RESENDING))));
 
         when(failedMessageSearchService.search(searchRequest)).thenReturn(asList(failedMessage, anotherFailedMessage));
 
