@@ -8,6 +8,10 @@ dao:
   mongo:
     host: localhost
     port: 27017
+    options:
+      ssl:
+        enabled: false
+        invalidHostnameAllowed: false
     dbName: queue-triage
     failedMessage:
       name: failedMessage

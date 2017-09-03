@@ -2,6 +2,7 @@ package uk.gov.dwp.queue.triage.core.dao.mongo.configuration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mongodb.MongoClient;
+import com.mongodb.ServerAddress;
 import org.bson.BSON;
 import org.bson.Transformer;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -49,7 +50,10 @@ public class MongoDaoConfig {
     @Bean
     @DependsOn("mongoDaoProperties")
     public MongoClient mongoClient(MongoDaoProperties mongoDaoProperties) {
-        return new MongoClient(mongoDaoProperties.getHost(), mongoDaoProperties.getPort());
+        return new MongoClient(
+                new ServerAddress(mongoDaoProperties.getHost(), mongoDaoProperties.getPort()),
+                mongoDaoProperties.mongoClientOptions()
+        );
     }
 
     @Bean
