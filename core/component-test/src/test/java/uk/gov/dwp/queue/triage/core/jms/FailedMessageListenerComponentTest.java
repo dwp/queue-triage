@@ -5,10 +5,10 @@ import org.hamcrest.Matcher;
 import org.hamcrest.collection.IsIterableContainingInOrder;
 import org.junit.Test;
 import uk.gov.dwp.queue.triage.core.BaseCoreComponentTest;
-import uk.gov.dwp.queue.triage.core.JmsStage;
+import uk.gov.dwp.queue.triage.core.stage.JmsStage;
 import uk.gov.dwp.queue.triage.core.client.search.SearchFailedMessageResponse;
 import uk.gov.dwp.queue.triage.core.domain.SearchFailedMessageResponseMatcher;
-import uk.gov.dwp.queue.triage.core.search.SearchFailedMessageStage;
+import uk.gov.dwp.queue.triage.core.stage.search.SearchFailedMessageStage;
 import uk.gov.dwp.queue.triage.jgiven.ReflectionArgumentFormatter;
 
 import java.util.Arrays;

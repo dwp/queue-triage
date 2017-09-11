@@ -1,4 +1,4 @@
-package uk.gov.dwp.queue.triage.core;
+package uk.gov.dwp.queue.triage.core.stage;
 
 import com.mongodb.MongoClient;
 import com.tngtech.jgiven.Stage;

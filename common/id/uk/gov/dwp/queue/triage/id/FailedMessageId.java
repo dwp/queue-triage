@@ -1,6 +1,7 @@
 package uk.gov.dwp.queue.triage.id;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
 
 import java.util.UUID;
 
@@ -44,6 +45,7 @@ public class FailedMessageId implements Id {
         return id.equals(((FailedMessageId) o).id);
     }
 
+    @JsonValue
     @Override
     public String toString() {
         return id.toString();

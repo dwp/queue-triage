@@ -11,6 +11,7 @@ import org.springframework.core.env.PropertiesPropertySource;
 import org.springframework.core.env.StandardEnvironment;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.jms.core.JmsTemplate;
+import uk.gov.dwp.queue.triage.core.jms.activemq.configuration.JmsListenerProperties;
 import uk.gov.dwp.queue.triage.core.jms.spring.SpringMessageSender;
 import uk.gov.dwp.queue.triage.core.resend.FailedMessageSender;
 import uk.gov.dwp.queue.triage.core.resend.ResendFailedMessageService;
@@ -100,7 +101,7 @@ public class ResendBeanDefinitionFactoryTest {
     private AnnotationConfigApplicationContext createApplicationContext(String yamlFilename) {
         AnnotationConfigApplicationContext applicationContext = new AnnotationConfigApplicationContext();
         applicationContext.setEnvironment(createEnvironment(yamlFilename));
-        applicationContext.register(ResendFailedMessageConfiguration.class, AdditionalConfig.class);
+        applicationContext.register(JmsListenerProperties.class, ResendFailedMessageConfiguration.class, AdditionalConfig.class);
         applicationContext.refresh();
         return applicationContext;
     }

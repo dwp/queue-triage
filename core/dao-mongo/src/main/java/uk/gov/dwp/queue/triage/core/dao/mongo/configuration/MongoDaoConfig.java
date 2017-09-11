@@ -48,7 +48,6 @@ public class MongoDaoConfig {
     }
 
     @Bean
-    @DependsOn("mongoDaoProperties")
     public MongoClient mongoClient(MongoDaoProperties mongoDaoProperties) {
         return new MongoClient(
                 new ServerAddress(mongoDaoProperties.getHost(), mongoDaoProperties.getPort()),
@@ -57,7 +56,6 @@ public class MongoDaoConfig {
     }
 
     @Bean
-    @DependsOn("mongoDaoProperties")
     public FailedMessageDao failedMessageDao(MongoClient mongoClient,
                                              MongoDaoProperties mongoDaoProperties,
                                              FailedMessageConverter failedMessageConverter,
