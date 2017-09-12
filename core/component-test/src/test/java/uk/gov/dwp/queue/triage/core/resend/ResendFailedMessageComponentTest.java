@@ -3,10 +3,8 @@ package uk.gov.dwp.queue.triage.core.resend;
 import com.tngtech.jgiven.annotation.ScenarioStage;
 import org.junit.Test;
 import uk.gov.dwp.queue.triage.core.BaseCoreComponentTest;
-import uk.gov.dwp.queue.triage.core.stage.FailedMessageResourceStage;
-import uk.gov.dwp.queue.triage.core.stage.JmsStage;
-import uk.gov.dwp.queue.triage.core.stage.resend.resend.ResendFailedMessageGivenStage;
-import uk.gov.dwp.queue.triage.core.stage.resend.resend.ResendFailedMessageWhenStage;
+import uk.gov.dwp.queue.triage.core.FailedMessageResourceStage;
+import uk.gov.dwp.queue.triage.core.JmsStage;
 import uk.gov.dwp.queue.triage.id.FailedMessageId;
 
 import static uk.gov.dwp.queue.triage.core.client.CreateFailedMessageRequest.newCreateFailedMessageRequest;

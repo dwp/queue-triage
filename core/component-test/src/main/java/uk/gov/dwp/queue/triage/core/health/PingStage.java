@@ -1,4 +1,4 @@
-package uk.gov.dwp.queue.triage.core.stage.health;
+package uk.gov.dwp.queue.triage.core.health;
 
 import com.tngtech.jgiven.Stage;
 import com.tngtech.jgiven.integration.spring.JGivenStage;
@@ -19,12 +19,12 @@ public class PingStage extends Stage<PingStage> {
 
     private String response;
 
-    public PingStage aRequestIsMadeToPing() throws IOException {
+    PingStage aRequestIsMadeToPing() throws IOException {
         response = restTemplate.getForEntity("/ping", String.class).getBody();
         return this;
     }
 
-    public PingStage theResponseIs(String expectedResponse) {
+    PingStage theResponseIs(String expectedResponse) {
         assertThat(response, is(expectedResponse));
         return this;
     }

@@ -2,9 +2,6 @@ package uk.gov.dwp.queue.triage.core.jms.activemq.configuration;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
-import org.springframework.core.Ordered;
-import org.springframework.core.annotation.Order;
 import org.springframework.core.env.Environment;
 import uk.gov.dwp.queue.triage.core.jms.JmsMessagePropertyExtractor;
 import uk.gov.dwp.queue.triage.core.jms.MessageTextExtractor;
@@ -16,15 +13,10 @@ import uk.gov.dwp.queue.triage.core.jms.activemq.spring.FailedMessageListenerBea
 import uk.gov.dwp.queue.triage.core.jms.activemq.spring.JmsListenerBeanDefinitionFactory;
 
 @Configuration
-@Import({
-        JmsListenerProperties.class
-})
-@Order(Ordered.LOWEST_PRECEDENCE - 1)
 public class JmsListenerConfig {
 
     @Bean
-    public static JmsListenerBeanDefinitionFactory jmsListenerBeanDefinitionFactory(JmsListenerProperties jmsListenerProperties,
-                                                                             Environment environment) {
+    public static JmsListenerBeanDefinitionFactory jmsListenerBeanDefinitionFactory(Environment environment) {
         return new JmsListenerBeanDefinitionFactory(
                 environment,
                 new ActiveMQConnectionFactoryBeanDefinitionFactory(),

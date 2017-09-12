@@ -1,4 +1,4 @@
-package uk.gov.dwp.queue.triage.core.stage;
+package uk.gov.dwp.queue.triage.core;
 
 import com.tngtech.jgiven.Stage;
 import com.tngtech.jgiven.annotation.ExpectedScenarioState;

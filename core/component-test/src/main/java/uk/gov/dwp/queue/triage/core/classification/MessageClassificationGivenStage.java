@@ -1,10 +1,9 @@
-package uk.gov.dwp.queue.triage.core.stage.classification;
+package uk.gov.dwp.queue.triage.core.classification;
 
 import com.tngtech.jgiven.integration.spring.JGivenStage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpEntity;
-import uk.gov.dwp.queue.triage.core.classification.MessageClassifier;
 import uk.gov.dwp.queue.triage.core.classification.MessageClassifier.MessageClassifierBuilder;
 import uk.gov.dwp.queue.triage.core.classification.action.DeleteMessageAction;
 import uk.gov.dwp.queue.triage.core.classification.predicate.BrokerEqualsPredicate;

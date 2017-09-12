@@ -1,10 +1,15 @@
 package uk.gov.dwp.queue.triage.core.health;
 
+import com.tngtech.jgiven.integration.spring.EnableJGiven;
+import com.tngtech.jgiven.integration.spring.SimpleSpringRuleScenarioTest;
 import org.junit.Test;
-import uk.gov.dwp.queue.triage.core.BaseCoreComponentTest;
-import uk.gov.dwp.queue.triage.core.stage.health.PingStage;
+import org.springframework.boot.test.context.SpringBootTest;
 
-public class PingComponentTest extends BaseCoreComponentTest<PingStage> {
+import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
+
+@EnableJGiven
+@SpringBootTest(webEnvironment= RANDOM_PORT)
+public class PingComponentTest extends SimpleSpringRuleScenarioTest<PingStage> {
 
     @Test
     public void aRequestToPingReturnsPong() throws Exception {

@@ -4,7 +4,6 @@ import org.apache.activemq.ActiveMQConnectionFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
-import org.springframework.core.env.Environment;
 import org.springframework.jms.connection.JmsTransactionManager;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.jms.listener.DefaultMessageListenerContainer;
@@ -21,7 +20,7 @@ import javax.jms.ConnectionFactory;
 import javax.jms.MessageListener;
 
 @Configuration
-@Import({StubAppRepositoryConfiguration.class})
+@Import(StubAppRepositoryConfiguration.class)
 public class StubAppJmsConfiguration {
 
     public static final String BROKER_NAME = "internal-broker";
@@ -53,9 +52,9 @@ public class StubAppJmsConfiguration {
     }
 
     @Bean(destroyMethod = "shutdown")
-    public DefaultMessageListenerContainer dummyAppMessageListenerContainer(Environment environment,
+    public DefaultMessageListenerContainer dummyAppMessageListenerContainer(JmsListenerProperties jmsListenerProperties,
                                                                             MessageListener stubMessageListener) {
-        ConnectionFactory connectionFactory = createConnectionFactory(environment);
+        ConnectionFactory connectionFactory = createConnectionFactory(jmsListenerProperties, BROKER_NAME);
         DefaultMessageListenerContainer defaultMessageListenerContainer = new DefaultMessageListenerContainer();
         defaultMessageListenerContainer.setConnectionFactory(connectionFactory);
         defaultMessageListenerContainer.setDestinationName("some-queue");
@@ -66,14 +65,20 @@ public class StubAppJmsConfiguration {
     }
 
     @Bean
-    public JmsTemplate dummyAppJmsTemplate(Environment environment) {
-        JmsTemplate jmsTemplate = new JmsTemplate(createConnectionFactory(environment));
+    public JmsTemplate dummyAppJmsTemplate(JmsListenerProperties jmsListenerProperties) {
+        JmsTemplate jmsTemplate = new JmsTemplate(createConnectionFactory(jmsListenerProperties, BROKER_NAME));
         jmsTemplate.setDeliveryPersistent(true);
         return jmsTemplate;
     }
 
-    private ConnectionFactory createConnectionFactory(Environment environment) {
-        return new ActiveMQConnectionFactory(environment.getProperty("jms.activemq.brokers[0].url") + "?jms.redeliveryPolicy.maximumRedeliveries=0");
+    private ConnectionFactory createConnectionFactory(JmsListenerProperties jmsListenerProperties, String brokerName) {
+        JmsListenerProperties.BrokerProperties brokerProperties = jmsListenerProperties
+                .getBrokers()
+                .stream()
+                .filter(broker -> brokerName.equals(broker.getName()))
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("Cannot find configuration for " + brokerName));
+        return new ActiveMQConnectionFactory(brokerProperties.getUrl() + "?jms.redeliveryPolicy.maximumRedeliveries=0");
     }
 
 }
