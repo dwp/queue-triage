@@ -1,4 +1,4 @@
-package uk.gov.dwp.queue.triage.core.delete;
+package uk.gov.dwp.queue.triage.core.stage.delete;
 
 import com.tngtech.jgiven.Stage;
 import com.tngtech.jgiven.integration.spring.JGivenStage;

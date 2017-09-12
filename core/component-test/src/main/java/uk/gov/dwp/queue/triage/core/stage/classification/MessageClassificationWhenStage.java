@@ -1,4 +1,4 @@
-package uk.gov.dwp.queue.triage.core.classification;
+package uk.gov.dwp.queue.triage.core.stage.classification;
 
 import com.tngtech.jgiven.integration.spring.JGivenStage;
 import org.springframework.beans.factory.annotation.Autowired;

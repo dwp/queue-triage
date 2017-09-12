@@ -1,5 +1,8 @@
 package uk.gov.dwp.queue.triage.core.dao.mongo.configuration;
 
+import com.mongodb.MongoClient;
+import com.mongodb.MongoClientOptions;
+import com.mongodb.MongoClientURI;
 import com.mongodb.ServerAddress;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
@@ -12,10 +15,12 @@ import static java.util.Optional.ofNullable;
 @ConfigurationProperties(prefix = "dao.mongo")
 public class MongoDaoProperties {
 
+    private Optional<String> uri = Optional.empty();
     private Optional<String> host = Optional.empty();
     private Optional<Integer> port = Optional.empty();
     private Optional<String> dbName = Optional.empty();
     private Collection failedMessage = new Collection();
+    private MongoOptions options = new MongoOptions();
 
     public String getHost() {
         return host.orElse(ServerAddress.defaultHost());
@@ -48,6 +53,27 @@ public class MongoDaoProperties {
         this.failedMessage = failedMessage;
     }
 
+    public MongoClient createClient() {
+        return uri
+                .map(s -> new MongoClient(new MongoClientURI(s)))
+                .orElseGet(() -> new MongoClient(getHost(), getPort()));
+    }
+
+    public MongoOptions getOptions() {
+        return options;
+    }
+
+    public void setOptions(MongoOptions options) {
+        this.options = options;
+    }
+
+    public MongoClientOptions mongoClientOptions() {
+        return new MongoClientOptions.Builder()
+                .sslEnabled(options.ssl.enabled)
+                .sslInvalidHostNameAllowed(options.ssl.invalidHostnameAllowed)
+                .build();
+    }
+
     public static class Collection {
 
         private String name = "failedMessage";
@@ -58,6 +84,32 @@ public class MongoDaoProperties {
 
         public void setName(String name) {
             this.name = name;
+        }
+    }
+
+    public static class MongoOptions {
+
+        private SSL ssl = new SSL();
+
+        public SSL getSsl() {
+            return ssl;
+        }
+
+        public void setSsl(SSL ssl) {
+            this.ssl = ssl;
+        }
+
+        public static class SSL {
+            private boolean enabled;
+            private boolean invalidHostnameAllowed;
+
+            public void setEnabled(boolean enabled) {
+                this.enabled = enabled;
+            }
+
+            public void setInvalidHostnameAllowed(boolean invalidHostnameAllowed) {
+                this.invalidHostnameAllowed = invalidHostnameAllowed;
+            }
         }
     }
 }
