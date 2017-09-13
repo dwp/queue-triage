@@ -1,0 +1,5 @@
+dao:
+  mongo:
+    serverAddresses:
+    - host: localhost
+      port: 27017

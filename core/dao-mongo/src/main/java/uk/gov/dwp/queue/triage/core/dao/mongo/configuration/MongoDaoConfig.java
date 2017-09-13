@@ -1,8 +1,10 @@
 package uk.gov.dwp.queue.triage.core.dao.mongo.configuration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.mongodb.AuthenticationMechanism;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientOptions;
+import com.mongodb.MongoCredential;
 import com.mongodb.ServerAddress;
 import org.bson.BSON;
 import org.bson.Transformer;
@@ -20,6 +22,7 @@ import uk.gov.dwp.queue.triage.core.dao.mongo.FailedMessageConverter;
 import uk.gov.dwp.queue.triage.core.dao.mongo.FailedMessageMongoDao;
 import uk.gov.dwp.queue.triage.core.dao.mongo.FailedMessageStatusDBObjectConverter;
 import uk.gov.dwp.queue.triage.core.dao.mongo.RemoveRecordsQueryFactory;
+import uk.gov.dwp.queue.triage.core.dao.mongo.configuration.MongoDaoProperties.Collection;
 import uk.gov.dwp.queue.triage.core.domain.Destination;
 import uk.gov.dwp.queue.triage.core.domain.FailedMessageStatus;
 import uk.gov.dwp.queue.triage.id.Id;
@@ -27,12 +30,17 @@ import uk.gov.dwp.queue.triage.jackson.configuration.JacksonConfiguration;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
 import java.util.stream.Collectors;
 
+import static com.mongodb.MongoCredential.createScramSha1Credential;
 import static java.time.ZoneOffset.UTC;
+import static java.util.Collections.singletonList;
 
 @Configuration
 @Import(JacksonConfiguration.class)
@@ -53,19 +61,29 @@ public class MongoDaoConfig {
     @DependsOn("mongoDaoProperties")
     public MongoClient mongoClient(MongoDaoProperties mongoDaoProperties) {
         return new MongoClient(
-                mongoDaoProperties.getServerAddresses()
-                        .stream()
-                        .map(serverAddress -> new ServerAddress(serverAddress.getHost(), serverAddress.getPort()))
-                        .collect(Collectors.toList()),
-                mongoClientOptions(mongoDaoProperties)
+                createSeeds(mongoDaoProperties),
+                createCredentials(mongoDaoProperties),
+                mongoDaoProperties.mongoClientOptions()
         );
     }
 
-    private MongoClientOptions mongoClientOptions(MongoDaoProperties mongoDaoProperties) {
-        return new MongoClientOptions.Builder()
-                        .sslEnabled(mongoDaoProperties.getOptions().getSsl().isEnabled())
-                        .sslInvalidHostNameAllowed(mongoDaoProperties.getOptions().getSsl().isInvalidHostnameAllowed())
-                        .build();
+    private List<MongoCredential> createCredentials(MongoDaoProperties mongoDaoProperties) {
+        return mongoDaoProperties.getFailedMessage().getUsername()
+                .map(username -> singletonList(createScramSha1Credential(
+                        username,
+                        mongoDaoProperties.getDbName(),
+                        mongoDaoProperties.getFailedMessage()
+                                .getPassword()
+                                .orElseThrow(() -> new IllegalArgumentException("Password is required when username specified"))
+                                .toCharArray())))
+                .orElse(Collections.emptyList());
+    }
+
+    private List<ServerAddress> createSeeds(MongoDaoProperties mongoDaoProperties) {
+        return mongoDaoProperties.getServerAddresses()
+                .stream()
+                .map(serverAddress -> new ServerAddress(serverAddress.getHost(), serverAddress.getPort()))
+                .collect(Collectors.toList());
     }
 
     @Bean
@@ -107,7 +125,7 @@ public class MongoDaoConfig {
         @Override
         public Object transform(Object objectToTransform) {
             if (objectToTransform instanceof LocalDateTime) {
-                return Date.from(((LocalDateTime)objectToTransform).toInstant(UTC));
+                return Date.from(((LocalDateTime) objectToTransform).toInstant(UTC));
             } else if (objectToTransform instanceof Date) {
                 return LocalDateTime.ofInstant(((Date) objectToTransform).toInstant(), UTC);
             }
@@ -120,7 +138,7 @@ public class MongoDaoConfig {
         @Override
         public Object transform(Object objectToTransform) {
             if (objectToTransform instanceof Instant) {
-                return Date.from(((Instant)objectToTransform));
+                return Date.from(((Instant) objectToTransform));
             } else if (objectToTransform instanceof Date) {
                 return ((Date) objectToTransform).toInstant();
             }
@@ -133,7 +151,7 @@ public class MongoDaoConfig {
         @Override
         public Object transform(Object objectToTransform) {
             if (objectToTransform instanceof Id) {
-                return ((Id)objectToTransform).getId().toString();
+                return ((Id) objectToTransform).getId().toString();
             }
             throw new IllegalArgumentException("IdTransformer can only be used with instances of Id");
         }

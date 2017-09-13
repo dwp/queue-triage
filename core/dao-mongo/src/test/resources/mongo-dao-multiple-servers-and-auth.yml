@@ -1,0 +1,16 @@
+dao:
+  mongo:
+    serverAddresses:
+      - host: db1.server.com
+        port: 27017
+      - host: db2.server.com
+        port: 27017
+    options:
+      ssl:
+        enabled: true
+        invalidHostnameAllowed: true
+    dbName: someDatabase
+    failedMessage:
+      name: someCollection
+      username: failedMessageUser
+      password: Passw0rd

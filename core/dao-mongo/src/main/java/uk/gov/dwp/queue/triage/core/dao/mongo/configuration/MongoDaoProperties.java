@@ -1,6 +1,6 @@
 package uk.gov.dwp.queue.triage.core.dao.mongo.configuration;
 
-import com.mongodb.ServerAddress;
+import com.mongodb.MongoClientOptions;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
@@ -51,9 +51,18 @@ public class MongoDaoProperties {
         this.options = options;
     }
 
+    public MongoClientOptions mongoClientOptions() {
+        return new MongoClientOptions.Builder()
+                .sslEnabled(options.ssl.enabled)
+                .sslInvalidHostNameAllowed(options.ssl.invalidHostnameAllowed)
+                .build();
+    }
+
     public static class Collection {
 
         private String name = "failedMessage";
+        private Optional<String> username = Optional.empty();
+        private Optional<String> password = Optional.empty();
 
         public String getName() {
             return name;
@@ -62,6 +71,22 @@ public class MongoDaoProperties {
         public void setName(String name) {
             this.name = name;
         }
+
+        public Optional<String> getUsername() {
+            return username;
+        }
+
+        public void setUsername(Optional<String> username) {
+            this.username = username;
+        }
+
+        public Optional<String> getPassword() {
+            return password;
+        }
+
+        public void setPassword(Optional<String> password) {
+            this.password = password;
+        }
     }
 
     public static class MongoServerAddress {
@@ -69,7 +94,7 @@ public class MongoDaoProperties {
         private Integer port;
 
         public String getHost() {
-            return ofNullable(host).orElse(ServerAddress.defaultHost());
+            return host;
         }
 
         public void setHost(String host) {
@@ -77,7 +102,7 @@ public class MongoDaoProperties {
         }
 
         public Integer getPort() {
-            return ofNullable(port).orElse(ServerAddress.defaultPort());
+            return port;
         }
 
         public void setPort(Integer port) {

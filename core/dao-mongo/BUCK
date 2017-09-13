@@ -21,6 +21,14 @@ java_library(
     ]
 )
 
+java_library(
+    name = "test-resources",
+    resources = glob([
+        "src/test/resources/*.yml"
+    ]),
+    resources_root = "src/test/resources",
+)
+
 java_test(
     name = 'test',
     srcs = glob([ 'src/test/java/**/*Test.java']),
@@ -28,11 +36,13 @@ java_test(
         "//common/id:queue-triage-common-id",
         '//core/dao:queue-triage-core-dao',
         '//core/dao-mongo:queue-triage-core-dao-mongo',
+        '//core/dao-mongo:test-resources',
         '//core/dao-mongo-test-support:queue-triage-core-dao-mongo-test-support',
         '//core/domain:queue-triage-core-domain',
         '//core/domain-test-support:queue-triage-core-domain-test-support',
         '//lib:commons-logging',
         '//lib:guava',
+        '//lib:snakeyaml',
         '//lib/hibernate-validator:hibernate-validator',
         '//lib/javax:javax-ws-rs-api',
         '//lib/mongo:mongodb-driver',
@@ -41,6 +51,4 @@ java_test(
         '//lib/spring:spring-test',
         '//lib/test:common',
     ],
-    visibility = [
-    ]
 )
