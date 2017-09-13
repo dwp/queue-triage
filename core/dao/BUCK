@@ -11,6 +11,7 @@ java_library(
     visibility = [
         '//core/dao-mongo:queue-triage-core-dao-mongo',
         '//core/dao-mongo:test',
+        '//core/resend:test-spring',
         '//core/search:queue-triage-core-search-mongo',
         '//core/search:test-mongo',
         '//core/server:queue-triage-core-server',

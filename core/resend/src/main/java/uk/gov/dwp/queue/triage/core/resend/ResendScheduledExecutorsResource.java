@@ -11,9 +11,9 @@ import java.util.Map;
 @Path("/admin/executor/message-resend/{brokerName}")
 public class ResendScheduledExecutorsResource {
 
-    private Map<String, ResendScheduledExecutorService> resendScheduledExecutors = new HashMap<>();
+    private final Map<String, ResendScheduledExecutorService> resendScheduledExecutors;
 
-    public void setResendScheduledExecutors(Map<String, ResendScheduledExecutorService> resendScheduledExecutors) {
+    public ResendScheduledExecutorsResource(Map<String, ResendScheduledExecutorService> resendScheduledExecutors) {
         this.resendScheduledExecutors = resendScheduledExecutors;
     }
 

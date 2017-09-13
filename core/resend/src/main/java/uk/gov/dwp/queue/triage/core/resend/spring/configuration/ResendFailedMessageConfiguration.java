@@ -9,11 +9,16 @@ import uk.gov.dwp.migration.mongo.demo.cxf.client.ResourceRegistry;
 import uk.gov.dwp.queue.triage.core.jms.activemq.spring.ActiveMQConnectionFactoryBeanDefinitionFactory;
 import uk.gov.dwp.queue.triage.core.jms.spring.JmsTemplateBeanDefinitionFactory;
 import uk.gov.dwp.queue.triage.core.jms.spring.SpringMessageSenderBeanDefinitionFactory;
+import uk.gov.dwp.queue.triage.core.resend.ResendScheduledExecutorService;
 import uk.gov.dwp.queue.triage.core.resend.ResendScheduledExecutorsResource;
 import uk.gov.dwp.queue.triage.core.resend.spring.FailedMessageSenderBeanDefinitionFactory;
 import uk.gov.dwp.queue.triage.core.resend.spring.ResendBeanDefinitionFactory;
 import uk.gov.dwp.queue.triage.core.resend.spring.ResendFailedMessageServiceBeanDefinitionFactory;
 import uk.gov.dwp.queue.triage.core.resend.spring.ResendScheduledExecutorServiceBeanDefinitionFactory;
+
+import java.util.List;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Configuration
 @Import({
@@ -35,7 +40,11 @@ public class ResendFailedMessageConfiguration {
     }
 
     @Bean
-    public ResendScheduledExecutorsResource resendScheduledExecutorsResource(ResourceRegistry resourceRegistry) {
-        return resourceRegistry.add(new ResendScheduledExecutorsResource());
+    public ResendScheduledExecutorsResource resendScheduledExecutorsResource(ResourceRegistry resourceRegistry,
+                                                                             List<ResendScheduledExecutorService> resendScheduledExecutorServices) {
+        return resourceRegistry.add(new ResendScheduledExecutorsResource(
+                resendScheduledExecutorServices
+                        .stream()
+                        .collect(Collectors.toMap(ResendScheduledExecutorService::getBrokerName, Function.identity()))));
     }
 }

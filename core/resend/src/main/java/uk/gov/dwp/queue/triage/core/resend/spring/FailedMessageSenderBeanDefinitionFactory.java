@@ -13,6 +13,7 @@ public class FailedMessageSenderBeanDefinitionFactory {
         return genericBeanDefinition(FailedMessageSender.class)
                 .addConstructorArgReference(messageSenderDelegate)
                 .addConstructorArgReference("failedMessageService")
+                .addDependsOn("failedMessageDao")
                 .getBeanDefinition();
     }
 
