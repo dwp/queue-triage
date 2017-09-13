@@ -29,7 +29,7 @@ public class ResendScheduledExecutorService {
         this.brokerName = resendFailedMessageService.getBrokerName();
         this.runnable = () -> {
             try {
-                LOGGER.info("Executing the resend FailedMessages job for broker: {}", brokerName);
+                LOGGER.debug("Executing the resend FailedMessages job for broker: {}", brokerName);
                 resendFailedMessageService.resendMessages();
             } catch (Throwable t) {
                 LOGGER.error("An error occurred resending FailedMessages for broker: " + brokerName, t);

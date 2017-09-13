@@ -4,11 +4,9 @@ import com.tngtech.jgiven.annotation.ScenarioStage;
 import org.junit.Before;
 import org.junit.Test;
 import uk.gov.dwp.queue.triage.core.BaseCoreComponentTest;
-import uk.gov.dwp.queue.triage.core.stage.FailedMessageResourceStage;
-import uk.gov.dwp.queue.triage.core.stage.JmsStage;
-import uk.gov.dwp.queue.triage.core.stage.classification.MessageClassificationGivenStage;
-import uk.gov.dwp.queue.triage.core.stage.classification.MessageClassificationWhenStage;
-import uk.gov.dwp.queue.triage.core.stage.search.SearchFailedMessageStage;
+import uk.gov.dwp.queue.triage.core.FailedMessageResourceStage;
+import uk.gov.dwp.queue.triage.core.JmsStage;
+import uk.gov.dwp.queue.triage.core.search.SearchFailedMessageStage;
 import uk.gov.dwp.queue.triage.id.FailedMessageId;
 
 import static org.hamcrest.Matchers.equalTo;

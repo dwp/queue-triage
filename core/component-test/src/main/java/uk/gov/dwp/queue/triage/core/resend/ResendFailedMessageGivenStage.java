@@ -1,4 +1,4 @@
-package uk.gov.dwp.queue.triage.core.stage.resend.resend;
+package uk.gov.dwp.queue.triage.core.resend;
 
 import com.tngtech.jgiven.integration.spring.JGivenStage;
 import org.springframework.beans.factory.annotation.Autowired;

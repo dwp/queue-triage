@@ -5,20 +5,20 @@ import org.hamcrest.Matcher;
 import org.hamcrest.collection.IsIterableContainingInOrder;
 import org.junit.Test;
 import uk.gov.dwp.queue.triage.core.BaseCoreComponentTest;
-import uk.gov.dwp.queue.triage.core.stage.FailedMessageResourceStage;
+import uk.gov.dwp.queue.triage.core.FailedMessageResourceStage;
 import uk.gov.dwp.queue.triage.core.client.search.SearchFailedMessageResponse;
 import uk.gov.dwp.queue.triage.core.domain.SearchFailedMessageResponseMatcher;
-import uk.gov.dwp.queue.triage.core.stage.search.SearchFailedMessageStage;
 import uk.gov.dwp.queue.triage.id.FailedMessageId;
 import uk.gov.dwp.queue.triage.jgiven.ReflectionArgumentFormatter;
 
 import java.util.Arrays;
 
+import static javax.ws.rs.core.Response.Status.BAD_REQUEST;
 import static org.hamcrest.Matchers.equalTo;
 import static uk.gov.dwp.queue.triage.core.client.CreateFailedMessageRequest.newCreateFailedMessageRequest;
 import static uk.gov.dwp.queue.triage.core.client.search.SearchFailedMessageRequest.newSearchFailedMessageRequest;
 import static uk.gov.dwp.queue.triage.core.domain.SearchFailedMessageResponseMatcher.aFailedMessage;
-import static uk.gov.dwp.queue.triage.core.stage.search.SearchFailedMessageStage.noResults;
+import static uk.gov.dwp.queue.triage.core.search.SearchFailedMessageStage.noResults;
 
 public class SearchFailedMessageComponentTest extends BaseCoreComponentTest<SearchFailedMessageStage> {
 
