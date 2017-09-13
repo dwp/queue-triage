@@ -2,6 +2,7 @@ package uk.gov.dwp.queue.triage.core.dao.mongo.configuration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mongodb.MongoClient;
+import com.mongodb.MongoClientOptions;
 import com.mongodb.ServerAddress;
 import org.bson.BSON;
 import org.bson.Transformer;
@@ -29,6 +30,7 @@ import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.Map;
 import java.util.TimeZone;
+import java.util.stream.Collectors;
 
 import static java.time.ZoneOffset.UTC;
 
@@ -51,9 +53,19 @@ public class MongoDaoConfig {
     @DependsOn("mongoDaoProperties")
     public MongoClient mongoClient(MongoDaoProperties mongoDaoProperties) {
         return new MongoClient(
-                new ServerAddress(mongoDaoProperties.getHost(), mongoDaoProperties.getPort()),
-                mongoDaoProperties.mongoClientOptions()
+                mongoDaoProperties.getServerAddresses()
+                        .stream()
+                        .map(serverAddress -> new ServerAddress(serverAddress.getHost(), serverAddress.getPort()))
+                        .collect(Collectors.toList()),
+                mongoClientOptions(mongoDaoProperties)
         );
+    }
+
+    private MongoClientOptions mongoClientOptions(MongoDaoProperties mongoDaoProperties) {
+        return new MongoClientOptions.Builder()
+                        .sslEnabled(mongoDaoProperties.getOptions().getSsl().isEnabled())
+                        .sslInvalidHostNameAllowed(mongoDaoProperties.getOptions().getSsl().isInvalidHostnameAllowed())
+                        .build();
     }
 
     @Bean
