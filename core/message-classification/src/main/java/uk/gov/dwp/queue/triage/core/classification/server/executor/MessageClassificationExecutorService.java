@@ -63,7 +63,7 @@ public class MessageClassificationExecutorService {
                 executionFrequency,
                 timeUnit
         );
-        scheduleAtAFixedRate(0);
+        scheduleAtAFixedRate(0).isDone();
     }
 
     @PUT
@@ -86,12 +86,13 @@ public class MessageClassificationExecutorService {
         LOGGER.info("Execution of the MessageClassificationService stopped");
     }
 
-    private void scheduleAtAFixedRate(long initialDelay) {
+    private ScheduledFuture<?> scheduleAtAFixedRate(long initialDelay) {
         futureTask = this.scheduledExecutorService.scheduleAtFixedRate(
                 runnable,
                 initialDelay,
                 executionFrequency,
                 timeUnit
         );
+        return futureTask;
     }
 }

@@ -6,8 +6,9 @@ cxf:
 
 dao:
   mongo:
-    host: localhost
-    port: 27017
+    serverAddresses:
+      - host: localhost
+        port: 27017
     options:
       ssl:
         enabled: false

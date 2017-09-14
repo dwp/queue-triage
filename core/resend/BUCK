@@ -82,6 +82,7 @@ java_test(
     name = "test-spring",
     srcs = glob(["src/test/java/**/spring/**/*.java"]),
     deps = RESEND_SPRING_DEPENDENCIES + [
+        "//core/dao:queue-triage-core-dao",
         "//core/jms:queue-triage-core-jms",
         "//core/jms:queue-triage-core-jms-spring",
         "//core/resend:queue-triage-core-resend",

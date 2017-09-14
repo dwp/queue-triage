@@ -11,6 +11,7 @@ import org.springframework.core.env.PropertiesPropertySource;
 import org.springframework.core.env.StandardEnvironment;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.jms.core.JmsTemplate;
+import uk.gov.dwp.queue.triage.core.dao.FailedMessageDao;
 import uk.gov.dwp.queue.triage.core.jms.spring.SpringMessageSender;
 import uk.gov.dwp.queue.triage.core.resend.FailedMessageSender;
 import uk.gov.dwp.queue.triage.core.resend.ResendFailedMessageService;
@@ -128,6 +129,11 @@ public class ResendBeanDefinitionFactoryTest {
         @Bean
         public FailedMessageService failedMessageService() {
             return mock(FailedMessageService.class);
+        }
+
+        @Bean
+        public FailedMessageDao failedMessageDao() {
+            return mock(FailedMessageDao.class);
         }
     }
 }

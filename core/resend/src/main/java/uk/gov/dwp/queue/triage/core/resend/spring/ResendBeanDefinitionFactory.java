@@ -9,15 +9,9 @@ import org.springframework.core.env.Environment;
 import uk.gov.dwp.queue.triage.core.jms.activemq.spring.ActiveMQConnectionFactoryBeanDefinitionFactory;
 import uk.gov.dwp.queue.triage.core.jms.spring.JmsTemplateBeanDefinitionFactory;
 import uk.gov.dwp.queue.triage.core.jms.spring.SpringMessageSenderBeanDefinitionFactory;
-import uk.gov.dwp.queue.triage.core.resend.ResendScheduledExecutorService;
-import uk.gov.dwp.queue.triage.core.resend.ResendScheduledExecutorsResource;
 
-import java.util.Map;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class ResendBeanDefinitionFactory implements BeanDefinitionRegistryPostProcessor {
 
@@ -121,14 +115,6 @@ public class ResendBeanDefinitionFactory implements BeanDefinitionRegistryPostPr
 
     @Override
     public void postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory) throws BeansException {
-        final Map<String, ResendScheduledExecutorService> resendScheduledExecutors =
-                Stream.of(beanFactory.getBeanNamesForType(ResendScheduledExecutorService.class))
-                        .map(beanName -> beanFactory.getBean(beanName, ResendScheduledExecutorService.class))
-                        .collect(Collectors.toMap(
-                                ResendScheduledExecutorService::getBrokerName,
-                                Function.identity()
-                        ));
-        beanFactory.getBean(ResendScheduledExecutorsResource.class).setResendScheduledExecutors(resendScheduledExecutors);
     }
 
     private boolean hasMoreBrokers(int index) {

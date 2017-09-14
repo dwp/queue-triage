@@ -56,7 +56,7 @@ public class ResendScheduledExecutorService {
                 executionFrequency,
                 timeUnit
         );
-        scheduleAtAFixedRate(0);
+        scheduleAtAFixedRate(0).isDone();
     }
 
     public void pause() {
@@ -81,12 +81,13 @@ public class ResendScheduledExecutorService {
         return brokerName;
     }
 
-    private void scheduleAtAFixedRate(long initialDelay) {
+    private ScheduledFuture<?> scheduleAtAFixedRate(long initialDelay) {
         futureTask = this.scheduledExecutorService.scheduleAtFixedRate(
                 runnable,
                 initialDelay,
                 executionFrequency,
                 timeUnit
         );
+        return futureTask;
     }
 }
