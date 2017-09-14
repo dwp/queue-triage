@@ -48,5 +48,13 @@ java_test(
 #         "-Dbrowser=marionette",
 #         "-Dwebdriver.gecko.driver=/opt/geckodriver/current/geckodriver"
         "-Dbrowser=phantomjs",
+        "-Djgiven.report.dir=buck-out/gen/web/component-test/jgiven-reports",
     ]
+)
+
+# buck build //web/component-test:generate-jgiven-html-reports
+genrule(
+    name = "generate-jgiven-html-reports",
+    cmd  = "$(exe //lib/test:jgiven-html5-report-with-deps) --format=html --sourceDir=`pwd`/../jgiven-reports --targetDir=$OUT",
+    out  = "jgiven-html-reports",
 )

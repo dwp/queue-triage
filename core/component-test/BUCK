@@ -82,6 +82,6 @@ java_test(
 # buck build //core/component-test:generate-jgiven-html-reports
 genrule(
     name = "generate-jgiven-html-reports",
-    cmd  = "$(exe //lib/test:jgiven-html5-report-with-deps) --format=html --sourceDir=/Users/anmcghie/sandpit/queue-triage/buck-out/gen/core/component-test/jgiven-reports --targetDir=$OUT",
+    cmd  = "$(exe //lib/test:jgiven-html5-report-with-deps) --format=html --sourceDir=`pwd`/../jgiven-reports --targetDir=$OUT",
     out  = "jgiven-html-reports",
 )
