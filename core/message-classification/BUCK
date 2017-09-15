@@ -53,6 +53,7 @@ java_library(
         "//lib/javax:javax-ws-rs-api",
         "//lib/slf4j:slf4j-api",
         "//lib/spring:spring-beans",
+        "//lib/spring:spring-boot",
         "//lib/spring:spring-context",
         ':queue-triage-core-message-classification',
         '//common/id:queue-triage-common-id',
@@ -66,18 +67,35 @@ java_library(
     ],
 )
 
+java_library(
+    name = 'test-resources',
+    resources = glob([
+        'src/test/resources/*.yml'
+    ]),
+    resources_root = 'src/test/resources',
+    visibility = [
+        '//core/message-classification:test-server'
+    ]
+)
+
 java_test(
     name = 'test-server',
     srcs = glob(['src/test/java/**/server/**/*.java']),
     deps = [
         ':queue-triage-core-message-classification',
         ':queue-triage-core-message-classification-server',
+        ':test-resources',
         '//core/domain:queue-triage-core-domain',
         '//core/search:queue-triage-core-search',
         '//lib:commons-lang3',
+        '//lib:snakeyaml',
+        '//lib/hibernate-validator:hibernate-validator',
         '//lib/jackson:jackson-annotations',
         '//lib/slf4j:slf4j-api',
 #         '//lib/slf4j:slf4j-simple',
+        '//lib/spring:spring-boot',
+        '//lib/spring:spring-core',
+        '//lib/spring:spring-core-dependencies',
         '//lib/test:common',
     ],
     vm_args = [

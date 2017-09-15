@@ -1,5 +1,6 @@
 package uk.gov.dwp.queue.triage.core.classification.server.configuration;
 
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
@@ -16,9 +17,8 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 @Configuration
-@Import({
-        CxfConfiguration.class
-})
+@Import(CxfConfiguration.class)
+@EnableConfigurationProperties(MessageClassificationProperties.class)
 public class MessageClassificationConfiguration {
 
     @Bean
@@ -39,14 +39,15 @@ public class MessageClassificationConfiguration {
     }
 
     @Bean(initMethod = "start", destroyMethod = "stop")
-    public MessageClassificationExecutorService messageClassificationExecutorService(MessageClassificationService messageClassificationService,
+    public MessageClassificationExecutorService messageClassificationExecutorService(MessageClassificationProperties messageClassificationProperties,
+                                                                                     MessageClassificationService messageClassificationService,
                                                                                      ResourceRegistry resourceRegistry) {
         return resourceRegistry.add(new MessageClassificationExecutorService(
                 Executors.newSingleThreadScheduledExecutor(),
                 messageClassificationService,
-                0,
-                60,
-                TimeUnit.SECONDS
+                messageClassificationProperties.getInitialDelay(),
+                messageClassificationProperties.getFrequency(),
+                messageClassificationProperties.getTimeUnit()
         ));
     }
 }
