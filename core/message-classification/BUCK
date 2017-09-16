@@ -67,24 +67,12 @@ java_library(
     ],
 )
 
-java_library(
-    name = 'test-resources',
-    resources = glob([
-        'src/test/resources/*.yml'
-    ]),
-    resources_root = 'src/test/resources',
-    visibility = [
-        '//core/message-classification:test-server'
-    ]
-)
-
 java_test(
     name = 'test-server',
     srcs = glob(['src/test/java/**/server/**/*.java']),
     deps = [
         ':queue-triage-core-message-classification',
         ':queue-triage-core-message-classification-server',
-        ':test-resources',
         '//core/domain:queue-triage-core-domain',
         '//core/search:queue-triage-core-search',
         '//lib:commons-lang3',
