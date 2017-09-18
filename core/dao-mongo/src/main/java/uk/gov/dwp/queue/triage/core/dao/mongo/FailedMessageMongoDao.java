@@ -17,6 +17,7 @@ import static java.util.Collections.singletonList;
 import static uk.gov.dwp.queue.triage.core.dao.mongo.DestinationDBObjectConverter.BROKER_NAME;
 import static uk.gov.dwp.queue.triage.core.dao.mongo.FailedMessageConverter.DESTINATION;
 import static uk.gov.dwp.queue.triage.core.dao.mongo.FailedMessageConverter.STATUS_HISTORY;
+import static uk.gov.dwp.queue.triage.core.dao.mongo.FailedMessageStatusDBObjectConverter.LAST_MODIFIED_DATE_TIME;
 
 public class FailedMessageMongoDao implements FailedMessageDao {
 
@@ -46,7 +47,7 @@ public class FailedMessageMongoDao implements FailedMessageDao {
                 failedMessageConverter.createId(failedMessageId),
                 new BasicDBObject("$push", new BasicDBObject(STATUS_HISTORY, new BasicDBObject()
                         .append("$each", singletonList(failedMessageStatusConverter.convertFromObject(failedMessageStatus)))
-                        .append("$sort", new BasicDBObject("updatedDateTime", OrderBy.DESC.getIntRepresentation()))))
+                        .append("$sort", new BasicDBObject(LAST_MODIFIED_DATE_TIME, OrderBy.DESC.getIntRepresentation()))))
         );
     }
 

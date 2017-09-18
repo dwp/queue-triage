@@ -18,6 +18,7 @@ import static uk.gov.dwp.queue.triage.core.domain.FailedMessageStatus.Status.RES
 public class FailedMessageServiceTest {
 
     private static final FailedMessageId FAILED_MESSAGE_ID = FailedMessageId.newFailedMessageId();
+    private static final Instant NOW = Instant.now();
 
     private final FailedMessageDao failedMessageDao = Mockito.mock(FailedMessageDao.class);
 
@@ -38,6 +39,16 @@ public class FailedMessageServiceTest {
         Mockito.verify(failedMessageDao).updateStatus(
                 Mockito.eq(FAILED_MESSAGE_ID),
                 argThat(FailedMessageStatusMatcher.equalTo(RESEND).withUpdatedDateTime(Matchers.notNullValue(Instant.class)))
+        );
+    }
+
+    @Test
+    public void updateStatusWithGivenDate() {
+        underTest.updateStatus(FAILED_MESSAGE_ID, new FailedMessageStatus(RESEND, NOW));
+
+        Mockito.verify(failedMessageDao).updateStatus(
+                Mockito.eq(FAILED_MESSAGE_ID),
+                argThat(FailedMessageStatusMatcher.equalTo(RESEND).withUpdatedDateTime(Matchers.equalTo(NOW)))
         );
     }
 

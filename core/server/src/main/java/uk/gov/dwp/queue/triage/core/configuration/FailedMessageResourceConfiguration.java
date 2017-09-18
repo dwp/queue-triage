@@ -17,6 +17,8 @@ import uk.gov.dwp.queue.triage.core.search.FailedMessageSearchService;
 import uk.gov.dwp.queue.triage.core.search.SearchFailedMessageResponseAdapter;
 import uk.gov.dwp.queue.triage.core.service.FailedMessageService;
 
+import java.time.Clock;
+
 @Configuration
 @Import({
         MongoDaoConfig.class,
@@ -46,7 +48,7 @@ public class FailedMessageResourceConfiguration {
     public ResendFailedMessageResource resendFailedMessageResource(ResourceRegistry resourceRegistry,
                                                                    FailedMessageService failedMessageService) {
         return resourceRegistry.add(new ResendFailedMessageResource(
-                failedMessageService
-        ));
+                failedMessageService,
+                Clock.systemUTC()));
     }
 }

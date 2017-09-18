@@ -25,11 +25,13 @@ public class ResendFailedMessageServiceTest {
     private static final String BROKER_NAME = "internal-broker";
     private final FailedMessageSearchService failedMessageSearchService = mock(FailedMessageSearchService.class);
     private final MessageSender messageSender = mock(MessageSender.class);
+    private final HistoricStatusPredicate historicStatusPredicate = mock(HistoricStatusPredicate.class);
 
     private final ResendFailedMessageService underTest = new ResendFailedMessageService(
             BROKER_NAME,
             failedMessageSearchService,
-            messageSender
+            messageSender,
+            historicStatusPredicate
     );
     private final FailedMessage failedMessage = mock(FailedMessage.class);
     private final FailedMessage anotherFailedMessage = mock(FailedMessage.class);
@@ -39,13 +41,13 @@ public class ResendFailedMessageServiceTest {
         SearchFailedMessageRequest searchRequest = argThat(new HamcrestArgumentMatcher<>(aSearchRequest()
                 .withBroker(equalTo(Optional.of(BROKER_NAME)))
                 .withStatusMatcher(contains(RESENDING))));
-
         when(failedMessageSearchService.search(searchRequest)).thenReturn(asList(failedMessage, anotherFailedMessage));
+        when(historicStatusPredicate.test(failedMessage)).thenReturn(true);
+        when(historicStatusPredicate.test(anotherFailedMessage)).thenReturn(false);
 
         underTest.resendMessages();
 
         verify(messageSender).send(failedMessage);
-        verify(messageSender).send(anotherFailedMessage);
         verifyNoMoreInteractions(messageSender);
     }
 }

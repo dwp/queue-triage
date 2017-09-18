@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import uk.gov.dwp.queue.triage.core.dao.FailedMessageDao;
 import uk.gov.dwp.queue.triage.core.domain.FailedMessage;
 import uk.gov.dwp.queue.triage.core.domain.FailedMessageStatus;
+import uk.gov.dwp.queue.triage.core.domain.FailedMessageStatus.Status;
 import uk.gov.dwp.queue.triage.id.FailedMessageId;
 
 import static uk.gov.dwp.queue.triage.core.domain.FailedMessageStatus.Status.DELETED;
@@ -24,9 +25,17 @@ public class FailedMessageService {
         failedMessageDao.insert(failedMessage);
     }
 
-    public void updateStatus(FailedMessageId failedMessageId, FailedMessageStatus.Status status) {
-        LOGGER.debug("Message {} updated to {}", failedMessageId, status);
-        failedMessageDao.updateStatus(failedMessageId, failedMessageStatus(status));
+    public void updateStatus(FailedMessageId failedMessageId, Status status) {
+        updateStatus(failedMessageId, failedMessageStatus(status));
+    }
+
+    public void updateStatus(FailedMessageId failedMessageId, FailedMessageStatus failedMessageStatus) {
+        LOGGER.debug("Message {} updated to {} with effectiveDateTime {}",
+                failedMessageId,
+                failedMessageStatus.getStatus(),
+                failedMessageStatus.getEffectiveDateTime()
+        );
+        failedMessageDao.updateStatus(failedMessageId, failedMessageStatus);
     }
 
     public void delete(FailedMessageId failedMessageId) {

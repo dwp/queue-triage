@@ -8,6 +8,8 @@ import org.springframework.http.HttpEntity;
 import uk.gov.dwp.queue.triage.core.client.resend.ResendFailedMessageClient;
 import uk.gov.dwp.queue.triage.id.FailedMessageId;
 
+import java.time.Duration;
+
 @JGivenStage
 public class ResendFailedMessageWhenStage extends Stage<ResendFailedMessageWhenStage> {
 
@@ -18,6 +20,12 @@ public class ResendFailedMessageWhenStage extends Stage<ResendFailedMessageWhenS
 
     public ResendFailedMessageWhenStage aFailedMessageWithId$IsMarkedForResend(FailedMessageId failedMessageId) {
         resendFailedMessageClient.resendFailedMessage(failedMessageId);
+        return this;
+    }
+
+    public ResendFailedMessageWhenStage aFailedMessageWithId$IsMarkedForResendIn$(FailedMessageId failedMessageId,
+                                                                                  Duration duration) {
+        resendFailedMessageClient.resendFailedMessageWithDelay(failedMessageId, duration);
         return this;
     }
 
