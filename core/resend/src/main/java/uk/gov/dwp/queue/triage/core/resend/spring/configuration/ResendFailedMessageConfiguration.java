@@ -9,6 +9,7 @@ import uk.gov.dwp.migration.mongo.demo.cxf.client.ResourceRegistry;
 import uk.gov.dwp.queue.triage.core.jms.activemq.spring.ActiveMQConnectionFactoryBeanDefinitionFactory;
 import uk.gov.dwp.queue.triage.core.jms.spring.JmsTemplateBeanDefinitionFactory;
 import uk.gov.dwp.queue.triage.core.jms.spring.SpringMessageSenderBeanDefinitionFactory;
+import uk.gov.dwp.queue.triage.core.resend.HistoricStatusPredicate;
 import uk.gov.dwp.queue.triage.core.resend.ResendScheduledExecutorService;
 import uk.gov.dwp.queue.triage.core.resend.ResendScheduledExecutorsResource;
 import uk.gov.dwp.queue.triage.core.resend.spring.FailedMessageSenderBeanDefinitionFactory;
@@ -31,7 +32,7 @@ public class ResendFailedMessageConfiguration {
         return new ResendBeanDefinitionFactory(
                 environment,
                 new ActiveMQConnectionFactoryBeanDefinitionFactory(),
-                new ResendFailedMessageServiceBeanDefinitionFactory(),
+                new ResendFailedMessageServiceBeanDefinitionFactory(new HistoricStatusPredicate()),
                 new FailedMessageSenderBeanDefinitionFactory(),
                 new SpringMessageSenderBeanDefinitionFactory(),
                 new JmsTemplateBeanDefinitionFactory(),

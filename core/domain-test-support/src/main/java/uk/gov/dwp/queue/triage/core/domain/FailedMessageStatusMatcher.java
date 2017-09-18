@@ -38,7 +38,7 @@ public class FailedMessageStatusMatcher extends TypeSafeMatcher<FailedMessageSta
     @Override
     protected boolean matchesSafely(FailedMessageStatus failedMessageStatus) {
         return status == failedMessageStatus.getStatus() &&
-                updatedDateTimeMatcher.matches(failedMessageStatus.getUpdatedDateTime());
+                updatedDateTimeMatcher.matches(failedMessageStatus.getEffectiveDateTime());
     }
 
     @Override
