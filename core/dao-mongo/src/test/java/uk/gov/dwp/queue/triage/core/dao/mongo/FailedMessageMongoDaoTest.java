@@ -22,6 +22,8 @@ import static java.util.Collections.emptyMap;
 import static java.util.Optional.of;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.hamcrest.Matchers.emptyIterable;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
@@ -56,7 +58,7 @@ public class FailedMessageMongoDaoTest extends AbstractMongoDaoTest {
     }
 
     @Test
-    public void saveMessageWithEmptyProperties() throws Exception {
+    public void saveMessageWithEmptyPropertiesAndNoLabels() throws Exception {
         failedMessageBuilder.withProperties(emptyMap());
 
         underTest.insert(failedMessageBuilder.build());
@@ -66,11 +68,12 @@ public class FailedMessageMongoDaoTest extends AbstractMongoDaoTest {
                 .withContent(equalTo("Hello"))
                 .withProperties(equalTo(emptyMap()))
                 .withFailedMessageStatus(FailedMessageStatusMatcher.equalTo(FAILED))
+                .withLabels(emptyIterable())
         ));
     }
 
     @Test
-    public void saveMessageWithProperties() throws Exception {
+    public void saveMessageWithPropertiesAndLabels() throws Exception {
         HashMapBuilder<String, Object> hashMapBuilder = newHashMap(String.class, Object.class)
                 .put("string", "Builder")
                 .put("localDateTime", LocalDateTime.now())
@@ -81,7 +84,10 @@ public class FailedMessageMongoDaoTest extends AbstractMongoDaoTest {
 
         HashMap<String, Object> properties = hashMapBuilder.build();
         properties.put("properties", hashMapBuilder.build());
-        failedMessageBuilder.withProperties(properties);
+        failedMessageBuilder
+                .withProperties(properties)
+                .withLabel("foo")
+                .withLabel("bar");
 
         underTest.insert(failedMessageBuilder.build());
 
@@ -90,6 +96,7 @@ public class FailedMessageMongoDaoTest extends AbstractMongoDaoTest {
                 .withContent(equalTo("Hello"))
                 .withProperties(equalTo(properties))
                 .withFailedMessageStatus(FailedMessageStatusMatcher.equalTo(FAILED))
+                .withLabels(containsInAnyOrder("foo", "bar"))
         ));
     }
 

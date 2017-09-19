@@ -12,8 +12,10 @@ import uk.gov.dwp.queue.triage.id.FailedMessageId;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import static uk.gov.dwp.queue.triage.core.domain.FailedMessageBuilder.newFailedMessage;
 import static uk.gov.dwp.queue.triage.id.FailedMessageId.fromString;
@@ -26,6 +28,7 @@ public class FailedMessageConverter implements DBObjectWithIdConverter<FailedMes
     public static final String CONTENT = "content";
     public static final String PROPERTIES = "properties";
     public static final String STATUS_HISTORY = "statusHistory";
+    public static final String LABELS = "labels";
 
     private final DBObjectConverter<Destination> destinationDBObjectMapper;
     private final DBObjectConverter<FailedMessageStatus> failedMessageStatusDBObjectMapper;
@@ -53,6 +56,7 @@ public class FailedMessageConverter implements DBObjectWithIdConverter<FailedMes
                 .withContent(getContent(basicDBObject))
                 .withFailedMessageStatus(getFailedMessageStatus(basicDBObject))
                 .withProperties(propertiesMongoMapper.convertToObject(basicDBObject.getString(PROPERTIES)))
+                .withLabels(getLabels(basicDBObject))
                 .build();
     }
 
@@ -90,6 +94,10 @@ public class FailedMessageConverter implements DBObjectWithIdConverter<FailedMes
         return (Instant) basicDBObject.get(SENT_DATE_TIME);
     }
 
+    private Set<String> getLabels(BasicDBObject basicDBObject) {
+        return new HashSet<>((List<String>)basicDBObject.get(LABELS));
+    }
+
     @Override
     public BasicDBObject convertFromObject(FailedMessage item) {
         return createId(item.getFailedMessageId())
@@ -99,6 +107,7 @@ public class FailedMessageConverter implements DBObjectWithIdConverter<FailedMes
                 .append(CONTENT, item.getContent())
                 .append(PROPERTIES, propertiesMongoMapper.convertFromObject(item.getProperties()))
                 .append(STATUS_HISTORY, Collections.singletonList(failedMessageStatusDBObjectMapper.convertFromObject(item.getFailedMessageStatus())))
+                .append(LABELS, DBObjectConverter.toBasicDBList(item.getLabels()))
                 ;
     }
 

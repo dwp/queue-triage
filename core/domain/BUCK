@@ -41,6 +41,8 @@ java_test(
     srcs = glob(["src/test/java/**/*.java"]),
     deps = [
         ':queue-triage-core-domain',
+        '//common/id:queue-triage-common-id',
+        '//core/domain-test-support:queue-triage-core-domain-test-support',
         '//core/client:queue-triage-core-client',
         '//lib:guava',
         '//lib/test:common',

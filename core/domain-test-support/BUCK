@@ -11,6 +11,7 @@ java_library(
     visibility = [
         "//core/activemq:test",
         "//core/dao-mongo:test",
+        "//core/domain:test",
         "//core/jms:test",
         "//core/server:test",
         "//core/service:test",

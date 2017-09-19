@@ -9,6 +9,7 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 import uk.gov.dwp.queue.triage.core.dao.ObjectConverter;
+import uk.gov.dwp.queue.triage.core.dao.mongo.configuration.MongoDaoConfig;
 import uk.gov.dwp.queue.triage.core.domain.Destination;
 import uk.gov.dwp.queue.triage.core.domain.FailedMessageBuilder;
 import uk.gov.dwp.queue.triage.core.domain.FailedMessageStatus;
@@ -20,17 +21,21 @@ import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 import java.util.Map;
 
+import static java.util.Collections.singletonList;
 import static java.util.Optional.of;
 import static org.hamcrest.Matchers.allOf;
+import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.when;
+import static uk.gov.dwp.queue.triage.core.dao.mongo.DBObjectConverter.toBasicDBList;
 import static uk.gov.dwp.queue.triage.core.dao.mongo.DBObjectMatcher.hasField;
 import static uk.gov.dwp.queue.triage.core.dao.mongo.FailedMessageConverter.CONTENT;
 import static uk.gov.dwp.queue.triage.core.dao.mongo.FailedMessageConverter.DESTINATION;
+import static uk.gov.dwp.queue.triage.core.dao.mongo.FailedMessageConverter.LABELS;
 import static uk.gov.dwp.queue.triage.core.dao.mongo.FailedMessageConverter.PROPERTIES;
 import static uk.gov.dwp.queue.triage.core.domain.DestinationMatcher.aDestination;
 import static uk.gov.dwp.queue.triage.core.domain.FailedMessageMatcher.aFailedMessage;
@@ -75,8 +80,13 @@ public class FailedMessageConverterTest {
                 .withFailedDateTime(FAILED_AT)
                 .withProperties(SOME_PROPERTIES)
                 .withFailedMessageStatus(SOME_STATUS)
+                .withLabel("PR-1234")
         ;
-        underTest = new FailedMessageConverter(destinationDBObjectConverter, failedMessageStatusDBObjectConverter, propertiesConverter);
+        underTest = new MongoDaoConfig().failedMessageConverter(
+                destinationDBObjectConverter,
+                failedMessageStatusDBObjectConverter,
+                propertiesConverter
+        );
     }
 
     @Test
@@ -100,7 +110,8 @@ public class FailedMessageConverterTest {
                 hasField("_id", equalTo(FAILED_MESSAGE_ID_AS_STRING)),
                 hasField(CONTENT, equalTo("Hello")),
                 hasField(DESTINATION, equalTo(DESTINATION_DB_OBJECT)),
-                hasField(PROPERTIES, equalTo("{ \"propertyName\": \"propertyValue\" }"))
+                hasField(PROPERTIES, equalTo("{ \"propertyName\": \"propertyValue\" }")),
+                hasField(LABELS, equalTo(toBasicDBList(singletonList("PR-1234"))))
         ));
 
         assertThat(underTest.convertToObject(dbObject), is(aFailedMessage()
@@ -111,6 +122,7 @@ public class FailedMessageConverterTest {
                 .withFailedAt(FAILED_AT)
                 .withProperties(equalTo(SOME_PROPERTIES))
                 .withFailedMessageStatus(FailedMessageStatusMatcher.equalTo(SENT).withUpdatedDateTime(notNullValue(Instant.class)))
+                .withLabels(contains("PR-1234"))
         ));
     }
 
