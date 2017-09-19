@@ -73,4 +73,15 @@ java_test(
     visibility = [
         "PUBLIC"
     ],
+    # TODO: Can we pass $(location :test) or something similar into vm_args?
+    vm_args = [
+        "-Djgiven.report.dir=buck-out/gen/core/component-test/jgiven-reports",
+    ],
+)
+
+# buck build //core/component-test:generate-jgiven-html-reports
+genrule(
+    name = "generate-jgiven-html-reports",
+    cmd  = "$(exe //lib/test:jgiven-html5-report-with-deps) --format=html --sourceDir=`pwd`/../jgiven-reports --targetDir=$OUT",
+    out  = "jgiven-html-reports",
 )
