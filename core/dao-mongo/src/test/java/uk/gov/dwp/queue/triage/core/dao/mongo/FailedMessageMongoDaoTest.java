@@ -34,6 +34,7 @@ import static uk.gov.dwp.queue.triage.core.domain.FailedMessageStatus.Status.FAI
 import static uk.gov.dwp.queue.triage.core.domain.FailedMessageStatus.Status.RESEND;
 import static uk.gov.dwp.queue.triage.core.domain.FailedMessageStatus.Status.SENT;
 import static uk.gov.dwp.queue.triage.core.domain.FailedMessageStatus.failedMessageStatus;
+import static uk.gov.dwp.queue.triage.id.FailedMessageId.FAILED_MESSAGE_ID;
 import static uk.gov.dwp.queue.triage.id.FailedMessageId.newFailedMessageId;
 
 public class FailedMessageMongoDaoTest extends AbstractMongoDaoTest {
@@ -162,6 +163,40 @@ public class FailedMessageMongoDaoTest extends AbstractMongoDaoTest {
 
         assertThat(underTest.removeFailedMessages(), is(2));
         assertThat(collection.count(), is(4L));
+    }
+
+    @Test
+    public void addLabelToAFailedMessage() {
+        underTest.insert(failedMessageBuilder.build());
+        underTest.addLabel(failedMessageId, "foo");
+
+        assertThat(underTest.findById(failedMessageId), aFailedMessage().withLabels(contains("foo")));
+    }
+
+    @Test
+    public void addDuplicateLabelToAFailedMessage() {
+        underTest.insert(failedMessageBuilder.withLabel("foo").build());
+        underTest.addLabel(failedMessageId, "foo");
+
+        assertThat(underTest.findById(failedMessageId), aFailedMessage().withLabels(contains("foo")));
+    }
+
+    @Test
+    public void removeLabelFromAFailedMessage() {
+        underTest.insert(failedMessageBuilder.withLabel("foo").build());
+
+        underTest.removeLabel(failedMessageId, "foo");
+
+        assertThat(underTest.findById(failedMessageId), aFailedMessage().withLabels(emptyIterable()));
+    }
+
+    @Test
+    public void removeLabelThatDoesNotExistIsSuccessful() {
+        underTest.insert(failedMessageBuilder.withLabel("foo").build());
+
+        underTest.removeLabel(failedMessageId, "bar");
+
+        assertThat(underTest.findById(failedMessageId), aFailedMessage().withLabels(contains("foo")));
     }
 
     public FailedMessage newFailedMessageWithStatus(FailedMessageStatus.Status status, Instant instant) {

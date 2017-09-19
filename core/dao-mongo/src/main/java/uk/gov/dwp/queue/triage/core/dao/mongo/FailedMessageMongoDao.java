@@ -4,6 +4,7 @@ import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
+import com.mongodb.QueryOperators;
 import com.mongodb.operation.OrderBy;
 import uk.gov.dwp.queue.triage.core.dao.FailedMessageDao;
 import uk.gov.dwp.queue.triage.core.domain.FailedMessage;
@@ -16,6 +17,7 @@ import java.util.stream.Collectors;
 import static java.util.Collections.singletonList;
 import static uk.gov.dwp.queue.triage.core.dao.mongo.DestinationDBObjectConverter.BROKER_NAME;
 import static uk.gov.dwp.queue.triage.core.dao.mongo.FailedMessageConverter.DESTINATION;
+import static uk.gov.dwp.queue.triage.core.dao.mongo.FailedMessageConverter.LABELS;
 import static uk.gov.dwp.queue.triage.core.dao.mongo.FailedMessageConverter.STATUS_HISTORY;
 import static uk.gov.dwp.queue.triage.core.dao.mongo.FailedMessageStatusDBObjectConverter.LAST_MODIFIED_DATE_TIME;
 
@@ -76,5 +78,21 @@ public class FailedMessageMongoDao implements FailedMessageDao {
     @Override
     public int removeFailedMessages() {
         return collection.remove(removeRecordsQueryFactory.create()).getN();
+    }
+
+    @Override
+    public void addLabel(FailedMessageId failedMessageId, String label) {
+        collection.update(
+                failedMessageConverter.createId(failedMessageId),
+                new BasicDBObject("$addToSet", new BasicDBObject(LABELS, label))
+        );
+    }
+
+    @Override
+    public void removeLabel(FailedMessageId failedMessageId, String label) {
+        collection.update(
+                failedMessageConverter.createId(failedMessageId),
+                new BasicDBObject("$pull", new BasicDBObject(LABELS, label))
+        );
     }
 }
