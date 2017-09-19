@@ -13,6 +13,8 @@ prebuilt_jar(
         "//core/activemq:queue-triage-core-activemq",
         "//core/component-test:queue-triage-core-component-test",
         "//core/dao-mongo:queue-triage-core-dao-mongo",
+        "//core/message-classification:queue-triage-core-message-classification-server",
+        "//core/message-classification:test-server",
         "//core/search:queue-triage-core-search-mongo-spring",
     ]
 )
@@ -34,6 +36,7 @@ prebuilt_jar(
         "//core/activemq:test",
         "//core/jms:queue-triage-core-jms-spring",
         "//core/jms:test-spring",
+        "//core/message-classification:test-server",
         "//core/resend:queue-triage-core-resend-spring",
         "//core/resend:test-spring",
         "//core/search:queue-triage-core-search-mongo-spring",

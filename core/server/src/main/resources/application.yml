@@ -26,3 +26,8 @@ jms:
         resend:
           frequency: 60
           timeUnit: SECONDS
+
+messageClassification:
+  initialDelay: 0
+  frequency: 60
+  timeUnit: SECONDS
