@@ -182,6 +182,14 @@ public class FailedMessageMongoDaoTest extends AbstractMongoDaoTest {
     }
 
     @Test
+    public void addLabelToAFailedMessageThatDoesNotExist() {
+        underTest.addLabel(failedMessageId, "foo");
+
+        //TODO: What should be the behaviour (no current use case)? Throw an Exception?  Return a Boolean?
+        assertThat(collection.count(), is(0L));
+    }
+
+    @Test
     public void removeLabelFromAFailedMessage() {
         underTest.insert(failedMessageBuilder.withLabel("foo").build());
 
@@ -191,12 +199,20 @@ public class FailedMessageMongoDaoTest extends AbstractMongoDaoTest {
     }
 
     @Test
-    public void removeLabelThatDoesNotExistIsSuccessful() {
+    public void removeLabelThatDoesNotExistFromAFailedMessageIsSuccessful() {
         underTest.insert(failedMessageBuilder.withLabel("foo").build());
 
         underTest.removeLabel(failedMessageId, "bar");
 
         assertThat(underTest.findById(failedMessageId), aFailedMessage().withLabels(contains("foo")));
+    }
+
+    @Test
+    public void removeLabelForAFailedMessageThatDoesNotExist() {
+        underTest.removeLabel(failedMessageId, "bar");
+
+        //TODO: What should be the behaviour (no current use case)? Throw an Exception?  Return a Boolean?
+        assertThat(collection.count(), is(0L));
     }
 
     public FailedMessage newFailedMessageWithStatus(FailedMessageStatus.Status status, Instant instant) {
