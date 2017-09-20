@@ -5,7 +5,10 @@ import org.junit.Test;
 import uk.gov.dwp.queue.triage.core.BaseCoreComponentTest;
 import uk.gov.dwp.queue.triage.core.FailedMessageResourceStage;
 import uk.gov.dwp.queue.triage.core.JmsStage;
+import uk.gov.dwp.queue.triage.core.delete.DeleteFailedMessageStage;
 import uk.gov.dwp.queue.triage.id.FailedMessageId;
+
+import java.time.Duration;
 
 import static uk.gov.dwp.queue.triage.core.client.CreateFailedMessageRequest.newCreateFailedMessageRequest;
 import static uk.gov.dwp.queue.triage.core.client.FailedMessageStatus.FAILED;
@@ -16,6 +19,8 @@ import static uk.gov.dwp.queue.triage.id.FailedMessageId.newFailedMessageId;
 
 public class ResendFailedMessageComponentTest extends BaseCoreComponentTest<JmsStage> {
 
+    @ScenarioStage
+    private DeleteFailedMessageStage deleteFailedMessageStage;
     @ScenarioStage
     private FailedMessageResourceStage failedMessageResourceStage;
     @ScenarioStage
@@ -51,5 +56,44 @@ public class ResendFailedMessageComponentTest extends BaseCoreComponentTest<JmsS
 
         resendFailedMessageWhenStage.when().theResendFailedMessageJobExecutesForBroker$("internal-broker");
         failedMessageResourceStage.then().aFailedMessageWithId$Has(failedMessageIdToResend, aFailedMessage().withStatus(SENT));
+    }
+
+    @Test
+    public void messagesMarkedForResendingInTheFutureAreNotSent() {
+        FailedMessageId failedMessageId = FailedMessageId.newFailedMessageId();
+
+        resendFailedMessageGivenStage.given().theResendFailedMessageJobIsPausedForBroker$("internal-broker");
+        failedMessageResourceStage.given().and().aFailedMessage(newCreateFailedMessageRequest()
+                .withFailedMessageId(failedMessageId)
+                .withBrokerName("internal-broker")
+                .withDestinationName("some-queue")
+        ).exists();
+
+        resendFailedMessageWhenStage.when().aFailedMessageWithId$IsMarkedForResendIn$(failedMessageId, Duration.ofMinutes(30));
+
+        failedMessageResourceStage.then().aFailedMessageWithId$Has(failedMessageId, aFailedMessage().withStatus(RESENDING));
+
+        resendFailedMessageWhenStage.when().theResendFailedMessageJobExecutesForBroker$("internal-broker");
+        failedMessageResourceStage.then().aFailedMessageWithId$Has(failedMessageId, aFailedMessage().withStatus(RESENDING));
+    }
+
+    @Test
+    public void messageMarkedForResendingInTheFutureCanBeDeleted() {
+        FailedMessageId failedMessageId = FailedMessageId.newFailedMessageId();
+
+        resendFailedMessageGivenStage.given().theResendFailedMessageJobIsPausedForBroker$("internal-broker");
+        failedMessageResourceStage.given().and().aFailedMessage(newCreateFailedMessageRequest()
+                .withFailedMessageId(failedMessageId)
+                .withBrokerName("internal-broker")
+                .withDestinationName("some-queue")
+        ).exists();
+
+
+        resendFailedMessageWhenStage.when().aFailedMessageWithId$IsMarkedForResendIn$(failedMessageId, Duration.ofMinutes(30));
+        failedMessageResourceStage.then().aFailedMessageWithId$Has(failedMessageId, aFailedMessage().withStatus(RESENDING));
+
+        deleteFailedMessageStage.when().theFailedMessageWithId$IsDeleted(failedMessageId);
+        failedMessageResourceStage.then().aFailedMessageWithId$DoesNotExist(failedMessageId);
+
     }
 }

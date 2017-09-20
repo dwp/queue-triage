@@ -4,6 +4,7 @@ import com.tngtech.jgiven.Stage;
 import com.tngtech.jgiven.annotation.ExpectedScenarioState;
 import com.tngtech.jgiven.annotation.Format;
 import com.tngtech.jgiven.integration.spring.JGivenStage;
+import org.hamcrest.Matchers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.web.client.TestRestTemplate;
@@ -69,6 +70,11 @@ public class FailedMessageResourceStage extends Stage<FailedMessageResourceStage
     public FailedMessageResourceStage aFailedMessageWithId$Has(FailedMessageId failedMessageId,
                                                                FailedMessageResponseMatcher failedMessageResponseMatcher) {
         await().pollDelay(500, MILLISECONDS).until(() -> findFailedMessageById(failedMessageId),  failedMessageResponseMatcher);
+        return this;
+    }
+
+    public FailedMessageResourceStage aFailedMessageWithId$DoesNotExist(FailedMessageId failedMessageId) {
+        await().pollDelay(100, MILLISECONDS).until(() -> findFailedMessageById(failedMessageId), Matchers.nullValue());
         return this;
     }
 

@@ -20,7 +20,7 @@ public class FailedMessageStatus {
         return status;
     }
 
-    public Instant getUpdatedDateTime() {
+    public Instant getEffectiveDateTime() {
         return updatedDateTime;
     }
 
