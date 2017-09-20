@@ -8,6 +8,7 @@ import javax.ws.rs.DELETE;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
+import java.util.Set;
 
 @Api(value = "Label")
 @Path("/failed-message/label")
@@ -17,6 +18,11 @@ public interface LabelFailedMessageClient {
     @PUT
     @Path("/{failedMessageId}/{label}")
     void addLabel(@PathParam("failedMessageId") FailedMessageId failedMessageId, @PathParam("label") String label);
+
+    @ApiOperation("Replace the labels on a given FailedMessage")
+    @PUT
+    @Path("/{failedMessageId}")
+    void setLabels(@PathParam("failedMessageId") FailedMessageId failedMessageId, Set<String> labels);
 
     @ApiOperation("Remove a label from a FailedMessage")
     @DELETE
