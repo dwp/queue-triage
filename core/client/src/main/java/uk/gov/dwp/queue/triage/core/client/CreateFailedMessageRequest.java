@@ -7,7 +7,9 @@ import uk.gov.dwp.queue.triage.id.FailedMessageId;
 import javax.validation.constraints.NotNull;
 import java.time.Instant;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 public class CreateFailedMessageRequest {
 
@@ -25,6 +27,8 @@ public class CreateFailedMessageRequest {
     private final String content;
     @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS)
     private final Map<String, Object> properties;
+    @NotNull
+    private final Set<String> labels;
 
     CreateFailedMessageRequest(@JsonProperty("failedMessageId") FailedMessageId failedMessageId,
                                @JsonProperty("brokerName") String brokerName,
@@ -32,7 +36,8 @@ public class CreateFailedMessageRequest {
                                @JsonProperty("sentAt") Instant sentAt,
                                @JsonProperty("failedAt") Instant failedAt,
                                @JsonProperty("content") String content,
-                               @JsonProperty("properties") Map<String, Object> properties) {
+                               @JsonProperty("properties") Map<String, Object> properties,
+                               @JsonProperty("labels") Set<String> labels) {
         this.failedMessageId = failedMessageId;
         this.brokerName = brokerName;
         this.destination = destination;
@@ -40,6 +45,7 @@ public class CreateFailedMessageRequest {
         this.failedAt = failedAt;
         this.content = content;
         this.properties = properties;
+        this.labels = labels;
     }
 
     public static CreateFailedMessageRequestBuilder newCreateFailedMessageRequest() {
@@ -74,6 +80,10 @@ public class CreateFailedMessageRequest {
         return properties;
     }
 
+    public Set<String> getLabels() {
+        return labels;
+    }
+
     public static class CreateFailedMessageRequestBuilder {
         private FailedMessageId failedMessageId;
         private String brokerName;
@@ -82,12 +92,13 @@ public class CreateFailedMessageRequest {
         private Instant failedDateTime;
         private String content;
         private Map<String, Object> properties = new HashMap<>();
+        private Set<String> labels= new HashSet<>();
 
         private CreateFailedMessageRequestBuilder() {
         }
 
         public CreateFailedMessageRequest build() {
-            return new CreateFailedMessageRequest(failedMessageId, brokerName, destinationName, sentDateTime, failedDateTime, content, properties);
+            return new CreateFailedMessageRequest(failedMessageId, brokerName, destinationName, sentDateTime, failedDateTime, content, properties, labels);
         }
 
         public CreateFailedMessageRequestBuilder withFailedMessageId(FailedMessageId failedMessageId) {
@@ -127,6 +138,16 @@ public class CreateFailedMessageRequest {
 
         public CreateFailedMessageRequestBuilder withProperty(String key, Object value) {
             this.properties.put(key, value);
+            return this;
+        }
+
+        public CreateFailedMessageRequestBuilder withLabels(Set<String> labels) {
+            this.labels = (labels != null) ? labels : new HashSet<>();
+            return this;
+        }
+
+        public CreateFailedMessageRequestBuilder withLabel(String label) {
+            this.labels.add(label);
             return this;
         }
     }

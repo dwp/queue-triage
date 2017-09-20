@@ -24,8 +24,10 @@ public class FailedMessageResponseMatcher extends TypeSafeMatcher<FailedMessageR
     private Matcher<Instant> failedAtMatcher = new IsAnything<>();
     private Matcher<FailedMessageStatus> statusMatcher = new IsAnything<>();
     private Matcher<Map<? extends String, ? extends Object>> propertiesMatcher = new IsAnything<>();
+    private Matcher<Iterable<? extends String>> labelsMatcher = new IsAnything<>();
 
-    private FailedMessageResponseMatcher() { }
+    private FailedMessageResponseMatcher() {
+    }
 
     public static FailedMessageResponseMatcher aFailedMessage() {
         return new FailedMessageResponseMatcher();
@@ -81,6 +83,11 @@ public class FailedMessageResponseMatcher extends TypeSafeMatcher<FailedMessageR
         return this;
     }
 
+    public FailedMessageResponseMatcher withLabels(Matcher<Iterable<? extends String>> labelsMatcher) {
+        this.labelsMatcher = labelsMatcher;
+        return this;
+    }
+
     @Override
     protected boolean matchesSafely(FailedMessageResponse item) {
         return failedMessageIdMatcher.matches(item.getFailedMessageId())
@@ -90,20 +97,27 @@ public class FailedMessageResponseMatcher extends TypeSafeMatcher<FailedMessageR
                 && sentAtMatcher.matches(item.getSentAt())
                 && failedAtMatcher.matches(item.getFailedAt())
                 && statusMatcher.matches(item.getCurrentStatus())
-                && propertiesMatcher.matches(item.getProperties());
+                && propertiesMatcher.matches(item.getProperties())
+                && labelsMatcher.matches(item.getLabels());
     }
 
     @Override
     public void describeTo(Description description) {
-        description
-                .appendText("failedMessageId is ").appendDescriptionOf(failedMessageIdMatcher)
-                .appendText(" content is ").appendDescriptionOf(contentMatcher)
-                .appendText(" broker is ").appendDescriptionOf(brokerMatcher)
-                .appendText(" destination is ").appendDescriptionOf(destinationMatcher)
-                .appendText(" sentAt is ").appendDescriptionOf(sentAtMatcher)
-                .appendText(" failedAt is ").appendDescriptionOf(failedAtMatcher)
-                .appendText(" status is").appendDescriptionOf(statusMatcher)
-                .appendText(" properties are ").appendDescriptionOf(propertiesMatcher)
+        addMatcher(description, "failedMessageId is ", failedMessageIdMatcher);
+        addMatcher(description, "content is ", contentMatcher);
+        addMatcher(description, "broker is ", brokerMatcher);
+        addMatcher(description, "destination is ", destinationMatcher);
+        addMatcher(description, "sentAt is ", sentAtMatcher);
+        addMatcher(description, "failedAt is ", failedAtMatcher);
+        addMatcher(description, "status is", statusMatcher);
+        addMatcher(description, "properties are ", propertiesMatcher);
+        addMatcher(description, "labels with ", labelsMatcher);
         ;
+    }
+
+    public void addMatcher(Description description, String fieldName, Matcher<?> matcher) {
+        if (!(matcher instanceof IsAnything)) {
+            description.appendText(fieldName).appendDescriptionOf(matcher).appendText(" ");
+        }
     }
 }

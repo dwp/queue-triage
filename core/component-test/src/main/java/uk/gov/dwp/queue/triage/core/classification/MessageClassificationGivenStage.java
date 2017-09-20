@@ -6,6 +6,7 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpEntity;
 import uk.gov.dwp.queue.triage.core.classification.MessageClassifier.MessageClassifierBuilder;
 import uk.gov.dwp.queue.triage.core.classification.action.DeleteMessageAction;
+import uk.gov.dwp.queue.triage.core.classification.action.LabelMessageAction;
 import uk.gov.dwp.queue.triage.core.classification.predicate.BrokerEqualsPredicate;
 import uk.gov.dwp.queue.triage.core.classification.predicate.ContentEqualToPredicate;
 import uk.gov.dwp.queue.triage.core.classification.predicate.DestinationEqualsPredicate;
@@ -33,6 +34,15 @@ public class MessageClassificationGivenStage extends GivenStage<MessageClassific
         testRestTemplate.postForLocation(
                 "/core/message-classification",
                 predicateBuilder.then(new DeleteMessageAction(null))
+        );
+        return this;
+    }
+
+    public MessageClassificationGivenStage aMessageClassifierExistsToLabelAnyMessage$FromBroker$(String label, String broker) {
+        MessageClassifierBuilder predicateBuilder = MessageClassifier.when(new BrokerEqualsPredicate(broker));
+        testRestTemplate.postForLocation(
+                "/core/message-classification",
+                predicateBuilder.then(new LabelMessageAction(label, null))
         );
         return this;
     }

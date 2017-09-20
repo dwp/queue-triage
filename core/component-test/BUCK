@@ -37,6 +37,7 @@ java_library(
         '//lib/test:hamcrest-optional',
         '//lib/test:jgiven',
         '//lib/test:jgiven-spring',
+        '//lib/test:junit',
     ],
     visibility = [
         "//core/component-test:test"

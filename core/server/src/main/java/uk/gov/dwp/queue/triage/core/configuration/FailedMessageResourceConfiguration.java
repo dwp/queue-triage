@@ -10,11 +10,13 @@ import uk.gov.dwp.queue.triage.core.dao.mongo.configuration.MongoDaoConfig;
 import uk.gov.dwp.queue.triage.core.domain.FailedMessageStatusAdapter;
 import uk.gov.dwp.queue.triage.core.resource.create.CreateFailedMessageResource;
 import uk.gov.dwp.queue.triage.core.resource.create.FailedMessageFactory;
+import uk.gov.dwp.queue.triage.core.resource.label.LabelFailedMessageResource;
 import uk.gov.dwp.queue.triage.core.resource.resend.ResendFailedMessageResource;
 import uk.gov.dwp.queue.triage.core.resource.search.FailedMessageResponseFactory;
 import uk.gov.dwp.queue.triage.core.resource.search.FailedMessageSearchResource;
 import uk.gov.dwp.queue.triage.core.search.FailedMessageSearchService;
 import uk.gov.dwp.queue.triage.core.search.SearchFailedMessageResponseAdapter;
+import uk.gov.dwp.queue.triage.core.service.FailedMessageLabelService;
 import uk.gov.dwp.queue.triage.core.service.FailedMessageService;
 
 import java.time.Clock;
@@ -50,5 +52,13 @@ public class FailedMessageResourceConfiguration {
         return resourceRegistry.add(new ResendFailedMessageResource(
                 failedMessageService,
                 Clock.systemUTC()));
+    }
+
+    @Bean
+    public LabelFailedMessageResource labelFailedMessageResource(ResourceRegistry resourceRegistry,
+                                                                 FailedMessageLabelService failedMessageLabelService) {
+        return resourceRegistry.add(new LabelFailedMessageResource(
+                failedMessageLabelService
+        ));
     }
 }

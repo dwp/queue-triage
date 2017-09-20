@@ -1,8 +1,6 @@
 package uk.gov.dwp.queue.triage.core.search;
 
-import com.mongodb.MongoClient;
 import com.tngtech.jgiven.Stage;
-import com.tngtech.jgiven.annotation.BeforeScenario;
 import com.tngtech.jgiven.annotation.ExpectedScenarioState;
 import com.tngtech.jgiven.annotation.Format;
 import com.tngtech.jgiven.integration.spring.JGivenStage;
@@ -16,7 +14,6 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import uk.gov.dwp.queue.triage.core.client.search.SearchFailedMessageRequest.SearchFailedMessageRequestBuilder;
 import uk.gov.dwp.queue.triage.core.client.search.SearchFailedMessageResponse;
-import uk.gov.dwp.queue.triage.core.dao.mongo.MongoDatabaseCleaner;
 import uk.gov.dwp.queue.triage.jgiven.ReflectionArgumentFormatter;
 
 import javax.ws.rs.core.Response.Status;
@@ -32,16 +29,9 @@ public class SearchFailedMessageStage extends Stage<SearchFailedMessageStage> {
 
     @Autowired
     private TestRestTemplate testRestTemplate;
-    @Autowired
-    private MongoClient mongoClient;
 
     @ExpectedScenarioState
     private ResponseEntity<Collection<SearchFailedMessageResponse>> searchResponse;
-
-    @BeforeScenario
-    public void cleanDatabases() {
-        new MongoDatabaseCleaner(mongoClient).cleanDatabase("queue-triage");
-    }
 
     public SearchFailedMessageStage aSearchIsRequested(@Format(value = ReflectionArgumentFormatter.class, args = {"broker", "destination"}) SearchFailedMessageRequestBuilder requestBuilder) {
         searchResponse = testRestTemplate.exchange(
