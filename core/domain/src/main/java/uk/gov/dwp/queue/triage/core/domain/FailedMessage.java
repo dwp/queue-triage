@@ -3,7 +3,9 @@ package uk.gov.dwp.queue.triage.core.domain;
 import uk.gov.dwp.queue.triage.id.FailedMessageId;
 
 import java.time.Instant;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import static org.apache.commons.lang3.builder.ToStringBuilder.reflectionToString;
 
@@ -16,6 +18,7 @@ public class FailedMessage {
     private final String content;
     private final Map<String, Object> properties;
     private final FailedMessageStatus failedMessageStatus;
+    private final Set<String> labels;
 
     FailedMessage(FailedMessageId failedMessageId,
                   Destination destination,
@@ -23,7 +26,8 @@ public class FailedMessage {
                   Instant failedAt,
                   String content,
                   Map<String, Object> properties,
-                  FailedMessageStatus failedMessageStatus) {
+                  FailedMessageStatus failedMessageStatus,
+                  Set<String> labels) {
         this.failedMessageId = failedMessageId;
         this.destination = destination;
         this.sentAt = sentAt;
@@ -31,6 +35,7 @@ public class FailedMessage {
         this.content = content;
         this.properties = properties;
         this.failedMessageStatus = failedMessageStatus;
+        this.labels = labels;
     }
 
     public FailedMessageId getFailedMessageId() {
@@ -59,6 +64,10 @@ public class FailedMessage {
 
     public <T> T getProperty(String name) {
         return (T)properties.get(name);
+    }
+
+    public Set<String> getLabels() {
+        return new HashSet<>(labels);
     }
 
     @Override

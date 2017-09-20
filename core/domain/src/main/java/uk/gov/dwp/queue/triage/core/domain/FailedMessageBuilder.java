@@ -5,7 +5,9 @@ import uk.gov.dwp.queue.triage.id.FailedMessageId;
 
 import java.time.Instant;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 public class FailedMessageBuilder {
 
@@ -16,6 +18,7 @@ public class FailedMessageBuilder {
     private String content;
     private Map<String, Object> properties = new HashMap<>();
     private FailedMessageStatus failedMessageStatus;
+    private Set<String> labels = new HashSet<>();
 
     private FailedMessageBuilder() {
     }
@@ -33,11 +36,12 @@ public class FailedMessageBuilder {
                 .withFailedDateTime(failedMessage.getFailedAt())
                 .withContent(failedMessage.getContent())
                 .withProperties(failedMessage.getProperties())
-                .withFailedMessageStatus(failedMessage.getFailedMessageStatus());
+                .withFailedMessageStatus(failedMessage.getFailedMessageStatus())
+                .withLabels(failedMessage.getLabels());
     }
 
     public FailedMessage build() {
-        return new FailedMessage(failedMessageId, destination, sentDateTime, failedDateTime, content, properties, failedMessageStatus);
+        return new FailedMessage(failedMessageId, destination, sentDateTime, failedDateTime, content, properties, failedMessageStatus, labels);
     }
 
     public FailedMessageBuilder withNewFailedMessageId() {
@@ -87,6 +91,16 @@ public class FailedMessageBuilder {
 
     public FailedMessageBuilder withFailedMessageStatus(FailedMessageStatus failedMessageStatus) {
         this.failedMessageStatus = failedMessageStatus;
+        return this;
+    }
+
+    public FailedMessageBuilder withLabels(Set<String> labels) {
+        this.labels = (labels != null) ? labels : new HashSet<>();
+        return this;
+    }
+
+    public FailedMessageBuilder withLabel(String label) {
+        labels.add(label);
         return this;
     }
 }

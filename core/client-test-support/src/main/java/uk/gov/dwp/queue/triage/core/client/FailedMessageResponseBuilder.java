@@ -6,8 +6,10 @@ import uk.gov.dwp.queue.triage.id.FailedMessageId;
 
 import java.time.Instant;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 import static uk.gov.dwp.queue.triage.id.FailedMessageId.newFailedMessageId;
 
@@ -15,12 +17,13 @@ public class FailedMessageResponseBuilder {
 
     private FailedMessageId failedMessageId;
     private String broker;
-    private Optional<String> destination;
+    private Optional<String> destination = Optional.empty();
     private Instant sentAt;
     private Instant failedAt;
     private String content;
     private FailedMessageStatus currentStatus;
-    private Map<String, Object> properties;
+    private Map<String, Object> properties = new HashMap<>();
+    private Set<String> labels = new HashSet<>();
 
     private FailedMessageResponseBuilder() {
     }
@@ -40,8 +43,8 @@ public class FailedMessageResponseBuilder {
                 failedAt,
                 content,
                 currentStatus,
-                properties
-        );
+                properties,
+                labels);
     }
 
     public FailedMessageResponseBuilder withNewFailedMessageId() {
@@ -96,6 +99,16 @@ public class FailedMessageResponseBuilder {
 
     public FailedMessageResponseBuilder withStatus(FailedMessageStatus status) {
         this.currentStatus = status;
+        return this;
+    }
+
+    public FailedMessageResponseBuilder withLabels(Set<String> labels) {
+        this.labels = (labels != null) ? labels : new HashSet<>();
+        return this;
+    }
+
+    public FailedMessageResponseBuilder withLabel(String label) {
+        this.labels.add(label);
         return this;
     }
 }

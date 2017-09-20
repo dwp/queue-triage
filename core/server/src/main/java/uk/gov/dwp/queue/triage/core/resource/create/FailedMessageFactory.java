@@ -17,6 +17,7 @@ public class FailedMessageFactory {
                 .withFailedDateTime(request.getFailedAt())
                 .withProperties(request.getProperties())
                 .withSentDateTime(request.getSentAt())
+                .withLabels(request.getLabels())
                 .build();
     }
 }

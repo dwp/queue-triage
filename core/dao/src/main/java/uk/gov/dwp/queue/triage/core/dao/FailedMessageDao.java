@@ -19,4 +19,8 @@ public interface FailedMessageDao {
     List<FailedMessageStatus> getStatusHistory(FailedMessageId failedMessageId);
 
     int removeFailedMessages();
+
+    void addLabel(FailedMessageId failedMessageId, String label);
+
+    void removeLabel(FailedMessageId failedMessageId, String label);
 }

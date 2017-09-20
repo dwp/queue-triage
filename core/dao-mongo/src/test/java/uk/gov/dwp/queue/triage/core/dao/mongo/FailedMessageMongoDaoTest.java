@@ -22,6 +22,8 @@ import static java.util.Collections.emptyMap;
 import static java.util.Optional.of;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.hamcrest.Matchers.emptyIterable;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
@@ -32,6 +34,7 @@ import static uk.gov.dwp.queue.triage.core.domain.FailedMessageStatus.Status.FAI
 import static uk.gov.dwp.queue.triage.core.domain.FailedMessageStatus.Status.RESEND;
 import static uk.gov.dwp.queue.triage.core.domain.FailedMessageStatus.Status.SENT;
 import static uk.gov.dwp.queue.triage.core.domain.FailedMessageStatus.failedMessageStatus;
+import static uk.gov.dwp.queue.triage.id.FailedMessageId.FAILED_MESSAGE_ID;
 import static uk.gov.dwp.queue.triage.id.FailedMessageId.newFailedMessageId;
 
 public class FailedMessageMongoDaoTest extends AbstractMongoDaoTest {
@@ -56,7 +59,7 @@ public class FailedMessageMongoDaoTest extends AbstractMongoDaoTest {
     }
 
     @Test
-    public void saveMessageWithEmptyProperties() throws Exception {
+    public void saveMessageWithEmptyPropertiesAndNoLabels() throws Exception {
         failedMessageBuilder.withProperties(emptyMap());
 
         underTest.insert(failedMessageBuilder.build());
@@ -66,11 +69,12 @@ public class FailedMessageMongoDaoTest extends AbstractMongoDaoTest {
                 .withContent(equalTo("Hello"))
                 .withProperties(equalTo(emptyMap()))
                 .withFailedMessageStatus(FailedMessageStatusMatcher.equalTo(FAILED))
+                .withLabels(emptyIterable())
         ));
     }
 
     @Test
-    public void saveMessageWithProperties() throws Exception {
+    public void saveMessageWithPropertiesAndLabels() throws Exception {
         HashMapBuilder<String, Object> hashMapBuilder = newHashMap(String.class, Object.class)
                 .put("string", "Builder")
                 .put("localDateTime", LocalDateTime.now())
@@ -81,7 +85,10 @@ public class FailedMessageMongoDaoTest extends AbstractMongoDaoTest {
 
         HashMap<String, Object> properties = hashMapBuilder.build();
         properties.put("properties", hashMapBuilder.build());
-        failedMessageBuilder.withProperties(properties);
+        failedMessageBuilder
+                .withProperties(properties)
+                .withLabel("foo")
+                .withLabel("bar");
 
         underTest.insert(failedMessageBuilder.build());
 
@@ -90,6 +97,7 @@ public class FailedMessageMongoDaoTest extends AbstractMongoDaoTest {
                 .withContent(equalTo("Hello"))
                 .withProperties(equalTo(properties))
                 .withFailedMessageStatus(FailedMessageStatusMatcher.equalTo(FAILED))
+                .withLabels(containsInAnyOrder("foo", "bar"))
         ));
     }
 
@@ -155,6 +163,56 @@ public class FailedMessageMongoDaoTest extends AbstractMongoDaoTest {
 
         assertThat(underTest.removeFailedMessages(), is(2));
         assertThat(collection.count(), is(4L));
+    }
+
+    @Test
+    public void addLabelToAFailedMessage() {
+        underTest.insert(failedMessageBuilder.build());
+        underTest.addLabel(failedMessageId, "foo");
+
+        assertThat(underTest.findById(failedMessageId), aFailedMessage().withLabels(contains("foo")));
+    }
+
+    @Test
+    public void addDuplicateLabelToAFailedMessage() {
+        underTest.insert(failedMessageBuilder.withLabel("foo").build());
+        underTest.addLabel(failedMessageId, "foo");
+
+        assertThat(underTest.findById(failedMessageId), aFailedMessage().withLabels(contains("foo")));
+    }
+
+    @Test
+    public void addLabelToAFailedMessageThatDoesNotExist() {
+        underTest.addLabel(failedMessageId, "foo");
+
+        //TODO: What should be the behaviour (no current use case)? Throw an Exception?  Return a Boolean?
+        assertThat(collection.count(), is(0L));
+    }
+
+    @Test
+    public void removeLabelFromAFailedMessage() {
+        underTest.insert(failedMessageBuilder.withLabel("foo").build());
+
+        underTest.removeLabel(failedMessageId, "foo");
+
+        assertThat(underTest.findById(failedMessageId), aFailedMessage().withLabels(emptyIterable()));
+    }
+
+    @Test
+    public void removeLabelThatDoesNotExistFromAFailedMessageIsSuccessful() {
+        underTest.insert(failedMessageBuilder.withLabel("foo").build());
+
+        underTest.removeLabel(failedMessageId, "bar");
+
+        assertThat(underTest.findById(failedMessageId), aFailedMessage().withLabels(contains("foo")));
+    }
+
+    @Test
+    public void removeLabelForAFailedMessageThatDoesNotExist() {
+        underTest.removeLabel(failedMessageId, "bar");
+
+        //TODO: What should be the behaviour (no current use case)? Throw an Exception?  Return a Boolean?
+        assertThat(collection.count(), is(0L));
     }
 
     public FailedMessage newFailedMessageWithStatus(FailedMessageStatus.Status status, Instant instant) {

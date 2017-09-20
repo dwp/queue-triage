@@ -5,8 +5,10 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import uk.gov.dwp.queue.triage.id.FailedMessageId;
 
 import java.time.Instant;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 import static org.apache.commons.lang3.builder.ToStringBuilder.reflectionToString;
 
@@ -21,6 +23,7 @@ public class FailedMessageResponse {
     private final FailedMessageStatus currentStatus;
     @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS)
     private final Map<String, Object> properties;
+    private final Set<String> labels;
 
     public FailedMessageResponse(@JsonProperty("failedMessageId") FailedMessageId failedMessageId,
                                  @JsonProperty("broker") String broker,
@@ -29,7 +32,8 @@ public class FailedMessageResponse {
                                  @JsonProperty("failedAt") Instant failedAt,
                                  @JsonProperty("content") String content,
                                  @JsonProperty("currentStatus") FailedMessageStatus currentStatus,
-                                 @JsonProperty("properties") Map<String, Object> properties) {
+                                 @JsonProperty("properties") Map<String, Object> properties,
+                                 @JsonProperty("labels") Set<String> labels) {
         this.failedMessageId = failedMessageId;
         this.broker = broker;
         this.destination = destination;
@@ -38,6 +42,7 @@ public class FailedMessageResponse {
         this.content = content;
         this.currentStatus = currentStatus;
         this.properties = properties;
+        this.labels = labels;
     }
 
     public FailedMessageId getFailedMessageId() {
@@ -76,9 +81,12 @@ public class FailedMessageResponse {
         return (T) properties.get(name);
     }
 
+    public Set<String> getLabels() {
+        return new HashSet<>(labels);
+    }
+
     @Override
     public String toString() {
         return reflectionToString(this);
     }
-
 }

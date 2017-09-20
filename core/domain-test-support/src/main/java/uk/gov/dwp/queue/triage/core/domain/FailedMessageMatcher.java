@@ -8,6 +8,7 @@ import uk.gov.dwp.queue.triage.id.FailedMessageId;
 
 import java.time.Instant;
 import java.util.Map;
+import java.util.Set;
 
 import static org.hamcrest.Matchers.equalTo;
 
@@ -20,6 +21,7 @@ public class FailedMessageMatcher extends TypeSafeMatcher<FailedMessage> {
     private Matcher<Instant> failedAtMatcher = new IsAnything<>();
     private Matcher<Map<? extends String, ? extends Object>> propertiesMatcher = new IsAnything<>();
     private Matcher<FailedMessageStatus> failedMessageStatusMatcher = new IsAnything<>();
+    private Matcher<Iterable<? extends String>> labelsMatcher = new IsAnything<>();
 
     private FailedMessageMatcher() { }
 
@@ -72,6 +74,11 @@ public class FailedMessageMatcher extends TypeSafeMatcher<FailedMessage> {
         return this;
     }
 
+    public FailedMessageMatcher withLabels(Matcher<Iterable<? extends String>> labelsMatcher) {
+        this.labelsMatcher = labelsMatcher;
+        return this;
+    }
+
     @Override
     protected boolean matchesSafely(FailedMessage item) {
         return failedMessageIdMatcher.matches(item.getFailedMessageId())
@@ -81,6 +88,7 @@ public class FailedMessageMatcher extends TypeSafeMatcher<FailedMessage> {
                 && failedAtMatcher.matches(item.getFailedAt())
                 && propertiesMatcher.matches(item.getProperties())
                 && failedMessageStatusMatcher.matches(item.getFailedMessageStatus())
+                && labelsMatcher.matches(item.getLabels())
                 ;
     }
 
@@ -94,6 +102,7 @@ public class FailedMessageMatcher extends TypeSafeMatcher<FailedMessage> {
                 .appendText(" failedAt is ").appendDescriptionOf(failedAtMatcher)
                 .appendText(" properties are ").appendDescriptionOf(propertiesMatcher)
                 .appendText(" status is ").appendDescriptionOf(failedMessageStatusMatcher)
+                .appendText(" labels are ").appendDescriptionOf(labelsMatcher)
         ;
     }
 }

@@ -21,7 +21,7 @@ public class FailedMessageResponseFactory {
                 failedMessage.getFailedAt(),
                 failedMessage.getContent(),
                 failedMessageStatusAdapter.toFailedMessageStatus(failedMessage.getFailedMessageStatus().getStatus()),
-                failedMessage.getProperties()
-        );
+                failedMessage.getProperties(),
+                failedMessage.getLabels());
     }
 }

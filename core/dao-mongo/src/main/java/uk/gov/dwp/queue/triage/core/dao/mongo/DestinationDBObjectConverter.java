@@ -13,7 +13,7 @@ public class DestinationDBObjectConverter implements DBObjectConverter<Destinati
 
     @Override
     public Destination convertToObject(DBObject dbObject) {
-        return new Destination((String)dbObject.get(BROKER_NAME), Optional.of((String)dbObject.get(NAME)));
+        return new Destination((String)dbObject.get(BROKER_NAME), Optional.ofNullable((String)dbObject.get(NAME)));
     }
 
     @Override
