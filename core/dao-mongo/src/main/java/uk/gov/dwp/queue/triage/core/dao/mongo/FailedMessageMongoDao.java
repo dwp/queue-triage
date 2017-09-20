@@ -4,7 +4,6 @@ import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
-import com.mongodb.QueryOperators;
 import com.mongodb.operation.OrderBy;
 import uk.gov.dwp.queue.triage.core.dao.FailedMessageDao;
 import uk.gov.dwp.queue.triage.core.domain.FailedMessage;
@@ -12,6 +11,7 @@ import uk.gov.dwp.queue.triage.core.domain.FailedMessageStatus;
 import uk.gov.dwp.queue.triage.id.FailedMessageId;
 
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import static java.util.Collections.singletonList;
@@ -85,6 +85,14 @@ public class FailedMessageMongoDao implements FailedMessageDao {
         collection.update(
                 failedMessageConverter.createId(failedMessageId),
                 new BasicDBObject("$addToSet", new BasicDBObject(LABELS, label))
+        );
+    }
+
+    @Override
+    public void setLabels(FailedMessageId failedMessageId, Set<String> labels) {
+        collection.update(
+                failedMessageConverter.createId(failedMessageId),
+                new BasicDBObject("$set", new BasicDBObject(LABELS, labels))
         );
     }
 

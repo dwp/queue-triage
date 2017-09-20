@@ -11,6 +11,7 @@ import uk.gov.dwp.queue.triage.id.FailedMessageId;
 
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.hamcrest.Matchers.emptyIterable;
 import static uk.gov.dwp.queue.triage.core.client.CreateFailedMessageRequest.newCreateFailedMessageRequest;
 import static uk.gov.dwp.queue.triage.core.domain.FailedMessageResponseMatcher.aFailedMessage;
 import static uk.gov.dwp.queue.triage.id.FailedMessageId.newFailedMessageId;
@@ -30,7 +31,24 @@ public class ManageLabelsComponentTest extends BaseCoreComponentTest<FailedMessa
         addLabelWhenStage.when().$IsAddedAsALabelToFailedMessage$("bar", failedMessageId);
 
         then().aFailedMessageWithId$Has(failedMessageId, aFailedMessage().withLabels(containsInAnyOrder("foo", "bar")));
+    }
 
+    @Test
+    public void replaceLabelsOnAFailedMessage() {
+        given().aFailedMessage(newCreateFailedMessageRequest().withFailedMessageId(failedMessageId).withBrokerName("some-broker").withLabel("something")).exists();
+
+        addLabelWhenStage.when().failedMessage$HasTheFollowingLabelsSet$(failedMessageId, "foo", "bar");
+
+        then().aFailedMessageWithId$Has(failedMessageId, aFailedMessage().withLabels(containsInAnyOrder("foo", "bar")));
+    }
+
+    @Test
+    public void replaceTheLabelsOnAFailedMessageWithAnEmptySet() {
+        given().aFailedMessage(newCreateFailedMessageRequest().withFailedMessageId(failedMessageId).withBrokerName("some-broker").withLabel("something")).exists();
+
+        addLabelWhenStage.when().failedMessage$HasTheFollowingLabelsSet$(failedMessageId);
+
+        then().aFailedMessageWithId$Has(failedMessageId, aFailedMessage().withLabels(emptyIterable()));
     }
 
     @Test

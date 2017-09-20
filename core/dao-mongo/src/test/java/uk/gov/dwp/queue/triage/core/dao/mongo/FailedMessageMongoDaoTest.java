@@ -1,5 +1,6 @@
 package uk.gov.dwp.queue.triage.core.dao.mongo;
 
+import com.google.common.collect.ImmutableSet;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import uk.gov.dwp.queue.triage.core.dao.util.HashMapBuilder;
@@ -34,7 +35,6 @@ import static uk.gov.dwp.queue.triage.core.domain.FailedMessageStatus.Status.FAI
 import static uk.gov.dwp.queue.triage.core.domain.FailedMessageStatus.Status.RESEND;
 import static uk.gov.dwp.queue.triage.core.domain.FailedMessageStatus.Status.SENT;
 import static uk.gov.dwp.queue.triage.core.domain.FailedMessageStatus.failedMessageStatus;
-import static uk.gov.dwp.queue.triage.id.FailedMessageId.FAILED_MESSAGE_ID;
 import static uk.gov.dwp.queue.triage.id.FailedMessageId.newFailedMessageId;
 
 public class FailedMessageMongoDaoTest extends AbstractMongoDaoTest {
@@ -187,6 +187,15 @@ public class FailedMessageMongoDaoTest extends AbstractMongoDaoTest {
 
         //TODO: What should be the behaviour (no current use case)? Throw an Exception?  Return a Boolean?
         assertThat(collection.count(), is(0L));
+    }
+
+    @Test
+    public void setLabelsOnAFailedMessageReplacesExistingLabels() throws Exception {
+        underTest.insert(failedMessageBuilder.withLabel("something").build());
+
+        underTest.setLabels(failedMessageId, ImmutableSet.of("foo", "bar"));
+
+        assertThat(underTest.findById(failedMessageId), aFailedMessage().withLabels(containsInAnyOrder("foo", "bar")));
     }
 
     @Test
