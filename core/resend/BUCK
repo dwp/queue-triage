@@ -85,7 +85,6 @@ java_test(
         "//core/dao:queue-triage-core-dao",
         "//core/jms:queue-triage-core-jms",
         "//core/jms:queue-triage-core-jms-spring",
-        "//core/resend:queue-triage-core-resend",
         "//core/resend:queue-triage-core-resend-spring",
         "//core/resend:test-resources",
         "//core/search:queue-triage-core-search",
