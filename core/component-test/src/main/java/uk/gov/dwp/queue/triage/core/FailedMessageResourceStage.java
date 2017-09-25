@@ -69,12 +69,12 @@ public class FailedMessageResourceStage extends Stage<FailedMessageResourceStage
 
     public FailedMessageResourceStage aFailedMessageWithId$Has(FailedMessageId failedMessageId,
                                                                FailedMessageResponseMatcher failedMessageResponseMatcher) {
-        await().pollDelay(500, MILLISECONDS).until(() -> findFailedMessageById(failedMessageId),  failedMessageResponseMatcher);
+        await().pollInterval(500, MILLISECONDS).until(() -> findFailedMessageById(failedMessageId), failedMessageResponseMatcher);
         return this;
     }
 
     public FailedMessageResourceStage aFailedMessageWithId$DoesNotExist(FailedMessageId failedMessageId) {
-        await().pollDelay(100, MILLISECONDS).until(() -> findFailedMessageById(failedMessageId), Matchers.nullValue());
+        await().pollInterval(100, MILLISECONDS).until(() -> findFailedMessageById(failedMessageId), Matchers.nullValue());
         return this;
     }
 

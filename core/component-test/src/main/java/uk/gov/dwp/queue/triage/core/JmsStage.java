@@ -15,7 +15,8 @@ import static org.slf4j.LoggerFactory.getLogger;
 @JGivenStage
 public class JmsStage extends Stage<JmsStage> {
 
-    private static final Logger LOGGER = getLogger("DoNothingMessageAction");
+    private static final Logger DEAD_LETTER_ACTION_LOGGER = getLogger("DeadLetterAction");
+    private static final Logger DO_NOTHING_LOGGER = getLogger("DoNothingAction");
     @Autowired
     private JmsTemplate dummyAppJmsTemplate;
     @Autowired
@@ -25,6 +26,7 @@ public class JmsStage extends Stage<JmsStage> {
         addMessageClassifierWithContent(
                 content,
                 failedMessage -> {
+                    DEAD_LETTER_ACTION_LOGGER.info("Throwing Exception for Message with content: {}", content);
                     throw new RuntimeException("Content is " + failedMessage.getContent());
                 }
         );
@@ -34,7 +36,7 @@ public class JmsStage extends Stage<JmsStage> {
     public JmsStage aMessageWithContent$WillBeConsumedSuccessfully(String content) {
         addMessageClassifierWithContent(
                 content,
-                failedMessage -> LOGGER.debug("Received Message with content: {}", content)
+                failedMessage -> DO_NOTHING_LOGGER.debug("Received Message with content: {}", content)
         );
         return this;
     }
