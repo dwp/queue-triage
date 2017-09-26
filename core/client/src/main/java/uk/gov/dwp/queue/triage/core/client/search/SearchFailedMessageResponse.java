@@ -5,7 +5,9 @@ import uk.gov.dwp.queue.triage.id.FailedMessageId;
 
 import javax.validation.constraints.NotNull;
 import java.time.Instant;
+import java.util.Collection;
 import java.util.Optional;
+import java.util.Set;
 
 public class SearchFailedMessageResponse {
 
@@ -19,19 +21,22 @@ public class SearchFailedMessageResponse {
     @NotNull
     private final Instant lastFailedDateTime;
     private final String content;
+    private final Set<String> labels;
 
     private SearchFailedMessageResponse(@JsonProperty("failedMessageId") FailedMessageId failedMessageId,
                                         @JsonProperty("broker") String broker,
                                         @JsonProperty("destination") Optional<String> destination,
                                         @JsonProperty("sentDateTime") Instant sentDateTime,
                                         @JsonProperty("failedDateTime") Instant lastFailedDateTime,
-                                        @JsonProperty("content") String content) {
+                                        @JsonProperty("content") String content,
+                                        @JsonProperty("labels") Set<String> labels) {
         this.failedMessageId = failedMessageId;
         this.broker = broker;
         this.destination = destination;
         this.sentDateTime = sentDateTime;
         this.lastFailedDateTime = lastFailedDateTime;
         this.content = content;
+        this.labels = labels;
     }
 
     public FailedMessageId getFailedMessageId() {
@@ -58,6 +63,10 @@ public class SearchFailedMessageResponse {
         return content;
     }
 
+    public Set<String> getLabels() {
+        return labels;
+    }
+
     public static SearchFailedMessageResponseBuilder newSearchFailedMessageResponse() {
         return new SearchFailedMessageResponseBuilder();
     }
@@ -70,6 +79,7 @@ public class SearchFailedMessageResponse {
         private Instant sentDateTime;
         private Instant failedDateTime;
         private String content;
+        private Set<String> labels;
 
         private SearchFailedMessageResponseBuilder() {
         }
@@ -104,8 +114,13 @@ public class SearchFailedMessageResponse {
             return this;
         }
 
+        public SearchFailedMessageResponseBuilder withLabels(Set<String> labels) {
+            this.labels = labels;
+            return this;
+        }
+
         public SearchFailedMessageResponse build() {
-            return new SearchFailedMessageResponse(failedMessageId, broker, destination, sentDateTime, failedDateTime, content);
+            return new SearchFailedMessageResponse(failedMessageId, broker, destination, sentDateTime, failedDateTime, content, labels);
         }
     }
 }

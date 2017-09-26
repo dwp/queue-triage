@@ -17,14 +17,15 @@
         $('#failed-message-list-grid').w2grid({
             name: 'failed-message-list-grid',
             url: {
-                get: '/web/failed-messages/data'
+                get: '/web/failed-messages/data',
+                save: '/web/api/failed-messages/labels'
             },
             show: {
                 selectColumn: true,
                 toolbar: true,
-                toolbarSearch: false
+                toolbarSearch: false,
 //                toolbarDelete: true,
-//                toolbarSave: true
+                toolbarSave: true
             },
             columns: [
                 { field: 'recid', caption: 'Failed Message Id', size: '220px', sortable: true },
@@ -32,6 +33,7 @@
                 { field: 'destination', caption: 'Queue', size: '10%', sortable: true },
                 { field: 'sentDateTime', caption: 'Originally Sent', size: '160px', sortable: true },
                 { field: 'failedDateTime', caption: 'Failed', size: '160px', sortable: true },
+                { field: 'labels', caption: 'Labels', size: '20%', editable: { type: 'text' } },
                 { field: 'content', caption: 'Content', size: '80%', sortable: true },
             ]
         });

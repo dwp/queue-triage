@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.Profile;
 import uk.gov.dwp.queue.triage.core.client.SearchFailedMessageClient;
+import uk.gov.dwp.queue.triage.core.client.label.LabelFailedMessageClient;
 import uk.gov.dwp.queue.triage.jackson.configuration.JacksonConfiguration;
 
 import static java.util.Collections.singletonList;
@@ -22,6 +23,16 @@ public class CoreClientConfiguration {
         return JAXRSClientFactory.create(
                 clientProperties.getCore().getUrl(),
                 SearchFailedMessageClient.class,
+                singletonList(jacksonJsonProvider)
+        );
+    }
+
+    @Bean
+    public LabelFailedMessageClient labelFailedMessageClient(JacksonJsonProvider jacksonJsonProvider,
+                                                             ClientProperties clientProperties) {
+        return JAXRSClientFactory.create(
+                clientProperties.getCore().getUrl(),
+                LabelFailedMessageClient.class,
                 singletonList(jacksonJsonProvider)
         );
     }

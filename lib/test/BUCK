@@ -80,7 +80,7 @@ java_binary(
         ':jgiven-html-app',
         ':jgiven-html5-report',
         '//lib/slf4j:slf4j-api',
-        '//lib/slf4j:slf4j-simple',
+#         '//lib/slf4j:slf4j-simple',
     ],
     visibility = [
         'PUBLIC',
