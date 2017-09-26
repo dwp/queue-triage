@@ -12,6 +12,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.ZonedDateTime;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -19,7 +20,9 @@ import static java.time.ZoneOffset.UTC;
 import static java.time.temporal.ChronoField.MILLI_OF_SECOND;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.allOf;
+import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.nullValue;
 import static org.valid4j.matchers.jsonpath.JsonPathMatchers.hasJsonPath;
 
 public class FailedMessageListItemAdapterTest {
@@ -48,6 +51,7 @@ public class FailedMessageListItemAdapterTest {
                 .withSentDateTime(SOME_DATE_TIME)
                 .withFailedDateTime(SOME_DATE_TIME.with(MILLI_OF_SECOND, 123))
                 .withContent("More Content")
+                .withLabels(new HashSet<>(Arrays.asList("aaa","bbb")))
                 .build();
 
         String json = OBJECT_MAPPER.writeValueAsString(underTest.adapt(Arrays.asList(failedMessage1, failedMessage2)));
@@ -59,13 +63,15 @@ public class FailedMessageListItemAdapterTest {
                 hasJsonPath("$.[0].destination", equalTo("queue-name")),
                 hasJsonPath("$.[0].sentDateTime", equalTo("1970-01-01T00:00:00.000Z")),
                 hasJsonPath("$.[0].failedDateTime", equalTo("2016-02-08T14:43:00.000Z")),
+                hasJsonPath("$.[0].labels", nullValue()),
 
                 hasJsonPath("$.[1].recid", equalTo(FAILED_MESSAGE_ID_2)),
                 hasJsonPath("$.[1].broker", equalTo("internal-broker")),
                 hasJsonPath("$.[1].content", equalTo("More Content")),
                 hasJsonPath("$.[1].destination", equalTo("another-queue")),
                 hasJsonPath("$.[1].sentDateTime", equalTo("2016-02-08T14:43:00.000Z")),
-                hasJsonPath("$.[1].failedDateTime", equalTo("2016-02-08T14:43:00.123Z"))
+                hasJsonPath("$.[1].failedDateTime", equalTo("2016-02-08T14:43:00.123Z")),
+                hasJsonPath("$.[1].labels", equalTo("aaa, bbb"))
         ));
     }
 }
