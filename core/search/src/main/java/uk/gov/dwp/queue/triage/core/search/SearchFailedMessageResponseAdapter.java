@@ -15,6 +15,7 @@ public class SearchFailedMessageResponseAdapter {
                 .withFailedDateTime(failedMessage.getFailedAt())
                 .withFailedMessageId(failedMessage.getFailedMessageId())
                 .withSentDateTime(failedMessage.getSentAt())
+                .withLabels(failedMessage.getLabels())
                 .build();
     }
 }

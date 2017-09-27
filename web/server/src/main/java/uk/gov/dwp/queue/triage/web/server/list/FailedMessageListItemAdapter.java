@@ -7,6 +7,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import java.util.TreeSet;
 import java.util.stream.Collectors;
 
 import static java.time.ZoneOffset.UTC;
@@ -25,7 +26,10 @@ public class FailedMessageListItemAdapter {
                         fm.getBroker(),
                         fm.getDestination().orElse(null),
                         toString(fm.getSentDateTime()),
-                        toString(fm.getLastFailedDateTime())))
+                        toString(fm.getLastFailedDateTime()),
+                        Optional.ofNullable(fm.getLabels())
+                                .map(labels -> labels.stream().collect(Collectors.joining(", ")))
+                                .orElse(null)))
                 .collect(Collectors.toList());
     }
 

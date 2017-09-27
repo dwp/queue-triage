@@ -4,6 +4,9 @@ import org.junit.Test;
 import uk.gov.dwp.queue.triage.core.dao.FailedMessageDao;
 import uk.gov.dwp.queue.triage.id.FailedMessageId;
 
+import java.util.Collections;
+
+import static java.util.Collections.singleton;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
@@ -26,5 +29,12 @@ public class FailedMessageLabelServiceTest {
         underTest.removeLabel(FAILED_MESSAGE_ID, LABEL);
 
         verify(failedMessageDao).removeLabel(FAILED_MESSAGE_ID, LABEL);
+    }
+
+    @Test
+    public void setLabelsDelegatesToDao() {
+        underTest.setLabels(FAILED_MESSAGE_ID, singleton(LABEL));
+
+        verify(failedMessageDao).setLabels(FAILED_MESSAGE_ID, singleton(LABEL));
     }
 }

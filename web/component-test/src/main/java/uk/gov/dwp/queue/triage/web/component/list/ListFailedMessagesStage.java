@@ -64,6 +64,10 @@ public class ListFailedMessagesStage extends Stage<ListFailedMessagesStage> {
         return this;
     }
 
+    public ListFailedMessagesStage theUserHasNavigatedToTheFailedMessagesPage() {
+        return theUserNavigatesToTheFailedMessagesPage();
+    }
+
     public ListFailedMessagesStage theUserNavigatesToTheFailedMessagesPage() {
         LOGGER.debug("Opening the ListFailedMessagePage");
         ListFailedMessagesPage.openListFailedMessagePage(environment);

@@ -6,10 +6,13 @@ import org.springframework.context.annotation.Import;
 import uk.gov.dwp.migration.mongo.demo.cxf.client.CxfConfiguration;
 import uk.gov.dwp.migration.mongo.demo.cxf.client.ResourceRegistry;
 import uk.gov.dwp.queue.triage.core.client.SearchFailedMessageClient;
+import uk.gov.dwp.queue.triage.core.client.label.LabelFailedMessageClient;
 import uk.gov.dwp.queue.triage.jackson.configuration.JacksonConfiguration;
+import uk.gov.dwp.queue.triage.web.server.api.FailedMessageChangeResource;
 import uk.gov.dwp.queue.triage.web.server.home.HomeController;
 import uk.gov.dwp.queue.triage.web.server.list.FailedMessageListController;
 import uk.gov.dwp.queue.triage.web.server.list.FailedMessageListItemAdapter;
+import uk.gov.dwp.queue.triage.web.server.api.LabelExtractor;
 import uk.gov.dwp.queue.triage.web.server.login.AuthenticationExceptionAdapter;
 import uk.gov.dwp.queue.triage.web.server.login.LoginController;
 
@@ -37,6 +40,15 @@ public class ControllerConfiguration {
         return resourceRegistry.add(new FailedMessageListController(
                 searchFailedMessageClient,
                 new FailedMessageListItemAdapter()
+        ));
+    }
+
+    @Bean
+    public FailedMessageChangeResource failedMessageChangeResource(ResourceRegistry resourceRegistry,
+                                                                   LabelFailedMessageClient labelFailedMessageClient) {
+        return resourceRegistry.add(new FailedMessageChangeResource(
+                labelFailedMessageClient,
+                new LabelExtractor()
         ));
     }
 }

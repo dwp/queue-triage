@@ -9,6 +9,8 @@ notifications:
       - secure: hrtu4XHLH5cRM+EUEiq5P6nRWqohnaYn3oA9IxIb9IOxffxrU2el2bHlm0fG7jOnARhobmrpDvXBXqs5HX7MRMhQ6M6FpMc0sgVedoc4CMS7t27vm9OSK+1MY6T5kzO/jMlKK7Bkq/0e/rdf7vlXJYM8JLeeTnCte179yccB/Rey4oJEAnzLqd0B6WV0rwdC3i8iZQNCV/6hkG1p3V9tPd8OCRvbRgX5KchIY2Fo0JQShKaIta3ESUzG/J4M8asrrNQYYoqiP6vV/VDIRtC3ok5uGrP7PlICB3GZpJvYPSaXmafVJr5ICD6cQkUwjC6O9tV9fTjzjVU88coiWLFtp+WuTQ51wVcjDQzjLDfAq7BOeBx5z/lNs9JakEIapUaf0YghpiRtca1AR4YvEwU7lKu+LHZLdVWj1NSGLcLxnl+3+ZW8Cjl5BgmQO03nohzJWqjs2HE1U2zAG11BwWbHN66ueTY5Zm0Vq2Z8r2OVUtHYsoMuYchYq8URWy5bDTMwb3exzUgjD6QXrR1zS3h3jfZTq3OzwZDfzhmtL7YRPpUmQcxJAm9h+zcQUOUqe4xtoh6wc+rRT7txuSo7ROV72GLO4jaaQQj/GcqMuvm5miLsgRBJuFgu2VbPB0cKFJcYoX4jEg6yN7fk3rJtJrC2aeRAVJyRWHBJ7jhZTiq42FI=
     
 before_script:
+  - "export DISPLAY=:99.0"
+  - "sh -e /etc/init.d/xvfb start"
   # Install Buck
   - pushd $HOME
   - git clone --branch v2017.05.31.01 --depth 1 https://github.com/facebook/buck.git
@@ -18,7 +20,6 @@ before_script:
   - buck --version
 
 script:
-  - buck fetch //... > /dev/null
   - buck test //... > /dev/null
 
 services:
