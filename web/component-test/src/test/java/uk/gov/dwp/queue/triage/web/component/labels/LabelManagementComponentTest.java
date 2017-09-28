@@ -49,8 +49,8 @@ public class LabelManagementComponentTest extends BaseWebComponentTest<LabelMana
         loginGivenStage.given().and().theUserHasSuccessfullyLoggedOn();
         listFailedMessagesStage.given().and().theUserHasNavigatedToTheFailedMessagesPage();
 
-        when().labelsAddedToFailedMessage("foo", FAILED_MESSAGE_ID_1);
-        when().and().labelsAddedToFailedMessage("label1, label2", FAILED_MESSAGE_ID_2);
+        when().theUserAddslabels$ToFailedMessage$("foo", FAILED_MESSAGE_ID_1);
+        when().and().theUserAddslabels$ToFailedMessage$("label1, label2", FAILED_MESSAGE_ID_2);
         when().and().theUserClicksSave();
 
         labelManagementThenStage.then().failedMessage$IsUpdatedWithLabels$(FAILED_MESSAGE_ID_1, "foo");
@@ -79,7 +79,7 @@ public class LabelManagementComponentTest extends BaseWebComponentTest<LabelMana
         loginGivenStage.given().and().theUserHasSuccessfullyLoggedOn();
         listFailedMessagesStage.given().and().theUserHasNavigatedToTheFailedMessagesPage();
 
-        when().labelsAddedToFailedMessage("", FAILED_MESSAGE_ID_1);
+        when().theUserAddslabels$ToFailedMessage$("", FAILED_MESSAGE_ID_1);
         when().and().theUserClicksSave();
 
         labelManagementThenStage.then().failedMessage$IsUpdatedWithNoLabels(FAILED_MESSAGE_ID_1);
