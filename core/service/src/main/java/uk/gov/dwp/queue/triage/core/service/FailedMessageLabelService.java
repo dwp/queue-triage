@@ -5,6 +5,8 @@ import org.slf4j.LoggerFactory;
 import uk.gov.dwp.queue.triage.core.dao.FailedMessageDao;
 import uk.gov.dwp.queue.triage.id.FailedMessageId;
 
+import java.util.Set;
+
 public class FailedMessageLabelService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(FailedMessageLabelService.class);
@@ -16,12 +18,17 @@ public class FailedMessageLabelService {
     }
 
     public void addLabel(FailedMessageId failedMessageId, String label) {
+        LOGGER.debug("Adding label '{}' to FailedMessage: {}", label, failedMessageId);
         failedMessageDao.addLabel(failedMessageId, label);
-        LOGGER.debug("Added label '{}' to FailedMessage: {}", label, failedMessageId);
     }
 
     public void removeLabel(FailedMessageId failedMessageId, String label) {
+        LOGGER.debug("Removing label '{}' from FailedMessage: {}", label, failedMessageId);
         failedMessageDao.removeLabel(failedMessageId, label);
-        LOGGER.debug("Removed label '{}' from FailedMessage: {}", label, failedMessageId);
+    }
+
+    public void setLabels(FailedMessageId failedMessageId, Set<String> labels) {
+        LOGGER.debug("Replacing all labels on FailedMessage: {}", failedMessageId);
+        failedMessageDao.setLabels(failedMessageId, labels);
     }
 }

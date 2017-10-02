@@ -16,18 +16,22 @@ public class FailedMessageListItem {
     private final String sentDateTime;
     @JsonProperty
     private final String failedDateTime;
+    @JsonProperty
+    private final String labels;
 
     public FailedMessageListItem(String recid,
                                  String content,
                                  String broker,
                                  String destination,
                                  String sentDateTime,
-                                 String failedDateTime) {
+                                 String failedDateTime,
+                                 String labels) {
         this.recid = recid;
         this.content = content;
         this.broker = broker;
         this.destination = destination;
         this.sentDateTime = sentDateTime;
         this.failedDateTime = failedDateTime;
+        this.labels = labels;
     }
 }

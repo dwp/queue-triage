@@ -5,6 +5,7 @@ import uk.gov.dwp.queue.triage.core.domain.FailedMessageStatus;
 import uk.gov.dwp.queue.triage.id.FailedMessageId;
 
 import java.util.List;
+import java.util.Set;
 
 public interface FailedMessageDao {
 
@@ -21,6 +22,8 @@ public interface FailedMessageDao {
     int removeFailedMessages();
 
     void addLabel(FailedMessageId failedMessageId, String label);
+
+    void setLabels(FailedMessageId failedMessageId, Set<String> labels);
 
     void removeLabel(FailedMessageId failedMessageId, String label);
 }

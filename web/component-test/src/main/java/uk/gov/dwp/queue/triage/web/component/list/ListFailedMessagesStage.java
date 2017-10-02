@@ -64,6 +64,10 @@ public class ListFailedMessagesStage extends Stage<ListFailedMessagesStage> {
         return this;
     }
 
+    public ListFailedMessagesStage theUserHasNavigatedToTheFailedMessagesPage() {
+        return theUserNavigatesToTheFailedMessagesPage();
+    }
+
     public ListFailedMessagesStage theUserNavigatesToTheFailedMessagesPage() {
         LOGGER.debug("Opening the ListFailedMessagePage");
         ListFailedMessagesPage.openListFailedMessagePage(environment);
@@ -83,8 +87,9 @@ public class ListFailedMessagesStage extends Stage<ListFailedMessagesStage> {
     }
 
     public ListFailedMessagesStage theUserClicksTheReloadButton() {
+        LOGGER.debug("Reloading the failedMessages grid");
         // TODO: Investigate why this doesn't work with htmlunit-driver
-        Selenide.$(By.id("tb_failed-message-list-grid_toolbar_item_w2ui-reload"))
+        Selenide.$(By.id("tb_failedMessages_toolbar_item_w2ui-reload"))
                 .find(By.className("w2ui-button"))
                 .click();
         Selenide.$(By.className("w2ui-lock-msg")).waitUntil(not(visible), 5000);
