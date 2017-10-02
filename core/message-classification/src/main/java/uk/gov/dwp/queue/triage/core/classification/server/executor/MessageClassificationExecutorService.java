@@ -7,8 +7,8 @@ import uk.gov.dwp.queue.triage.core.classification.server.MessageClassificationS
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
+import java.util.concurrent.RunnableScheduledFuture;
 import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
 @Path("/admin/executor/message-classification")
@@ -22,7 +22,7 @@ public class MessageClassificationExecutorService {
     private final long executionFrequency;
     private final TimeUnit timeUnit;
 
-    private ScheduledFuture<?> futureTask;
+    private RunnableScheduledFuture<?> futureTask;
 
     public MessageClassificationExecutorService(ScheduledExecutorService scheduledExecutorService,
                                                 MessageClassificationService messageClassificationService,
@@ -58,12 +58,16 @@ public class MessageClassificationExecutorService {
     @POST
     @Path("/execute")
     public void execute() {
-        cancelFutureTask();
-        LOGGER.info("Executing the MessageClassificationService immediately and then scheduling to execute every {} {}",
-                executionFrequency,
-                timeUnit
-        );
-        scheduleAtAFixedRate(0).isDone();
+        if (futureTask == null || futureTask.isCancelled()) {
+            LOGGER.info("Executing the MessageClassificationService immediately");
+            runnable.run();
+        } else {
+            LOGGER.info("Executing the MessageClassificationService immediately, then scheduling to execute every {} {}",
+                    executionFrequency,
+                    timeUnit);
+            futureTask.run();
+        }
+        LOGGER.info("MessageClassificationService has executed successfully");
     }
 
     @PUT
@@ -86,8 +90,8 @@ public class MessageClassificationExecutorService {
         LOGGER.info("Execution of the MessageClassificationService stopped");
     }
 
-    private ScheduledFuture<?> scheduleAtAFixedRate(long initialDelay) {
-        futureTask = this.scheduledExecutorService.scheduleAtFixedRate(
+    private RunnableScheduledFuture<?> scheduleAtAFixedRate(long initialDelay) {
+        futureTask = (RunnableScheduledFuture)this.scheduledExecutorService.scheduleAtFixedRate(
                 runnable,
                 initialDelay,
                 executionFrequency,

@@ -99,6 +99,18 @@ public class MessageClassificationExecutorServiceTest {
         verifyMessageClassificationServiceExecutions(75);
     }
 
+    @Test
+    public void jobCanBeExecutedOnDemandWhenPaused() throws InterruptedException {
+        underTest.start();
+        verifyMessageClassificationServiceExecutions(75);
+
+        underTest.pause();
+        assertThat(countDownLatch.getCount(), is(1L));
+
+        underTest.execute();
+        verifyMessageClassificationServiceExecutions(0);
+    }
+
     private Answer decrementCountdownLatch() {
         return invocationOnMock -> {
             countDownLatch.countDown();
