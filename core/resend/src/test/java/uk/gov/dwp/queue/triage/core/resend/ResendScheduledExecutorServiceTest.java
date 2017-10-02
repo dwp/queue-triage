@@ -81,7 +81,8 @@ public class ResendScheduledExecutorServiceTest {
 
         underTest.execute();
 
-        verifyMessageClassificationServiceExecutions(75);
+        verifyMessageClassificationServiceExecutions(0);
+        assertThat(underTest.isPaused(), is(false));
     }
 
     @Test
@@ -93,9 +94,26 @@ public class ResendScheduledExecutorServiceTest {
 
         underTest.pause();
         assertThat(countDownLatch.getCount(), is(1L));
+        assertThat(underTest.isPaused(), is(true));
 
         underTest.start();
         verifyMessageClassificationServiceExecutions(75);
+        assertThat(underTest.isPaused(), is(false));
+    }
+
+    @Test
+    public void executorRemainsPausedIfExecuted() throws InterruptedException {
+        underTest.start();
+        verifyMessageClassificationServiceExecutions(75);
+        assertThat(underTest.isPaused(), is(false));
+
+        underTest.pause();
+        assertThat(countDownLatch.getCount(), is(1L));
+        assertThat(underTest.isPaused(), is(true));
+
+        underTest.execute();
+        verifyMessageClassificationServiceExecutions(0);
+        assertThat(underTest.isPaused(), is(true));
     }
 
     private Answer decrementCountdownLatch() {

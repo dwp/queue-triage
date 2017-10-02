@@ -3,8 +3,8 @@ package uk.gov.dwp.queue.triage.core.resend;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.concurrent.RunnableScheduledFuture;
 import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
 public class ResendScheduledExecutorService {
@@ -18,7 +18,7 @@ public class ResendScheduledExecutorService {
     private final TimeUnit timeUnit;
     private final String brokerName;
 
-    private ScheduledFuture<?> futureTask;
+    private RunnableScheduledFuture<?> futureTask;
 
     public ResendScheduledExecutorService(ScheduledExecutorService scheduledExecutorService,
                                           ResendFailedMessageService resendFailedMessageService,
@@ -51,12 +51,16 @@ public class ResendScheduledExecutorService {
     }
 
     public void execute() {
-        cancelFutureTask();
-        LOGGER.info("Executing the ResendFailedMessageService immediately and then scheduling to execute every {} {}",
-                executionFrequency,
-                timeUnit
-        );
-        scheduleAtAFixedRate(0).isDone();
+        if (futureTask == null || futureTask.isCancelled()) {
+            LOGGER.info("Executing the ResendFailedMessageService immediately");
+            runnable.run();
+        } else {
+            LOGGER.info("Executing the ResendFailedMessageService immediately, then scheduling to execute every {} {}",
+                    executionFrequency,
+                    timeUnit);
+            futureTask.run();
+        }
+        LOGGER.info("ResendFailedMessageService has executed successfully");
     }
 
     public void pause() {
@@ -81,8 +85,12 @@ public class ResendScheduledExecutorService {
         return brokerName;
     }
 
-    private ScheduledFuture<?> scheduleAtAFixedRate(long initialDelay) {
-        futureTask = this.scheduledExecutorService.scheduleAtFixedRate(
+    public boolean isPaused() {
+        return futureTask.isCancelled();
+    }
+
+    private RunnableScheduledFuture<?> scheduleAtAFixedRate(long initialDelay) {
+        futureTask = (RunnableScheduledFuture)scheduledExecutorService.scheduleAtFixedRate(
                 runnable,
                 initialDelay,
                 executionFrequency,
