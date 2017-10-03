@@ -11,16 +11,16 @@ public class JmsListenerBeanDefinitionFactory implements BeanDefinitionRegistryP
     private final Environment environment;
     private final ActiveMQConnectionFactoryBeanDefinitionFactory activeMQConnectionFactoryBeanDefinitionFactory;
     private final FailedMessageListenerBeanDefinitionFactory failedMessageListenerBeanDefinitionFactory;
-    private final DefaultMessageListenerContainerBeanDefinitionFactory defaultMessageListenerContainerBeanDefinitionFactory;
+    private final NamedMessageListenerContainerBeanDefinitionFactory namedMessageListenerContainerBeanDefinitionFactory;
 
     public JmsListenerBeanDefinitionFactory(Environment environment,
                                      ActiveMQConnectionFactoryBeanDefinitionFactory activeMQConnectionFactoryBeanDefinitionFactory,
                                      FailedMessageListenerBeanDefinitionFactory failedMessageListenerBeanDefinitionFactory,
-                                     DefaultMessageListenerContainerBeanDefinitionFactory defaultMessageListenerContainerBeanDefinitionFactory) {
+                                     NamedMessageListenerContainerBeanDefinitionFactory namedMessageListenerContainerBeanDefinitionFactory) {
         this.environment = environment;
         this.activeMQConnectionFactoryBeanDefinitionFactory = activeMQConnectionFactoryBeanDefinitionFactory;
         this.failedMessageListenerBeanDefinitionFactory = failedMessageListenerBeanDefinitionFactory;
-        this.defaultMessageListenerContainerBeanDefinitionFactory = defaultMessageListenerContainerBeanDefinitionFactory;
+        this.namedMessageListenerContainerBeanDefinitionFactory = namedMessageListenerContainerBeanDefinitionFactory;
     }
 
     @Override
@@ -45,8 +45,9 @@ public class JmsListenerBeanDefinitionFactory implements BeanDefinitionRegistryP
 
             // Create DefaultMessageListenerContainer
             registry.registerBeanDefinition(
-                    defaultMessageListenerContainerBeanDefinitionFactory.createBeanName(brokerName),
-                    defaultMessageListenerContainerBeanDefinitionFactory.create(
+                    namedMessageListenerContainerBeanDefinitionFactory.createBeanName(brokerName),
+                    namedMessageListenerContainerBeanDefinitionFactory.create(
+                            brokerName,
                             connectionFactoryBeanName,
                             getProperty(index, "queue"),
                             failedMessageListenerBeanName
