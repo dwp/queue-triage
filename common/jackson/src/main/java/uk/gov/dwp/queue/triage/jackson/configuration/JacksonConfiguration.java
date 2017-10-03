@@ -10,7 +10,7 @@ import com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
-import uk.gov.dwp.migration.mongo.demo.cxf.client.CxfConfiguration;
+import uk.gov.dwp.queue.triage.cxf.CxfConfiguration;
 import uk.gov.dwp.queue.triage.id.Id;
 import uk.gov.dwp.queue.triage.jackson.ISO8601DateFormatWithMilliSeconds;
 import uk.gov.dwp.queue.triage.jackson.IdDeserializer;

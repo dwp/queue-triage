@@ -49,7 +49,7 @@ java_test(
     srcs = glob(['src/test/java/**/*Test.java']),
     deps = [
         "//lib/hibernate-validator:hibernate-validator",
-        '//common/cxf:queue-triage-cxf',
+        '//common/cxf-server:queue-triage-common-cxf-server',
         '//common/id:queue-triage-common-id',
         '//common/jgiven:jgiven',
         '//core/client:queue-triage-core-client',

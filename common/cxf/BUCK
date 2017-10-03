@@ -1,10 +1,11 @@
 java_library(
-    name = "queue-triage-cxf-client",
-    srcs = glob(["src/main/java/**/client/*.java"]),
+    name = "queue-triage-common-cxf",
+    srcs = glob(["src/main/java/**/*.java"]),
     deps = [
         "//lib/spring:spring-context",
     ],
     visibility = [
+        "//common/cxf-server:queue-triage-common-cxf-server",
         "//common/jackson:queue-triage-common-jackson",
         "//common/swagger:queue-triage-common-swagger-cxf",
         "//core/resend:queue-triage-core-resend-spring",
@@ -12,27 +13,4 @@ java_library(
         "//core/message-classification:queue-triage-core-message-classification-server",
         "//web/mustache:queue-triage-web-mustache-spring",
     ]
-)
-
-java_library(
-    name = "queue-triage-cxf",
-    srcs = glob(
-        ["src/main/java/**/*.java"],
-        excludes = [
-            "src/main/java/**/client/*.java"
-        ]
-    ),
-    exported_deps = [
-        ":queue-triage-cxf-client",
-        "//lib/apache-cxf:cxf-rt-transports-http-jetty",
-        "//lib/javax:javax-servlet-api",
-        "//lib/spring:spring-boot",
-        "//lib/spring:spring-context",
-        "//lib/spring:spring-core",
-    ],
-    visibility = [
-        "//core/component-test:test",
-        "//core/server:queue-triage-core-server",
-        "//web/server:queue-triage-web-server",
-    ],
 )

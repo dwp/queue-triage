@@ -1,4 +1,4 @@
-package uk.gov.dwp.migration.mongo.demo.cxf.configuration;
+package uk.gov.dwp.queue.triage.cxf.server.configuration;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;

@@ -21,7 +21,7 @@ java_library(
         "//web/mustache:queue-triage-web-mustache-spring",
         "//web/spring-security:queue-triage-web-spring-security",
         "//web/spring-security:queue-triage-web-spring-security-ldap",
-        '//common/cxf:queue-triage-cxf',
+        '//common/cxf-server:queue-triage-common-cxf-server',
         '//common/health:queue-triage-health',
         '//common/id:queue-triage-common-id',
         '//core/client:queue-triage-core-client',

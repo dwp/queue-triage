@@ -1,4 +1,4 @@
-package uk.gov.dwp.migration.mongo.demo.cxf.configuration;
+package uk.gov.dwp.queue.triage.cxf.server.configuration;
 
 import org.apache.cxf.Bus;
 import org.apache.cxf.endpoint.Server;
@@ -12,9 +12,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.ImportResource;
-import uk.gov.dwp.migration.mongo.demo.cxf.client.CxfConfiguration;
-import uk.gov.dwp.migration.mongo.demo.cxf.client.ProviderRegistry;
-import uk.gov.dwp.migration.mongo.demo.cxf.client.ResourceRegistry;
+import uk.gov.dwp.queue.triage.cxf.CxfConfiguration;
+import uk.gov.dwp.queue.triage.cxf.ProviderRegistry;
+import uk.gov.dwp.queue.triage.cxf.ResourceRegistry;
 
 import java.util.List;
 

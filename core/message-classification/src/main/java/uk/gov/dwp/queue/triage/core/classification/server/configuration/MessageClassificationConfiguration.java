@@ -4,8 +4,8 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
-import uk.gov.dwp.migration.mongo.demo.cxf.client.CxfConfiguration;
-import uk.gov.dwp.migration.mongo.demo.cxf.client.ResourceRegistry;
+import uk.gov.dwp.queue.triage.cxf.CxfConfiguration;
+import uk.gov.dwp.queue.triage.cxf.ResourceRegistry;
 import uk.gov.dwp.queue.triage.core.classification.server.MessageClassificationService;
 import uk.gov.dwp.queue.triage.core.classification.server.executor.MessageClassificationExecutorService;
 import uk.gov.dwp.queue.triage.core.classification.server.repository.MessageClassificationRepository;
@@ -14,7 +14,6 @@ import uk.gov.dwp.queue.triage.core.classification.server.resource.MessageClassi
 import uk.gov.dwp.queue.triage.core.search.FailedMessageSearchService;
 
 import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
 
 @Configuration
 @Import(CxfConfiguration.class)
