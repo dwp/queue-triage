@@ -4,10 +4,15 @@ import com.mongodb.MongoClient;
 import com.tngtech.jgiven.integration.spring.EnableJGiven;
 import com.tngtech.jgiven.integration.spring.SimpleSpringRuleScenarioTest;
 import org.junit.Before;
+import org.junit.Rule;
+import org.junit.rules.TestRule;
+import org.junit.rules.TestWatcher;
+import org.junit.runner.Description;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import uk.gov.dwp.queue.triage.core.dao.mongo.MongoDatabaseCleaner;
+import uk.gov.dwp.queue.triage.core.dao.mongo.MongoDatabaseLogger;
 import uk.gov.dwp.queue.triage.core.stub.app.resource.StubMessageClassifierResource;
 
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
@@ -21,6 +26,14 @@ public class BaseCoreComponentTest<STAGE> extends SimpleSpringRuleScenarioTest<S
     private MongoClient mongoClient;
     @Autowired
     private StubMessageClassifierResource stubMessageClassifierResource;
+    @Rule
+    public final TestRule dumpFailedMessagesOnError = new TestWatcher() {
+        @Override
+        protected void failed(Throwable e, Description description) {
+            super.failed(e, description);
+            new MongoDatabaseLogger(mongoClient).log("queue-triage");
+        }
+    };
 
     @Before
     public void cleanDatabases() {
