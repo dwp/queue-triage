@@ -14,6 +14,7 @@ java_library(
         '//lib:commons-lang3',
         '//lib/jackson:jackson-annotations',
         '//lib/javax:javax-ws-rs-api',
+        '//lib/swagger:swagger-annotations',
     ],
     visibility = [
         '//core/component-test:queue-triage-core-component-test',

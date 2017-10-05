@@ -1,5 +1,7 @@
 package uk.gov.dwp.queue.triage.core.classification.server.executor;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import uk.gov.dwp.queue.triage.core.classification.server.MessageClassificationService;
@@ -7,10 +9,12 @@ import uk.gov.dwp.queue.triage.core.classification.server.MessageClassificationS
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
+import javax.ws.rs.core.Response;
 import java.util.concurrent.RunnableScheduledFuture;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+@Api("Message Classification Executor")
 @Path("/admin/executor/message-classification")
 public class MessageClassificationExecutorService {
 
@@ -43,6 +47,10 @@ public class MessageClassificationExecutorService {
         this.timeUnit = timeUnit;
     }
 
+    @ApiOperation(
+            value = "Start the Message Classification executor with the configuration in application.yml",
+            code = 204
+    )
     @POST
     @Path("/start")
     public void start() {
@@ -55,6 +63,10 @@ public class MessageClassificationExecutorService {
         scheduleAtAFixedRate(initialDelay);
     }
 
+    @ApiOperation(
+            value = "Synchronously execute the resend job for the given broker",
+            code  = 204
+    )
     @POST
     @Path("/execute")
     public void execute() {
@@ -70,6 +82,10 @@ public class MessageClassificationExecutorService {
         LOGGER.info("MessageClassificationService has executed successfully");
     }
 
+    @ApiOperation(
+            value = "Pause/Stop the Message Classification executor",
+            code = 204
+    )
     @PUT
     @Path("/pause")
     public void pause() {
