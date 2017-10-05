@@ -4,6 +4,7 @@ import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
+import com.mongodb.WriteConcern;
 import com.mongodb.operation.OrderBy;
 import uk.gov.dwp.queue.triage.core.dao.FailedMessageDao;
 import uk.gov.dwp.queue.triage.core.domain.FailedMessage;
@@ -23,6 +24,9 @@ import static uk.gov.dwp.queue.triage.core.dao.mongo.FailedMessageStatusDBObject
 
 public class FailedMessageMongoDao implements FailedMessageDao {
 
+    private static final boolean NO_UPSERT = false;
+    private static final boolean SINGLE_ROW = false;
+
     private final DBCollection collection;
     private final FailedMessageConverter failedMessageConverter;
     private final DBObjectConverter<FailedMessageStatus> failedMessageStatusConverter;
@@ -40,7 +44,7 @@ public class FailedMessageMongoDao implements FailedMessageDao {
 
     @Override
     public void insert(FailedMessage failedMessage) {
-        collection.insert(failedMessageConverter.convertFromObject(failedMessage));
+        collection.insert(WriteConcern.ACKNOWLEDGED, failedMessageConverter.convertFromObject(failedMessage));
     }
 
     @Override
@@ -49,7 +53,8 @@ public class FailedMessageMongoDao implements FailedMessageDao {
                 failedMessageConverter.createId(failedMessageId),
                 new BasicDBObject("$push", new BasicDBObject(STATUS_HISTORY, new BasicDBObject()
                         .append("$each", singletonList(failedMessageStatusConverter.convertFromObject(failedMessageStatus)))
-                        .append("$sort", new BasicDBObject(LAST_MODIFIED_DATE_TIME, OrderBy.DESC.getIntRepresentation()))))
+                        .append("$sort", new BasicDBObject(LAST_MODIFIED_DATE_TIME, OrderBy.DESC.getIntRepresentation())))),
+                NO_UPSERT, SINGLE_ROW, WriteConcern.ACKNOWLEDGED
         );
     }
 
@@ -77,14 +82,15 @@ public class FailedMessageMongoDao implements FailedMessageDao {
 
     @Override
     public int removeFailedMessages() {
-        return collection.remove(removeRecordsQueryFactory.create()).getN();
+        return collection.remove(removeRecordsQueryFactory.create(), WriteConcern.ACKNOWLEDGED).getN();
     }
 
     @Override
     public void addLabel(FailedMessageId failedMessageId, String label) {
         collection.update(
                 failedMessageConverter.createId(failedMessageId),
-                new BasicDBObject("$addToSet", new BasicDBObject(LABELS, label))
+                new BasicDBObject("$addToSet", new BasicDBObject(LABELS, label)),
+                NO_UPSERT, SINGLE_ROW, WriteConcern.ACKNOWLEDGED
         );
     }
 
@@ -92,7 +98,8 @@ public class FailedMessageMongoDao implements FailedMessageDao {
     public void setLabels(FailedMessageId failedMessageId, Set<String> labels) {
         collection.update(
                 failedMessageConverter.createId(failedMessageId),
-                new BasicDBObject("$set", new BasicDBObject(LABELS, labels))
+                new BasicDBObject("$set", new BasicDBObject(LABELS, labels)),
+                NO_UPSERT, SINGLE_ROW, WriteConcern.ACKNOWLEDGED
         );
     }
 
@@ -100,7 +107,8 @@ public class FailedMessageMongoDao implements FailedMessageDao {
     public void removeLabel(FailedMessageId failedMessageId, String label) {
         collection.update(
                 failedMessageConverter.createId(failedMessageId),
-                new BasicDBObject("$pull", new BasicDBObject(LABELS, label))
+                new BasicDBObject("$pull", new BasicDBObject(LABELS, label)),
+                NO_UPSERT, SINGLE_ROW, WriteConcern.ACKNOWLEDGED
         );
     }
 }
