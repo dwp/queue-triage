@@ -49,7 +49,7 @@ java_library(
     name = 'queue-triage-core-message-classification-server',
     srcs = glob(['src/main/java/**/server/**/*.java']),
     deps = [
-        "//common/cxf:queue-triage-cxf-client",
+        "//common/cxf:queue-triage-common-cxf",
         "//lib/javax:javax-ws-rs-api",
         "//lib/slf4j:slf4j-api",
         "//lib/spring:spring-beans",

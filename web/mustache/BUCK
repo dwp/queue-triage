@@ -15,7 +15,7 @@ java_library(
     name="queue-triage-web-mustache-spring",
     srcs=glob(["src/main/java/**/configuration/*.java"]),
     exported_deps=[
-        "//common/cxf:queue-triage-cxf-client",
+        "//common/cxf:queue-triage-common-cxf",
         "//lib/spring:spring-beans",
         "//lib/spring:spring-context",
         "//web/mustache:queue-triage-web-mustache",

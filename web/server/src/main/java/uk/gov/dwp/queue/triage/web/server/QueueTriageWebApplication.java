@@ -4,7 +4,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
-import uk.gov.dwp.migration.mongo.demo.cxf.configuration.CxfBusConfiguration;
+import uk.gov.dwp.queue.triage.cxf.server.configuration.CxfBusConfiguration;
 import uk.gov.dwp.queue.triage.web.common.mustache.configuration.MustacheConfiguration;
 import uk.gov.dwp.queue.triage.web.security.spring.ldap.LdapSecurityConfig;
 import uk.gov.dwp.queue.triage.web.security.spring.web.WebSecurityConfig;

@@ -47,7 +47,7 @@ java_library(
         "//lib/slf4j:slf4j-api",
     ],
     visibility = [
-        "//common/cxf:queue-triage-cxf",
+        "//common/cxf-server:queue-triage-common-cxf-server",
         "//core/component-test:test",
         "//core/server:queue-triage-core-server",
     ]

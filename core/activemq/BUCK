@@ -2,11 +2,13 @@ java_library(
     name = "queue-triage-core-activemq",
     srcs = glob(["src/main/java/**/*.java"]),
     exported_deps =[
+        "//common/cxf:queue-triage-common-cxf",
         "//core/domain:queue-triage-core-domain",
         "//core/jms:queue-triage-core-jms",
         "//core/service:queue-triage-core-service",
         "//lib/activemq:activemq-client",
         "//lib/activemq:geronimo-jms",
+        "//lib/javax:javax-ws-rs-api",
         "//lib/slf4j:slf4j-api",
         "//lib/spring:spring-beans",
         "//lib/spring:spring-boot",
@@ -39,10 +41,6 @@ java_library(
 java_test(
     name = "test",
     srcs = glob([ "src/test/java/**/*.java" ]),
-#     resources = [
-#         "src/test/resources/single-broker.yml",
-#         "src/test/resources/multiple-brokers.yml",
-#     ],
     deps = [
         ":test-resources",
         "//core/activemq:queue-triage-core-activemq",

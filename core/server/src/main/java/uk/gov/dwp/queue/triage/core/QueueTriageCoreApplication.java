@@ -7,7 +7,7 @@ import org.springframework.boot.autoconfigure.jms.activemq.ActiveMQAutoConfigura
 import org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration;
 import org.springframework.boot.autoconfigure.security.SecurityAutoConfiguration;
 import org.springframework.context.annotation.Import;
-import uk.gov.dwp.migration.mongo.demo.cxf.configuration.CxfBusConfiguration;
+import uk.gov.dwp.queue.triage.cxf.server.configuration.CxfBusConfiguration;
 import uk.gov.dwp.queue.triage.swagger.configuration.SwaggerConfiguration;
 
 @SpringBootApplication
