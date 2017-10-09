@@ -1,13 +1,17 @@
 package uk.gov.dwp.queue.triage.core.resend;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+
 import javax.ws.rs.BadRequestException;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
-import java.util.HashMap;
 import java.util.Map;
 
+@Api("Resend Executor")
 @Path("/admin/executor/message-resend/{brokerName}")
 public class ResendScheduledExecutorsResource {
 
@@ -17,21 +21,30 @@ public class ResendScheduledExecutorsResource {
         this.resendScheduledExecutors = resendScheduledExecutors;
     }
 
+    @ApiOperation("Start the resend executor for the given broker")
     @POST
     @Path("/start")
-    public void start(@PathParam("brokerName") String brokerName) {
+    public void start(
+            @ApiParam(value = "name of the broker as defined in application.yml", required = true)
+            @PathParam("brokerName") String brokerName) {
         getExecutor(brokerName).start();
     }
 
+    @ApiOperation("Synchronously execute the resend job for the given broker")
     @POST
     @Path("/execute")
-    public void execute(@PathParam("brokerName") String brokerName) {
+    public void execute(
+            @ApiParam(value = "name of the broker as defined in application.yml", required = true)
+            @PathParam("brokerName") String brokerName) {
         getExecutor(brokerName).execute();
     }
 
+    @ApiOperation("Pause the resend executor for the given broker")
     @PUT
     @Path("/pause")
-    public void pause(@PathParam("brokerName") String brokerName) {
+    public void pause(
+            @ApiParam(value = "name of the broker as defined in application.yml", required = true)
+            @PathParam("brokerName") String brokerName) {
         getExecutor(brokerName).pause();
     }
 

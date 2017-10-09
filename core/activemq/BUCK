@@ -15,6 +15,7 @@ java_library(
         "//lib/spring:spring-context",
         "//lib/spring:spring-core",
         "//lib/spring:spring-jms",
+        "//lib/swagger:swagger-annotations",
     ],
     visibility = [
         "//core/component-test:queue-triage-core-component-test",

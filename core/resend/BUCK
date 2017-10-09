@@ -20,6 +20,7 @@ java_library(
     deps =
         RESEND_DEPENDENCIES + [
         "//core/domain:queue-triage-core-domain",
+        "//lib/swagger:swagger-annotations",
     ],
     visibility = [
         "//core/resend:test",

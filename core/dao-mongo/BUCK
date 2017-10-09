@@ -8,6 +8,7 @@ java_library(
         '//core/domain:queue-triage-core-domain',
         '//lib/jackson:jackson-databind',
         '//lib/mongo:mongodb-driver',
+        '//lib/slf4j:slf4j-api',
         '//lib/spring:spring-boot',
         '//lib/spring:spring-context',
     ],

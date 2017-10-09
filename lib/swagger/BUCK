@@ -67,3 +67,24 @@ remote_file(
     url  = "mvn:io.swagger:swagger-models:src:1.5.16",
     sha1 = "1cea57d2218690f0be910fc8c842dd2101a04835",
 )
+
+java_binary(
+    name = "swagger-codegen-cli",
+    main_class = "io.swagger.codegen.SwaggerCodegen",
+    deps = [
+        ":swagger-codegen-cli-jar"
+    ],
+    visibility = [
+        "PUBLIC"
+    ],
+)
+prebuilt_jar(
+    name = "swagger-codegen-cli-jar",
+    binary_jar = ":swagger-codegen-cli-mvn",
+)
+remote_file(
+    name = "swagger-codegen-cli-mvn",
+    out  = "swagger-codegen-cli-2.2.3.jar",
+    url  = "mvn:io.swagger:swagger-codegen-cli:jar:2.2.3",
+    sha1 = "34dd615d37edec0b50830ca12fc34e33c17b6d86",
+)
