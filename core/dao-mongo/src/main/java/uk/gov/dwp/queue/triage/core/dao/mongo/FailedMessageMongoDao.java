@@ -5,7 +5,10 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import com.mongodb.WriteConcern;
+import com.mongodb.WriteResult;
 import com.mongodb.operation.OrderBy;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import uk.gov.dwp.queue.triage.core.dao.FailedMessageDao;
 import uk.gov.dwp.queue.triage.core.domain.FailedMessage;
 import uk.gov.dwp.queue.triage.core.domain.FailedMessageStatus;
@@ -24,6 +27,7 @@ import static uk.gov.dwp.queue.triage.core.dao.mongo.FailedMessageStatusDBObject
 
 public class FailedMessageMongoDao implements FailedMessageDao {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(FailedMessageMongoDao.class);
     private static final boolean NO_UPSERT = false;
     private static final boolean SINGLE_ROW = false;
 
@@ -44,7 +48,11 @@ public class FailedMessageMongoDao implements FailedMessageDao {
 
     @Override
     public void insert(FailedMessage failedMessage) {
-        collection.insert(WriteConcern.ACKNOWLEDGED, failedMessageConverter.convertFromObject(failedMessage));
+        WriteResult writeResult = collection.insert(
+                WriteConcern.ACKNOWLEDGED,
+                failedMessageConverter.convertFromObject(failedMessage)
+        );
+        LOGGER.debug("{} rows inserted", writeResult.getN());
     }
 
     @Override
@@ -87,20 +95,22 @@ public class FailedMessageMongoDao implements FailedMessageDao {
 
     @Override
     public void addLabel(FailedMessageId failedMessageId, String label) {
-        collection.update(
+        WriteResult writeResult = collection.update(
                 failedMessageConverter.createId(failedMessageId),
                 new BasicDBObject("$addToSet", new BasicDBObject(LABELS, label)),
                 NO_UPSERT, SINGLE_ROW, WriteConcern.ACKNOWLEDGED
         );
+        LOGGER.debug("{} rows updated", writeResult.getN());
     }
 
     @Override
     public void setLabels(FailedMessageId failedMessageId, Set<String> labels) {
-        collection.update(
+        WriteResult writeResult = collection.update(
                 failedMessageConverter.createId(failedMessageId),
                 new BasicDBObject("$set", new BasicDBObject(LABELS, labels)),
                 NO_UPSERT, SINGLE_ROW, WriteConcern.ACKNOWLEDGED
         );
+        LOGGER.debug("{} rows updated", writeResult.getN());
     }
 
     @Override
