@@ -56,6 +56,7 @@ java_library(
         "//lib/spring:spring-beans",
         "//lib/spring:spring-boot",
         "//lib/spring:spring-context",
+        '//lib/swagger:swagger-annotations',
         ':queue-triage-core-message-classification',
         '//common/id:queue-triage-common-id',
         '//core/domain:queue-triage-core-domain',
