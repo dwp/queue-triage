@@ -1,5 +1,8 @@
 server:
   port: 9991
+  metrics:
+    enabled: true
+    prefix: uk.gov.dwp.queue.triage.core.servlet
 
 cxf:
   contextPath: /core

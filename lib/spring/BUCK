@@ -10,6 +10,7 @@ prebuilt_jar(
     source_jar = ":spring-boot-src",
     visibility=[
         "//common/cxf-server:queue-triage-common-cxf-server",
+        "//common/metrics:queue-triage-common-metrics",
         "//core/activemq:queue-triage-core-activemq",
         "//core/component-test:queue-triage-core-component-test",
         "//core/dao-mongo:queue-triage-core-dao-mongo",
@@ -37,6 +38,7 @@ prebuilt_jar(
     source_jar=":spring-core-src",
     visibility=[
         "//common/cxf-server:queue-triage-common-cxf-server",
+        "//common/metrics:queue-triage-common-metrics",
         "//core/activemq:queue-triage-core-activemq",
         "//core/activemq:test",
         "//core/jms:queue-triage-core-jms-spring",

@@ -17,6 +17,7 @@ java_library(
         '//common/health:queue-triage-health',
         '//common/id:queue-triage-common-id',
         '//common/jackson:queue-triage-common-jackson-spring',
+        "//common/metrics:queue-triage-common-metrics",
         '//common/swagger:queue-triage-common-swagger-cxf',
         '//core/activemq:queue-triage-core-activemq',
         '//core/client:queue-triage-core-client',
