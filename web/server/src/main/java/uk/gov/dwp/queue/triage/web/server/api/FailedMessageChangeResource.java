@@ -1,5 +1,6 @@
 package uk.gov.dwp.queue.triage.web.server.api;
 
+import uk.gov.dwp.queue.triage.core.client.delete.DeleteFailedMessageClient;
 import uk.gov.dwp.queue.triage.core.client.label.LabelFailedMessageClient;
 
 import javax.ws.rs.Consumes;
@@ -17,11 +18,14 @@ public class FailedMessageChangeResource {
 
     private final LabelFailedMessageClient labelFailedMessageClient;
     private final LabelExtractor labelExtractor;
+    private final DeleteFailedMessageClient deleteFailedMessageClient;
 
     public FailedMessageChangeResource(LabelFailedMessageClient labelFailedMessageClient,
-                                       LabelExtractor labelExtractor) {
+                                       LabelExtractor labelExtractor,
+                                       DeleteFailedMessageClient deleteFailedMessageClient) {
         this.labelFailedMessageClient = labelFailedMessageClient;
         this.labelExtractor = labelExtractor;
+        this.deleteFailedMessageClient = deleteFailedMessageClient;
     }
 
     @POST
@@ -31,6 +35,14 @@ public class FailedMessageChangeResource {
                 .forEach(change -> labelFailedMessageClient.setLabels(
                         fromString(change.getRecid()),
                         labelExtractor.extractLabels(change.getLabels())));
+        return "{ 'status': 'success' }";
+    }
+
+    @POST
+    @Path("/delete")
+    public String removeFailedMessages(DeleteRequest request) {
+        request.getSelected()
+                .forEach(recid -> deleteFailedMessageClient.deleteFailedMessage(fromString(recid)));
         return "{ 'status': 'success' }";
     }
 

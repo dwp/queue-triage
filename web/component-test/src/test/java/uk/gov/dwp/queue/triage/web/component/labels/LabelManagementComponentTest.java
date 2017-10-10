@@ -3,7 +3,7 @@ package uk.gov.dwp.queue.triage.web.component.labels;
 import com.tngtech.jgiven.annotation.ScenarioStage;
 import org.junit.Test;
 import uk.gov.dwp.queue.triage.id.FailedMessageId;
-import uk.gov.dwp.queue.triage.web.component.BaseWebComponentTest;
+import uk.gov.dwp.queue.triage.web.component.SimpleBaseWebComponentTest;
 import uk.gov.dwp.queue.triage.web.component.list.ListFailedMessagesStage;
 import uk.gov.dwp.queue.triage.web.component.login.LoginGivenStage;
 
@@ -14,7 +14,7 @@ import static java.time.temporal.ChronoUnit.HOURS;
 import static java.time.temporal.ChronoUnit.MINUTES;
 import static uk.gov.dwp.queue.triage.core.client.search.SearchFailedMessageResponse.newSearchFailedMessageResponse;
 
-public class LabelManagementComponentTest extends BaseWebComponentTest<LabelManagementWhenStage> {
+public class LabelManagementComponentTest extends SimpleBaseWebComponentTest<LabelManagementWhenStage> {
 
     private static final FailedMessageId FAILED_MESSAGE_ID_1 = FailedMessageId.newFailedMessageId();
     private static final FailedMessageId FAILED_MESSAGE_ID_2 = FailedMessageId.newFailedMessageId();

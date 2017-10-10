@@ -1,9 +1,10 @@
-package uk.gov.dwp.queue.triage.web.component.list;
+package uk.gov.dwp.queue.triage.web.component.delete;
 
 import com.tngtech.jgiven.annotation.ScenarioStage;
 import org.junit.Test;
 import uk.gov.dwp.queue.triage.id.FailedMessageId;
-import uk.gov.dwp.queue.triage.web.component.SimpleBaseWebComponentTest;
+import uk.gov.dwp.queue.triage.web.component.WebComponentTest;
+import uk.gov.dwp.queue.triage.web.component.list.ListFailedMessagesStage;
 import uk.gov.dwp.queue.triage.web.component.login.LoginGivenStage;
 
 import java.time.Instant;
@@ -13,16 +14,17 @@ import static java.time.temporal.ChronoUnit.HOURS;
 import static java.time.temporal.ChronoUnit.MINUTES;
 import static uk.gov.dwp.queue.triage.core.client.search.SearchFailedMessageResponse.newSearchFailedMessageResponse;
 
-public class ViewFailedMessagesComponentTest extends SimpleBaseWebComponentTest<ListFailedMessagesStage> {
+public class DeleteFailedMessageComponentTest extends WebComponentTest<ListFailedMessagesStage, DeleteMessageWhenStage, DeleteMessageThenStage> {
 
     private static final FailedMessageId FAILED_MESSAGE_ID_1 = FailedMessageId.newFailedMessageId();
     private static final FailedMessageId FAILED_MESSAGE_ID_2 = FailedMessageId.newFailedMessageId();
     private static final Instant NOW = Instant.now();
+
     @ScenarioStage
     private LoginGivenStage loginGivenStage;
 
     @Test
-    public void failedMessagesAreDisplayedInTheMessageList() throws Exception {
+    public void deleteFailedMessages() throws Exception {
         given().aFailedMessage$Exists(newSearchFailedMessageResponse()
                 .withFailedMessageId(FAILED_MESSAGE_ID_1)
                 .withBroker("main-broker")
@@ -40,32 +42,13 @@ public class ViewFailedMessagesComponentTest extends SimpleBaseWebComponentTest<
                 .withContent("Failure")
         );
         given().and().theSearchResultsWillContainFailedMessages$(FAILED_MESSAGE_ID_1, FAILED_MESSAGE_ID_2);
-        loginGivenStage.and().theUserHasSuccessfullyLoggedOn();
+        loginGivenStage.given().and().theUserHasSuccessfullyLoggedOn();
+        given().and().theUserHasNavigatedToTheFailedMessagesPage();
 
-        when().theUserNavigatesToTheFailedMessagesPage();
+        when().failedMessage$IsSelected(FAILED_MESSAGE_ID_1);
+        when().and().theUserClicksDelete();
+        when().and().theUserConfirmsTheyWantToDeleteTheMessages();
 
-        then().theMessageListContainsAFailedMessageWithId(FAILED_MESSAGE_ID_1);
-        then().theMessageListContainsAFailedMessageWithId(FAILED_MESSAGE_ID_2);
-    }
-
-    @Test
-    public void reloadButtonRefreshesTheMessageList() throws Exception {
-
-        given().theSearchResultsWillContainNoFailedMessages();
-        loginGivenStage.and().theUserHasSuccessfullyLoggedOn();
-        when().theUserNavigatesToTheFailedMessagesPage();
-        then().theMessageListIsEmpty();
-
-        given().aFailedMessage$Exists(newSearchFailedMessageResponse()
-                .withFailedMessageId(FAILED_MESSAGE_ID_1)
-                .withBroker("main-broker")
-                .withDestination(Optional.of("queue-name"))
-                .withSentDateTime(NOW.minus(1, MINUTES))
-                .withFailedDateTime(NOW)
-                .withContent("Boom")
-        );
-        given().and().theSearchResultsWillContainFailedMessages$(FAILED_MESSAGE_ID_1);
-        when().theUserClicksTheReloadButton();
-        then().theMessageListContainsAFailedMessageWithId(FAILED_MESSAGE_ID_1);
+        then().failedMessage$IsDeleted(FAILED_MESSAGE_ID_1);
     }
 }
