@@ -16,6 +16,7 @@ import uk.gov.dwp.queue.triage.swagger.configuration.SwaggerConfiguration;
 @SpringBootApplication
 @Import({
         CxfBusConfiguration.class,
+        CxfMetricsConfiguration.class,
         MetricRegistryConfiguration.class,
         ServletMetricsConfiguration.class,
         SwaggerConfiguration.class,

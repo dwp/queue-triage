@@ -34,7 +34,24 @@ remote_file(
     url  = "mvn:org.apache.cxf:cxf-rt-rs-service-description-swagger:src:3.1.11",
     sha1 = "7447ea2956df52dac53a10f8aaad7f23426620fb"
 )
-
+prebuilt_jar(
+    name = "cxf-rt-features-metrics",
+    binary_jar = ":cxf-rt-features-metrics-mvn",
+    source_jar = ":cxf-rt-features-metrics-src",
+    visibility = ["PUBLIC"],
+)
+remote_file(
+    name = "cxf-rt-features-metrics-mvn",
+    out  = "cxf-rt-features-metrics-3.1.13.jar",
+    url  = "mvn:org.apache.cxf:cxf-rt-features-metrics:jar:3.1.13",
+    sha1 = "3db5c0dd6c5733557dc3d4c2687660827e1d9df7",
+)
+remote_file(
+    name = "cxf-rt-features-metrics-src",
+    out  = "cxf-rt-features-metrics-3.1.13-sources.jar",
+    url  = "mvn:org.apache.cxf:cxf-rt-features-metrics:src:3.1.13",
+    sha1 = "3a5ba41b8590ddb41cd7e9382b44c454e9625498",
+)
 java_library(
     name = "cxf-rt-transports-http-jetty",
     exported_deps = [
