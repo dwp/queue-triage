@@ -8,12 +8,18 @@ import org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration;
 import org.springframework.boot.autoconfigure.security.SecurityAutoConfiguration;
 import org.springframework.context.annotation.Import;
 import uk.gov.dwp.queue.triage.cxf.server.configuration.CxfBusConfiguration;
+import uk.gov.dwp.queue.triage.cxf.server.configuration.CxfMetricsConfiguration;
+import uk.gov.dwp.queue.triage.metrics.configuration.MetricRegistryConfiguration;
+import uk.gov.dwp.queue.triage.metrics.servlet.configuration.ServletMetricsConfiguration;
 import uk.gov.dwp.queue.triage.swagger.configuration.SwaggerConfiguration;
 
 @SpringBootApplication
 @Import({
-        SwaggerConfiguration.class,
         CxfBusConfiguration.class,
+        CxfMetricsConfiguration.class,
+        MetricRegistryConfiguration.class,
+        ServletMetricsConfiguration.class,
+        SwaggerConfiguration.class,
 })
 @EnableAutoConfiguration(
         exclude = {

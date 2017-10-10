@@ -45,6 +45,12 @@ public class CxfBusConfiguration {
         endpoint.setProviders(providerRegistry.getProviders());
         endpoint.setBus(bus);
         endpoint.setFeatures(features);
+        if (cxfProperties.getMetrics().isEnabled()) {
+            endpoint.getProperties(true).put(
+                    "org.apache.cxf.management.service.counter.name",
+                    cxfProperties.getMetrics().getPrefix()
+            );
+        }
         return endpoint.create();
     }
 

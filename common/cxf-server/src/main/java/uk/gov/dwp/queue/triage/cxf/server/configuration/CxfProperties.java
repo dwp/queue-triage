@@ -11,13 +11,43 @@ import org.springframework.context.annotation.Configuration;
 public class CxfProperties {
 
     private String contextPath;
+    private CxfMetricsProperties metrics = new CxfMetricsProperties();
 
     public String getContextPath() {
         return contextPath;
     }
 
-    public CxfProperties setContextPath(String contextPath) {
+    public void setContextPath(String contextPath) {
         this.contextPath = contextPath;
-        return this;
     }
+
+    public CxfMetricsProperties getMetrics() {
+        return metrics;
+    }
+
+    public void setMetrics(CxfMetricsProperties metrics) {
+        this.metrics = metrics;
+    }
+
+    public static class CxfMetricsProperties {
+        private boolean enabled;
+        private String prefix;
+
+        public boolean isEnabled() {
+            return enabled;
+        }
+
+        public void setEnabled(boolean enabled) {
+            this.enabled = enabled;
+        }
+
+        public String getPrefix() {
+            return prefix;
+        }
+
+        public void setPrefix(String prefix) {
+            this.prefix = prefix;
+        }
+    }
+
 }
