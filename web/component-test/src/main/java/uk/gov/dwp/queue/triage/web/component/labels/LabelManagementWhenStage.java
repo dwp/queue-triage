@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import uk.gov.dwp.queue.triage.id.FailedMessageId;
 import uk.gov.dwp.queue.triage.jgiven.WhenStage;
+import uk.gov.dwp.queue.triage.web.component.w2ui.FailedMessageGrid;
 
 public class LabelManagementWhenStage extends WhenStage<LabelManagementWhenStage> {
 
@@ -14,7 +15,7 @@ public class LabelManagementWhenStage extends WhenStage<LabelManagementWhenStage
 
     public LabelManagementWhenStage theUserAddslabels$ToFailedMessage$(String labels, FailedMessageId failedMessageId) {
         LOGGER.debug("Adding label(s): {} to failedMessage: {}", labels, failedMessageId);
-        selectCheckboxForFailedMessage(failedMessageId, true);
+        FailedMessageGrid.selectCheckboxForFailedMessage(failedMessageId, true);
 
         SelenideElement cell = Selenide.$("#grid_failedMessages_rec_" + failedMessageId + " td[col='5'] div");
 
@@ -25,14 +26,8 @@ public class LabelManagementWhenStage extends WhenStage<LabelManagementWhenStage
 
         Selenide.$("#grid_failedMessages_edit_" + failedMessageId + "_5").setValue(labels);
 
-        selectCheckboxForFailedMessage(failedMessageId, false);
+        FailedMessageGrid.selectCheckboxForFailedMessage(failedMessageId, false);
         return this;
-    }
-
-    private void selectCheckboxForFailedMessage(FailedMessageId failedMessageId, boolean selected) {
-        Selenide.$(By.id("grid_failedMessages_frec_" + failedMessageId))
-                .find("input[type='checkbox']")
-                .setSelected(selected);
     }
 
     public LabelManagementWhenStage theUserClicksSave() {

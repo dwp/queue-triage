@@ -18,13 +18,14 @@
             name: 'failedMessages',
             url: {
                 get: '/web/failed-messages/data',
+                remove: '/web/api/failed-messages/delete',
                 save: '/web/api/failed-messages/labels'
             },
             show: {
                 selectColumn: true,
                 toolbar: true,
                 toolbarSearch: false,
-//                toolbarDelete: true,
+                toolbarDelete: true,
                 toolbarSave: true
             },
             columns: [

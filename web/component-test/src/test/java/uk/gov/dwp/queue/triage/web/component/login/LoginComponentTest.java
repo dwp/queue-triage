@@ -1,11 +1,11 @@
 package uk.gov.dwp.queue.triage.web.component.login;
 
 import org.junit.Test;
-import uk.gov.dwp.queue.triage.web.component.BaseWebComponentTest;
+import uk.gov.dwp.queue.triage.web.component.SimpleBaseWebComponentTest;
 
 import static uk.gov.dwp.queue.triage.web.component.login.LoginStage.User.aUser;
 
-public class LoginComponentTest extends BaseWebComponentTest<LoginStage> {
+public class LoginComponentTest extends SimpleBaseWebComponentTest<LoginStage> {
 
     @Test
     public void userAttemptsToAccessASecureArea() throws Exception {
