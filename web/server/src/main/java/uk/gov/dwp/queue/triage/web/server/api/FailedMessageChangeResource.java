@@ -49,10 +49,9 @@ public class FailedMessageChangeResource {
 
     @POST
     @Path("/delete")
-    public String removeFailedMessages(DeleteRequest request) {
+    public String deleteFailedMessages(DeleteRequest request) {
         request.getSelected()
                 .forEach(recid -> deleteFailedMessageClient.deleteFailedMessage(fromString(recid)));
         return "{ 'status': 'success' }";
     }
-
 }

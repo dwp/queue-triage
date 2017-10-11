@@ -19,6 +19,7 @@
             url: {
                 get: '/web/failed-messages/data',
                 remove: '/web/api/failed-messages/delete',
+                resend: '/web/api/failed-messages/resend',
                 save: '/web/api/failed-messages/labels'
             },
             show: {
@@ -36,8 +37,39 @@
                 { field: 'failedDateTime', caption: 'Failed', size: '160px', sortable: true },
                 { field: 'labels', caption: 'Labels', size: '20%', editable: { type: 'text' } },
                 { field: 'content', caption: 'Content', size: '80%', sortable: true },
-            ]
-        });
+            ],
+            onSelect: function(event) {
+                event.onComplete = function() {
+                    var sel = this.getSelection();
+                    if (sel.length >= 1) this.toolbar.enable('w2ui-resend'); else this.toolbar.disable('w2ui-resend');
+                };
+            },
+            onUnselect: function(event) {
+                event.onComplete = function() {
+                    this.toolbar.disable('w2ui-resend');
+                };
+            }
+        }).toolbar.insert(
+                'w2ui-delete',
+                {
+                    type: 'button',
+                    id: 'w2ui-resend',
+                    text: 'Resend',
+                    caption: 'Resend selected Failed Messages',
+                    img: 'icon-send',
+                    disabled: true,
+                    onClick: function (event) {
+                        console.log(event);
+                        w2ui.failedMessages.request('resend', null, w2ui.failedMessages.url.resend,
+                                function (data) {
+                                    if (data.status !== 'error') {
+                                        w2ui.failedMessages.reload();
+                                    }
+                                });
+                    }
+                },
+                { type: 'break' }
+        );
     });
 </script>
 </body>
