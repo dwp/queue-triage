@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Profile;
 import uk.gov.dwp.queue.triage.core.client.SearchFailedMessageClient;
 import uk.gov.dwp.queue.triage.core.client.delete.DeleteFailedMessageClient;
 import uk.gov.dwp.queue.triage.core.client.label.LabelFailedMessageClient;
+import uk.gov.dwp.queue.triage.core.client.resend.ResendFailedMessageClient;
 
 import static org.mockito.Mockito.mock;
 
@@ -26,5 +27,10 @@ public class CoreClientConfiguration {
     @Bean
     public DeleteFailedMessageClient deleteFailedMessageClient() {
         return mock(DeleteFailedMessageClient.class);
+    }
+
+    @Bean
+    public ResendFailedMessageClient resendFailedMessageClient() {
+        return mock(ResendFailedMessageClient.class);
     }
 }

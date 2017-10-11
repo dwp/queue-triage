@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Profile;
 import uk.gov.dwp.queue.triage.core.client.SearchFailedMessageClient;
 import uk.gov.dwp.queue.triage.core.client.delete.DeleteFailedMessageClient;
 import uk.gov.dwp.queue.triage.core.client.label.LabelFailedMessageClient;
+import uk.gov.dwp.queue.triage.core.client.resend.ResendFailedMessageClient;
 import uk.gov.dwp.queue.triage.jackson.configuration.JacksonConfiguration;
 
 import static java.util.Collections.singletonList;
@@ -44,6 +45,16 @@ public class CoreClientConfiguration {
         return JAXRSClientFactory.create(
                 clientProperties.getCore().getUrl(),
                 DeleteFailedMessageClient.class,
+                singletonList(jacksonJsonProvider)
+        );
+    }
+
+    @Bean
+    public ResendFailedMessageClient resendFailedMessageClient(JacksonJsonProvider jacksonJsonProvider,
+                                                               ClientProperties clientProperties) {
+        return JAXRSClientFactory.create(
+                clientProperties.getCore().getUrl(),
+                ResendFailedMessageClient.class,
                 singletonList(jacksonJsonProvider)
         );
     }

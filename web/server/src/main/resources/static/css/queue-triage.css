@@ -2,6 +2,10 @@ body {
     background: #eee !important;
 }
 
+.icon-send {
+    background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABZklEQVR42t2SS0sCYRSG32/mm/GSOWVaJtqmSCI3GiG0rE30B4IiCIKiXW0l2gUt+g/9h6DW7aLbojBpIUalgaXmmHNxHGcaC7KFtQkiOnDgLM55znsuBD808k8Ba0s9A+HYyPj3fBOZy+uzthnGUd+d3u8JcUHvl+V6rgD2oZgj8j62GwriagVQXoCDJBZXFvi0SV20JjhhG7aDMK0+pmFCS6vgnyWQetUgU1G4wwEM6hrQaDpFaneTVsG5KPgOFA0HhNFHUIeBRo2ikhTQDR2oVwHNAjSpiTlEQl2IqpaCrIi9nXVSAOekIgLghAggH6OkFeC1+6CwE2ClE7jJkwVR3gHzk/CtTmNDLoM5vcFWYhn3IglQ3j0Eh5YCWM7aJ9PUb0mso4wYiHQBgckbbZcoHvpvbc7eAZt8ZRXzAENbAEN/m7XCxWGomWxbwOyMJ+jvLI21jv0pzTQ/wrwUOv+jn/irgFdwa35bBb46oAAAAABJRU5ErkJggg==) no-repeat center !important;
+}
+
 .wrapper {
     margin-top: 80px;
     margin-bottom: 80px;

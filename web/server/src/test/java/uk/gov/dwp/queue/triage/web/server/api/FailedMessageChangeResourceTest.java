@@ -54,7 +54,7 @@ public class FailedMessageChangeResourceTest {
 
     @Test
     public void deleteFailedMessages() {
-        String result = underTest.removeFailedMessages(
+        String result = underTest.deleteFailedMessages(
                 newDeleteRequest().withSelectedRecords(FAILED_MESSAGE_1_ID, FAILED_MESSAGE_2_ID).build()
         );
 
