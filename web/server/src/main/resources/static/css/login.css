@@ -1,0 +1,79 @@
+* {
+    padding:0;
+    margin:0;
+    font-family:"Lucida Sans",Tahoma,Arial,Verdana;
+    -webkit-box-sizing:border-box;
+    -moz-box-sizing:border-box;
+    -ms-box-sizing:border-box;
+    -o-box-sizing:border-box;
+    box-sizing:border-box
+}
+
+body {
+    overflow:hidden;
+    background-color:#F6F6F6
+}
+
+.login-box {
+    font-family: verdana;
+    font-size: 11px;
+    margin-top: 70px;
+    text-align: center;
+}
+
+.login-msg {
+    color: red;
+}
+
+.login-box .login-center {
+    width: 500px;
+    margin: 10px auto;
+    border: 1px solid #ccc;
+    background: #fff;
+    border-radius: 5px;
+    box-shadow: 0 0 5px #ccc;
+    padding: 20px;
+}
+
+
+.login-box .login-center .login-img {
+    height: 200px;
+    width: 200px;
+    float: left;
+    border-right: 1px solid #dfdfdf;
+}
+
+.login-box .login-center .login-img div {
+    margin-top: 40%;
+    font-weight: 700;
+    color: #777;
+    font-size: 14px;
+}
+
+.login-box .login-center .login-input {
+    margin-left: 230px;
+    text-align: left;
+}
+
+.login-box .login-center .login-input span {
+    margin: 20px 0 3px;
+    color: #999;
+    font-weight: 700;
+    display: block;
+}
+
+.login-box input[type="text"], .login-box input[type="password"] {
+    border-radius: 4px;
+    padding: 6px;
+    border: 1px solid silver;
+    font-size: 14px;
+    width: 220px;
+}
+
+.login-box input[type="submit"] {
+    width: 220px;
+    font-weight: 700;
+    padding-top: 3px;
+    padding-bottom: 2px;
+    font-size: 11px;
+}
