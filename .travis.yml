@@ -10,7 +10,7 @@ notifications:
     
 before_script:
   # Create Mongo admin user
-  - mongo admin --eval 'db.createUser({user:'admin',pwd:'Passw0rd',roles:['userAdminAnyDatabase']});'
+  - echo "db.createUser({user:'admin',pwd:'Passw0rd',roles:['userAdminAnyDatabase']})" | mongo admin
   # Install Buck
   - pushd $HOME
   - git clone --branch v2017.05.31.01 --depth 1 https://github.com/facebook/buck.git
@@ -20,7 +20,7 @@ before_script:
   - buck --version
 
 script:
-    buck run //core/dao-mongo:create-users-and-roles
+  - buck run //core/dao-mongo:create-users-and-roles
   - buck fetch //... > /dev/null
   - buck test //... > /dev/null
 
