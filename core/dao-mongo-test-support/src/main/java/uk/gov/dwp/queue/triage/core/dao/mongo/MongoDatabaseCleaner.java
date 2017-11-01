@@ -36,4 +36,8 @@ public class MongoDatabaseCleaner {
         }
         LOGGER.info("Removing data from '{}' database complete", db.getName());
     }
+
+    public void cleanCollection(String databaseName, String collectionName) {
+        mongoClient.getDatabase(databaseName).getCollection(collectionName).deleteMany(new BasicDBObject());
+    }
 }

@@ -22,6 +22,8 @@ dao:
     dbName: queue-triage
     failedMessage:
       name: failedMessage
+      username: failedMessageUser
+      password: Passw0rd
 
 jms:
   activemq:
