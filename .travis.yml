@@ -20,7 +20,7 @@ before_script:
   - buck --version
 
 script:
-  - buck run //core/dao-mongo:create-users-and-roles
+  - buck build //core/dao-mongo:create-users-and-roles
   - buck fetch //... > /dev/null
   - buck test //... > /dev/null
 
