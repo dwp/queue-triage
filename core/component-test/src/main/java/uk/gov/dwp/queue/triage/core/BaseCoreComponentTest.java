@@ -37,7 +37,7 @@ public class BaseCoreComponentTest<STAGE> extends SimpleSpringRuleScenarioTest<S
 
     @Before
     public void cleanDatabases() {
-        new MongoDatabaseCleaner(mongoClient).cleanDatabase("queue-triage");
+        new MongoDatabaseCleaner(mongoClient).cleanCollection("queue-triage", "failedMessage");
         stubMessageClassifierResource.clear();
     }
 }

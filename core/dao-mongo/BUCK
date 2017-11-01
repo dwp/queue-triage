@@ -30,6 +30,22 @@ java_library(
     resources_root = "src/test/resources",
 )
 
+export_file(
+    name = 'mongo-queue-triage-roles.sh',
+    src  = 'src/main/resources/mongo-queue-triage-roles.sh',
+)
+
+export_file(
+    name = 'mongo-queue-triage-users.sh',
+    src  = 'src/main/resources/mongo-queue-triage-users.sh',
+)
+
+genrule(
+    name = 'create-users-and-roles',
+    cmd = '$(location :mongo-queue-triage-roles.sh) > $OUT && $(location :mongo-queue-triage-users.sh) >> $OUT',
+    out = 'create-users-and-roles.log'
+)
+
 java_test(
     name = 'test',
     srcs = glob([ 'src/test/java/**/*Test.java']),
