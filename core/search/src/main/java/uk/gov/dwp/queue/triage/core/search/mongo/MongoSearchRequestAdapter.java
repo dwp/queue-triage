@@ -5,8 +5,11 @@ import com.mongodb.DBObject;
 import uk.gov.dwp.queue.triage.core.client.search.SearchFailedMessageRequest;
 import uk.gov.dwp.queue.triage.core.dao.mongo.MongoStatusHistoryQueryBuilder;
 
+import java.util.regex.Pattern;
+
 import static uk.gov.dwp.queue.triage.core.dao.mongo.DestinationDBObjectConverter.BROKER_NAME;
 import static uk.gov.dwp.queue.triage.core.dao.mongo.DestinationDBObjectConverter.NAME;
+import static uk.gov.dwp.queue.triage.core.dao.mongo.FailedMessageConverter.CONTENT;
 import static uk.gov.dwp.queue.triage.core.dao.mongo.FailedMessageConverter.DESTINATION;
 import static uk.gov.dwp.queue.triage.core.domain.FailedMessageStatus.Status.DELETED;
 import static uk.gov.dwp.queue.triage.core.domain.FailedMessageStatusAdapter.fromFailedMessageStatus;
@@ -28,6 +31,7 @@ public class MongoSearchRequestAdapter {
         }
         request.getBroker().ifPresent(broker -> query.append(DESTINATION + "." + BROKER_NAME, broker));
         request.getDestination().ifPresent(destination -> query.append(DESTINATION + "." + NAME, destination));
+        request.getContent().ifPresent(content -> query.append(CONTENT, Pattern.compile(content)));
         return query;
     }
 }
