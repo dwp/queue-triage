@@ -1,23 +1,35 @@
 <!DOCTYPE html>
 <html>
-  <head>
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=9"/>
     <title>Queue Triage - Login</title>
-    <link rel="stylesheet" type="text/css" href="/static/css/queue-triage.css" />
-  </head>
-  <body id="queue-triage-login">
-    <div class="wrapper">
-      <form action="/web/login" method="POST" class="form-signin">
-        <h2 class="form-signin-heading">Please login</h2>
-          {{#errorPresent}}
-          <p id="error-message">{{errorMessage}}</p>
-          {{/errorPresent}}
-        <input class="form-control" name="username" placeholder="Username" required="" autofocus="" />
-        <input type="password" class="form-control" name="password" placeholder="Password" required=""/>
-        <label class="checkbox">
-          <input type="checkbox" value="remember-me" id="rememberMe" name="rememberMe"> Remember me
-        </label>
-        <button id="btn-login" class="btn btn-lg btn-primary btn-block">Login</button>
-      </form>
+    <link rel="stylesheet" type="text/css" href="/static/css/login.css" />
+</head>
+<body id="queue-triage-login">
+    <div class="login-box">
+    {{#errorPresent}}
+        <div id="error-message" class="login-msg">{{errorMessage}}</div>
+    {{/errorPresent}}
+        <br><br>
+        <div class="login-center">
+            <div class="login-img">
+                <div> Queue Triage </div>
+            </div>
+            <form action="/web/login" method="POST">
+                <div class="login-input">
+                    <span>Login</span>
+                    <input id="username" name="username" size="25" type="text" autofocus="yes"
+                           onkeypress="$('#error-message').html('&nbsp;'); if (event.keyCode == 13) form.submit();">
+                    <span>Password</span>
+                    <input id="password" name="password" size="25" type="password"
+                           onkeypress="$('#error-message').html('&nbsp;'); if (event.keyCode == 13) form.submit();">
+                    <div style="height: 25px; font-size: 1px;">&nbsp;</div>
+                    <input id="btn-login" type="submit" value="Login" />
+                </div>
+            </form>
+            <div style="text-align: center; padding-top: 10px;">
+            </div>
+        </div>
     </div>
-  </body>
+</body>
 </html>
