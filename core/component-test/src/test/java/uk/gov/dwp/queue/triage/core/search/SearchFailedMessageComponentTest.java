@@ -60,6 +60,31 @@ public class SearchFailedMessageComponentTest extends BaseCoreComponentTest<Sear
                         .withFailedMessageId(equalTo(failedMessageId))));
     }
 
+    @Test
+    public void searchByMessageContent() {
+        FailedMessageId failedMessageId = FailedMessageId.newFailedMessageId();
+        failedMessageResourceStage.given().aFailedMessage(newCreateFailedMessageRequest()
+                .withFailedMessageId(failedMessageId)
+                .withBrokerName("broker-name")
+                .withDestinationName("queue-name"))
+                .withContent("Bodger and Badger")
+                .exists();
+
+        when().aSearchIsRequested(newSearchFailedMessageRequest()
+                .withContent("and")
+        );
+
+        then().theSearchResultsContain(contains(
+                aFailedMessage()
+                        .withFailedMessageId(equalTo(failedMessageId))));
+
+        when().aSearchIsRequested(newSearchFailedMessageRequest()
+                .withContent("Bananas")
+        );
+
+        then().theSearchResultsContain(noResults());
+    }
+
     private static Matcher<Iterable<? extends SearchFailedMessageResponse>> contains(SearchFailedMessageResponseMatcher... searchResultMatcher) {
         return new IsIterableContainingInOrder<SearchFailedMessageResponse>(Arrays.asList(searchResultMatcher)) {
             @Override

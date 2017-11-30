@@ -12,13 +12,16 @@ public class SearchFailedMessageRequest {
     private final Optional<String> broker;
     private final Optional<String> destination;
     private final Set<FailedMessageStatus> statuses;
+    private final Optional<String> content;
 
     private SearchFailedMessageRequest(@JsonProperty("broker") Optional<String> broker,
                                        @JsonProperty("destination") Optional<String> destination,
-                                       @JsonProperty("statuses") Set<FailedMessageStatus> statuses) {
+                                       @JsonProperty("statuses") Set<FailedMessageStatus> statuses,
+                                       @JsonProperty("content") Optional<String> content) {
         this.broker = broker;
         this.destination = destination;
         this.statuses = statuses;
+        this.content = content;
     }
 
     public Optional<String> getBroker() {
@@ -33,6 +36,10 @@ public class SearchFailedMessageRequest {
         return statuses;
     }
 
+    public Optional<String> getContent() {
+        return content;
+    }
+
     public static SearchFailedMessageRequestBuilder newSearchFailedMessageRequest() {
         return new SearchFailedMessageRequestBuilder();
     }
@@ -42,6 +49,7 @@ public class SearchFailedMessageRequest {
         private Optional<String> broker = Optional.empty();
         private Optional<String> destination = Optional.empty();
         private Set<FailedMessageStatus> statuses = new HashSet<>();
+        private Optional<String> content = Optional.empty();
 
         private SearchFailedMessageRequestBuilder() {}
 
@@ -75,8 +83,13 @@ public class SearchFailedMessageRequest {
             return this;
         }
 
+        public SearchFailedMessageRequestBuilder withContent(String content) {
+            this.content = Optional.ofNullable(content);
+            return this;
+        }
+
         public SearchFailedMessageRequest build() {
-            return new SearchFailedMessageRequest(broker, destination, statuses);
+            return new SearchFailedMessageRequest(broker, destination, statuses, content);
         }
     }
 }
