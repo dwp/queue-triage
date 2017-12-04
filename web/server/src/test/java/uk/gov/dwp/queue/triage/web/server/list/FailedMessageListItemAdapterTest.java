@@ -6,6 +6,7 @@ import org.junit.Test;
 import uk.gov.dwp.queue.triage.core.client.search.SearchFailedMessageResponse;
 import uk.gov.dwp.queue.triage.id.FailedMessageId;
 import uk.gov.dwp.queue.triage.jackson.configuration.JacksonConfiguration;
+import uk.gov.dwp.queue.triage.web.server.search.FailedMessageListItemAdapter;
 
 import java.time.Instant;
 import java.time.LocalDate;
@@ -20,7 +21,6 @@ import static java.time.ZoneOffset.UTC;
 import static java.time.temporal.ChronoField.MILLI_OF_SECOND;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.allOf;
-import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.nullValue;
 import static org.valid4j.matchers.jsonpath.JsonPathMatchers.hasJsonPath;
