@@ -8,7 +8,7 @@ import uk.gov.dwp.queue.triage.core.search.SearchFailedMessageStage;
 import uk.gov.dwp.queue.triage.id.FailedMessageId;
 
 import static uk.gov.dwp.queue.triage.core.client.CreateFailedMessageRequest.newCreateFailedMessageRequest;
-import static uk.gov.dwp.queue.triage.core.client.search.SearchFailedMessageRequest.newSearchFailedMessageRequest;
+import static uk.gov.dwp.queue.triage.core.client.search.SearchFailedMessageRequest.searchMatchingAllCriteria;
 import static uk.gov.dwp.queue.triage.core.search.SearchFailedMessageStage.noResults;
 
 public class DeleteFailedMessageComponentTest extends BaseCoreComponentTest<DeleteFailedMessageStage> {
@@ -28,7 +28,7 @@ public class DeleteFailedMessageComponentTest extends BaseCoreComponentTest<Dele
                 .exists();
 
         when().theFailedMessageWithId$IsDeleted(failedMessageId);
-        searchFailedMessageStage.and().aSearchIsRequested(newSearchFailedMessageRequest()
+        searchFailedMessageStage.and().aSearchIsRequested(searchMatchingAllCriteria()
                 .withBroker("broker-name")
                 .withDestination("queue-name")
         );

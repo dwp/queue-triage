@@ -11,7 +11,7 @@ import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static uk.gov.dwp.queue.triage.core.client.FailedMessageStatus.FAILED;
-import static uk.gov.dwp.queue.triage.core.domain.SearchFailedMessageRequestMatcher.aSearchRequest;
+import static uk.gov.dwp.queue.triage.core.domain.SearchFailedMessageRequestMatcher.aSearchRequestMatchingAllCriteria;
 
 public class SearchFailedMessageRequestTest {
 
@@ -21,12 +21,12 @@ public class SearchFailedMessageRequestTest {
     @Test
     public void serialiseAndDeserialiseWithOptionalFieldsMissing() throws Exception {
         String json = OBJECT_MAPPER.writeValueAsString(
-                SearchFailedMessageRequest.newSearchFailedMessageRequest()
+                SearchFailedMessageRequest.searchMatchingAllCriteria()
                         .withStatus(FAILED)
                         .build());
 
         assertThat(OBJECT_MAPPER.readValue(json, SearchFailedMessageRequest.class), is(
-                aSearchRequest()
+                aSearchRequestMatchingAllCriteria()
                         .withBroker(equalTo(Optional.empty()))
                         .withDestination(equalTo(Optional.empty()))
                         .withStatusMatcher(contains(FAILED))
@@ -36,14 +36,14 @@ public class SearchFailedMessageRequestTest {
     @Test
     public void serialiseAndDeserialiseWithAllFieldsPopulated() throws Exception {
         String json = OBJECT_MAPPER.writeValueAsString(
-                SearchFailedMessageRequest.newSearchFailedMessageRequest()
+                SearchFailedMessageRequest.searchMatchingAllCriteria()
                         .withBroker("broker")
                         .withDestination("queue")
                         .withStatus(FAILED)
                         .build());
 
         assertThat(OBJECT_MAPPER.readValue(json, SearchFailedMessageRequest.class), is(
-                aSearchRequest()
+                aSearchRequestMatchingAllCriteria()
                         .withBroker(equalTo(Optional.of("broker")))
                         .withDestination(equalTo(Optional.of("queue")))
                         .withStatusMatcher(contains(FAILED))

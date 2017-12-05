@@ -14,8 +14,10 @@ import uk.gov.dwp.queue.triage.web.server.api.FailedMessageChangeResource;
 import uk.gov.dwp.queue.triage.web.server.api.resend.ResendFailedMessageResource;
 import uk.gov.dwp.queue.triage.web.server.home.HomeController;
 import uk.gov.dwp.queue.triage.web.server.list.FailedMessageListController;
-import uk.gov.dwp.queue.triage.web.server.list.FailedMessageListItemAdapter;
+import uk.gov.dwp.queue.triage.web.server.search.FailedMessageListItemAdapter;
 import uk.gov.dwp.queue.triage.web.server.api.LabelExtractor;
+import uk.gov.dwp.queue.triage.web.server.search.SearchFailedMessageController;
+import uk.gov.dwp.queue.triage.web.server.search.SearchFailedMessageRequestAdapter;
 import uk.gov.dwp.queue.triage.web.server.login.AuthenticationExceptionAdapter;
 import uk.gov.dwp.queue.triage.web.server.login.LoginController;
 
@@ -38,10 +40,16 @@ public class ControllerConfiguration {
     }
 
     @Bean
-    public FailedMessageListController failedMessageListController(ResourceRegistry resourceRegistry,
-                                                                   SearchFailedMessageClient searchFailedMessageClient) {
-        return resourceRegistry.add(new FailedMessageListController(
+    public FailedMessageListController failedMessageListController(ResourceRegistry resourceRegistry) {
+        return resourceRegistry.add(new FailedMessageListController());
+    }
+
+    @Bean
+    public SearchFailedMessageController searchFailedMessageController(ResourceRegistry resourceRegistry,
+                                                                       SearchFailedMessageClient searchFailedMessageClient) {
+        return resourceRegistry.add(new SearchFailedMessageController(
                 searchFailedMessageClient,
+                new SearchFailedMessageRequestAdapter(),
                 new FailedMessageListItemAdapter()
         ));
     }
@@ -59,7 +67,7 @@ public class ControllerConfiguration {
 
     @Bean
     public ResendFailedMessageResource resendFailedMessageResource(ResourceRegistry resourceRegistry,
-                                                            ResendFailedMessageClient resendFailedMessageClient) {
+                                                                   ResendFailedMessageClient resendFailedMessageClient) {
         return resourceRegistry.add(new ResendFailedMessageResource(resendFailedMessageClient));
     }
 }

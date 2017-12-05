@@ -4,6 +4,7 @@ import com.tngtech.jgiven.annotation.ScenarioStage;
 import org.junit.Test;
 import uk.gov.dwp.queue.triage.id.FailedMessageId;
 import uk.gov.dwp.queue.triage.web.component.SimpleBaseWebComponentTest;
+import uk.gov.dwp.queue.triage.web.component.WebComponentTest;
 import uk.gov.dwp.queue.triage.web.component.login.LoginGivenStage;
 
 import java.time.Instant;
@@ -13,7 +14,7 @@ import static java.time.temporal.ChronoUnit.HOURS;
 import static java.time.temporal.ChronoUnit.MINUTES;
 import static uk.gov.dwp.queue.triage.core.client.search.SearchFailedMessageResponse.newSearchFailedMessageResponse;
 
-public class ViewFailedMessagesComponentTest extends SimpleBaseWebComponentTest<ListFailedMessagesStage> {
+public class ViewFailedMessagesComponentTest extends WebComponentTest<ListFailedMessagesStage, ListFailedMessagesStage, FailedMessageListThenStage> {
 
     private static final FailedMessageId FAILED_MESSAGE_ID_1 = FailedMessageId.newFailedMessageId();
     private static final FailedMessageId FAILED_MESSAGE_ID_2 = FailedMessageId.newFailedMessageId();

@@ -1,6 +1,7 @@
-package uk.gov.dwp.queue.triage.web.server.list;
+package uk.gov.dwp.queue.triage.web.server.search;
 
 import uk.gov.dwp.queue.triage.core.client.search.SearchFailedMessageResponse;
+import uk.gov.dwp.queue.triage.web.server.list.FailedMessageListItem;
 
 import java.time.Instant;
 import java.time.format.DateTimeFormatter;
