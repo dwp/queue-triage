@@ -2,11 +2,15 @@ package uk.gov.dwp.queue.triage.core.search.mongo;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
+import com.mongodb.QueryOperators;
 import uk.gov.dwp.queue.triage.core.client.search.SearchFailedMessageRequest;
 import uk.gov.dwp.queue.triage.core.dao.mongo.MongoStatusHistoryQueryBuilder;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Pattern;
 
+import static uk.gov.dwp.queue.triage.core.client.search.SearchFailedMessageRequest.Operator.AND;
 import static uk.gov.dwp.queue.triage.core.dao.mongo.DestinationDBObjectConverter.BROKER_NAME;
 import static uk.gov.dwp.queue.triage.core.dao.mongo.DestinationDBObjectConverter.NAME;
 import static uk.gov.dwp.queue.triage.core.dao.mongo.FailedMessageConverter.CONTENT;
@@ -29,9 +33,14 @@ public class MongoSearchRequestAdapter {
         } else {
             query = mongoStatusHistoryQueryBuilder.currentStatusNotEqualTo(DELETED);
         }
-        request.getBroker().ifPresent(broker -> query.append(DESTINATION + "." + BROKER_NAME, broker));
-        request.getDestination().ifPresent(destination -> query.append(DESTINATION + "." + NAME, destination));
-        request.getContent().ifPresent(content -> query.append(CONTENT, Pattern.compile(content)));
+        List<BasicDBObject> predicates = new ArrayList<>();
+
+        request.getBroker().ifPresent(broker -> predicates.add(new BasicDBObject(DESTINATION + "." + BROKER_NAME, broker)));
+        request.getDestination().ifPresent(destination -> predicates.add(new BasicDBObject(DESTINATION + "." + NAME, destination)));
+        request.getContent().ifPresent(content -> predicates.add(new BasicDBObject(CONTENT, Pattern.compile(content))));
+        if (predicates.size() > 0) {
+            query.append(request.getOperator() == AND ? QueryOperators.AND : QueryOperators.OR, predicates);
+        }
         return query;
     }
 }

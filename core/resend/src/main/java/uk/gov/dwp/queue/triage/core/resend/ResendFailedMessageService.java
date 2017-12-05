@@ -9,7 +9,7 @@ import uk.gov.dwp.queue.triage.core.search.FailedMessageSearchService;
 import java.util.function.Predicate;
 
 import static uk.gov.dwp.queue.triage.core.client.FailedMessageStatus.RESENDING;
-import static uk.gov.dwp.queue.triage.core.client.search.SearchFailedMessageRequest.newSearchFailedMessageRequest;
+import static uk.gov.dwp.queue.triage.core.client.search.SearchFailedMessageRequest.searchMatchingAllCriteria;
 
 public class ResendFailedMessageService {
 
@@ -33,7 +33,7 @@ public class ResendFailedMessageService {
     public void resendMessages() {
         LOGGER.debug("Resending FailedMessages to: {}", brokerName);
         failedMessageSearchService
-                .search(newSearchFailedMessageRequest()
+                .search(searchMatchingAllCriteria()
                         .withBroker(brokerName)
                         .withStatus(RESENDING)
                         .build())

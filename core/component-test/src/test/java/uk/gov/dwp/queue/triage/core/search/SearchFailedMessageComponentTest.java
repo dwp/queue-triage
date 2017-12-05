@@ -13,10 +13,10 @@ import uk.gov.dwp.queue.triage.jgiven.ReflectionArgumentFormatter;
 
 import java.util.Arrays;
 
-import static javax.ws.rs.core.Response.Status.BAD_REQUEST;
 import static org.hamcrest.Matchers.equalTo;
 import static uk.gov.dwp.queue.triage.core.client.CreateFailedMessageRequest.newCreateFailedMessageRequest;
-import static uk.gov.dwp.queue.triage.core.client.search.SearchFailedMessageRequest.newSearchFailedMessageRequest;
+import static uk.gov.dwp.queue.triage.core.client.search.SearchFailedMessageRequest.searchMatchingAllCriteria;
+import static uk.gov.dwp.queue.triage.core.client.search.SearchFailedMessageRequest.searchMatchingAnyCriteria;
 import static uk.gov.dwp.queue.triage.core.domain.SearchFailedMessageResponseMatcher.aFailedMessage;
 import static uk.gov.dwp.queue.triage.core.search.SearchFailedMessageStage.noResults;
 
@@ -28,14 +28,14 @@ public class SearchFailedMessageComponentTest extends BaseCoreComponentTest<Sear
     @Test
     public void searchByBrokerResultsNoResultsWhenNoFailedMessagesExist() throws Exception {
 
-        when().aSearchIsRequested(newSearchFailedMessageRequest()
+        when().aSearchIsRequested(searchMatchingAllCriteria()
                 .withBroker("broker-name"));
 
         then().theSearchResultsContain(noResults());
     }
 
     @Test
-    public void searchByBrokerAndByQueue() {
+    public void searchByBrokerAndByQueueWhenAllCriteriaNeedsBeToMatched() {
         FailedMessageId failedMessageId = FailedMessageId.newFailedMessageId();
         failedMessageResourceStage.given().aFailedMessage(newCreateFailedMessageRequest()
                 .withFailedMessageId(failedMessageId)
@@ -43,14 +43,14 @@ public class SearchFailedMessageComponentTest extends BaseCoreComponentTest<Sear
                 .withDestinationName("queue-name"))
                 .exists();
 
-        when().aSearchIsRequested(newSearchFailedMessageRequest()
+        when().aSearchIsRequested(searchMatchingAllCriteria()
                 .withBroker("broker-name")
                 .withDestination("another-queue")
         );
 
         then().theSearchResultsContain(noResults());
 
-        when().aSearchIsRequested(newSearchFailedMessageRequest()
+        when().aSearchIsRequested(searchMatchingAllCriteria()
                 .withBroker("broker-name")
                 .withDestination("queue-name")
         );
@@ -61,7 +61,40 @@ public class SearchFailedMessageComponentTest extends BaseCoreComponentTest<Sear
     }
 
     @Test
-    public void searchByMessageContent() {
+    public void searchByBrokerAndByQueueWhenAnyCriteriaCanBeMatched() {
+        FailedMessageId failedMessageId = FailedMessageId.newFailedMessageId();
+        FailedMessageId anotherFailedMessageId = FailedMessageId.newFailedMessageId();
+        failedMessageResourceStage.given().aFailedMessage(newCreateFailedMessageRequest()
+                .withFailedMessageId(failedMessageId)
+                .withBrokerName("broker-name")
+                .withDestinationName("queue-name"))
+                .exists();
+        failedMessageResourceStage.given().aFailedMessage(newCreateFailedMessageRequest()
+                .withFailedMessageId(anotherFailedMessageId)
+                .withBrokerName("another-broker")
+                .withDestinationName("queue-name"))
+                .exists();
+
+        when().aSearchIsRequested(searchMatchingAnyCriteria()
+                .withBroker("some-broker")
+                .withDestination("another-queue")
+        );
+
+        then().theSearchResultsContain(noResults());
+
+        when().aSearchIsRequested(searchMatchingAnyCriteria()
+                .withBroker("broker-name")
+                .withDestination("queue-name")
+        );
+
+        then().theSearchResultsContain(contains(
+                aFailedMessage().withFailedMessageId(equalTo(failedMessageId)),
+                aFailedMessage().withFailedMessageId(equalTo(anotherFailedMessageId))
+        ));
+    }
+
+    @Test
+    public void searchByMessageContentMatchesTextAnywhere() {
         FailedMessageId failedMessageId = FailedMessageId.newFailedMessageId();
         failedMessageResourceStage.given().aFailedMessage(newCreateFailedMessageRequest()
                 .withFailedMessageId(failedMessageId)
@@ -70,7 +103,7 @@ public class SearchFailedMessageComponentTest extends BaseCoreComponentTest<Sear
                 .withContent("Bodger and Badger")
                 .exists();
 
-        when().aSearchIsRequested(newSearchFailedMessageRequest()
+        when().aSearchIsRequested(searchMatchingAllCriteria()
                 .withContent("and")
         );
 
@@ -78,7 +111,7 @@ public class SearchFailedMessageComponentTest extends BaseCoreComponentTest<Sear
                 aFailedMessage()
                         .withFailedMessageId(equalTo(failedMessageId))));
 
-        when().aSearchIsRequested(newSearchFailedMessageRequest()
+        when().aSearchIsRequested(searchMatchingAllCriteria()
                 .withContent("Bananas")
         );
 

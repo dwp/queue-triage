@@ -12,7 +12,7 @@ import java.util.Optional;
 import static javax.ws.rs.core.Response.Status.NOT_FOUND;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.equalTo;
-import static uk.gov.dwp.queue.triage.core.client.search.SearchFailedMessageRequest.newSearchFailedMessageRequest;
+import static uk.gov.dwp.queue.triage.core.client.search.SearchFailedMessageRequest.searchMatchingAllCriteria;
 import static uk.gov.dwp.queue.triage.core.domain.SearchFailedMessageResponseMatcher.aFailedMessage;
 
 public class FailedMessageListenerAdminComponentTest extends BaseCoreComponentTest<FailedMessageListenerAdminStage> {
@@ -32,14 +32,14 @@ public class FailedMessageListenerAdminComponentTest extends BaseCoreComponentTe
         jmsStage.when().aMessageWithContent$IsSentTo$OnBroker$("poison", "some-queue", "internal-broker");
 
         searchFailedMessageStage.then().aSearch$WillContain$(
-                newSearchFailedMessageRequest().withBroker("internal-broker"),
+                searchMatchingAllCriteria().withBroker("internal-broker"),
                 Matchers.emptyIterable()
         );
         when().aRequestIsMadeToStartTheMessageListenerForBroker$("internal-broker");
 
         then().theMessageListenerFor$Is$Running("internal-broker", true);
         searchFailedMessageStage.then().aSearch$WillContain$(
-                newSearchFailedMessageRequest().withBroker("internal-broker"),
+                searchMatchingAllCriteria().withBroker("internal-broker"),
                 contains(aFailedMessage()
                         .withBroker(equalTo("internal-broker"))
                         .withDestination(equalTo(Optional.of("some-queue")))

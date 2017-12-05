@@ -15,16 +15,14 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.isA;
+import static uk.gov.dwp.queue.triage.web.server.list.SearchW2UIRequestTest.CriteriaMatcher.criteria;
 import static uk.gov.dwp.queue.triage.web.server.search.SearchW2UIRequest.Criteria.Field.BROKER;
 import static uk.gov.dwp.queue.triage.web.server.search.SearchW2UIRequest.Criteria.Field.CONTENT;
 import static uk.gov.dwp.queue.triage.web.server.search.SearchW2UIRequest.Criteria.Field.DESTINATION;
-import static uk.gov.dwp.queue.triage.web.server.search.SearchW2UIRequest.Criteria.Field.LABELS;
 import static uk.gov.dwp.queue.triage.web.server.search.SearchW2UIRequest.Criteria.Operator.BEGINS;
 import static uk.gov.dwp.queue.triage.web.server.search.SearchW2UIRequest.Criteria.Operator.CONTAINS;
 import static uk.gov.dwp.queue.triage.web.server.search.SearchW2UIRequest.Criteria.Operator.ENDS;
-import static uk.gov.dwp.queue.triage.web.server.search.SearchW2UIRequest.Criteria.Operator.IS;
 import static uk.gov.dwp.queue.triage.web.server.search.SearchW2UIRequest.Logic.OR;
-import static uk.gov.dwp.queue.triage.web.server.list.SearchW2UIRequestTest.CriteriaMatcher.criteria;
 
 public class SearchW2UIRequestTest {
 
@@ -51,16 +49,10 @@ public class SearchW2UIRequestTest {
                 "      \"value\": \"ipsum\"\n" +
                 "    },\n" +
                 "    {\n" +
-                "      \"field\": \"labels\",\n" +
+                "      \"field\": \"content\",\n" +
                 "      \"type\": \"text\",\n" +
                 "      \"operator\": \"ends\",\n" +
                 "      \"value\": \"dolor\"\n" +
-                "    },\n" +
-                "    {\n" +
-                "      \"field\": \"content\",\n" +
-                "      \"type\": \"text\",\n" +
-                "      \"operator\": \"is\",\n" +
-                "      \"value\": \"sit\"\n" +
                 "    }\n" +
                 "  ],\n" +
                 "  \"searchLogic\": \"OR\"\n" +
@@ -70,15 +62,13 @@ public class SearchW2UIRequestTest {
         assertThat(searchW2UIRequest.getSearchCriteria(), contains(
                 criteria().withField(BROKER).withOperator(BEGINS).withValue("Lorem"),
                 criteria().withField(DESTINATION).withOperator(CONTAINS).withValue("ipsum"),
-                criteria().withField(LABELS).withOperator(ENDS).withValue("dolor"),
-                criteria().withField(CONTENT).withOperator(IS).withValue("sit")
+                criteria().withField(CONTENT).withOperator(ENDS).withValue("dolor")
         ));
     }
 
     public static class CriteriaMatcher extends TypeSafeMatcher<Criteria> {
 
         private Matcher<Field> field = isA(Field.class);
-        private Matcher<String> type = equalTo("text");
         private Matcher<Operator> operator = isA(Operator.class);
         private Matcher<String> value = isA(String.class);
 
@@ -91,11 +81,6 @@ public class SearchW2UIRequestTest {
 
         public CriteriaMatcher withField(Field field) {
             this.field = equalTo(field);
-            return this;
-        }
-
-        public CriteriaMatcher withType(String type) {
-            this.type = equalTo(type);
             return this;
         }
 
@@ -112,7 +97,6 @@ public class SearchW2UIRequestTest {
         @Override
         protected boolean matchesSafely(Criteria criteria) {
             return field.matches(criteria.getField()) &&
-                    type.matches(criteria.getType()) &&
                     operator.matches(criteria.getOperator()) &&
                     value.matches(criteria.getValue())
                     ;
@@ -122,7 +106,6 @@ public class SearchW2UIRequestTest {
         public void describeTo(Description description) {
             description
                     .appendText("field ").appendDescriptionOf(field)
-                    .appendText(" type ").appendDescriptionOf(type)
                     .appendText(" operator ").appendDescriptionOf(operator)
                     .appendText(" value ").appendDescriptionOf(value)
                     ;

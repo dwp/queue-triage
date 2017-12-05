@@ -15,7 +15,7 @@ import java.util.Arrays;
 import java.util.Optional;
 
 import static org.hamcrest.Matchers.equalTo;
-import static uk.gov.dwp.queue.triage.core.client.search.SearchFailedMessageRequest.newSearchFailedMessageRequest;
+import static uk.gov.dwp.queue.triage.core.client.search.SearchFailedMessageRequest.searchMatchingAllCriteria;
 import static uk.gov.dwp.queue.triage.core.domain.SearchFailedMessageResponseMatcher.aFailedMessage;
 
 public class FailedMessageListenerComponentTest extends BaseCoreComponentTest<JmsStage> {
@@ -32,7 +32,7 @@ public class FailedMessageListenerComponentTest extends BaseCoreComponentTest<Jm
         when().and().aMessageWithContent$IsSentTo$OnBroker$("elixir", "some-queue", "internal-broker");
 
         searchFailedMessageStage.then().aSearch$WillContain$(
-                newSearchFailedMessageRequest().withBroker("internal-broker"),
+                searchMatchingAllCriteria().withBroker("internal-broker"),
                 contains(aFailedMessage()
                         .withBroker(equalTo("internal-broker"))
                         .withDestination(equalTo(Optional.of("some-queue")))

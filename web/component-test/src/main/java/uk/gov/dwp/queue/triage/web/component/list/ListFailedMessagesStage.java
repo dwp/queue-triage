@@ -5,6 +5,8 @@ import com.tngtech.jgiven.Stage;
 import com.tngtech.jgiven.annotation.ProvidedScenarioState;
 import com.tngtech.jgiven.integration.spring.JGivenStage;
 import org.mockito.Mockito;
+import org.mockito.hamcrest.MockitoHamcrest;
+import org.mockito.internal.hamcrest.HamcrestArgumentMatcher;
 import org.openqa.selenium.By;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,6 +16,7 @@ import uk.gov.dwp.queue.triage.core.client.SearchFailedMessageClient;
 import uk.gov.dwp.queue.triage.core.client.search.SearchFailedMessageRequest;
 import uk.gov.dwp.queue.triage.core.client.search.SearchFailedMessageResponse;
 import uk.gov.dwp.queue.triage.core.client.search.SearchFailedMessageResponse.SearchFailedMessageResponseBuilder;
+import uk.gov.dwp.queue.triage.core.domain.SearchFailedMessageRequestMatcher;
 import uk.gov.dwp.queue.triage.id.FailedMessageId;
 
 import java.util.Arrays;
@@ -64,6 +67,13 @@ public class ListFailedMessagesStage extends Stage<ListFailedMessagesStage> {
         return this;
     }
 
+    public ListFailedMessagesStage queueTriageCoreWillRespondTo(SearchFailedMessageRequestMatcher searchFailedMessageRequestMatcher,
+                                                                SearchFailedMessageResponse... failedMessages) {
+        Mockito.when(searchFailedMessageClient.search(MockitoHamcrest.argThat(searchFailedMessageRequestMatcher)))
+                .thenReturn(Arrays.asList(failedMessages));
+        return this;
+    }
+
     public ListFailedMessagesStage theUserHasNavigatedToTheFailedMessagesPage() {
         return theUserNavigatesToTheFailedMessagesPage();
     }
@@ -71,18 +81,6 @@ public class ListFailedMessagesStage extends Stage<ListFailedMessagesStage> {
     public ListFailedMessagesStage theUserNavigatesToTheFailedMessagesPage() {
         LOGGER.debug("Opening the ListFailedMessagePage");
         ListFailedMessagesPage.openListFailedMessagePage(environment);
-        return this;
-    }
-
-    public ListFailedMessagesStage theMessageListIsEmpty() {
-        LOGGER.debug("Asserting the MessageList is empty");
-        Selenide.$$(By.cssSelector("tr[recid]")).shouldHave(size(0));
-        return this;
-    }
-
-    public ListFailedMessagesStage theMessageListContainsAFailedMessageWithId(FailedMessageId failedMessageId) throws InterruptedException {
-        LOGGER.debug("Asserting FailedMessageId: {} is in the MessageList", failedMessageId);
-        Selenide.$(By.cssSelector("tr[recid='" + failedMessageId.toString() + "']")).should(exist);
         return this;
     }
 

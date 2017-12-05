@@ -7,21 +7,36 @@ import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
+import static org.apache.commons.lang3.builder.ToStringBuilder.reflectionToString;
+import static uk.gov.dwp.queue.triage.core.client.search.SearchFailedMessageRequest.Operator.AND;
+import static uk.gov.dwp.queue.triage.core.client.search.SearchFailedMessageRequest.Operator.OR;
+
 public class SearchFailedMessageRequest {
 
     private final Optional<String> broker;
     private final Optional<String> destination;
     private final Set<FailedMessageStatus> statuses;
     private final Optional<String> content;
+    private final Operator operator;
+
+    public static SearchFailedMessageRequestBuilder searchMatchingAllCriteria() {
+        return new SearchFailedMessageRequestBuilder(AND);
+    }
+
+    public static SearchFailedMessageRequestBuilder searchMatchingAnyCriteria() {
+        return new SearchFailedMessageRequestBuilder(OR);
+    }
 
     private SearchFailedMessageRequest(@JsonProperty("broker") Optional<String> broker,
                                        @JsonProperty("destination") Optional<String> destination,
                                        @JsonProperty("statuses") Set<FailedMessageStatus> statuses,
-                                       @JsonProperty("content") Optional<String> content) {
+                                       @JsonProperty("content") Optional<String> content,
+                                       @JsonProperty("operator") Operator operator) {
         this.broker = broker;
         this.destination = destination;
         this.statuses = statuses;
         this.content = content;
+        this.operator = operator;
     }
 
     public Optional<String> getBroker() {
@@ -40,8 +55,17 @@ public class SearchFailedMessageRequest {
         return content;
     }
 
-    public static SearchFailedMessageRequestBuilder newSearchFailedMessageRequest() {
-        return new SearchFailedMessageRequestBuilder();
+    public Operator getOperator() {
+        return operator;
+    }
+
+    @Override
+    public String toString() {
+        return reflectionToString(this);
+    }
+
+    public enum Operator {
+        AND, OR
     }
 
     public static class SearchFailedMessageRequestBuilder {
@@ -50,8 +74,11 @@ public class SearchFailedMessageRequest {
         private Optional<String> destination = Optional.empty();
         private Set<FailedMessageStatus> statuses = new HashSet<>();
         private Optional<String> content = Optional.empty();
+        private Operator operator;
 
-        private SearchFailedMessageRequestBuilder() {}
+        private SearchFailedMessageRequestBuilder(Operator operator) {
+            this.operator = operator;
+        }
 
         public SearchFailedMessageRequestBuilder withBroker(String broker) {
             this.broker = Optional.ofNullable(broker);
@@ -89,7 +116,7 @@ public class SearchFailedMessageRequest {
         }
 
         public SearchFailedMessageRequest build() {
-            return new SearchFailedMessageRequest(broker, destination, statuses, content);
+            return new SearchFailedMessageRequest(broker, destination, statuses, content, operator);
         }
     }
 }

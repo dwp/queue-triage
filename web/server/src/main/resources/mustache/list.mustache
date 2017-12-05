@@ -25,19 +25,20 @@
             show: {
                 selectColumn: true,
                 toolbar: true,
-                toolbarSearch: true,
+                toolbarSearch: false,
                 toolbarDelete: true,
                 toolbarSave: true
             },
             multiSearch: true,
+            textSearch: 'contains',
             columns: [
                 { field: 'recid', caption: 'Failed Message Id', size: '220px', sortable: true },
                 { field: 'broker', caption: 'Broker', size: '10%', sortable: true, searchable: true },
                 { field: 'destination', caption: 'Queue', size: '10%', sortable: true, searchable: true },
                 { field: 'sentDateTime', caption: 'Originally Sent', size: '160px', sortable: true },
                 { field: 'failedDateTime', caption: 'Failed', size: '160px', sortable: true },
-                { field: 'labels', caption: 'Labels', size: '20%', editable: { type: 'text' }, searchable: true },
-                { field: 'content', caption: 'Content', size: '80%', sortable: true, searchable: true },
+                { field: 'labels', caption: 'Labels', size: '20%', editable: { type: 'text' } },
+                { field: 'content', caption: 'Content', size: '80%', sortable: true, searchable: true }
             ],
             onSelect: function(event) {
                 event.onComplete = function() {
