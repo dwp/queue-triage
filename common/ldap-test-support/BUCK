@@ -13,3 +13,10 @@ java_library(
         "PUBLIC"
     ],
 )
+
+genrule(
+    name = "start",
+    cmd = "java -cp $(classpath :queue-triage-ldap-test-support) uk.gov.dwp.queue.triage.ldap.InMemoryDirectoryServerFactory > $OUT",
+    out = "startMicroservice.log",
+    executable = True,
+)
