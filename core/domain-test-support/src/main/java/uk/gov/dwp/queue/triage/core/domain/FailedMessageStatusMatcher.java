@@ -44,7 +44,7 @@ public class FailedMessageStatusMatcher extends TypeSafeMatcher<FailedMessageSta
     @Override
     public void describeTo(Description description) {
         description
-                .appendText("status is").appendValue(status)
-                .appendText("updatedDateTime is").appendDescriptionOf(updatedDateTimeMatcher);
+                .appendText("status is ").appendValue(status)
+                .appendText(" updatedDateTime is ").appendDescriptionOf(updatedDateTimeMatcher);
     }
 }

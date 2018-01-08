@@ -12,6 +12,7 @@ mongo --username=${MONGO_ADMIN_USER} \
       --password=${MONGO_ADMIN_PASSWORD} \
       --authenticationDatabase=${MONGO_ADMIN_DB} \
       ${MONGO_DB_ADDRESS} <<!
+db.dropRole("failedMessageReadOnly")
 db.createRole({
   role: "failedMessageReadOnly",
     privileges: [
@@ -19,6 +20,7 @@ db.createRole({
     ],
     roles: []
 })
+db.dropRole("failedMessageReadWrite")
 db.createRole({
   role: "failedMessageReadWrite",
   privileges: [

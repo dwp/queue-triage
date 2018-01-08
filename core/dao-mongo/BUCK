@@ -63,6 +63,7 @@ java_test(
         '//lib/hibernate-validator:hibernate-validator',
         '//lib/javax:javax-ws-rs-api',
         '//lib/mongo:mongodb-driver',
+        '//lib/slf4j:slf4j-simple',
         '//lib/spring:spring-boot-test',
         '//lib/spring:spring-boot-with-dependencies',
         '//lib/spring:spring-test',
