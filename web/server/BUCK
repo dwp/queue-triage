@@ -29,6 +29,7 @@ java_library(
         '//lib:snakeyaml',
         '//lib/apache-cxf:cxf-rt-rs-client',
         '//lib/apache-cxf:cxf-rt-transports-http',
+        "//lib/hibernate-validator:hibernate-validator",
         '//lib/jackson:jackson-annotations',
         '//lib/jackson:jackson-jaxrs-json-provider',
         '//lib/javax:javax-servlet-api',
@@ -61,15 +62,8 @@ java_test(
     ]
 )
 
-cmd=[
-    "echo $(classpath :queue-triage-web-server)",
-    "&&",
-    "java -cp $(classpath :queue-triage-web-server) uk.gov.dwp.queue.triage.web.server.QueueTriageWebApplication > $OUT",
-]
-
 genrule(
-name="start",
-cmd="".join(cmd),
-out="startMicroservice.log",
-executable=True,
+    name = "start-script",
+    cmd  = "echo 'java -cp $(classpath :queue-triage-web-server) uk.gov.dwp.queue.triage.web.server.QueueTriageWebApplication' > $OUT && chmod u+x $OUT",
+    out  = "start-web.sh",
 )

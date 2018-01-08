@@ -28,14 +28,14 @@ buck test //...
 To run the `queue-triage-core-server` from the command line run:
 
 ```bash
-buck run start-core
+./start.sh core
 ```
 
 To run the `queue-triage-web-server` from the command line run:
 
 ```bash
-buck run start-ldap
-buck run start-web
+./start.sh ldap
+./start.sh web
 ```
 
 ### Troubleshooting

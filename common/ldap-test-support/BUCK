@@ -15,8 +15,7 @@ java_library(
 )
 
 genrule(
-    name = "start",
-    cmd = "java -cp $(classpath :queue-triage-ldap-test-support) uk.gov.dwp.queue.triage.ldap.InMemoryDirectoryServerFactory > $OUT",
-    out = "startMicroservice.log",
-    executable = True,
+    name = "start-script",
+    cmd  = "echo 'java -cp $(classpath :queue-triage-ldap-test-support) uk.gov.dwp.queue.triage.ldap.InMemoryDirectoryServerFactory' > $OUT && chmod u+x $OUT",
+    out  = "start-ldap.sh",
 )
