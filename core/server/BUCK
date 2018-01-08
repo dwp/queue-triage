@@ -78,19 +78,10 @@ java_test(
     ],
 )
 
-mainClass="uk.gov.dwp.queue.triage.core.QueueTriageCoreApplication"
-
-cmd=[
-    "echo $(classpath :queue-triage-core-server)",
-    "&&",
-    "java -cp $(classpath :queue-triage-core-server) uk.gov.dwp.queue.triage.core.QueueTriageCoreApplication > $OUT",
-]
-
 genrule(
-name="start",
-cmd="".join(cmd),
-out="startMicroservice.log",
-executable=True,
+    name = "start-script",
+    cmd  = "echo 'java -cp $(classpath :queue-triage-core-server) uk.gov.dwp.queue.triage.core.QueueTriageCoreApplication' > $OUT && chmod u+x $OUT",
+    out  = "start-core.sh",
 )
 
 # buck build //core/server:generate-swagger-output

@@ -48,11 +48,11 @@ public class FailedMessageMongoDao implements FailedMessageDao {
 
     @Override
     public void insert(FailedMessage failedMessage) {
-        WriteResult writeResult = collection.insert(
+        collection.insert(
                 WriteConcern.ACKNOWLEDGED,
                 failedMessageConverter.convertFromObject(failedMessage)
         );
-        LOGGER.debug("{} rows inserted", writeResult.getN());
+        LOGGER.debug("1 row inserted with Id: {}", failedMessage.getFailedMessageId());
     }
 
     @Override

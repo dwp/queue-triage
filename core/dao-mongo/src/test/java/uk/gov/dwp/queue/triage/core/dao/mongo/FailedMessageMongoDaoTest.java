@@ -126,7 +126,7 @@ public class FailedMessageMongoDaoTest extends AbstractMongoDaoTest {
     }
 
     @Test
-    public void updateStatus() throws Exception {
+    public void updateStatus() {
         underTest.insert(failedMessageBuilder.build());
         underTest.updateStatus(failedMessageId, failedMessageStatus(RESEND));
 
@@ -137,12 +137,12 @@ public class FailedMessageMongoDaoTest extends AbstractMongoDaoTest {
     }
 
     @Test
-    public void removeOnAnEmptyCollection() throws Exception {
+    public void removeOnAnEmptyCollection() {
         assertThat(underTest.removeFailedMessages(), is(0));
     }
 
     @Test
-    public void removeWhenNoEligibleRecords() throws Exception {
+    public void removeWhenNoEligibleRecords() {
         underTest.insert(newFailedMessageWithStatus(FAILED, EIGHT_DAYS_AGO));
         underTest.insert(newFailedMessageWithStatus(RESEND, EIGHT_DAYS_AGO));
         underTest.insert(newFailedMessageWithStatus(SENT, EIGHT_DAYS_AGO));
@@ -152,7 +152,7 @@ public class FailedMessageMongoDaoTest extends AbstractMongoDaoTest {
     }
 
     @Test
-    public void successfullyRemoveDeletedRecordsMoreThan7DaysOld() throws Exception {
+    public void successfullyRemoveDeletedRecordsMoreThan7DaysOld() {
         underTest.insert(newFailedMessageWithStatus(FAILED, EIGHT_DAYS_AGO));
         underTest.insert(newFailedMessageWithStatus(RESEND, EIGHT_DAYS_AGO));
         underTest.insert(newFailedMessageWithStatus(SENT, EIGHT_DAYS_AGO));
