@@ -3,7 +3,7 @@ package uk.gov.dwp.queue.triage.core.resource.resend;
 import org.hamcrest.Matchers;
 import org.junit.Test;
 import org.mockito.internal.hamcrest.HamcrestArgumentMatcher;
-import uk.gov.dwp.queue.triage.core.domain.FailedMessageStatusMatcher;
+import uk.gov.dwp.queue.triage.core.domain.StatusHistoryEventMatcher;
 import uk.gov.dwp.queue.triage.core.service.FailedMessageService;
 import uk.gov.dwp.queue.triage.id.FailedMessageId;
 
@@ -17,7 +17,7 @@ import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
-import static uk.gov.dwp.queue.triage.core.domain.FailedMessageStatus.Status.RESEND;
+import static uk.gov.dwp.queue.triage.core.domain.StatusHistoryEvent.Status.RESEND;
 
 public class ResendFailedMessageResourceTest {
 
@@ -41,7 +41,7 @@ public class ResendFailedMessageResourceTest {
 
         verify(failedMessageService).updateStatus(
                 eq(FAILED_MESSAGE_ID),
-                argThat(new HamcrestArgumentMatcher<>(FailedMessageStatusMatcher.equalTo(RESEND)
+                argThat(new HamcrestArgumentMatcher<>(StatusHistoryEventMatcher.equalTo(RESEND)
                         .withUpdatedDateTime(Matchers.equalTo(NOW.plus(100,  SECONDS))))));
     }
 }

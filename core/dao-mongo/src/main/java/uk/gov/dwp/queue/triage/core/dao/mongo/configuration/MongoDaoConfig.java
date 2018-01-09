@@ -1,9 +1,7 @@
 package uk.gov.dwp.queue.triage.core.dao.mongo.configuration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.mongodb.AuthenticationMechanism;
 import com.mongodb.MongoClient;
-import com.mongodb.MongoClientOptions;
 import com.mongodb.MongoCredential;
 import com.mongodb.ServerAddress;
 import org.bson.BSON;
@@ -22,15 +20,13 @@ import uk.gov.dwp.queue.triage.core.dao.mongo.FailedMessageConverter;
 import uk.gov.dwp.queue.triage.core.dao.mongo.FailedMessageMongoDao;
 import uk.gov.dwp.queue.triage.core.dao.mongo.FailedMessageStatusDBObjectConverter;
 import uk.gov.dwp.queue.triage.core.dao.mongo.RemoveRecordsQueryFactory;
-import uk.gov.dwp.queue.triage.core.dao.mongo.configuration.MongoDaoProperties.Collection;
 import uk.gov.dwp.queue.triage.core.domain.Destination;
-import uk.gov.dwp.queue.triage.core.domain.FailedMessageStatus;
+import uk.gov.dwp.queue.triage.core.domain.StatusHistoryEvent;
 import uk.gov.dwp.queue.triage.id.Id;
 import uk.gov.dwp.queue.triage.jackson.configuration.JacksonConfiguration;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -91,7 +87,7 @@ public class MongoDaoConfig {
     public FailedMessageDao failedMessageDao(MongoClient mongoClient,
                                              MongoDaoProperties mongoDaoProperties,
                                              FailedMessageConverter failedMessageConverter,
-                                             DBObjectConverter<FailedMessageStatus> failedMessageStatusDBObjectConverter) {
+                                             DBObjectConverter<StatusHistoryEvent> failedMessageStatusDBObjectConverter) {
         return new FailedMessageMongoDao(
                 mongoClient.getDB(mongoDaoProperties.getDbName()).getCollection(mongoDaoProperties.getFailedMessage().getName()),
                 failedMessageConverter,
@@ -100,7 +96,7 @@ public class MongoDaoConfig {
 
     @Bean
     public FailedMessageConverter failedMessageConverter(DBObjectConverter<Destination> destinationDBObjectConverter,
-                                                         DBObjectConverter<FailedMessageStatus> failedMessageStatusDBObjectConverter,
+                                                         DBObjectConverter<StatusHistoryEvent> failedMessageStatusDBObjectConverter,
                                                          ObjectConverter<Map<String, Object>, String> propertiesObjectConverter) {
         return new FailedMessageConverter(destinationDBObjectConverter, failedMessageStatusDBObjectConverter, propertiesObjectConverter);
     }

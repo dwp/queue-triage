@@ -13,9 +13,9 @@ import static org.hamcrest.Matchers.is;
 import static uk.gov.dwp.queue.triage.core.dao.mongo.DBObjectMatcher.hasField;
 import static uk.gov.dwp.queue.triage.core.dao.mongo.FailedMessageConverter.STATUS_HISTORY;
 import static uk.gov.dwp.queue.triage.core.dao.mongo.FailedMessageStatusDBObjectConverter.STATUS;
-import static uk.gov.dwp.queue.triage.core.domain.FailedMessageStatus.Status.CLASSIFIED;
-import static uk.gov.dwp.queue.triage.core.domain.FailedMessageStatus.Status.DELETED;
-import static uk.gov.dwp.queue.triage.core.domain.FailedMessageStatus.Status.FAILED;
+import static uk.gov.dwp.queue.triage.core.domain.StatusHistoryEvent.Status.CLASSIFIED;
+import static uk.gov.dwp.queue.triage.core.domain.StatusHistoryEvent.Status.DELETED;
+import static uk.gov.dwp.queue.triage.core.domain.StatusHistoryEvent.Status.FAILED;
 
 public class MongoStatusHistoryQueryBuilderTest {
 

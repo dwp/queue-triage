@@ -9,7 +9,7 @@ import uk.gov.dwp.queue.triage.id.FailedMessageId;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static uk.gov.dwp.queue.triage.core.domain.FailedMessageStatus.Status.SENT;
+import static uk.gov.dwp.queue.triage.core.domain.StatusHistoryEvent.Status.SENT;
 
 public class FailedMessageSenderTest {
 

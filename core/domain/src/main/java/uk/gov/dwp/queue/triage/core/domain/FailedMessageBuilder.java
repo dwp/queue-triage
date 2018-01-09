@@ -1,6 +1,6 @@
 package uk.gov.dwp.queue.triage.core.domain;
 
-import uk.gov.dwp.queue.triage.core.domain.FailedMessageStatus.Status;
+import uk.gov.dwp.queue.triage.core.domain.StatusHistoryEvent.Status;
 import uk.gov.dwp.queue.triage.id.FailedMessageId;
 
 import java.time.Instant;
@@ -17,7 +17,7 @@ public class FailedMessageBuilder {
     private Instant failedDateTime;
     private String content;
     private Map<String, Object> properties = new HashMap<>();
-    private FailedMessageStatus failedMessageStatus;
+    private StatusHistoryEvent statusHistoryEvent;
     private Set<String> labels = new HashSet<>();
 
     private FailedMessageBuilder() {
@@ -25,7 +25,7 @@ public class FailedMessageBuilder {
 
     public static FailedMessageBuilder newFailedMessage() {
         return new FailedMessageBuilder()
-                .withFailedMessageStatus(Status.FAILED);
+                .withStatusHistoryEvent(Status.FAILED);
     }
 
     public static FailedMessageBuilder clone(FailedMessage failedMessage) {
@@ -36,12 +36,12 @@ public class FailedMessageBuilder {
                 .withFailedDateTime(failedMessage.getFailedAt())
                 .withContent(failedMessage.getContent())
                 .withProperties(failedMessage.getProperties())
-                .withFailedMessageStatus(failedMessage.getFailedMessageStatus())
+                .withStatusHistoryEvent(failedMessage.getStatusHistoryEvent())
                 .withLabels(failedMessage.getLabels());
     }
 
     public FailedMessage build() {
-        return new FailedMessage(failedMessageId, destination, sentDateTime, failedDateTime, content, properties, failedMessageStatus, labels);
+        return new FailedMessage(failedMessageId, destination, sentDateTime, failedDateTime, content, properties, statusHistoryEvent, labels);
     }
 
     public FailedMessageBuilder withNewFailedMessageId() {
@@ -84,13 +84,13 @@ public class FailedMessageBuilder {
         return this;
     }
 
-    public FailedMessageBuilder withFailedMessageStatus(Status status) {
-        this.failedMessageStatus = FailedMessageStatus.failedMessageStatus(status);
+    public FailedMessageBuilder withStatusHistoryEvent(Status status) {
+        this.statusHistoryEvent = StatusHistoryEvent.statusHistoryEvent(status);
         return this;
     }
 
-    public FailedMessageBuilder withFailedMessageStatus(FailedMessageStatus failedMessageStatus) {
-        this.failedMessageStatus = failedMessageStatus;
+    public FailedMessageBuilder withStatusHistoryEvent(StatusHistoryEvent statusHistoryEvent) {
+        this.statusHistoryEvent = statusHistoryEvent;
         return this;
     }
 

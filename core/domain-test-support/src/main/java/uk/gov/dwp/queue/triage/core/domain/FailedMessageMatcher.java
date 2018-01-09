@@ -8,7 +8,6 @@ import uk.gov.dwp.queue.triage.id.FailedMessageId;
 
 import java.time.Instant;
 import java.util.Map;
-import java.util.Set;
 
 import static org.hamcrest.Matchers.equalTo;
 
@@ -20,7 +19,7 @@ public class FailedMessageMatcher extends TypeSafeMatcher<FailedMessage> {
     private Matcher<Instant> sentAtMatcher = new IsAnything<>();
     private Matcher<Instant> failedAtMatcher = new IsAnything<>();
     private Matcher<Map<? extends String, ? extends Object>> propertiesMatcher = new IsAnything<>();
-    private Matcher<FailedMessageStatus> failedMessageStatusMatcher = new IsAnything<>();
+    private Matcher<StatusHistoryEvent> failedMessageStatusMatcher = new IsAnything<>();
     private Matcher<Iterable<? extends String>> labelsMatcher = new IsAnything<>();
 
     private FailedMessageMatcher() { }
@@ -69,7 +68,7 @@ public class FailedMessageMatcher extends TypeSafeMatcher<FailedMessage> {
         return this;
     }
 
-    public FailedMessageMatcher withFailedMessageStatus(Matcher<FailedMessageStatus> failedMessageStatusMatcher) {
+    public FailedMessageMatcher withFailedMessageStatus(Matcher<StatusHistoryEvent> failedMessageStatusMatcher) {
         this.failedMessageStatusMatcher = failedMessageStatusMatcher;
         return this;
     }
@@ -87,7 +86,7 @@ public class FailedMessageMatcher extends TypeSafeMatcher<FailedMessage> {
                 && sentAtMatcher.matches(item.getSentAt())
                 && failedAtMatcher.matches(item.getFailedAt())
                 && propertiesMatcher.matches(item.getProperties())
-                && failedMessageStatusMatcher.matches(item.getFailedMessageStatus())
+                && failedMessageStatusMatcher.matches(item.getStatusHistoryEvent())
                 && labelsMatcher.matches(item.getLabels())
                 ;
     }

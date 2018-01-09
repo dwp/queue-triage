@@ -20,7 +20,7 @@ public class FailedMessageResponseFactory {
                 failedMessage.getSentAt(),
                 failedMessage.getFailedAt(),
                 failedMessage.getContent(),
-                failedMessageStatusAdapter.toFailedMessageStatus(failedMessage.getFailedMessageStatus().getStatus()),
+                failedMessageStatusAdapter.toFailedMessageStatus(failedMessage.getStatusHistoryEvent().getStatus()),
                 failedMessage.getProperties(),
                 failedMessage.getLabels());
     }

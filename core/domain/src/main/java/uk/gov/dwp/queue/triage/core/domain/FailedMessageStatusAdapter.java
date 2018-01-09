@@ -4,7 +4,7 @@ import com.google.common.collect.Sets;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import uk.gov.dwp.queue.triage.core.client.FailedMessageStatus;
-import uk.gov.dwp.queue.triage.core.domain.FailedMessageStatus.Status;
+import uk.gov.dwp.queue.triage.core.domain.StatusHistoryEvent.Status;
 
 import java.util.HashMap;
 import java.util.HashSet;

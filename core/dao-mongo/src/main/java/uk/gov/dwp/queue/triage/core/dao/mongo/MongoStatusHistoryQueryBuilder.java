@@ -1,7 +1,7 @@
 package uk.gov.dwp.queue.triage.core.dao.mongo;
 
 import com.mongodb.BasicDBObject;
-import uk.gov.dwp.queue.triage.core.domain.FailedMessageStatus.Status;
+import uk.gov.dwp.queue.triage.core.domain.StatusHistoryEvent.Status;
 
 import java.util.Set;
 

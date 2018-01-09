@@ -12,8 +12,8 @@ import uk.gov.dwp.queue.triage.core.dao.ObjectConverter;
 import uk.gov.dwp.queue.triage.core.dao.mongo.configuration.MongoDaoConfig;
 import uk.gov.dwp.queue.triage.core.domain.Destination;
 import uk.gov.dwp.queue.triage.core.domain.FailedMessageBuilder;
-import uk.gov.dwp.queue.triage.core.domain.FailedMessageStatus;
-import uk.gov.dwp.queue.triage.core.domain.FailedMessageStatusMatcher;
+import uk.gov.dwp.queue.triage.core.domain.StatusHistoryEvent;
+import uk.gov.dwp.queue.triage.core.domain.StatusHistoryEventMatcher;
 import uk.gov.dwp.queue.triage.id.FailedMessageId;
 
 import java.time.Instant;
@@ -39,8 +39,8 @@ import static uk.gov.dwp.queue.triage.core.dao.mongo.FailedMessageConverter.LABE
 import static uk.gov.dwp.queue.triage.core.dao.mongo.FailedMessageConverter.PROPERTIES;
 import static uk.gov.dwp.queue.triage.core.domain.DestinationMatcher.aDestination;
 import static uk.gov.dwp.queue.triage.core.domain.FailedMessageMatcher.aFailedMessage;
-import static uk.gov.dwp.queue.triage.core.domain.FailedMessageStatus.Status.SENT;
-import static uk.gov.dwp.queue.triage.core.domain.FailedMessageStatus.failedMessageStatus;
+import static uk.gov.dwp.queue.triage.core.domain.StatusHistoryEvent.Status.SENT;
+import static uk.gov.dwp.queue.triage.core.domain.StatusHistoryEvent.statusHistoryEvent;
 import static uk.gov.dwp.queue.triage.id.FailedMessageId.newFailedMessageId;
 
 public class FailedMessageConverterTest {
@@ -55,7 +55,7 @@ public class FailedMessageConverterTest {
     }};
     private static final Destination SOME_DESTINATION = new Destination("broker", of("queue.name"));
     private static final BasicDBObject DESTINATION_DB_OBJECT = new BasicDBObject();
-    private static final FailedMessageStatus SOME_STATUS = failedMessageStatus(SENT);
+    private static final StatusHistoryEvent SOME_STATUS = statusHistoryEvent(SENT);
     private static final BasicDBObject STATUS_DB_OBJECT = new BasicDBObject();
     private static final Instant SENT_AT = Instant.now().minus(5, ChronoUnit.MINUTES);
     private static final Instant FAILED_AT = Instant.now();
@@ -63,7 +63,7 @@ public class FailedMessageConverterTest {
     @Mock
     private DBObjectConverter<Destination> destinationDBObjectConverter;
     @Mock
-    private DBObjectConverter<FailedMessageStatus> failedMessageStatusDBObjectConverter;
+    private DBObjectConverter<StatusHistoryEvent> failedMessageStatusDBObjectConverter;
     @Mock
     private ObjectConverter<Map<String, Object>, String> propertiesConverter;
 
@@ -79,7 +79,7 @@ public class FailedMessageConverterTest {
                 .withSentDateTime(SENT_AT)
                 .withFailedDateTime(FAILED_AT)
                 .withProperties(SOME_PROPERTIES)
-                .withFailedMessageStatus(SOME_STATUS)
+                .withStatusHistoryEvent(SOME_STATUS)
                 .withLabel("PR-1234")
         ;
         underTest = new MongoDaoConfig().failedMessageConverter(
@@ -121,7 +121,7 @@ public class FailedMessageConverterTest {
                 .withSentAt(SENT_AT)
                 .withFailedAt(FAILED_AT)
                 .withProperties(equalTo(SOME_PROPERTIES))
-                .withFailedMessageStatus(FailedMessageStatusMatcher.equalTo(SENT).withUpdatedDateTime(notNullValue(Instant.class)))
+                .withFailedMessageStatus(StatusHistoryEventMatcher.equalTo(SENT).withUpdatedDateTime(notNullValue(Instant.class)))
                 .withLabels(contains("PR-1234"))
         ));
     }
@@ -136,8 +136,8 @@ public class FailedMessageConverterTest {
         when(propertiesConverter.convertToObject(propertiesAsJson)).thenReturn(properties);
     }
 
-    private void primeFailedMessageStatusConverter(FailedMessageStatus failedMessageStatus, BasicDBObject statusDBObject) {
-        when(failedMessageStatusDBObjectConverter.convertFromObject(failedMessageStatus)).thenReturn(statusDBObject);
-        when(failedMessageStatusDBObjectConverter.convertToObject(statusDBObject)).thenReturn(failedMessageStatus);
+    private void primeFailedMessageStatusConverter(StatusHistoryEvent statusHistoryEvent, BasicDBObject statusDBObject) {
+        when(failedMessageStatusDBObjectConverter.convertFromObject(statusHistoryEvent)).thenReturn(statusDBObject);
+        when(failedMessageStatusDBObjectConverter.convertToObject(statusDBObject)).thenReturn(statusHistoryEvent);
     }
 }

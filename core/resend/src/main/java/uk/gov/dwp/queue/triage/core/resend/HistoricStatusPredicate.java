@@ -8,6 +8,6 @@ import java.util.function.Predicate;
 public class HistoricStatusPredicate implements Predicate<FailedMessage> {
     @Override
     public boolean test(FailedMessage failedMessage) {
-        return failedMessage.getFailedMessageStatus().getEffectiveDateTime().isBefore(Instant.now());
+        return failedMessage.getStatusHistoryEvent().getEffectiveDateTime().isBefore(Instant.now());
     }
 }
