@@ -7,8 +7,8 @@ import uk.gov.dwp.queue.triage.core.dao.util.HashMapBuilder;
 import uk.gov.dwp.queue.triage.core.domain.Destination;
 import uk.gov.dwp.queue.triage.core.domain.FailedMessage;
 import uk.gov.dwp.queue.triage.core.domain.FailedMessageBuilder;
-import uk.gov.dwp.queue.triage.core.domain.FailedMessageStatus;
-import uk.gov.dwp.queue.triage.core.domain.FailedMessageStatusMatcher;
+import uk.gov.dwp.queue.triage.core.domain.StatusHistoryEvent;
+import uk.gov.dwp.queue.triage.core.domain.StatusHistoryEventMatcher;
 import uk.gov.dwp.queue.triage.id.FailedMessageId;
 
 import java.time.Instant;
@@ -30,11 +30,11 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
 import static uk.gov.dwp.queue.triage.core.dao.util.HashMapBuilder.newHashMap;
 import static uk.gov.dwp.queue.triage.core.domain.FailedMessageMatcher.aFailedMessage;
-import static uk.gov.dwp.queue.triage.core.domain.FailedMessageStatus.Status.DELETED;
-import static uk.gov.dwp.queue.triage.core.domain.FailedMessageStatus.Status.FAILED;
-import static uk.gov.dwp.queue.triage.core.domain.FailedMessageStatus.Status.RESEND;
-import static uk.gov.dwp.queue.triage.core.domain.FailedMessageStatus.Status.SENT;
-import static uk.gov.dwp.queue.triage.core.domain.FailedMessageStatus.failedMessageStatus;
+import static uk.gov.dwp.queue.triage.core.domain.StatusHistoryEvent.Status.DELETED;
+import static uk.gov.dwp.queue.triage.core.domain.StatusHistoryEvent.Status.FAILED;
+import static uk.gov.dwp.queue.triage.core.domain.StatusHistoryEvent.Status.RESEND;
+import static uk.gov.dwp.queue.triage.core.domain.StatusHistoryEvent.Status.SENT;
+import static uk.gov.dwp.queue.triage.core.domain.StatusHistoryEvent.statusHistoryEvent;
 import static uk.gov.dwp.queue.triage.id.FailedMessageId.newFailedMessageId;
 
 public class FailedMessageMongoDaoTest extends AbstractMongoDaoTest {
@@ -68,7 +68,7 @@ public class FailedMessageMongoDaoTest extends AbstractMongoDaoTest {
                 .withFailedMessageId(equalTo(failedMessageId))
                 .withContent(equalTo("Hello"))
                 .withProperties(equalTo(emptyMap()))
-                .withFailedMessageStatus(FailedMessageStatusMatcher.equalTo(FAILED))
+                .withFailedMessageStatus(StatusHistoryEventMatcher.equalTo(FAILED))
                 .withLabels(emptyIterable())
         ));
     }
@@ -96,7 +96,7 @@ public class FailedMessageMongoDaoTest extends AbstractMongoDaoTest {
                 .withFailedMessageId(equalTo(failedMessageId))
                 .withContent(equalTo("Hello"))
                 .withProperties(equalTo(properties))
-                .withFailedMessageStatus(FailedMessageStatusMatcher.equalTo(FAILED))
+                .withFailedMessageStatus(StatusHistoryEventMatcher.equalTo(FAILED))
                 .withLabels(containsInAnyOrder("foo", "bar"))
         ));
     }
@@ -128,11 +128,11 @@ public class FailedMessageMongoDaoTest extends AbstractMongoDaoTest {
     @Test
     public void updateStatus() {
         underTest.insert(failedMessageBuilder.build());
-        underTest.updateStatus(failedMessageId, failedMessageStatus(RESEND));
+        underTest.updateStatus(failedMessageId, statusHistoryEvent(RESEND));
 
         assertThat(underTest.getStatusHistory(failedMessageId), contains(
-                FailedMessageStatusMatcher.equalTo(RESEND),
-                FailedMessageStatusMatcher.equalTo(FAILED)
+                StatusHistoryEventMatcher.equalTo(RESEND),
+                StatusHistoryEventMatcher.equalTo(FAILED)
         ));
     }
 
@@ -224,10 +224,10 @@ public class FailedMessageMongoDaoTest extends AbstractMongoDaoTest {
         assertThat(collection.count(), is(0L));
     }
 
-    public FailedMessage newFailedMessageWithStatus(FailedMessageStatus.Status status, Instant instant) {
+    public FailedMessage newFailedMessageWithStatus(StatusHistoryEvent.Status status, Instant instant) {
         return failedMessageBuilder
                 .withNewFailedMessageId()
-                .withFailedMessageStatus(new FailedMessageStatus(status, instant))
+                .withStatusHistoryEvent(new StatusHistoryEvent(status, instant))
                 .build();
     }
 

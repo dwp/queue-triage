@@ -10,7 +10,7 @@ import uk.gov.dwp.queue.triage.core.search.FailedMessageSearchService;
 import java.util.Collection;
 import java.util.List;
 
-import static uk.gov.dwp.queue.triage.core.domain.FailedMessageStatus.Status.FAILED;
+import static uk.gov.dwp.queue.triage.core.domain.StatusHistoryEvent.Status.FAILED;
 
 public class MessageClassificationService {
 

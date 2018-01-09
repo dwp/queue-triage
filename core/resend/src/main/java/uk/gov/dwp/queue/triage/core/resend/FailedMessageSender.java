@@ -6,7 +6,7 @@ import uk.gov.dwp.queue.triage.core.domain.FailedMessage;
 import uk.gov.dwp.queue.triage.core.jms.MessageSender;
 import uk.gov.dwp.queue.triage.core.service.FailedMessageService;
 
-import static uk.gov.dwp.queue.triage.core.domain.FailedMessageStatus.Status.SENT;
+import static uk.gov.dwp.queue.triage.core.domain.StatusHistoryEvent.Status.SENT;
 
 public class FailedMessageSender implements MessageSender {
 

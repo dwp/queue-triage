@@ -4,41 +4,41 @@ import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;
 import org.hamcrest.TypeSafeMatcher;
-import uk.gov.dwp.queue.triage.core.domain.FailedMessageStatus.Status;
+import uk.gov.dwp.queue.triage.core.domain.StatusHistoryEvent.Status;
 
 import java.time.Instant;
 
 import static org.hamcrest.Matchers.notNullValue;
 
-public class FailedMessageStatusMatcher extends TypeSafeMatcher<FailedMessageStatus> {
+public class StatusHistoryEventMatcher extends TypeSafeMatcher<StatusHistoryEvent> {
 
     private Status status;
     private Matcher<Instant> updatedDateTimeMatcher = notNullValue(Instant.class);
 
-    public static FailedMessageStatusMatcher equalTo(Status status) {
-        return new FailedMessageStatusMatcher()
+    public static StatusHistoryEventMatcher equalTo(Status status) {
+        return new StatusHistoryEventMatcher()
                 .withStatus(status);
     }
 
-    private FailedMessageStatusMatcher withStatus(Status status) {
+    private StatusHistoryEventMatcher withStatus(Status status) {
         this.status = status;
         return this;
     }
 
-    public FailedMessageStatusMatcher withUpdatedDateTime(Instant updatedDateTime) {
+    public StatusHistoryEventMatcher withUpdatedDateTime(Instant updatedDateTime) {
         this.updatedDateTimeMatcher = Matchers.equalTo(updatedDateTime);
         return this;
     }
 
-    public FailedMessageStatusMatcher withUpdatedDateTime(Matcher<Instant> updatedDateTimeMatcher) {
+    public StatusHistoryEventMatcher withUpdatedDateTime(Matcher<Instant> updatedDateTimeMatcher) {
         this.updatedDateTimeMatcher = updatedDateTimeMatcher;
         return this;
     }
 
     @Override
-    protected boolean matchesSafely(FailedMessageStatus failedMessageStatus) {
-        return status == failedMessageStatus.getStatus() &&
-                updatedDateTimeMatcher.matches(failedMessageStatus.getEffectiveDateTime());
+    protected boolean matchesSafely(StatusHistoryEvent statusHistoryEvent) {
+        return status == statusHistoryEvent.getStatus() &&
+                updatedDateTimeMatcher.matches(statusHistoryEvent.getEffectiveDateTime());
     }
 
     @Override

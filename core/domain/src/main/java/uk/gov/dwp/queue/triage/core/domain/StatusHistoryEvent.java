@@ -2,16 +2,16 @@ package uk.gov.dwp.queue.triage.core.domain;
 
 import java.time.Instant;
 
-public class FailedMessageStatus {
+public class StatusHistoryEvent {
 
     private final Status status;
     private final Instant updatedDateTime;
 
-    public static FailedMessageStatus failedMessageStatus(Status status) {
-        return new FailedMessageStatus(status, Instant.now());
+    public static StatusHistoryEvent statusHistoryEvent(Status status) {
+        return new StatusHistoryEvent(status, Instant.now());
     }
 
-    public FailedMessageStatus(Status status, Instant updatedDateTime) {
+    public StatusHistoryEvent(Status status, Instant updatedDateTime) {
         this.status = status;
         this.updatedDateTime = updatedDateTime;
     }

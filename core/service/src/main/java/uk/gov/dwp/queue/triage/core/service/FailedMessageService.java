@@ -4,12 +4,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import uk.gov.dwp.queue.triage.core.dao.FailedMessageDao;
 import uk.gov.dwp.queue.triage.core.domain.FailedMessage;
-import uk.gov.dwp.queue.triage.core.domain.FailedMessageStatus;
-import uk.gov.dwp.queue.triage.core.domain.FailedMessageStatus.Status;
+import uk.gov.dwp.queue.triage.core.domain.StatusHistoryEvent;
+import uk.gov.dwp.queue.triage.core.domain.StatusHistoryEvent.Status;
 import uk.gov.dwp.queue.triage.id.FailedMessageId;
 
-import static uk.gov.dwp.queue.triage.core.domain.FailedMessageStatus.Status.DELETED;
-import static uk.gov.dwp.queue.triage.core.domain.FailedMessageStatus.failedMessageStatus;
+import static uk.gov.dwp.queue.triage.core.domain.StatusHistoryEvent.Status.DELETED;
+import static uk.gov.dwp.queue.triage.core.domain.StatusHistoryEvent.statusHistoryEvent;
 
 public class FailedMessageService {
 
@@ -26,20 +26,20 @@ public class FailedMessageService {
     }
 
     public void updateStatus(FailedMessageId failedMessageId, Status status) {
-        updateStatus(failedMessageId, failedMessageStatus(status));
+        updateStatus(failedMessageId, statusHistoryEvent(status));
     }
 
-    public void updateStatus(FailedMessageId failedMessageId, FailedMessageStatus failedMessageStatus) {
+    public void updateStatus(FailedMessageId failedMessageId, StatusHistoryEvent statusHistoryEvent) {
         LOGGER.debug("Message {} updated to {} with effectiveDateTime {}",
                 failedMessageId,
-                failedMessageStatus.getStatus(),
-                failedMessageStatus.getEffectiveDateTime()
+                statusHistoryEvent.getStatus(),
+                statusHistoryEvent.getEffectiveDateTime()
         );
-        failedMessageDao.updateStatus(failedMessageId, failedMessageStatus);
+        failedMessageDao.updateStatus(failedMessageId, statusHistoryEvent);
     }
 
     public void delete(FailedMessageId failedMessageId) {
         LOGGER.debug("Message {} deleted", failedMessageId);
-        failedMessageDao.updateStatus(failedMessageId, failedMessageStatus(DELETED));
+        failedMessageDao.updateStatus(failedMessageId, statusHistoryEvent(DELETED));
     }
 }

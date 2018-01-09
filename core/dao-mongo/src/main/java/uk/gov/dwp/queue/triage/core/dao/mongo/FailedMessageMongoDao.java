@@ -11,7 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import uk.gov.dwp.queue.triage.core.dao.FailedMessageDao;
 import uk.gov.dwp.queue.triage.core.domain.FailedMessage;
-import uk.gov.dwp.queue.triage.core.domain.FailedMessageStatus;
+import uk.gov.dwp.queue.triage.core.domain.StatusHistoryEvent;
 import uk.gov.dwp.queue.triage.id.FailedMessageId;
 
 import java.util.List;
@@ -33,12 +33,12 @@ public class FailedMessageMongoDao implements FailedMessageDao {
 
     private final DBCollection collection;
     private final FailedMessageConverter failedMessageConverter;
-    private final DBObjectConverter<FailedMessageStatus> failedMessageStatusConverter;
+    private final DBObjectConverter<StatusHistoryEvent> failedMessageStatusConverter;
     private final RemoveRecordsQueryFactory removeRecordsQueryFactory;
 
     public FailedMessageMongoDao(DBCollection collection,
                                  FailedMessageConverter failedMessageConverter,
-                                 DBObjectConverter<FailedMessageStatus> failedMessageStatusConverter,
+                                 DBObjectConverter<StatusHistoryEvent> failedMessageStatusConverter,
                                  RemoveRecordsQueryFactory removeRecordsQueryFactory) {
         this.collection = collection;
         this.failedMessageConverter = failedMessageConverter;
@@ -56,18 +56,18 @@ public class FailedMessageMongoDao implements FailedMessageDao {
     }
 
     @Override
-    public void updateStatus(FailedMessageId failedMessageId, FailedMessageStatus failedMessageStatus) {
+    public void updateStatus(FailedMessageId failedMessageId, StatusHistoryEvent statusHistoryEvent) {
         collection.update(
                 failedMessageConverter.createId(failedMessageId),
                 new BasicDBObject("$push", new BasicDBObject(STATUS_HISTORY, new BasicDBObject()
-                        .append("$each", singletonList(failedMessageStatusConverter.convertFromObject(failedMessageStatus)))
+                        .append("$each", singletonList(failedMessageStatusConverter.convertFromObject(statusHistoryEvent)))
                         .append("$sort", new BasicDBObject(LAST_MODIFIED_DATE_TIME, OrderBy.DESC.getIntRepresentation())))),
                 NO_UPSERT, SINGLE_ROW, WriteConcern.ACKNOWLEDGED
         );
     }
 
     @Override
-    public List<FailedMessageStatus> getStatusHistory(FailedMessageId failedMessageId) {
+    public List<StatusHistoryEvent> getStatusHistory(FailedMessageId failedMessageId) {
         return ((BasicDBList)collection
                 .findOne(failedMessageConverter.createId(failedMessageId), new BasicDBObject(STATUS_HISTORY, 1))
                 .get(STATUS_HISTORY))

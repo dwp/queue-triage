@@ -17,7 +17,7 @@ public class FailedMessage {
     private final Instant failedAt;
     private final String content;
     private final Map<String, Object> properties;
-    private final FailedMessageStatus failedMessageStatus;
+    private final StatusHistoryEvent statusHistoryEvent;
     private final Set<String> labels;
 
     FailedMessage(FailedMessageId failedMessageId,
@@ -26,7 +26,7 @@ public class FailedMessage {
                   Instant failedAt,
                   String content,
                   Map<String, Object> properties,
-                  FailedMessageStatus failedMessageStatus,
+                  StatusHistoryEvent statusHistoryEvent,
                   Set<String> labels) {
         this.failedMessageId = failedMessageId;
         this.destination = destination;
@@ -34,7 +34,7 @@ public class FailedMessage {
         this.failedAt = failedAt;
         this.content = content;
         this.properties = properties;
-        this.failedMessageStatus = failedMessageStatus;
+        this.statusHistoryEvent = statusHistoryEvent;
         this.labels = labels;
     }
 
@@ -75,7 +75,7 @@ public class FailedMessage {
         return reflectionToString(this);
     }
 
-    public FailedMessageStatus getFailedMessageStatus() {
-        return failedMessageStatus;
+    public StatusHistoryEvent getStatusHistoryEvent() {
+        return statusHistoryEvent;
     }
 }

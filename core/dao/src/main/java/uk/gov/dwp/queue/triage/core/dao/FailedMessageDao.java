@@ -1,7 +1,7 @@
 package uk.gov.dwp.queue.triage.core.dao;
 
 import uk.gov.dwp.queue.triage.core.domain.FailedMessage;
-import uk.gov.dwp.queue.triage.core.domain.FailedMessageStatus;
+import uk.gov.dwp.queue.triage.core.domain.StatusHistoryEvent;
 import uk.gov.dwp.queue.triage.id.FailedMessageId;
 
 import java.util.List;
@@ -15,9 +15,9 @@ public interface FailedMessageDao {
 
     long findNumberOfMessagesForBroker(String broker);
 
-    void updateStatus(FailedMessageId failedMessageId, FailedMessageStatus failedMessageStatus);
+    void updateStatus(FailedMessageId failedMessageId, StatusHistoryEvent statusHistoryEvent);
 
-    List<FailedMessageStatus> getStatusHistory(FailedMessageId failedMessageId);
+    List<StatusHistoryEvent> getStatusHistory(FailedMessageId failedMessageId);
 
     int removeFailedMessages();
 

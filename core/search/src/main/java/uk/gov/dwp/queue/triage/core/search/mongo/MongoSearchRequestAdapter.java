@@ -15,7 +15,7 @@ import static uk.gov.dwp.queue.triage.core.dao.mongo.DestinationDBObjectConverte
 import static uk.gov.dwp.queue.triage.core.dao.mongo.DestinationDBObjectConverter.NAME;
 import static uk.gov.dwp.queue.triage.core.dao.mongo.FailedMessageConverter.CONTENT;
 import static uk.gov.dwp.queue.triage.core.dao.mongo.FailedMessageConverter.DESTINATION;
-import static uk.gov.dwp.queue.triage.core.domain.FailedMessageStatus.Status.DELETED;
+import static uk.gov.dwp.queue.triage.core.domain.StatusHistoryEvent.Status.DELETED;
 import static uk.gov.dwp.queue.triage.core.domain.FailedMessageStatusAdapter.fromFailedMessageStatus;
 
 public class MongoSearchRequestAdapter {

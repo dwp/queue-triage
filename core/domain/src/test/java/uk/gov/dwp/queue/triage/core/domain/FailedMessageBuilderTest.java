@@ -11,7 +11,7 @@ import java.util.Optional;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
-import static uk.gov.dwp.queue.triage.core.domain.FailedMessageStatus.Status.FAILED;
+import static uk.gov.dwp.queue.triage.core.domain.StatusHistoryEvent.Status.FAILED;
 
 public class FailedMessageBuilderTest {
 
@@ -28,7 +28,7 @@ public class FailedMessageBuilderTest {
             .withDestination(new Destination(BROKER_NAME, Optional.of(DESTINATION_NAME)))
             .withFailedDateTime(FAILED_DATE_TIME)
             .withFailedMessageId(FAILED_MESSAGE_ID)
-            .withFailedMessageStatus(FAILED)
+            .withStatusHistoryEvent(FAILED)
             .withSentDateTime(SEND_DATE_TIME);
 
     @Test
@@ -57,7 +57,7 @@ public class FailedMessageBuilderTest {
                 .withDestination(DestinationMatcher.aDestination().withBrokerName(BROKER_NAME).withName(DESTINATION_NAME))
                 .withFailedAt(FAILED_DATE_TIME)
                 .withFailedMessageId(equalTo(FAILED_MESSAGE_ID))
-                .withFailedMessageStatus(FailedMessageStatusMatcher.equalTo(FAILED))
+                .withFailedMessageStatus(StatusHistoryEventMatcher.equalTo(FAILED))
                 .withSentAt(SEND_DATE_TIME);
     }
 }

@@ -6,14 +6,14 @@ import org.mockito.Mockito;
 import org.mockito.internal.hamcrest.HamcrestArgumentMatcher;
 import uk.gov.dwp.queue.triage.core.dao.FailedMessageDao;
 import uk.gov.dwp.queue.triage.core.domain.FailedMessage;
-import uk.gov.dwp.queue.triage.core.domain.FailedMessageStatus;
-import uk.gov.dwp.queue.triage.core.domain.FailedMessageStatusMatcher;
+import uk.gov.dwp.queue.triage.core.domain.StatusHistoryEvent;
+import uk.gov.dwp.queue.triage.core.domain.StatusHistoryEventMatcher;
 import uk.gov.dwp.queue.triage.id.FailedMessageId;
 
 import java.time.Instant;
 
-import static uk.gov.dwp.queue.triage.core.domain.FailedMessageStatus.Status.DELETED;
-import static uk.gov.dwp.queue.triage.core.domain.FailedMessageStatus.Status.RESEND;
+import static uk.gov.dwp.queue.triage.core.domain.StatusHistoryEvent.Status.DELETED;
+import static uk.gov.dwp.queue.triage.core.domain.StatusHistoryEvent.Status.RESEND;
 
 public class FailedMessageServiceTest {
 
@@ -38,17 +38,17 @@ public class FailedMessageServiceTest {
 
         Mockito.verify(failedMessageDao).updateStatus(
                 Mockito.eq(FAILED_MESSAGE_ID),
-                argThat(FailedMessageStatusMatcher.equalTo(RESEND).withUpdatedDateTime(Matchers.notNullValue(Instant.class)))
+                argThat(StatusHistoryEventMatcher.equalTo(RESEND).withUpdatedDateTime(Matchers.notNullValue(Instant.class)))
         );
     }
 
     @Test
     public void updateStatusWithGivenDate() {
-        underTest.updateStatus(FAILED_MESSAGE_ID, new FailedMessageStatus(RESEND, NOW));
+        underTest.updateStatus(FAILED_MESSAGE_ID, new StatusHistoryEvent(RESEND, NOW));
 
         Mockito.verify(failedMessageDao).updateStatus(
                 Mockito.eq(FAILED_MESSAGE_ID),
-                argThat(FailedMessageStatusMatcher.equalTo(RESEND).withUpdatedDateTime(Matchers.equalTo(NOW)))
+                argThat(StatusHistoryEventMatcher.equalTo(RESEND).withUpdatedDateTime(Matchers.equalTo(NOW)))
         );
     }
 
@@ -58,11 +58,11 @@ public class FailedMessageServiceTest {
 
         Mockito.verify(failedMessageDao).updateStatus(
                 Mockito.eq(FAILED_MESSAGE_ID),
-                argThat(FailedMessageStatusMatcher.equalTo(DELETED).withUpdatedDateTime(Matchers.notNullValue(Instant.class)))
+                argThat(StatusHistoryEventMatcher.equalTo(DELETED).withUpdatedDateTime(Matchers.notNullValue(Instant.class)))
         );
     }
 
-    public FailedMessageStatus argThat(FailedMessageStatusMatcher matcher) {
+    public StatusHistoryEvent argThat(StatusHistoryEventMatcher matcher) {
         return Mockito.argThat(new HamcrestArgumentMatcher<>(matcher));
     }
 }

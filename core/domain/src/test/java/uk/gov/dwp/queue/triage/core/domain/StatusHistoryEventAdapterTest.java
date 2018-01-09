@@ -2,7 +2,7 @@ package uk.gov.dwp.queue.triage.core.domain;
 
 import org.junit.Test;
 import uk.gov.dwp.queue.triage.core.client.FailedMessageStatus;
-import uk.gov.dwp.queue.triage.core.domain.FailedMessageStatus.Status;
+import uk.gov.dwp.queue.triage.core.domain.StatusHistoryEvent.Status;
 
 import java.util.Arrays;
 import java.util.List;
@@ -17,10 +17,10 @@ import static org.junit.Assert.fail;
 import static uk.gov.dwp.queue.triage.core.domain.FailedMessageStatusAdapter.fromFailedMessageStatus;
 import static uk.gov.dwp.queue.triage.core.domain.FailedMessageStatusAdapter.toFailedMessageStatus;
 
-public class FailedMessageStatusAdapterTest {
+public class StatusHistoryEventAdapterTest {
 
     @Test
-    public void ensureStatusCanBeAdaptedFromInternalToExternal() throws Exception {
+    public void ensureStatusCanBeAdaptedFromInternalToExternal() {
         List<Status> internalStatuses = Arrays.asList(Status.DELETED);
 
         for (Status status : Status.values()) {
@@ -42,7 +42,7 @@ public class FailedMessageStatusAdapterTest {
             try {
                 assertThat(fromFailedMessageStatus(failedMessageStatus), is(notNullValue()));
             } catch (IllegalArgumentException e) {
-                fail(format("FailedMessageStatus '%s' has no mapping to %s", failedMessageStatus, Status.class));
+                fail(format("StatusHistoryEvent '%s' has no mapping to %s", failedMessageStatus, Status.class));
             }
         }
     }

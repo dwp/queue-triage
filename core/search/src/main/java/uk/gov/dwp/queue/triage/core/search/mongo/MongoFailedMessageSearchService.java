@@ -6,7 +6,7 @@ import uk.gov.dwp.queue.triage.core.client.search.SearchFailedMessageRequest;
 import uk.gov.dwp.queue.triage.core.dao.mongo.FailedMessageConverter;
 import uk.gov.dwp.queue.triage.core.dao.mongo.MongoStatusHistoryQueryBuilder;
 import uk.gov.dwp.queue.triage.core.domain.FailedMessage;
-import uk.gov.dwp.queue.triage.core.domain.FailedMessageStatus;
+import uk.gov.dwp.queue.triage.core.domain.StatusHistoryEvent;
 import uk.gov.dwp.queue.triage.core.search.FailedMessageSearchService;
 
 import java.util.Collection;
@@ -42,7 +42,7 @@ public class MongoFailedMessageSearchService implements FailedMessageSearchServi
     }
 
     @Override
-    public Collection<FailedMessage> findByStatus(FailedMessageStatus.Status status) {
+    public Collection<FailedMessage> findByStatus(StatusHistoryEvent.Status status) {
         List<FailedMessage> responses = failedMessageConverter
                 .convertToList(dbCollection.find(mongoStatusHistoryQueryBuilder.currentStatusEqualTo(status)));
         LOGGER.debug("Found {} results", responses.size());

@@ -8,7 +8,7 @@ import static java.time.temporal.ChronoUnit.DAYS;
 import static uk.gov.dwp.queue.triage.core.dao.mongo.FailedMessageConverter.STATUS_HISTORY;
 import static uk.gov.dwp.queue.triage.core.dao.mongo.FailedMessageStatusDBObjectConverter.STATUS;
 import static uk.gov.dwp.queue.triage.core.dao.mongo.FailedMessageStatusDBObjectConverter.EFFECTIVE_DATE_TIME;
-import static uk.gov.dwp.queue.triage.core.domain.FailedMessageStatus.Status.DELETED;
+import static uk.gov.dwp.queue.triage.core.domain.StatusHistoryEvent.Status.DELETED;
 
 public class RemoveRecordsQueryFactory {
 

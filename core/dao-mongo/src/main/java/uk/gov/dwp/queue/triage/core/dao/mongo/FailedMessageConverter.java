@@ -6,7 +6,7 @@ import com.mongodb.DBObject;
 import uk.gov.dwp.queue.triage.core.dao.ObjectConverter;
 import uk.gov.dwp.queue.triage.core.domain.Destination;
 import uk.gov.dwp.queue.triage.core.domain.FailedMessage;
-import uk.gov.dwp.queue.triage.core.domain.FailedMessageStatus;
+import uk.gov.dwp.queue.triage.core.domain.StatusHistoryEvent;
 import uk.gov.dwp.queue.triage.id.FailedMessageId;
 
 import java.time.Instant;
@@ -31,15 +31,15 @@ public class FailedMessageConverter implements DBObjectWithIdConverter<FailedMes
     public static final String LABELS = "labels";
 
     private final DBObjectConverter<Destination> destinationDBObjectMapper;
-    private final DBObjectConverter<FailedMessageStatus> failedMessageStatusDBObjectMapper;
+    private final DBObjectConverter<StatusHistoryEvent> statusHistoryEventDBObjectMapper;
     private final ObjectConverter<Map<String, Object>, String> propertiesMongoMapper;
 
     public FailedMessageConverter(DBObjectConverter<Destination> destinationDBObjectMapper,
-                                  DBObjectConverter<FailedMessageStatus> failedMessageStatusDBObjectMapper,
+                                  DBObjectConverter<StatusHistoryEvent> statusHistoryEventDBObjectMapper,
                                   ObjectConverter<Map<String, Object>, String> propertiesMongoMapper) {
         this.destinationDBObjectMapper = destinationDBObjectMapper;
         this.propertiesMongoMapper = propertiesMongoMapper;
-        this.failedMessageStatusDBObjectMapper = failedMessageStatusDBObjectMapper;
+        this.statusHistoryEventDBObjectMapper = statusHistoryEventDBObjectMapper;
     }
 
     @Override
@@ -54,7 +54,7 @@ public class FailedMessageConverter implements DBObjectWithIdConverter<FailedMes
                 .withSentDateTime(getSentDateTime(basicDBObject))
                 .withFailedDateTime(getFailedDateTime(basicDBObject))
                 .withContent(getContent(basicDBObject))
-                .withFailedMessageStatus(getFailedMessageStatus(basicDBObject))
+                .withStatusHistoryEvent(getStatusHistoryEvent(basicDBObject))
                 .withProperties(propertiesMongoMapper.convertToObject(basicDBObject.getString(PROPERTIES)))
                 .withLabels(getLabels(basicDBObject))
                 .build();
@@ -69,9 +69,9 @@ public class FailedMessageConverter implements DBObjectWithIdConverter<FailedMes
         return responses;
     }
 
-    public FailedMessageStatus getFailedMessageStatus(BasicDBObject basicDBObject) {
+    public StatusHistoryEvent getStatusHistoryEvent(BasicDBObject basicDBObject) {
         List statusHistory = (List)basicDBObject.get(STATUS_HISTORY);
-        return failedMessageStatusDBObjectMapper.convertToObject((BasicDBObject)statusHistory.get(0));
+        return statusHistoryEventDBObjectMapper.convertToObject((BasicDBObject)statusHistory.get(0));
     }
 
     public FailedMessageId getFailedMessageId(BasicDBObject basicDBObject) {
@@ -106,7 +106,7 @@ public class FailedMessageConverter implements DBObjectWithIdConverter<FailedMes
                 .append(FAILED_DATE_TIME, item.getFailedAt())
                 .append(CONTENT, item.getContent())
                 .append(PROPERTIES, propertiesMongoMapper.convertFromObject(item.getProperties()))
-                .append(STATUS_HISTORY, Collections.singletonList(failedMessageStatusDBObjectMapper.convertFromObject(item.getFailedMessageStatus())))
+                .append(STATUS_HISTORY, Collections.singletonList(statusHistoryEventDBObjectMapper.convertFromObject(item.getStatusHistoryEvent())))
                 .append(LABELS, DBObjectConverter.toBasicDBList(item.getLabels()))
                 ;
     }
