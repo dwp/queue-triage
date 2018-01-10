@@ -26,7 +26,7 @@ public class SearchFailedMessageComponentTest extends BaseCoreComponentTest<Sear
     private FailedMessageResourceStage failedMessageResourceStage;
 
     @Test
-    public void searchByBrokerResultsNoResultsWhenNoFailedMessagesExist() throws Exception {
+    public void searchByBrokerResultsNoResultsWhenNoFailedMessagesExist() {
 
         when().aSearchIsRequested(searchMatchingAllCriteria()
                 .withBroker("broker-name"));
