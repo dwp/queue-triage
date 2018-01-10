@@ -17,6 +17,7 @@ java_library(
         "//core/domain:test",
         "//core/resend:queue-triage-core-resend",
         "//core/resend:test",
+        "//core/sample-data:queue-triage-sample-data",
         "//core/search:queue-triage-core-search",
         "//core/search:queue-triage-core-search-mongo",
         "//core/search:test-mongo",

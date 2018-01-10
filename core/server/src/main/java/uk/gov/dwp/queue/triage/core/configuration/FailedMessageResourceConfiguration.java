@@ -3,6 +3,7 @@ package uk.gov.dwp.queue.triage.core.configuration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import uk.gov.dwp.queue.triage.core.resource.status.FailedMessageStatusHistoryResource;
 import uk.gov.dwp.queue.triage.cxf.CxfConfiguration;
 import uk.gov.dwp.queue.triage.cxf.ResourceRegistry;
 import uk.gov.dwp.queue.triage.core.dao.FailedMessageDao;
@@ -60,5 +61,11 @@ public class FailedMessageResourceConfiguration {
         return resourceRegistry.add(new LabelFailedMessageResource(
                 failedMessageLabelService
         ));
+    }
+
+    @Bean
+    public FailedMessageStatusHistoryResource failedMessageStatusHistoryResource(ResourceRegistry resourceRegistry,
+                                                                                 FailedMessageDao failedMessageDao) {
+        return resourceRegistry.add(new FailedMessageStatusHistoryResource(failedMessageDao));
     }
 }

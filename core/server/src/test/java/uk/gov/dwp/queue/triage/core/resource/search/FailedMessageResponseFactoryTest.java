@@ -25,7 +25,7 @@ public class FailedMessageResponseFactoryTest {
     private final FailedMessageResponseFactory underTest = new FailedMessageResponseFactory(new FailedMessageStatusAdapter());
 
     @Test
-    public void createFailedMessageResponseFromAFailedMessage() throws Exception {
+    public void createFailedMessageResponseFromAFailedMessage() {
 
         FailedMessageResponse failedMessageResponse = underTest.create(newFailedMessage()
                 .withContent("Hello World")
