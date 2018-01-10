@@ -11,6 +11,7 @@ java_library(
         "//common/swagger:queue-triage-common-swagger-cxf",
         "//core/activemq:queue-triage-core-activemq",
         "//core/resend:queue-triage-core-resend-spring",
+        "//core/sample-data:queue-triage-sample-data",
         "//core/server:queue-triage-core-server",
         "//core/message-classification:queue-triage-core-message-classification-server",
         "//web/mustache:queue-triage-web-mustache-spring",
