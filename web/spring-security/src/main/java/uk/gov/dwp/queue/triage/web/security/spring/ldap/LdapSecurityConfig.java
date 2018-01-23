@@ -1,5 +1,6 @@
 package uk.gov.dwp.queue.triage.web.security.spring.ldap;
 
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.encoding.PlaintextPasswordEncoder;
@@ -10,25 +11,26 @@ import org.springframework.security.ldap.DefaultSpringSecurityContextSource;
 import static java.util.Collections.singletonList;
 
 @Configuration
+@EnableConfigurationProperties(LdapSecurityProperties.class)
 public class LdapSecurityConfig {
 
     @Bean
-    public SecurityConfigurerAdapter securityConfigurerAdapter() {
+    public SecurityConfigurerAdapter securityConfigurerAdapter(LdapSecurityProperties ldapSecurityProperties) {
         return new LdapAuthenticationProviderConfigurer()
-                .userDnPatterns("uid={0},ou=Users")
-                .groupSearchBase("ou=Groups")
-                .contextSource(contextSource())
+                .userDnPatterns(ldapSecurityProperties.getUserDnPatterns().toArray(new String[0]))
+                .groupSearchBase(ldapSecurityProperties.getGroupSearch().getBase())
+                .contextSource(contextSource(ldapSecurityProperties))
                 .passwordCompare()
 //                .passwordEncoder(new LdapShaPasswordEncoder())
                 .passwordEncoder(new PlaintextPasswordEncoder())
-                .passwordAttribute("userPassword")
+                .passwordAttribute(ldapSecurityProperties.getPassword().getAttribute())
                 .and();
     }
 
     @Bean
-    public DefaultSpringSecurityContextSource contextSource() {
+    public DefaultSpringSecurityContextSource contextSource(LdapSecurityProperties ldapSecurityProperties) {
         return new DefaultSpringSecurityContextSource(
-                singletonList("ldap://localhost:8389/"),
-                "dc=dwp,dc=gov,dc=uk");
+                ldapSecurityProperties.getUrls(),
+                ldapSecurityProperties.getBaseDn());
     }
 }

@@ -17,9 +17,33 @@ java_library(
     srcs = glob(["src/main/java/**/ldap/*.java"]),
     exported_deps = [
         "//lib/ldap:unboundid-ldapsdk",
+        "//lib/spring:spring-boot",
         "//lib/spring:spring-security-ldap-with-dependencies",
     ],
     visibility = [
         "//web/server:queue-triage-web-server",
+    ],
+)
+
+java_library(
+    name = 'test-resources',
+    resources = glob([
+        'src/test/resources/*.yml'
+    ]),
+    resources_root = 'src/test/resources',
+)
+
+java_test(
+    name = 'ldap-test',
+    srcs = glob(['src/test/java/**/ldap/*.java']),
+    deps = [
+        ':queue-triage-web-spring-security-ldap',
+        ':test-resources',
+        '//lib:snakeyaml',
+        '//lib/spring:spring-security-ldap-with-dependencies',
+        '//lib/spring:spring-boot-test',
+        '//lib/spring:spring-boot-with-dependencies',
+        '//lib/spring:spring-test',
+        '//lib/test:common',
     ],
 )

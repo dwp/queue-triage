@@ -6,4 +6,8 @@ cxf:
 
 client:
   core:
-   url: http://localhost:9991/core
+    url: http://localhost:9991/core
+
+ldap:
+  urls:
+    - ldap://localhost:8389/
