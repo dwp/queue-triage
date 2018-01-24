@@ -1,7 +1,14 @@
 sudo: false
 dist: trusty
+
 jdk:
   - openjdk8
+
+env:
+  - MOZ_HEADLESS=1
+
+addons:
+  firefox: latest
 
 notifications:
   slack:

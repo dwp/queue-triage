@@ -33,9 +33,9 @@ java_test(
         "//lib/hibernate-validator:hibernate-validator",
         '//lib/selenide:selenide',
         '//lib/selenide:selenide-dependencies',
-#         '//lib/selenium/firefox-driver:selenium-firefox-driver-with-dependencies',
+        '//lib/selenium/firefox-driver:selenium-firefox-driver-with-dependencies',
 #         '//lib/selenium/htmlunit-driver:htmlunit-driver-with-dependencies',
-        '//lib/selenium/phantomjs-driver:phantomjs-driver-with-dependencies',
+#         '//lib/selenium/phantomjs-driver:phantomjs-driver-with-dependencies',
         '//lib/spring:spring-beans',
         '//lib/spring:spring-boot-test',
         '//lib/spring:spring-context',
@@ -47,10 +47,10 @@ java_test(
         '//web/server:queue-triage-web-server',
     ],
     vm_args = [
-#         "-Dbrowser=marionette",
-#         "-Dwebdriver.gecko.driver=lib/geckodriver/geckodriver",
+        "-Dbrowser=marionette",
+        "-Dwebdriver.gecko.driver=lib/geckodriver/geckodriver",
 #         "-Dbrowser=htmlunit",
-        "-Dbrowser=phantomjs",
+#         "-Dbrowser=phantomjs",
         "-Djgiven.report.dir=buck-out/gen/web/component-test/jgiven-reports",
     ]
 )
