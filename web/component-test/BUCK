@@ -52,6 +52,7 @@ java_test(
 #         "-Dbrowser=htmlunit",
 #         "-Dbrowser=phantomjs",
         "-Djgiven.report.dir=buck-out/gen/web/component-test/jgiven-reports",
+        "-Dselenide.reports=buck-out/gen/web/component-test/selenide-output"
     ]
 )
 
