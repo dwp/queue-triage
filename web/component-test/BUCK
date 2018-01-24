@@ -47,7 +47,7 @@ java_test(
         '//web/server:queue-triage-web-server',
     ],
     vm_args = [
-        "-Dbrowser=marionette",
+        "-Dbrowser=firefox",
         "-Dwebdriver.gecko.driver=lib/geckodriver/geckodriver",
 #         "-Dbrowser=htmlunit",
 #         "-Dbrowser=phantomjs",
