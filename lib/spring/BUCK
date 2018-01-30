@@ -4,6 +4,7 @@ prebuilt_jar(
     binary_jar=':spring-beans-mvn',
     source_jar=":spring-beans-src",
     visibility=["PUBLIC"])
+
 prebuilt_jar(
     name="spring-boot",
     binary_jar = ":spring-boot-mvn",
@@ -17,6 +18,7 @@ prebuilt_jar(
         "//core/message-classification:queue-triage-core-message-classification-server",
         "//core/message-classification:test-server",
         "//core/search:queue-triage-core-search-mongo-spring",
+        "//web/spring-security:queue-triage-web-spring-security-ldap",
     ]
 )
 prebuilt_jar(name="spring-boot-autoconfigure", binary_jar = ":spring-boot-autoconfigure-mvn", visibility=["PUBLIC"])
@@ -123,6 +125,7 @@ java_library(
         "//web/component-test:queue-triage-web-component-test",
         "//web/component-test:test",
         "//web/server:queue-triage-web-server",
+        "//web/spring-security:ldap-test",
     ],
 )
 
@@ -157,6 +160,7 @@ java_library(
         "//lib:aopalliance",
     ],
     visibility = [
+        "//web/spring-security:ldap-test",
         "//web/spring-security:queue-triage-web-spring-security",
         "//web/spring-security:queue-triage-web-spring-security-ldap",
     ],

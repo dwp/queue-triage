@@ -1,0 +1,13 @@
+ldap:
+  urls:
+    - ldap://localhost:888/
+    - ldap://localhost:999/
+  baseDn: dc=example,dc=com
+  groupSearch:
+    base: ou=Support
+  userDnPatterns:
+    - uid={0},ou=SupportUsers
+    - uid={0},ou=Admins
+  password:
+    attribute: pw
+    encoder: sha256

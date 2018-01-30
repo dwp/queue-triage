@@ -1,0 +1,3 @@
+ldap:
+  urls:
+    - ldap://localhost:1234
