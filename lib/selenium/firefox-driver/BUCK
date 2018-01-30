@@ -4,9 +4,9 @@ prebuilt_jar(
 )
 remote_file(
     name = "selenium-firefox-driver-mvn",
-    out  = "selenium-firefox-driver-3.4.0.jar",
-    url  = "mvn:org.seleniumhq.selenium:selenium-firefox-driver:jar:3.4.0",
-    sha1 = "d88e50771a0c978502dfdf770d3192c7643928eb",
+    out  = "selenium-firefox-driver-3.8.1.jar",
+    url  = "mvn:org.seleniumhq.selenium:selenium-firefox-driver:jar:3.8.1",
+    sha1 = "5df6c61edd3058b770a9bbde557f7a5ecbb584b4",
 )
 
 java_library(

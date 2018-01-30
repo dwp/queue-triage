@@ -27,9 +27,8 @@ public class SearchFailedMessageWhenStage extends WhenStage<SearchFailedMessageW
                 .find(By.className("icon-search-down"))
                 .click();
         Selenide.$(By.id("w2ui-overlay-failedMessages-searchFields"))
-                .findAll("td")
-                .findBy(Condition.text("Broker"))
-                .parent()
+                .findAll(By.tagName("td"))
+                .findBy(Condition.text(fieldName))
                 .click();
         Selenide.$(By.id("grid_failedMessages_search_all"))
                 .sendKeys(searchText + Keys.RETURN);

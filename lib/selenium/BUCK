@@ -8,8 +8,8 @@ prebuilt_jar(
 remote_file(
     name = "selenium-java-mvn",
     out  = "selenium-java-3.4.0.jar",
-    url  = "mvn:org.seleniumhq.selenium:selenium-java:jar:3.4.0",
-    sha1 = "2b8e09636cefdb164eec61534482af5e505d051e"
+    url  = "mvn:org.seleniumhq.selenium:selenium-java:jar:3.8.1",
+    sha1 = "05b50d4072e0e51779b6e9f3594106312061bfde"
 )
 
 prebuilt_jar(
@@ -23,9 +23,9 @@ prebuilt_jar(
 )
 remote_file(
     name = "selenium-api-mvn",
-    out = "selenium-api-3.4.0.jar",
-    url = "mvn:org.seleniumhq.selenium:selenium-api:jar:3.4.0",
-    sha1 = "bf91d238e6eb07f8496ccb61e12e2c868d2bc7e9"
+    out = "selenium-api-3.8.1.jar",
+    url = "mvn:org.seleniumhq.selenium:selenium-api:jar:3.8.1",
+    sha1 = "248cdab497e53be8a259ac7edea3e82df2aa6cef"
 )
 
 prebuilt_jar(
@@ -38,9 +38,9 @@ prebuilt_jar(
 )
 remote_file(
     name = "selenium-remote-driver-mvn",
-    out  = "selenium-remote-driver-3.4.0.jar",
-    url  = "mvn:org.seleniumhq.selenium:selenium-remote-driver:jar:3.4.0",
-    sha1 = "2593094fccb4f0317e211674ebfc22fb049c043a"
+    out  = "selenium-remote-driver-3.8.1.jar",
+    url  = "mvn:org.seleniumhq.selenium:selenium-remote-driver:jar:3.8.1",
+    sha1 = "f2e493ccd447e36c7bb97bd3d872ed1d7dada6cf"
 )
 
 prebuilt_jar(
@@ -53,7 +53,7 @@ prebuilt_jar(
 )
 remote_file(
     name = "selenium-support-mvn",
-    out  = "selenium-support-3.4.0.jar",
-    url  = "mvn:org.seleniumhq.selenium:selenium-support:jar:3.4.0",
-    sha1 = "0900176a308fbf55d741a168a3beac8527caf1c1",
+    out  = "selenium-support-3.8.1.jar",
+    url  = "mvn:org.seleniumhq.selenium:selenium-support:jar:3.8.1",
+    sha1 = "a81051b31220c6f4a56d19d35c5cdeb081026dfa",
 )

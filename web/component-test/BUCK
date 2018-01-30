@@ -26,6 +26,9 @@ java_library(
 
 java_test(
     name = "test",
+    labels = [
+        "component-test"
+    ],
     srcs = glob(['src/test/java/**/*Test.java']),
     deps = [
         '//common/jgiven:jgiven',
@@ -33,9 +36,9 @@ java_test(
         "//lib/hibernate-validator:hibernate-validator",
         '//lib/selenide:selenide',
         '//lib/selenide:selenide-dependencies',
-#         '//lib/selenium/firefox-driver:selenium-firefox-driver-with-dependencies',
+        '//lib/selenium/firefox-driver:selenium-firefox-driver-with-dependencies',
 #         '//lib/selenium/htmlunit-driver:htmlunit-driver-with-dependencies',
-        '//lib/selenium/phantomjs-driver:phantomjs-driver-with-dependencies',
+#         '//lib/selenium/phantomjs-driver:phantomjs-driver-with-dependencies',
         '//lib/spring:spring-beans',
         '//lib/spring:spring-boot-test',
         '//lib/spring:spring-context',
@@ -47,11 +50,11 @@ java_test(
         '//web/server:queue-triage-web-server',
     ],
     vm_args = [
-#         "-Dbrowser=marionette",
-#         "-Dwebdriver.gecko.driver=lib/geckodriver/geckodriver",
-#         "-Dbrowser=htmlunit",
-        "-Dbrowser=phantomjs",
+        "-Dbrowser=firefox",
+        "-Dremote=http://localhost:4444/wd/hub",
+        "-Dwebdriver.gecko.driver=lib/geckodriver/geckodriver",
         "-Djgiven.report.dir=buck-out/gen/web/component-test/jgiven-reports",
+        "-Dselenide.reports=buck-out/gen/web/component-test/selenide-output"
     ]
 )
 

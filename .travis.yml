@@ -1,5 +1,5 @@
-sudo: false
-dist: trusty
+sudo: true
+
 jdk:
   - openjdk8
 
@@ -18,12 +18,16 @@ before_script:
   - export PATH=$HOME/buck/bin:$PATH
   # Verify Buck installation
   - buck --version
+  # Start Firefox
+  - docker run -d --net=host -v /dev/shm:/dev/shm selenium/standalone-firefox:3.8.1-francium
+  - docker ps
 
 script:
   - buck build //core/dao-mongo:create-users-and-roles
   - buck fetch //... > /dev/null
-  - buck test //... > /dev/null
+  - buck test --all --exclude component-test > /dev/null
+  - buck test --all --include component-test > /dev/null
 
 services:
   - mongodb
-
+  - docker

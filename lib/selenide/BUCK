@@ -9,15 +9,15 @@ prebuilt_jar(
 )
 remote_file(
     name = "selenide-mvn",
-    out = "selenide-4.5.1.jar",
-    url = "mvn:com.codeborne:selenide:jar:4.5.1",
-    sha1 = "c99b650f98572adbc331fda2cb5b7b77a0a52608"
+    out = "selenide-4.10.01.jar",
+    url = "mvn:com.codeborne:selenide:jar:4.10.01",
+    sha1 = "0da96cb7059ef961697b530370812125b6af08c0"
 )
 remote_file(
     name = "selenide-src-mvn",
-    out = "selenide-4.5.1-sources.jar",
-    url = "mvn:com.codeborne:selenide:src:4.5.1",
-    sha1 = "0dfb82c2bc9aa2e22a4bf528b3a4e707544ba687"
+    out = "selenide-4.10.01-sources.jar",
+    url = "mvn:com.codeborne:selenide:src:4.10.01",
+    sha1 = "ede986aeeddabce90709794c5f789617b6447db7"
 )
 
 
