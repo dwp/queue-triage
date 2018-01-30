@@ -6,10 +6,9 @@ import uk.gov.dwp.queue.triage.id.FailedMessageId;
 
 public class FailedMessageGrid {
 
-    public static void selectCheckboxForFailedMessage(FailedMessageId failedMessageId, boolean selected) {
+    public static void selectCheckboxForFailedMessage(FailedMessageId failedMessageId) {
         Selenide.$(By.id("grid_failedMessages_frec_" + failedMessageId))
-                .find("input[type='checkbox']")
-                .setSelected(selected);
+                .click();
     }
 
 }

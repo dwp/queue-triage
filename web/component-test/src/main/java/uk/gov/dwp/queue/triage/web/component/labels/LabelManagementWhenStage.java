@@ -15,7 +15,7 @@ public class LabelManagementWhenStage extends WhenStage<LabelManagementWhenStage
 
     public LabelManagementWhenStage theUserAddslabels$ToFailedMessage$(String labels, FailedMessageId failedMessageId) {
         LOGGER.debug("Adding label(s): {} to failedMessage: {}", labels, failedMessageId);
-        FailedMessageGrid.selectCheckboxForFailedMessage(failedMessageId, true);
+        FailedMessageGrid.selectCheckboxForFailedMessage(failedMessageId);
 
         SelenideElement cell = Selenide.$("#grid_failedMessages_rec_" + failedMessageId + " td[col='5'] div");
 
@@ -26,7 +26,7 @@ public class LabelManagementWhenStage extends WhenStage<LabelManagementWhenStage
 
         Selenide.$("#grid_failedMessages_edit_" + failedMessageId + "_5").setValue(labels);
 
-        FailedMessageGrid.selectCheckboxForFailedMessage(failedMessageId, false);
+        FailedMessageGrid.selectCheckboxForFailedMessage(failedMessageId);
         return this;
     }
 
