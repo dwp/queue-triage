@@ -46,6 +46,9 @@ java_library(
 
 java_test(
     name = "test",
+    labels = [
+        "component-test"
+    ],
     srcs = glob(['src/test/java/**/*Test.java']),
     deps = [
         "//lib/hibernate-validator:hibernate-validator",

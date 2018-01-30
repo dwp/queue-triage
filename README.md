@@ -22,7 +22,8 @@ buck build //core/dao-mongo:create-users-and-roles
 To build and test all the modules run the following commands:
 
 ```bash
-buck test //...
+buck test --all --exclude component-test
+buck test --all --include component-test
 ```
 
 To run the `queue-triage-core-server` from the command line run:
