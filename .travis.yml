@@ -21,6 +21,7 @@ before_script:
   # Start Firefox
   - docker run -d --net=host -v /dev/shm:/dev/shm selenium/standalone-firefox:3.8.1-francium
   - docker ps
+  - printf "[selenium]\n  remote_url=http://localhost:4444/wd/hub\n" > .buckconfig.local
 
 script:
   - buck build //core/dao-mongo:create-users-and-roles

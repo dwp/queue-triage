@@ -24,38 +24,60 @@ java_library(
     ]
 )
 
+test_deps = [
+    '//common/jgiven:jgiven',
+    '//core/client-test-support:queue-triage-core-client-test-support',
+    "//lib/hibernate-validator:hibernate-validator",
+    '//lib/selenide:selenide',
+    '//lib/selenide:selenide-dependencies',
+    '//lib/spring:spring-beans',
+    '//lib/spring:spring-boot-test',
+    '//lib/spring:spring-context',
+    '//lib/spring:spring-test',
+    '//lib/test:common',
+    '//lib/test:jgiven',
+    '//lib/test:jgiven-spring',
+    '//web/component-test:queue-triage-web-component-test',
+    '//web/server:queue-triage-web-server',
+]
+
+vm_args = [
+    '-Djgiven.report.dir=buck-out/gen/web/component-test/jgiven-reports',
+    '-Dselenide.reports=buck-out/gen/web/component-test/selenide-output'
+]
+
+def firefox(vm_args, test_deps):
+    vm_args.append('-Dbrowser=firefox')
+    vm_args.append('-Dwebdriver.gecko.driver=lib/geckodriver/geckodriver')
+    test_deps.append('//lib/selenium/firefox-driver:selenium-firefox-driver-with-dependencies')
+
+def phantomjs(vm_args, test_deps):
+    vm_args.append('-Dbrowser=phantomjs')
+    vm_args.append('-Dphantomjs.binary.path=lib/selenium/phantomjs-driver/phantomjs')
+    test_deps.append('//lib/selenium/phantomjs-driver:phantomjs-driver-with-dependencies')
+
+browsers = {
+    'firefox': firefox,
+    'phantomjs': phantomjs
+}
+
+# Configure the 'vm_args' and 'deps' for the relevant browser
+browsers[read_config('selenium', 'browser', 'firefox')](vm_args, test_deps)
+remote_url = read_config('selenium', 'remote_url')
+if remote_url:
+    vm_args.append('-Dremote={}'.format(remote_url))
+
+# The web component-test will run against a local firefox.  There are a number of options that can
+# be configuration by adding a [selenium] section to a .buckconfig.local file.  See the README.md
+# for more details.
 java_test(
     name = "test",
     labels = [
         "component-test"
     ],
     srcs = glob(['src/test/java/**/*Test.java']),
-    deps = [
-        '//common/jgiven:jgiven',
-        '//core/client-test-support:queue-triage-core-client-test-support',
-        "//lib/hibernate-validator:hibernate-validator",
-        '//lib/selenide:selenide',
-        '//lib/selenide:selenide-dependencies',
-        '//lib/selenium/firefox-driver:selenium-firefox-driver-with-dependencies',
-#         '//lib/selenium/htmlunit-driver:htmlunit-driver-with-dependencies',
-#         '//lib/selenium/phantomjs-driver:phantomjs-driver-with-dependencies',
-        '//lib/spring:spring-beans',
-        '//lib/spring:spring-boot-test',
-        '//lib/spring:spring-context',
-        '//lib/spring:spring-test',
-        '//lib/test:common',
-        '//lib/test:jgiven',
-        '//lib/test:jgiven-spring',
-        '//web/component-test:queue-triage-web-component-test',
-        '//web/server:queue-triage-web-server',
-    ],
-    vm_args = [
-        "-Dbrowser=firefox",
-        "-Dremote=http://localhost:4444/wd/hub",
-        "-Dwebdriver.gecko.driver=lib/geckodriver/geckodriver",
-        "-Djgiven.report.dir=buck-out/gen/web/component-test/jgiven-reports",
-        "-Dselenide.reports=buck-out/gen/web/component-test/selenide-output"
-    ]
+    deps = test_deps,
+    vm_args = vm_args
 )
 
 # buck build //web/component-test:generate-jgiven-html-reports

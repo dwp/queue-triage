@@ -41,7 +41,7 @@ remote_file(name="commons-pool-mvn", out = "commons-pool-1.6.jar", url = "mvn:co
 remote_file(name='commons-lang3-mvn', out='commons-lang3-3.5.jar', url='mvn:org.apache.commons:commons-lang3:jar:3.5', sha1='6c6c702c89bfff3cd9e80b04d668c5e190d588c6')
 remote_file(name='commons-logging-mvn', out='commons-logging-1.2.jar', url='mvn:commons-logging:commons-logging:jar:1.2', sha1='4bfc12adfe4842bf07b657f0369c4cb522955686')
 remote_file(name='gson-mvn', out='gson-2.8.1.jar', url='mvn:com.google.code.gson:gson:jar:2.8.1', sha1='02a8e0aa38a2e21cb39e2f5a7d6704cbdc941da0')
-remote_file(name='guava-mvn', out='guava-21.0.jar', url='mvn:com.google.guava:guava:jar:21.0', sha1='3a3d111be1be1b745edfa7d91678a12d7ed38709')
+remote_file(name='guava-mvn', out='guava-23.6-jre.jar', url='mvn:com.google.guava:guava:jar:23.6-jre', sha1='c0b638df79e7b2e1ed98f8d68ac62538a715ab1d')
 remote_file(name='javassist-mvn', out='javassist-3.22.0-CR2.jar', url='mvn:org.javassist:javassist:jar:3.22.0-CR2', sha1="44eaf0990dea92f4bca4b9931b2239c0e8756ee7")
 remote_file(name='jboss-logging-mvn', out='jboss-logging-3.1.1.Final.jar', url='mvn:org.jboss.logging:jboss-logging:jar:3.3.1.Final', sha1='c46217ab74b532568c0ed31dc599db3048bd1b67')
 remote_file(name='json-path-mvn', out='json-path-2.2.0.jar', url='mvn:com.jayway.jsonpath:json-path:jar:2.2.0', sha1='22290d17944bd239fabf5ac69005a60a7ecbbbcb')

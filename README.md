@@ -7,7 +7,7 @@ An application to manage dead lettered messages across multiple brokers
 * Mongo 3.2+
 * [Buck](https://buckbuild.com/).  Please refer to the [Getting Started Guide]() for installation and usage of Buck.
 
-
+### Setup
 To configure the project for IntelliJ run:
 
 ```
@@ -19,13 +19,30 @@ To create the relevant Mongo Roles and Users execute the following (this assumes
 buck build //core/dao-mongo:create-users-and-roles
 ```
 
-To build and test all the modules run the following commands:
+### Testing
+To test all the modules run the following commands:
 
 ```bash
 buck test --all --exclude component-test
 buck test --all --include component-test
 ```
+#### Testing - Configuration
+The web component-test will run against a local firefox.  There are a number of options that can be configuration by adding a `[selenium]` section to a `.buckconfig.local` file.
 
+##### `browser`
+Execute the selenium tests against a given browser
+```
+[selenium]
+  browser = firefox|phantomjs
+```
+##### `remote_url`
+Can be used to execute the selenium tests against a remote selenium instance
+```
+[selenium]
+  remote_url = http://localhost:4444/wd/hub
+```
+
+### Starting
 To run the `queue-triage-core-server` from the command line run:
 
 ```bash
