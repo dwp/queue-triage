@@ -1,27 +1,27 @@
 java_library(
     name = "queue-triage-web-spring-security",
     srcs = glob(["src/main/java/**/security/spring/web/*.java"]),
-    exported_deps = [
+    deps = [
         "//lib/javax:javax-servlet-api",
         "//lib/ldap:unboundid-ldapsdk",
         "//lib/spring:spring-security-ldap-with-dependencies",
         "//lib/spring:spring-web",
     ],
     visibility = [
-        "//web/server:queue-triage-web-server",
+        "//web/server:server",
     ],
 )
 
 java_library(
     name = "queue-triage-web-spring-security-ldap",
     srcs = glob(["src/main/java/**/ldap/*.java"]),
-    exported_deps = [
+    deps = [
         "//lib/ldap:unboundid-ldapsdk",
         "//lib/spring:spring-boot",
         "//lib/spring:spring-security-ldap-with-dependencies",
     ],
     visibility = [
-        "//web/server:queue-triage-web-server",
+        "//web/server:server",
     ],
 )
 

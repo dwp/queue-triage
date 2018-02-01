@@ -1,7 +1,7 @@
 java_library(
     name = "queue-triage-common-metrics",
     srcs = glob(['src/main/java/**/*.java']),
-    exported_deps = [
+    deps = [
         '//lib/dropwizard/metrics:metrics-servlet',
         '//lib/dropwizard/metrics:metrics-core',
         '//lib/javax:javax-servlet-api',
@@ -12,6 +12,6 @@ java_library(
     ],
     visibility = [
         '//common/cxf-server:queue-triage-common-cxf-server',
-        '//core/server:queue-triage-core-server',
+        '//core/server:server',
     ]
 )

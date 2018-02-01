@@ -27,6 +27,7 @@ prebuilt_jar(
     visibility = [
         "//core/activemq:queue-triage-core-activemq",
         "//core/activemq:test",
+        "//core/component-test:queue-triage-core-component-test",
         "//core/jms:queue-triage-core-jms",
         "//core/jms:queue-triage-core-jms-spring",
         "//core/jms:test",
@@ -60,7 +61,7 @@ java_library(
         "//core/activemq:test",
         "//core/component-test:test",
         "//core/resend:test-spring",
-        "//core/server:queue-triage-core-server",
+        "//core/server:server",
     ]
 )
 java_library(

@@ -21,6 +21,6 @@ java_library(
         "//core/search:queue-triage-core-search-mongo",
         "//core/search:queue-triage-core-search-mongo-spring",
         "//core/search:test-mongo",
-        "//core/server:queue-triage-core-server",
+        "//core/server:server",
     ]
 )

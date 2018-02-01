@@ -21,11 +21,11 @@ java_library(
         "//core/search:queue-triage-core-search",
         "//core/search:queue-triage-core-search-mongo",
         "//core/search:test-mongo",
-        "//core/server:queue-triage-core-server",
+        "//core/server:server",
         "//core/server:test",
         "//web/component-test:queue-triage-web-component-test",
         "//web/component-test:test",
-        "//web/server:queue-triage-web-server",
+        "//web/server:server",
         '//web/server:test',
     ]
 )

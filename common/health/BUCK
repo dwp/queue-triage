@@ -6,8 +6,8 @@ java_library(
     ],
     visibility = [
         "//common/health:test",
-        "//core/server:queue-triage-core-server",
-        "//web/server:queue-triage-web-server",
+        "//core/server:server",
+        "//web/server:server",
     ]
 )
 

@@ -11,11 +11,13 @@ java_library(
         "//core/jms:queue-triage-core-jms",
         "//core/jms:test",
         "//core/activemq:queue-triage-core-activemq",
+        "//core/activemq:test",
         "//core/message-classification:queue-triage-core-message-classification",
         "//core/message-classification:test",
         "//core/resend:queue-triage-core-resend",
         "//core/resend:test",
-        "//core/server:queue-triage-core-server",
+        "//core/resend:test-spring",
+        "//core/server:server",
         "//core/server:test",
     ]
 )

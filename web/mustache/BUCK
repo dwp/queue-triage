@@ -1,7 +1,7 @@
 java_library(
     name="queue-triage-web-mustache",
     srcs=glob(["src/main/java/**/*.java"], excludes=["src/main/java/**/configuration/*.java"]),
-    exported_deps=[
+    deps = [
         "//lib/javax:javax-ws-rs-api",
         "//lib/slf4j:slf4j-api",
         "//lib/web:mustache-compiler",
@@ -14,11 +14,13 @@ java_library(
 java_library(
     name="queue-triage-web-mustache-spring",
     srcs=glob(["src/main/java/**/configuration/*.java"]),
-    exported_deps=[
+    deps = [
+        ":queue-triage-web-mustache",
         "//common/cxf:queue-triage-common-cxf",
+        "//lib/javax:javax-ws-rs-api",
         "//lib/spring:spring-beans",
         "//lib/spring:spring-context",
-        "//web/mustache:queue-triage-web-mustache",
+        "//lib/web:mustache-compiler",
     ],
     visibility = [
         "//web/..."
@@ -40,9 +42,9 @@ java_test(
         "src/test/resources/mustache/testPage.mustache",
     ],
     deps=[
+        ":queue-triage-web-mustache",
+        ":test-resources",
         "//lib/test:common",
         "//lib/web:mustache-compiler",
-        "//web/mustache:queue-triage-web-mustache",
-        "//web/mustache:test-resources",
     ]
 )

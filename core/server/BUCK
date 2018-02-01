@@ -1,5 +1,7 @@
+load("//:queue-triage-version.properties", "QUEUE_TRIAGE_VERSION")
+
 java_library(
-    name = "queue-triage-core-server",
+    name = "server",
     srcs = glob(["src/main/java/**/*.java"]),
     resources = [
         'src/main/resources/application.yml',
@@ -7,13 +9,16 @@ java_library(
     ],
     resources_root = 'src/main/resources',
     deps = [
+        '//lib/activemq:activemq-client-with-dependencies',
+        '//lib/apache-cxf:cxf-core',
+        '//lib/apache-cxf:cxf-rt-rs-service-description-swagger',
+        '//lib/apache-cxf:cxf-rt-transports-http-jetty',
         '//lib:apache-el',
         '//lib:asm',
         '//lib:asm-commons',
         '//lib:asm-tree',
-        '//lib:snakeyaml',
-        '//lib/activemq:activemq-client-with-dependencies',
-        '//lib/apache-cxf:cxf-rt-transports-http-jetty',
+        '//lib/dropwizard/metrics:metrics-servlet',
+        '//lib/dropwizard/metrics:metrics-core',
         '//lib/jackson:jackson-jaxrs-json-provider',
         '//lib/javax:javax-annotation-api',
         '//lib/javax:javax-servlet-api',
@@ -25,6 +30,7 @@ java_library(
         '//lib/slf4j:jul-to-slf4j',
         '//lib/slf4j:log4j-over-slf4j',
         '//lib/slf4j:slf4j-api',
+        '//lib:snakeyaml',
         '//lib/spring:spring-boot-autoconfigure',
         '//lib/spring:spring-boot-with-dependencies',
         '//lib/spring:spring-jms',
@@ -62,7 +68,7 @@ java_test(
     name = "test",
     srcs = glob(['src/test/java/**/*Test.java']),
     deps = [
-        ':queue-triage-core-server',
+        ':server',
         '//core/client-test-support:queue-triage-core-client-test-support',
         '//core/domain-test-support:queue-triage-core-domain-test-support',
         '//lib:commons-lang3',
@@ -72,6 +78,17 @@ java_test(
         '//lib/slf4j:slf4j-api',
         '//lib/test:common',
     ],
+)
+
+java_binary(
+    name = 'queue-triage-core-server',
+    main_class = 'uk.gov.dwp.queue.triage.core.QueueTriageCoreApplication',
+    deps = [
+        ':server'
+    ],
+    blacklist = [
+        '^(?!uk.gov.dwp.queue.triage.*|logback.xml|application.yml)',
+    ]
 )
 
 genrule(

@@ -7,13 +7,15 @@ java_library(
     visibility = [
         "//common/cxf-server:queue-triage-common-cxf-server",
         "//common/jackson:queue-triage-common-jackson",
+        "//common/jackson:queue-triage-common-jackson-spring",
         "//common/metrics:queue-triage-common-metrics-cxf",
         "//common/swagger:queue-triage-common-swagger-cxf",
         "//core/activemq:queue-triage-core-activemq",
         "//core/resend:queue-triage-core-resend-spring",
         "//core/sample-data:queue-triage-sample-data",
-        "//core/server:queue-triage-core-server",
+        "//core/server:server",
         "//core/message-classification:queue-triage-core-message-classification-server",
         "//web/mustache:queue-triage-web-mustache-spring",
+        "//web/server:server",
     ]
 )

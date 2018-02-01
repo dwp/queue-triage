@@ -8,7 +8,7 @@ prebuilt_jar(
     visibility = [
         "//core/component-test:",
         "//core/sample-data:queue-triage-sample-data",
-        "//web/server:queue-triage-web-server",
+        "//web/server:server",
     ],
 )
 
@@ -68,7 +68,7 @@ java_library(
         "//common/cxf-server:queue-triage-common-cxf-server",
         "//core/component-test:test",
         "//core/sample-data:queue-triage-sample-data",
-        "//core/server:queue-triage-core-server",
+        "//core/server:server",
     ]
 )
 
@@ -90,5 +90,7 @@ java_library(
     ],
     visibility = [
         "//common/swagger:queue-triage-common-swagger-cxf",
+        "//core/server:server",
+        "//web/server:server",
     ]
 )

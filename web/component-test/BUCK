@@ -7,6 +7,7 @@ java_library(
         '//common/ldap-test-support:queue-triage-ldap-test-support',
         '//core/client:queue-triage-core-client',
         '//core/client-test-support:queue-triage-core-client-test-support',
+        "//lib/ldap:unboundid-ldapsdk",
         '//lib/selenide:selenide',
         '//lib/selenium:selenium-api',
         '//lib/spring:spring-boot-test',
@@ -38,7 +39,7 @@ test_deps = [
     '//lib/test:jgiven',
     '//lib/test:jgiven-spring',
     '//web/component-test:queue-triage-web-component-test',
-    '//web/server:queue-triage-web-server',
+    '//web/server:server',
 ]
 
 vm_args = [
