@@ -1,7 +1,7 @@
 java_library(
     name = "queue-triage-core-activemq",
     srcs = glob(["src/main/java/**/*.java"]),
-    exported_deps =[
+    deps = [
         "//common/cxf:queue-triage-common-cxf",
         "//core/domain:queue-triage-core-domain",
         "//core/jms:queue-triage-core-jms",
@@ -22,7 +22,7 @@ java_library(
         "//core/component-test:test",
         "//core/resend:queue-triage-core-resend-spring",
         "//core/resend:test-spring",
-        "//core/server:queue-triage-core-server",
+        "//core/server:server",
         "//core/server:test",
     ]
 )
@@ -44,13 +44,15 @@ java_test(
     srcs = glob([ "src/test/java/**/*.java" ]),
     deps = [
         ":test-resources",
-        "//core/activemq:queue-triage-core-activemq",
+        ":queue-triage-core-activemq",
         "//core/domain:queue-triage-core-domain",
         "//core/domain-test-support:queue-triage-core-domain-test-support",
         "//core/jms:queue-triage-core-jms",
-        "//lib:commons-lang3",
-        "//lib:snakeyaml",
+        "//core/service:queue-triage-core-service",
         "//lib/activemq:activemq-client-with-dependencies",
+        "//lib:commons-lang3",
+        "//lib/javax:javax-ws-rs-api",
+        "//lib:snakeyaml",
         "//lib/spring:spring-core",
         "//lib/spring:spring-core-dependencies",
         "//lib/spring:spring-jms",

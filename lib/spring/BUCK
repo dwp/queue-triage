@@ -63,7 +63,8 @@ prebuilt_jar(
         "//core/component-test:queue-triage-core-component-test",
         "//core/jms:queue-triage-core-jms-spring",
         "//core/jms:test-spring",
-        "//core/server:queue-triage-core-server",
+        "//core/resend:test-spring",
+        "//core/server:server",
     ],
 )
 prebuilt_jar(name='spring-ldap-core', binary_jar=":spring-ldap-core-mvn")
@@ -121,10 +122,10 @@ java_library(
         "//core/component-test:queue-triage-core-component-test",
         "//core/component-test:test",
         "//core/dao-mongo:test",
-        "//core/server:queue-triage-core-server",
+        "//core/server:server",
         "//web/component-test:queue-triage-web-component-test",
         "//web/component-test:test",
-        "//web/server:queue-triage-web-server",
+        "//web/server:server",
         "//web/spring-security:ldap-test",
     ],
 )
@@ -160,6 +161,7 @@ java_library(
         "//lib:aopalliance",
     ],
     visibility = [
+        "//web/server:server",
         "//web/spring-security:ldap-test",
         "//web/spring-security:queue-triage-web-spring-security",
         "//web/spring-security:queue-triage-web-spring-security-ldap",

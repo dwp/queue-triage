@@ -13,13 +13,14 @@ java_library(
         '//core/service:queue-triage-core-service',
         '//lib:commons-lang3',
         '//lib/jackson:jackson-annotations',
+        '//lib/jackson:jackson-databind',
         '//lib/javax:javax-ws-rs-api',
         '//lib/swagger:swagger-annotations',
     ],
     visibility = [
         '//core/component-test:queue-triage-core-component-test',
         '//core/component-test:test',
-        '//core/server:queue-triage-core-server',
+        '//core/server:server',
     ],
 )
 
@@ -34,6 +35,7 @@ java_test(
         ],
     ),
     deps = [
+        '//common/id:queue-triage-common-id',
         '//common/jackson:queue-triage-common-jackson',
         '//common/jackson:queue-triage-common-jackson-spring',
         '//common/matchers:queue-triage-common-matchers',
@@ -42,6 +44,8 @@ java_test(
         '//core/service:queue-triage-core-service',
         '//lib:commons-lang3',
         '//lib/jackson:jackson-annotations',
+        '//lib/jackson:jackson-core',
+        '//lib/jackson:jackson-databind',
         '//lib/test:common',
     ],
 )
@@ -65,7 +69,7 @@ java_library(
     visibility = [
         '//core/component-test:queue-triage-core-component-test',
         '//core/component-test:test',
-        '//core/server:queue-triage-core-server',
+        '//core/server:server',
     ],
 )
 

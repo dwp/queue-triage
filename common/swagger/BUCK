@@ -1,13 +1,13 @@
 java_library(
     name = 'queue-triage-common-swagger-cxf',
     srcs = glob(['src/main/java/**/*.java']),
-    exported_deps = [
+    deps = [
         '//common/cxf:queue-triage-common-cxf',
         '//lib/apache-cxf:cxf-core',
         '//lib/apache-cxf:cxf-rt-rs-service-description-swagger',
         '//lib/spring:spring-context',
     ],
     visibility = [
-        '//core/server:queue-triage-core-server',
+        '//core/server:server',
     ],
 )

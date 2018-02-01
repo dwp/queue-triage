@@ -1,5 +1,7 @@
+load("//:queue-triage-version.properties", "QUEUE_TRIAGE_VERSION")
+
 java_library(
-    name = "queue-triage-web-server",
+    name = "server",
     srcs = glob(["src/main/java/**/*.java"]),
     resources = [
         "src/main/resources/application.yml",
@@ -14,34 +16,56 @@ java_library(
         "src/main/resources/static/js/w2ui-1.5.rc1.js",
     ],
     resources_root = "src/main/resources",
-    exported_deps = [
-        "//common/jackson:queue-triage-common-jackson-spring",
-        "//lib/spring:spring-boot-autoconfigure",
-        "//lib/spring:spring-boot-with-dependencies",
-        "//lib/spring:spring-web",
-        "//web/mustache:queue-triage-web-mustache-spring",
-        "//web/spring-security:queue-triage-web-spring-security",
-        "//web/spring-security:queue-triage-web-spring-security-ldap",
-        '//common/cxf-server:queue-triage-common-cxf-server',
-        '//common/health:queue-triage-health',
-        '//common/id:queue-triage-common-id',
-        '//core/client:queue-triage-core-client',
-        '//lib:snakeyaml',
+    deps = [
+        '//lib/apache-cxf:cxf-core',
         '//lib/apache-cxf:cxf-rt-rs-client',
+        '//lib/apache-cxf:cxf-rt-rs-service-description-swagger',
         '//lib/apache-cxf:cxf-rt-transports-http',
-        "//lib/hibernate-validator:hibernate-validator",
+        '//lib/hibernate-validator:hibernate-validator',
         '//lib/jackson:jackson-annotations',
+        '//lib/jackson:jackson-core',
+        '//lib/jackson:jackson-databind',
         '//lib/jackson:jackson-jaxrs-json-provider',
         '//lib/javax:javax-servlet-api',
+        '//lib/javax:javax-ws-rs-api',
         '//lib/jetty:jetty-server',
         '//lib/logback:logback-classic',
         '//lib/logback:logback-core',
         '//lib/slf4j:jcl-over-slf4j',
         '//lib/slf4j:jul-to-slf4j',
         '//lib/slf4j:log4j-over-slf4j',
+        '//lib/slf4j:slf4j-api',
+        '//lib:snakeyaml',
+        '//lib/spring:spring-boot-autoconfigure',
+        '//lib/spring:spring-boot-with-dependencies',
+        "//lib/spring:spring-security-ldap-with-dependencies",
+        '//lib/spring:spring-web',
+    ],
+    exported_deps = [
+        '//common/cxf:queue-triage-common-cxf',
+        '//common/cxf-server:queue-triage-common-cxf-server',
+        '//common/health:queue-triage-health',
+        '//common/jackson:queue-triage-common-jackson-spring',
+        '//common/id:queue-triage-common-id',
+        '//core/client:queue-triage-core-client',
+        '//web/mustache:queue-triage-web-mustache',
+        '//web/mustache:queue-triage-web-mustache-spring',
+        '//web/spring-security:queue-triage-web-spring-security',
+        '//web/spring-security:queue-triage-web-spring-security-ldap',
     ],
     visibility = [
-        "//web/component-test:test",
+        '//web/component-test:test',
+    ],
+)
+
+java_binary(
+    name = 'queue-triage-web-server',
+    main_class = 'uk.gov.dwp.queue.triage.web.server.QueueTriageWebApplication',
+    deps = [
+        ':server'
+    ],
+    blacklist = [
+        '^(?!uk.gov.dwp.queue.triage.*|static*|mustache*|logback.xml|application.yml)',
     ]
 )
 
@@ -49,16 +73,15 @@ java_test(
     name = "test",
     srcs = glob(["src/test/java/**/*.java"]),
     deps = [
-        ":queue-triage-web-server",
-        "//common/id:queue-triage-common-id",
-        "//core/client:queue-triage-core-client",
-        "//core/client-test-support:queue-triage-core-client-test-support",
-        "//lib:json-path-matchers-incl-deps",
-        "//lib/javax:javax-servlet-api",
-        "//lib/spring:spring-security-core",
-        "//lib/spring:spring-security-web",
-        "//lib/test:common",
-        "//web/mustache:queue-triage-web-mustache-spring",
+        ':server',
+        '//core/client-test-support:queue-triage-core-client-test-support',
+        '//lib:json-path-matchers-incl-deps',
+        '//lib/jackson:jackson-core',
+        '//lib/jackson:jackson-databind',
+        '//lib/javax:javax-servlet-api',
+        '//lib/spring:spring-security-core',
+        '//lib/spring:spring-security-web',
+        '//lib/test:common',
     ]
 )
 

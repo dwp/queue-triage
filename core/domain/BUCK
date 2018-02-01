@@ -29,7 +29,7 @@ java_library(
         "//core/search:queue-triage-core-search",
         "//core/search:queue-triage-core-search-mongo",
         "//core/search:test-mongo",
-        "//core/server:queue-triage-core-server",
+        "//core/server:server",
         "//core/server:test",
         "//core/service:queue-triage-core-service",
         "//core/service:test",

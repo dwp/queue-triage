@@ -24,7 +24,7 @@ java_library(
     ],
     visibility = [
         "//core/resend:test",
-        "//core/server:queue-triage-core-server",
+        "//core/server:server",
     ]
 )
 
@@ -39,7 +39,7 @@ name = "test",
     ),
     deps =
         RESEND_DEPENDENCIES + [
-        "//core/client-test-support:queue-triage-core-client-test-support",
+            "//core/client-test-support:queue-triage-core-client-test-support",
             "//core/domain:queue-triage-core-domain",
             "//core/resend:queue-triage-core-resend",
             "//lib/test:common",
@@ -63,7 +63,7 @@ java_library(
     visibility = [
         "//core/component-test:queue-triage-component-test",
         "//core/component-test:test",
-        "//core/server:queue-triage-core-server",
+        "//core/server:server",
     ]
 )
 
@@ -89,8 +89,10 @@ java_test(
         "//core/resend:queue-triage-core-resend-spring",
         "//core/resend:test-resources",
         "//core/search:queue-triage-core-search",
+        "//core/service:queue-triage-core-service",
         "//lib:snakeyaml",
         "//lib/activemq:activemq-client-with-dependencies",
+        "//lib/spring:spring-jms",
         "//lib/spring:spring-tx",
         "//lib/test:common",
     ]

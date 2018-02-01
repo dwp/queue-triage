@@ -5,7 +5,7 @@ java_library(
         "src/main/resources/example.ldif"
     ],
     resources_root = 'src/main/resources',
-    exported_deps = [
+    deps = [
         "//lib/ldap:unboundid-ldapsdk",
         "//lib/slf4j:slf4j-api",
     ],

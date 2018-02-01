@@ -19,7 +19,7 @@ java_library(
         "//core/resend:queue-triage-core-resend",
         "//core/resend:test",
         "//core/resend:test-spring",
-        "//core/server:queue-triage-core-server",
+        "//core/server:server",
         "//core/server:test",
     ],
 )
@@ -40,7 +40,7 @@ java_library(
     visibility = [
         "//core/resend:queue-triage-core-resend-spring",
         "//core/resend:test-spring",
-        "//core/server:queue-triage-core-server",
+        "//core/server:server",
     ]
 )
 

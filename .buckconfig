@@ -1,11 +1,11 @@
 [alias]
   core-component = //core/component-test:test
-  core-server = //core/server:queue-triage-core-server
-  start-core = //core/server:start
+  core-server    = //core/server:queue-triage-core-server
+  start-core     = //core/server:start
   web-component  = //web/component-test:test
-  web-server  = //web/server:queue-triage-web-server
-  start-ldap = //common/ldap-test-support:start
-  start-web = //web/server:start
+  web-server     = //web/server:queue-triage-web-server
+  start-web      = //web/server:start
+  start-ldap     = //common/ldap-test-support:start
 
 [download]
   in_build = True

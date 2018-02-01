@@ -4,22 +4,21 @@ java_library(
         ["src/main/java/**/*.java"],
     ),
     deps = [
-        '//lib/apache-cxf:cxf-rt-features-metrics',
-        '//lib/spring:spring-boot-autoconfigure',
         '//common/metrics:queue-triage-common-metrics',
-    ],
-    exported_deps = [
         "//common/cxf:queue-triage-common-cxf",
+        '//lib/apache-cxf:cxf-rt-features-metrics',
         "//lib/apache-cxf:cxf-rt-transports-http-jetty",
+        '//lib/javax:javax-ws-rs-api',
         "//lib/javax:javax-servlet-api",
         "//lib/spring:spring-boot",
         "//lib/spring:spring-context",
         "//lib/spring:spring-core",
+        '//lib/spring:spring-boot-autoconfigure',
         '//lib/dropwizard/metrics:metrics-core',
     ],
     visibility = [
         "//core/component-test:test",
-        "//core/server:queue-triage-core-server",
-        "//web/server:queue-triage-web-server",
+        "//core/server:server",
+        "//web/server:server",
     ],
 )
