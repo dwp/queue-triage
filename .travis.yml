@@ -13,7 +13,7 @@ before_script:
   - echo "db.createUser({user:'admin',pwd:'Passw0rd',roles:['userAdminAnyDatabase']})" | mongo admin
   # Install Buck
   - pushd $HOME
-  - git clone --branch v2017.05.31.01 --depth 1 https://github.com/facebook/buck.git
+  - git clone --branch v2017.10.01.01 --depth 1 https://github.com/facebook/buck.git
   - cd buck && ant && popd
   - export PATH=$HOME/buck/bin:$PATH
   # Verify Buck installation
