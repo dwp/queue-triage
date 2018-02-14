@@ -3,8 +3,10 @@ java_library(
     srcs = glob(["src/main/java/**/*.java"]),
     deps = [
         "//common/cxf:queue-triage-common-cxf",
+        "//common/executor:queue-triage-common-executor",
         "//core/domain:queue-triage-core-domain",
         "//core/jms:queue-triage-core-jms",
+        "//core/jms:queue-triage-core-jms-spring",
         "//core/service:queue-triage-core-service",
         "//lib/activemq:activemq-client",
         "//lib/activemq:geronimo-jms",
@@ -31,7 +33,9 @@ java_library(
     name = "test-resources",
     resources = [
         "src/test/resources/single-broker.yml",
+        "src/test/resources/single-broker-browse.yml",
         "src/test/resources/multiple-brokers.yml",
+        "src/test/resources/multiple-brokers-browse.yml",
     ],
     resources_root = "src/test/resources",
     visibility = [
@@ -45,13 +49,16 @@ java_test(
     deps = [
         ":test-resources",
         ":queue-triage-core-activemq",
+        "//common/executor:queue-triage-common-executor",
         "//core/domain:queue-triage-core-domain",
         "//core/domain-test-support:queue-triage-core-domain-test-support",
         "//core/jms:queue-triage-core-jms",
+        "//core/jms:queue-triage-core-jms-spring",
         "//core/service:queue-triage-core-service",
         "//lib/activemq:activemq-client-with-dependencies",
         "//lib:commons-lang3",
         "//lib/javax:javax-ws-rs-api",
+        "//lib/slf4j:slf4j-api",
         "//lib:snakeyaml",
         "//lib/spring:spring-core",
         "//lib/spring:spring-core-dependencies",

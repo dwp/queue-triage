@@ -4,10 +4,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.core.env.Environment;
-import uk.gov.dwp.queue.triage.core.jms.JmsMessagePropertyExtractor;
-import uk.gov.dwp.queue.triage.core.jms.MessageTextExtractor;
-import uk.gov.dwp.queue.triage.core.jms.activemq.ActiveMQDestinationExtractor;
-import uk.gov.dwp.queue.triage.core.jms.activemq.ActiveMQFailedMessageFactory;
 import uk.gov.dwp.queue.triage.core.jms.activemq.JmsListenerAdminResource;
 import uk.gov.dwp.queue.triage.core.jms.activemq.spring.ActiveMQConnectionFactoryBeanDefinitionFactory;
 import uk.gov.dwp.queue.triage.core.jms.activemq.spring.FailedMessageListenerBeanDefinitionFactory;
@@ -23,20 +19,19 @@ import java.util.stream.Collectors;
 
 @Configuration
 @Import({
-        CxfConfiguration.class
+        CxfConfiguration.class,
+        CommonJmsConfiguration.class
 })
 public class JmsListenerConfig {
 
     @Bean
-    public static JmsListenerBeanDefinitionFactory jmsListenerBeanDefinitionFactory(Environment environment) {
+    public JmsListenerBeanDefinitionFactory jmsListenerBeanDefinitionFactory(Environment environment,
+                                                                             ActiveMQConnectionFactoryBeanDefinitionFactory activeMQConnectionFactoryBeanDefinitionFactory,
+                                                                             FailedMessageListenerBeanDefinitionFactory failedMessageListenerBeanDefinitionFactory) {
         return new JmsListenerBeanDefinitionFactory(
                 environment,
-                new ActiveMQConnectionFactoryBeanDefinitionFactory(),
-                new FailedMessageListenerBeanDefinitionFactory(brokerName -> new ActiveMQFailedMessageFactory(
-                        new MessageTextExtractor(),
-                        new ActiveMQDestinationExtractor(brokerName),
-                        new JmsMessagePropertyExtractor()
-                )),
+                activeMQConnectionFactoryBeanDefinitionFactory,
+                failedMessageListenerBeanDefinitionFactory,
                 new NamedMessageListenerContainerBeanDefinitionFactory()
         );
     }
