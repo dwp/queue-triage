@@ -87,6 +87,12 @@ public class QueueBrowsingBeanDefinitionFactory implements BeanDefinitionRegistr
                                 getProperty(index, "queue")
                         )
                 );
+
+                // Create QueueBrowserScheduledExecutor
+                registry.registerBeanDefinition(
+                        queueBrowserScheduledExecutorServiceBeanDefinitionFactory.createBeanName(brokerName),
+                        createQueueBrowserScheduledExecutorBeanDefinition(index, queueBrowserServiceBeanName)
+                );
             }
             index++;
         }

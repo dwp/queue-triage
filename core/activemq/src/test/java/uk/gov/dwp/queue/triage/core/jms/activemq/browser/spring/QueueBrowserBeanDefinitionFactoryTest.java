@@ -16,7 +16,6 @@ import org.springframework.jms.listener.DefaultMessageListenerContainer;
 import uk.gov.dwp.queue.triage.core.jms.FailedMessageListener;
 import uk.gov.dwp.queue.triage.core.jms.activemq.browser.QueueBrowserCallback;
 import uk.gov.dwp.queue.triage.core.jms.activemq.browser.QueueBrowserService;
-import uk.gov.dwp.queue.triage.core.jms.activemq.browser.configuration.QueueBrowserConfiguration;
 import uk.gov.dwp.queue.triage.core.jms.activemq.configuration.JmsListenerConfig;
 import uk.gov.dwp.queue.triage.core.jms.activemq.spring.FailedMessageListenerBeanDefinitionFactory;
 import uk.gov.dwp.queue.triage.core.service.FailedMessageService;
@@ -30,7 +29,7 @@ import static org.hamcrest.Matchers.nullValue;
 import static org.mockito.Mockito.mock;
 import static uk.gov.dwp.queue.triage.core.jms.activemq.browser.spring.QueueBrowserServiceBeanDefinitionFactory.QUEUE_BROWSER_SERVICE_BEAN_NAME_PREFIX;
 import static uk.gov.dwp.queue.triage.core.jms.activemq.spring.ActiveMQConnectionFactoryBeanDefinitionFactory.ACTIVE_MQ_CONNECTION_FACTORY_BEAN_NAME_PREFIX;
-import static uk.gov.dwp.queue.triage.core.jms.activemq.spring.NamedMessageListenerContainerBeanDefinitionFactory.DEFAULT_MESSAGE_LISTENER_CONTAINER_BEAN_NAME_PREFIX;
+import static uk.gov.dwp.queue.triage.core.jms.activemq.spring.NamedMessageListenerContainerBeanDefinitionFactory.NAMED_MESSAGE_LISTENER_CONTAINER_BEAN_NAME_PREFIX;
 import static uk.gov.dwp.queue.triage.core.jms.spring.JmsTemplateBeanDefinitionFactory.JMS_TEMPLATE_BEAN_NAME_PREFIX;
 
 public class QueueBrowserBeanDefinitionFactoryTest {
@@ -92,7 +91,7 @@ public class QueueBrowserBeanDefinitionFactoryTest {
     }
 
     private DefaultMessageListenerContainer defaultMessageListenerContainerBeanFor(String brokerName) {
-        return getBean(DEFAULT_MESSAGE_LISTENER_CONTAINER_BEAN_NAME_PREFIX + brokerName, DefaultMessageListenerContainer.class);
+        return getBean(NAMED_MESSAGE_LISTENER_CONTAINER_BEAN_NAME_PREFIX + brokerName, DefaultMessageListenerContainer.class);
     }
 
     private <T> T getBean(String beanName, Class<T> beanType) {
@@ -110,7 +109,7 @@ public class QueueBrowserBeanDefinitionFactoryTest {
     private AnnotationConfigApplicationContext createApplicationContext(String yamlFilename) {
         AnnotationConfigApplicationContext applicationContext = new AnnotationConfigApplicationContext();
         applicationContext.setEnvironment(createEnvironment(yamlFilename));
-        applicationContext.register(QueueBrowserConfiguration.class, JmsListenerConfig.class, AdditionalConfig.class);
+        applicationContext.register(JmsListenerConfig.class, AdditionalConfig.class);
         applicationContext.refresh();
         return applicationContext;
     }

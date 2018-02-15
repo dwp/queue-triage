@@ -31,22 +31,12 @@ public class FailedMessageListenerAdminStage extends Stage<FailedMessageListener
     }
 
     public FailedMessageListenerAdminStage aRequestIsMadeToStopTheMessageListenerForBroker$(String brokerName) {
-        response = testRestTemplate.postForEntity(
-                "/core/admin/jms-listener/stop/{brokerName}",
-                HttpEntity.EMPTY,
-                String.class,
-                brokerName
-        );
+        response = new FailedMessageListenerFixture(testRestTemplate).stopListenerForBroker(brokerName);
         return this;
     }
 
     public FailedMessageListenerAdminStage aRequestIsMadeToStartTheMessageListenerForBroker$(String brokerName) {
-        response = testRestTemplate.postForEntity(
-                "/core/admin/jms-listener/start/{brokerName}",
-                HttpEntity.EMPTY,
-                String.class,
-                brokerName
-        );
+        response = new FailedMessageListenerFixture(testRestTemplate).startListenerForBroker(brokerName);
         return this;
     }
 
@@ -56,10 +46,7 @@ public class FailedMessageListenerAdminStage extends Stage<FailedMessageListener
     }
 
     public FailedMessageListenerAdminStage aRequestIsMadeToGetTheStatusOfTheMessageListenerForBroker$(String brokerName) {
-        response = testRestTemplate.getForEntity(
-                "/core/admin/jms-listener/running/{brokerName}",
-                Boolean.class,
-                brokerName);
+        response = new FailedMessageListenerFixture(testRestTemplate).statusOfListenerForBroker(brokerName);
         return this;
     }
 }

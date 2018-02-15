@@ -42,7 +42,7 @@ public class QueueBrowserScheduledExecutorServiceTest {
     }
 
     @After
-    public void tearDown() throws Exception {
+    public void tearDown() {
         LOGGER.debug("Shutting down the scheduledExecutorService");
         scheduledExecutorService.shutdownNow();
     }
@@ -82,7 +82,7 @@ public class QueueBrowserScheduledExecutorServiceTest {
         underTest.execute();
 
         verifyQueueBrowserServiceExecutions(0);
-        assertThat(underTest.isPaused(), is(false));
+        assertThat(underTest.isRunning(), is(true));
     }
 
     @Test
@@ -94,26 +94,26 @@ public class QueueBrowserScheduledExecutorServiceTest {
 
         underTest.pause();
         assertThat(countDownLatch.getCount(), is(1L));
-        assertThat(underTest.isPaused(), is(true));
+        assertThat(underTest.isRunning(), is(false));
 
         underTest.start();
         verifyQueueBrowserServiceExecutions(75);
-        assertThat(underTest.isPaused(), is(false));
+        assertThat(underTest.isRunning(), is(true));
     }
 
     @Test
     public void executorRemainsPausedIfExecuted() throws InterruptedException {
         underTest.start();
         verifyQueueBrowserServiceExecutions(75);
-        assertThat(underTest.isPaused(), is(false));
+        assertThat(underTest.isRunning(), is(true));
 
         underTest.pause();
         assertThat(countDownLatch.getCount(), is(1L));
-        assertThat(underTest.isPaused(), is(true));
+        assertThat(underTest.isRunning(), is(false));
 
         underTest.execute();
         verifyQueueBrowserServiceExecutions(0);
-        assertThat(underTest.isPaused(), is(true));
+        assertThat(underTest.isRunning(), is(false));
     }
 
     private Answer decrementCountdownLatch() {

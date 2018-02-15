@@ -44,7 +44,7 @@ public class JmsListenerBeanDefinitionFactory implements BeanDefinitionRegistryP
                         failedMessageListenerBeanDefinitionFactory.create(brokerName)
                 );
 
-                // Create DefaultMessageListenerContainer
+                // Create NamedMessageListenerContainer
                 registry.registerBeanDefinition(
                         namedMessageListenerContainerBeanDefinitionFactory.createBeanName(brokerName),
                         namedMessageListenerContainerBeanDefinitionFactory.create(

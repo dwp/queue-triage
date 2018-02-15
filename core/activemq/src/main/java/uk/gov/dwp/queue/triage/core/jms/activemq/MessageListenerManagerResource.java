@@ -7,7 +7,6 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.jms.listener.DefaultMessageListenerContainer;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.NotFoundException;
@@ -19,14 +18,14 @@ import java.util.Optional;
 
 @Api(value = "Manage JMS Listeners")
 @Path("/admin/jms-listener")
-public class JmsListenerAdminResource {
+public class MessageListenerManagerResource {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(JmsListenerAdminResource.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(MessageListenerManagerResource.class);
 
-    private final Map<String, DefaultMessageListenerContainer> defaultMessageListenerContainers;
+    private final Map<String, MessageListenerManager> messageListenerAdmins;
 
-    public JmsListenerAdminResource(Map<String, DefaultMessageListenerContainer> defaultMessageListenerContainers) {
-        this.defaultMessageListenerContainers = defaultMessageListenerContainers;
+    public MessageListenerManagerResource(Map<String, MessageListenerManager> messageListenerAdmins) {
+        this.messageListenerAdmins = messageListenerAdmins;
     }
 
     @ApiOperation("Start consuming messages from the DLQ on the given broker")
@@ -40,7 +39,7 @@ public class JmsListenerAdminResource {
             @ApiParam(value = "name of the broker as defined in application.yml", required = true)
             @PathParam("brokerName") String brokerName) {
         LOGGER.info("Starting consuming messages of the {} broker", brokerName);
-        Optional.ofNullable(defaultMessageListenerContainers.get(brokerName))
+        Optional.ofNullable(messageListenerAdmins.get(brokerName))
                 .orElseThrow(NotFoundException::new)
                 .start();
     }
@@ -56,7 +55,7 @@ public class JmsListenerAdminResource {
             @ApiParam(value = "name of the broker as defined in application.yml", required = true)
             @PathParam("brokerName") String brokerName) {
         LOGGER.info("Stopping consuming messages of the {} broker", brokerName);
-        Optional.ofNullable(defaultMessageListenerContainers.get(brokerName))
+        Optional.ofNullable(messageListenerAdmins.get(brokerName))
                 .orElseThrow(NotFoundException::new)
                 .stop();
     }
@@ -71,7 +70,7 @@ public class JmsListenerAdminResource {
     public String isRunning(
             @ApiParam(value = "name of the broker as defined in application.yml", required = true)
             @PathParam("brokerName") String brokerName) {
-        return Boolean.toString(Optional.ofNullable(defaultMessageListenerContainers.get(brokerName))
+        return Boolean.toString(Optional.ofNullable(messageListenerAdmins.get(brokerName))
                 .orElseThrow(NotFoundException::new)
                 .isRunning());
     }

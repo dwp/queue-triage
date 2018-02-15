@@ -8,9 +8,9 @@ public interface BrokerExecutorService {
 
     void pause();
 
-    void stop();
+    void shutdown();
 
     String getBrokerName();
 
-    boolean isPaused();
+    boolean isRunning();
 }

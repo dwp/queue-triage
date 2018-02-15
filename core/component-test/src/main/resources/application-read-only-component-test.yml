@@ -1,0 +1,8 @@
+jms:
+  activemq:
+    brokers:
+      - name: internal-broker
+        url: tcp://localhost:61616
+        readOnly: true
+        read:
+          frequency: 60

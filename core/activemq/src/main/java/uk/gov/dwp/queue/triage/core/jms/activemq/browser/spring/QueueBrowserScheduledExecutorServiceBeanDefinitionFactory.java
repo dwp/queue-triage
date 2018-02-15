@@ -24,7 +24,7 @@ public class QueueBrowserScheduledExecutorServiceBeanDefinitionFactory {
                 .addConstructorArgValue(executionFrequency)
                 .addConstructorArgValue(timeUnit)
                 .setInitMethodName("start")
-                .setDestroyMethodName("stop")
+                .setDestroyMethodName("shutdown")
                 .getBeanDefinition();
     }
 

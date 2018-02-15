@@ -79,7 +79,7 @@ public abstract class AbstractScheduledExecutorService implements BrokerExecutor
     }
 
     @Override
-    public void stop() {
+    public void shutdown() {
         getLogger().info("Stopping execution of the {}", getServiceName());
         scheduledExecutorService.shutdown();
         getLogger().info("Execution of the {} stopped", getServiceName());
@@ -91,8 +91,8 @@ public abstract class AbstractScheduledExecutorService implements BrokerExecutor
     }
 
     @Override
-    public boolean isPaused() {
-        return futureTask.isCancelled();
+    public boolean isRunning() {
+        return !futureTask.isCancelled();
     }
 
     private RunnableScheduledFuture<?> scheduleAtAFixedRate(long initialDelay) {

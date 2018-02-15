@@ -1,15 +1,24 @@
 package uk.gov.dwp.queue.triage.core;
 
 import com.tngtech.jgiven.Stage;
+import com.tngtech.jgiven.StepFunction;
 import com.tngtech.jgiven.integration.spring.JGivenStage;
+import org.hamcrest.Matchers;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jms.core.BrowserCallback;
 import org.springframework.jms.core.JmsTemplate;
 import uk.gov.dwp.queue.triage.core.classification.MessageClassifier;
 import uk.gov.dwp.queue.triage.core.classification.action.FailedMessageAction;
 import uk.gov.dwp.queue.triage.core.classification.predicate.ContentEqualToPredicate;
 import uk.gov.dwp.queue.triage.core.stub.app.resource.StubMessageClassifierResource;
 
+import javax.jms.JMSException;
+import javax.jms.QueueBrowser;
+import javax.jms.Session;
+
+import static com.sun.org.apache.xerces.internal.util.PropertyState.is;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.slf4j.LoggerFactory.getLogger;
 
 @JGivenStage
@@ -50,6 +59,19 @@ public class JmsStage extends Stage<JmsStage> {
 
     public JmsStage aMessageWithContent$IsSentTo$OnBroker$(String content, String destination, String brokerName) {
         dummyAppJmsTemplate.send(destination, session -> session.createTextMessage(content));
+        return this;
+    }
+
+    public JmsStage deadLetterQueueContains$Messages(long numberOfMessages) {
+        dummyAppJmsTemplate.browse("ActiveMQ.DLQ", (BrowserCallback<Void>) (session, browser) -> {
+            long count = 0;
+            while (browser.getEnumeration().hasMoreElements()) {
+                browser.getEnumeration().nextElement();
+                count++;
+            }
+            assertThat(count, Matchers.is(numberOfMessages));
+            return null;
+        });
         return this;
     }
 }
