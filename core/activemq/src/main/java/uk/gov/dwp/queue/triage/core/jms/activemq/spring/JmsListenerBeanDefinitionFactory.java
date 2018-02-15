@@ -27,32 +27,34 @@ public class JmsListenerBeanDefinitionFactory implements BeanDefinitionRegistryP
     public void postProcessBeanDefinitionRegistry(BeanDefinitionRegistry registry) throws BeansException {
         int index = 0;
         while (hasMoreBrokers(index)) {
-            String brokerName = getProperty(index, "name");
+            if (!isReadOnly(index)) {
+                String brokerName = getProperty(index, "name");
 
-            // Create ConnectionFactory
-            String connectionFactoryBeanName = activeMQConnectionFactoryBeanDefinitionFactory.createBeanName(brokerName);
-            registry.registerBeanDefinition(
-                    connectionFactoryBeanName,
-                    activeMQConnectionFactoryBeanDefinitionFactory.create(getProperty(index, "url"))
-            );
+                // Create ConnectionFactory
+                String connectionFactoryBeanName = activeMQConnectionFactoryBeanDefinitionFactory.createBeanName(brokerName);
+                registry.registerBeanDefinition(
+                        connectionFactoryBeanName,
+                        activeMQConnectionFactoryBeanDefinitionFactory.create(getProperty(index, "url"))
+                );
 
-            // Create MessageListener
-            String failedMessageListenerBeanName = failedMessageListenerBeanDefinitionFactory.createBeanName(brokerName);
-            registry.registerBeanDefinition(
-                    failedMessageListenerBeanName,
-                    failedMessageListenerBeanDefinitionFactory.create(brokerName)
-            );
+                // Create MessageListener
+                String failedMessageListenerBeanName = failedMessageListenerBeanDefinitionFactory.createBeanName(brokerName);
+                registry.registerBeanDefinition(
+                        failedMessageListenerBeanName,
+                        failedMessageListenerBeanDefinitionFactory.create(brokerName)
+                );
 
-            // Create DefaultMessageListenerContainer
-            registry.registerBeanDefinition(
-                    namedMessageListenerContainerBeanDefinitionFactory.createBeanName(brokerName),
-                    namedMessageListenerContainerBeanDefinitionFactory.create(
-                            brokerName,
-                            connectionFactoryBeanName,
-                            getProperty(index, "queue"),
-                            failedMessageListenerBeanName
-                    )
-            );
+                // Create DefaultMessageListenerContainer
+                registry.registerBeanDefinition(
+                        namedMessageListenerContainerBeanDefinitionFactory.createBeanName(brokerName),
+                        namedMessageListenerContainerBeanDefinitionFactory.create(
+                                brokerName,
+                                connectionFactoryBeanName,
+                                getProperty(index, "queue"),
+                                failedMessageListenerBeanName
+                        )
+                );
+            }
             index++;
         }
     }
@@ -64,6 +66,10 @@ public class JmsListenerBeanDefinitionFactory implements BeanDefinitionRegistryP
 
     private boolean hasMoreBrokers(int index) {
         return environment.containsProperty("jms.activemq.brokers[" + index + "].name");
+    }
+
+    private boolean isReadOnly(int index) {
+        return environment.getProperty("jms.activemq.brokers[" + index + "].readOnly", Boolean.class, false);
     }
 
     private String getProperty(int index, String propertyName) {

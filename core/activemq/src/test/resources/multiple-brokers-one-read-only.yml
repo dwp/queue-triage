@@ -11,7 +11,4 @@ jms:
       - name: broker-two
         url: tcp://localhost:22222
         queue: ActiveMQ.DLQ
-        readOnly: true
-        read:
-          frequency: 10
-          timeUnit: SECOND
+        readOnly: false

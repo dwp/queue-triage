@@ -1,6 +1,7 @@
 package uk.gov.dwp.queue.triage.core.jms.activemq.browser.configuration;
 
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.core.env.Environment;

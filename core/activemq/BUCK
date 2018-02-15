@@ -14,6 +14,7 @@ java_library(
         "//lib/slf4j:slf4j-api",
         "//lib/spring:spring-beans",
         "//lib/spring:spring-boot",
+        "//lib/spring:spring-boot-autoconfigure",
         "//lib/spring:spring-context",
         "//lib/spring:spring-core",
         "//lib/spring:spring-jms",
@@ -33,9 +34,9 @@ java_library(
     name = "test-resources",
     resources = [
         "src/test/resources/single-broker.yml",
-        "src/test/resources/single-broker-browse.yml",
+        "src/test/resources/single-broker-read-only.yml",
         "src/test/resources/multiple-brokers.yml",
-        "src/test/resources/multiple-brokers-browse.yml",
+        "src/test/resources/multiple-brokers-one-read-only.yml",
     ],
     resources_root = "src/test/resources",
     visibility = [

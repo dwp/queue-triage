@@ -13,7 +13,9 @@ import uk.gov.dwp.queue.triage.core.jms.activemq.spring.NamedMessageListenerCont
 import uk.gov.dwp.queue.triage.cxf.CxfConfiguration;
 import uk.gov.dwp.queue.triage.cxf.ResourceRegistry;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -38,9 +40,10 @@ public class JmsListenerConfig {
 
     @Bean
     public JmsListenerAdminResource jmsListenerAdminResource(ResourceRegistry resourceRegistry,
-                                                             List<NamedMessageListenerContainer> namedMessageListenerContainers) {
+                                                             Optional<List<NamedMessageListenerContainer>> namedMessageListenerContainers) {
         return resourceRegistry.add(new JmsListenerAdminResource(
                 namedMessageListenerContainers
+                        .orElse(Collections.emptyList())
                         .stream()
                         .collect(Collectors.toMap(NamedMessageListenerContainer::getBrokerName, Function.identity()))
         ));

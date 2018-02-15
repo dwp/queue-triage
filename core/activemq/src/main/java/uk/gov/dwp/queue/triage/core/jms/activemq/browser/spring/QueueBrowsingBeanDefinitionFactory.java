@@ -6,7 +6,6 @@ import org.springframework.beans.factory.support.AbstractBeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.beans.factory.support.BeanDefinitionRegistryPostProcessor;
 import org.springframework.core.env.Environment;
-import uk.gov.dwp.queue.triage.core.jms.activemq.browser.QueueBrowserCallback;
 import uk.gov.dwp.queue.triage.core.jms.activemq.spring.ActiveMQConnectionFactoryBeanDefinitionFactory;
 import uk.gov.dwp.queue.triage.core.jms.activemq.spring.FailedMessageListenerBeanDefinitionFactory;
 import uk.gov.dwp.queue.triage.core.jms.spring.JmsTemplateBeanDefinitionFactory;
@@ -46,47 +45,49 @@ public class QueueBrowsingBeanDefinitionFactory implements BeanDefinitionRegistr
     public void postProcessBeanDefinitionRegistry(BeanDefinitionRegistry registry) throws BeansException {
         int index = 0;
         while (hasMoreBrokers(index)) {
-            String brokerName = getProperty(index, "name");
+            if (isBrokerReadOnly(index)) {
+                String brokerName = getProperty(index, "name");
 
-            // Create ConnectionFactory
-            String connectionFactoryBeanName = activeMQConnectionFactoryBeanDefinitionFactory.createBeanName(brokerName);
-            registry.registerBeanDefinition(
-                    connectionFactoryBeanName,
-                    activeMQConnectionFactoryBeanDefinitionFactory.create(getProperty(index, "url"))
-            );
+                // Create ConnectionFactory
+                String connectionFactoryBeanName = activeMQConnectionFactoryBeanDefinitionFactory.createBeanName(brokerName);
+                registry.registerBeanDefinition(
+                        connectionFactoryBeanName,
+                        activeMQConnectionFactoryBeanDefinitionFactory.create(getProperty(index, "url"))
+                );
 
-            // Create JmsTemplate
-            String jmsTemplateBeanName = jmsTemplateBeanDefinitionFactory.createBeanName(brokerName);
-            registry.registerBeanDefinition(
-                    jmsTemplateBeanName,
-                    jmsTemplateBeanDefinitionFactory.create(connectionFactoryBeanName)
-            );
+                // Create JmsTemplate
+                String jmsTemplateBeanName = jmsTemplateBeanDefinitionFactory.createBeanName(brokerName);
+                registry.registerBeanDefinition(
+                        jmsTemplateBeanName,
+                        jmsTemplateBeanDefinitionFactory.create(connectionFactoryBeanName)
+                );
 
-            // Create MessageListener
-            String failedMessageListenerBeanName = failedMessageListenerBeanDefinitionFactory.createBeanName(brokerName);
-            registry.registerBeanDefinition(
-                    failedMessageListenerBeanName,
-                    failedMessageListenerBeanDefinitionFactory.create(brokerName)
-            );
+                // Create MessageListener
+                String failedMessageListenerBeanName = failedMessageListenerBeanDefinitionFactory.createBeanName(brokerName);
+                registry.registerBeanDefinition(
+                        failedMessageListenerBeanName,
+                        failedMessageListenerBeanDefinitionFactory.create(brokerName)
+                );
 
-            // Create QueueBrowserCallback
-            String queueBrowserCallbackBeanName = queueBrowserCallbackBeanDefinitionFactory.createBeanName(brokerName);
-            registry.registerBeanDefinition(
-                    queueBrowserCallbackBeanName,
-                    queueBrowserCallbackBeanDefinitionFactory.create(failedMessageListenerBeanName)
-            );
+                // Create QueueBrowserCallback
+                String queueBrowserCallbackBeanName = queueBrowserCallbackBeanDefinitionFactory.createBeanName(brokerName);
+                registry.registerBeanDefinition(
+                        queueBrowserCallbackBeanName,
+                        queueBrowserCallbackBeanDefinitionFactory.create(failedMessageListenerBeanName)
+                );
 
-            // Create QueueBrowser
-            final String queueBrowserServiceBeanName = queueBrowserServiceBeanDefinitionFactory.createBeanName(brokerName);
-            registry.registerBeanDefinition(
-                    queueBrowserServiceBeanName,
-                    queueBrowserServiceBeanDefinitionFactory.create(
-                            queueBrowserCallbackBeanName,
-                            jmsTemplateBeanName,
-                            brokerName,
-                            getProperty(index, "queue")
-                    )
-            );
+                // Create QueueBrowser
+                final String queueBrowserServiceBeanName = queueBrowserServiceBeanDefinitionFactory.createBeanName(brokerName);
+                registry.registerBeanDefinition(
+                        queueBrowserServiceBeanName,
+                        queueBrowserServiceBeanDefinitionFactory.create(
+                                queueBrowserCallbackBeanName,
+                                jmsTemplateBeanName,
+                                brokerName,
+                                getProperty(index, "queue")
+                        )
+                );
+            }
             index++;
         }
     }
@@ -124,6 +125,10 @@ public class QueueBrowsingBeanDefinitionFactory implements BeanDefinitionRegistr
 
     private String getProperty(int index, String propertyName) {
         return environment.getProperty(getPropertyKey(index, propertyName));
+    }
+
+    private boolean isBrokerReadOnly(int index) {
+        return environment.getProperty("jms.activemq.brokers[" + index + "].readOnly", Boolean.class, false);
     }
 
     private String getPropertyKey(int index, String propertyName) {
