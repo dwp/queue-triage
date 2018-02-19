@@ -2,7 +2,8 @@ java_library(
     name = "queue-triage-core-component-test",
     srcs = glob(['src/main/java/**/*.java']),
     resources = [
-        "src/main/resources/application-component-test.yml"
+        "src/main/resources/application-component-test.yml",
+        "src/main/resources/application-read-only-component-test.yml",
     ],
     resources_root = "src/main/resources",
     deps = [
@@ -17,6 +18,7 @@ java_library(
         '//core/message-classification:queue-triage-core-message-classification',
         '//core/server:server',
         '//lib/activemq:activemq-client',
+        '//lib/activemq:activemq-junit',
         '//lib/activemq:geronimo-jms',
         '//lib/apache-cxf:cxf-core',
         '//lib/apache-cxf:cxf-rt-rs-client',
@@ -64,6 +66,7 @@ java_test(
         '//core/server:server',
         '//lib/activemq:activemq-broker-with-dependencies',
         '//lib/activemq:activemq-client-with-dependencies',
+        '//lib/activemq:activemq-junit',
         '//lib/apache-cxf:cxf-rt-transports-http-jetty',
         '//lib/jackson:jackson-annotations',
         '//lib/javax:javax-servlet-api',

@@ -14,9 +14,9 @@ public class ApplicationListenerConfiguration {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ApplicationListenerConfiguration.class);
 
-    @Bean
-    public ApplicationListener<ApplicationReadyEvent> applicationListener() {
-        return event -> Stream.of(event.getApplicationContext().getBeanDefinitionNames())
-                .forEach(LOGGER::debug);
-    }
+//    @Bean
+//    public ApplicationListener<ApplicationReadyEvent> applicationListener() {
+//        return event -> Stream.of(event.getApplicationContext().getBeanDefinitionNames())
+//                .forEach(LOGGER::debug);
+//    }
 }

@@ -13,17 +13,16 @@ import uk.gov.dwp.queue.triage.core.jms.activemq.spring.FailedMessageListenerBea
 public class CommonJmsConfiguration {
 
     @Bean
-    public ActiveMQConnectionFactoryBeanDefinitionFactory activeMQConnectionFactoryBeanDefinitionFactory() {
+    public static ActiveMQConnectionFactoryBeanDefinitionFactory activeMQConnectionFactoryBeanDefinitionFactory() {
         return new ActiveMQConnectionFactoryBeanDefinitionFactory();
     }
 
     @Bean
-    public FailedMessageListenerBeanDefinitionFactory failedMessageListenerBeanDefinitionFactory() {
+    public static FailedMessageListenerBeanDefinitionFactory failedMessageListenerBeanDefinitionFactory() {
         return new FailedMessageListenerBeanDefinitionFactory(brokerName -> new ActiveMQFailedMessageFactory(
                 new MessageTextExtractor(),
                 new ActiveMQDestinationExtractor(brokerName),
                 new JmsMessagePropertyExtractor()
         ));
     }
-
 }

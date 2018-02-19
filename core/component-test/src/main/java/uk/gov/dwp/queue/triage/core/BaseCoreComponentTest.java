@@ -3,6 +3,7 @@ package uk.gov.dwp.queue.triage.core;
 import com.mongodb.MongoClient;
 import com.tngtech.jgiven.integration.spring.EnableJGiven;
 import com.tngtech.jgiven.integration.spring.SimpleSpringRuleScenarioTest;
+import org.apache.activemq.junit.EmbeddedActiveMQBroker;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.rules.TestRule;
@@ -26,6 +27,9 @@ public class BaseCoreComponentTest<STAGE> extends SimpleSpringRuleScenarioTest<S
     private MongoClient mongoClient;
     @Autowired
     private StubMessageClassifierResource stubMessageClassifierResource;
+    @Rule
+    public final TestRule activeMqBroker = new EmbeddedActiveMQBroker();
+
     @Rule
     public final TestRule dumpFailedMessagesOnError = new TestWatcher() {
         @Override

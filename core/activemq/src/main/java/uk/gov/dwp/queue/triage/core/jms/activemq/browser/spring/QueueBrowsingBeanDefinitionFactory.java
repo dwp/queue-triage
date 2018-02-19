@@ -1,5 +1,7 @@
 package uk.gov.dwp.queue.triage.core.jms.activemq.browser.spring;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.beans.factory.support.AbstractBeanDefinition;
@@ -13,9 +15,9 @@ import uk.gov.dwp.queue.triage.core.jms.spring.JmsTemplateBeanDefinitionFactory;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
-import static org.springframework.beans.factory.support.BeanDefinitionBuilder.genericBeanDefinition;
-
 public class QueueBrowsingBeanDefinitionFactory implements BeanDefinitionRegistryPostProcessor {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(QueueBrowsingBeanDefinitionFactory.class);
 
     private final Environment environment;
     private final ActiveMQConnectionFactoryBeanDefinitionFactory activeMQConnectionFactoryBeanDefinitionFactory;
@@ -78,15 +80,17 @@ public class QueueBrowsingBeanDefinitionFactory implements BeanDefinitionRegistr
 
                 // Create QueueBrowser
                 final String queueBrowserServiceBeanName = queueBrowserServiceBeanDefinitionFactory.createBeanName(brokerName);
+                final String queueName = getProperty(index, "queue");
                 registry.registerBeanDefinition(
                         queueBrowserServiceBeanName,
                         queueBrowserServiceBeanDefinitionFactory.create(
                                 queueBrowserCallbackBeanName,
                                 jmsTemplateBeanName,
                                 brokerName,
-                                getProperty(index, "queue")
+                                queueName
                         )
                 );
+                LOGGER.info("QueueBrowser configured for {} on {}", queueName, brokerName);
 
                 // Create QueueBrowserScheduledExecutor
                 registry.registerBeanDefinition(

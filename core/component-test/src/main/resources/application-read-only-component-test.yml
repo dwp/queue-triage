@@ -2,7 +2,8 @@ jms:
   activemq:
     brokers:
       - name: internal-broker
-        url: vm://localhost
+        url: vm://embedded-broker?create=false
         readOnly: true
         read:
-          frequency: 60
+          frequency: 5
+          timeUnit: SECONDS

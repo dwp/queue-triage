@@ -35,9 +35,9 @@ import java.util.stream.Collectors;
 public class JmsListenerConfig {
 
     @Bean
-    public JmsListenerBeanDefinitionFactory jmsListenerBeanDefinitionFactory(Environment environment,
-                                                                             ActiveMQConnectionFactoryBeanDefinitionFactory activeMQConnectionFactoryBeanDefinitionFactory,
-                                                                             FailedMessageListenerBeanDefinitionFactory failedMessageListenerBeanDefinitionFactory) {
+    public static JmsListenerBeanDefinitionFactory jmsListenerBeanDefinitionFactory(Environment environment,
+                                                                                    ActiveMQConnectionFactoryBeanDefinitionFactory activeMQConnectionFactoryBeanDefinitionFactory,
+                                                                                    FailedMessageListenerBeanDefinitionFactory failedMessageListenerBeanDefinitionFactory) {
         return new JmsListenerBeanDefinitionFactory(
                 environment,
                 activeMQConnectionFactoryBeanDefinitionFactory,

@@ -1,13 +1,17 @@
 package uk.gov.dwp.queue.triage.core.jms.activemq.spring;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.beans.factory.support.BeanDefinitionRegistryPostProcessor;
 import org.springframework.core.env.Environment;
+import uk.gov.dwp.queue.triage.core.jms.activemq.browser.spring.QueueBrowsingBeanDefinitionFactory;
 
 public class JmsListenerBeanDefinitionFactory implements BeanDefinitionRegistryPostProcessor {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(QueueBrowsingBeanDefinitionFactory.class);
     private final Environment environment;
     private final ActiveMQConnectionFactoryBeanDefinitionFactory activeMQConnectionFactoryBeanDefinitionFactory;
     private final FailedMessageListenerBeanDefinitionFactory failedMessageListenerBeanDefinitionFactory;
@@ -45,15 +49,17 @@ public class JmsListenerBeanDefinitionFactory implements BeanDefinitionRegistryP
                 );
 
                 // Create NamedMessageListenerContainer
+                final String queueName = getProperty(index, "queue");
                 registry.registerBeanDefinition(
                         namedMessageListenerContainerBeanDefinitionFactory.createBeanName(brokerName),
                         namedMessageListenerContainerBeanDefinitionFactory.create(
                                 brokerName,
                                 connectionFactoryBeanName,
-                                getProperty(index, "queue"),
+                                queueName,
                                 failedMessageListenerBeanName
                         )
                 );
+                LOGGER.info("MessageConsumer configured for {} on {}", queueName, brokerName);
             }
             index++;
         }
