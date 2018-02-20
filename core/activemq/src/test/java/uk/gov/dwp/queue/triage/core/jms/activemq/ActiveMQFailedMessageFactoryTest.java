@@ -42,14 +42,14 @@ public class ActiveMQFailedMessageFactoryTest {
     public ExpectedException expectedException = none();
 
     @Test
-    public void exceptionIsThrownIfMessageIsNull() {
+    public void exceptionIsThrownIfMessageIsNull() throws JMSException {
         expectedException.expect(IllegalArgumentException.class);
         expectedException.expectMessage("Message cannot be null");
         underTest.createFailedMessage(null);
     }
 
     @Test
-    public void exceptionIsThrownIfMessageIsNotActiveMQMessage() {
+    public void exceptionIsThrownIfMessageIsNotActiveMQMessage() throws JMSException {
         expectedException.expect(IllegalArgumentException.class);
         expectedException.expectMessage("Expected ActiveMQMessage received: " + SomeMessage.class.getName());
 
@@ -63,12 +63,14 @@ public class ActiveMQFailedMessageFactoryTest {
         when(messageTextExtractor.extractText(message)).thenReturn("Some text");
         when(destinationExtractor.extractDestination(message)).thenReturn(new Destination("broker.name", of("queue.name")));
         when(messagePropertyExtractor.extractProperties(message)).thenReturn(emptyMap());
+        when(message.getJMSMessageID()).thenReturn("ID:localhost.localdomain-46765-1518703251379-5:1:1:1:1");
         when(message.getTimestamp()).thenReturn(NOW.minusSeconds(5).toEpochMilli());
         when(message.getBrokerInTime()).thenReturn(NOW.toEpochMilli());
 
         FailedMessage failedMessage = underTest.createFailedMessage(message);
 
         assertThat(failedMessage, is(aFailedMessage()
+                .withJmsMessageId(equalTo("ID:localhost.localdomain-46765-1518703251379-5:1:1:1:1"))
                 .withContent(equalTo("Some text"))
                 .withDestination(aDestination().withBrokerName("broker.name").withName("queue.name"))
                 .withSentAt(equalTo(NOW.minusSeconds(5)))

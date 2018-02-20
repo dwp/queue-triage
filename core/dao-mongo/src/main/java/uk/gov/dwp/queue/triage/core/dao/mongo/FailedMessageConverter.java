@@ -29,6 +29,7 @@ public class FailedMessageConverter implements DBObjectWithIdConverter<FailedMes
     public static final String PROPERTIES = "properties";
     public static final String STATUS_HISTORY = "statusHistory";
     public static final String LABELS = "labels";
+    public static final String JMS_MESSAGE_ID = "jmsMessageId";
 
     private final DBObjectConverter<Destination> destinationDBObjectMapper;
     private final DBObjectConverter<StatusHistoryEvent> statusHistoryEventDBObjectMapper;
@@ -50,6 +51,7 @@ public class FailedMessageConverter implements DBObjectWithIdConverter<FailedMes
         BasicDBObject basicDBObject = (BasicDBObject)dbObject;
         return newFailedMessage()
                 .withFailedMessageId(getFailedMessageId(basicDBObject))
+                .withJmsMessageId(getJmsMessageId(basicDBObject))
                 .withDestination(getDestination(basicDBObject))
                 .withSentDateTime(getSentDateTime(basicDBObject))
                 .withFailedDateTime(getFailedDateTime(basicDBObject))
@@ -78,6 +80,10 @@ public class FailedMessageConverter implements DBObjectWithIdConverter<FailedMes
         return fromString(basicDBObject.getString("_id"));
     }
 
+    private String getJmsMessageId(BasicDBObject basicDBObject) {
+        return basicDBObject.getString(JMS_MESSAGE_ID);
+    }
+
     public Destination getDestination(BasicDBObject basicDBObject) {
         return destinationDBObjectMapper.convertToObject((DBObject) basicDBObject.get(DESTINATION));
     }
@@ -101,6 +107,7 @@ public class FailedMessageConverter implements DBObjectWithIdConverter<FailedMes
     @Override
     public BasicDBObject convertFromObject(FailedMessage item) {
         return createId(item.getFailedMessageId())
+                .append(JMS_MESSAGE_ID, item.getJmsMessageId())
                 .append(DESTINATION, destinationDBObjectMapper.convertFromObject(item.getDestination()))
                 .append(SENT_DATE_TIME, item.getSentAt())
                 .append(FAILED_DATE_TIME, item.getFailedAt())

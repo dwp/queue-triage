@@ -35,6 +35,7 @@ import static uk.gov.dwp.queue.triage.core.dao.mongo.DBObjectConverter.toBasicDB
 import static uk.gov.dwp.queue.triage.core.dao.mongo.DBObjectMatcher.hasField;
 import static uk.gov.dwp.queue.triage.core.dao.mongo.FailedMessageConverter.CONTENT;
 import static uk.gov.dwp.queue.triage.core.dao.mongo.FailedMessageConverter.DESTINATION;
+import static uk.gov.dwp.queue.triage.core.dao.mongo.FailedMessageConverter.JMS_MESSAGE_ID;
 import static uk.gov.dwp.queue.triage.core.dao.mongo.FailedMessageConverter.LABELS;
 import static uk.gov.dwp.queue.triage.core.dao.mongo.FailedMessageConverter.PROPERTIES;
 import static uk.gov.dwp.queue.triage.core.domain.DestinationMatcher.aDestination;
@@ -50,6 +51,7 @@ public class FailedMessageConverterTest {
 
     private static final FailedMessageId FAILED_MESSAGE_ID = newFailedMessageId();
     private static final String FAILED_MESSAGE_ID_AS_STRING = FAILED_MESSAGE_ID.getId().toString();
+    private static final String JMS_MESSAGE_ID_VALUE = "ID:localhost.localdomain-46765-1518703251379-5:1:1:1:1";
     private static final Map<String, Object> SOME_PROPERTIES = new HashMap<String, Object>() {{
         put("propertyName", "propertyValue");
     }};
@@ -74,6 +76,7 @@ public class FailedMessageConverterTest {
     public void setUp() {
         failedMessageBuilder = FailedMessageBuilder.newFailedMessage()
                 .withFailedMessageId(FAILED_MESSAGE_ID)
+                .withJmsMessageId(JMS_MESSAGE_ID_VALUE)
                 .withDestination(SOME_DESTINATION)
                 .withContent("Hello")
                 .withSentDateTime(SENT_AT)
@@ -108,6 +111,7 @@ public class FailedMessageConverterTest {
         DBObject dbObject = underTest.convertFromObject(failedMessageBuilder.build());
         assertThat(dbObject, allOf(
                 hasField("_id", equalTo(FAILED_MESSAGE_ID_AS_STRING)),
+                hasField(JMS_MESSAGE_ID, equalTo(JMS_MESSAGE_ID_VALUE)),
                 hasField(CONTENT, equalTo("Hello")),
                 hasField(DESTINATION, equalTo(DESTINATION_DB_OBJECT)),
                 hasField(PROPERTIES, equalTo("{ \"propertyName\": \"propertyValue\" }")),
@@ -116,6 +120,7 @@ public class FailedMessageConverterTest {
 
         assertThat(underTest.convertToObject(dbObject), is(aFailedMessage()
                 .withFailedMessageId(equalTo(FAILED_MESSAGE_ID))
+                .withJmsMessageId(equalTo(JMS_MESSAGE_ID_VALUE))
                 .withContent(equalTo("Hello"))
                 .withDestination(aDestination().withBrokerName("broker").withName("queue.name"))
                 .withSentAt(SENT_AT)

@@ -7,6 +7,7 @@ import uk.gov.dwp.queue.triage.core.domain.FailedMessage;
 import uk.gov.dwp.queue.triage.core.jms.FailedMessageFactory;
 import uk.gov.dwp.queue.triage.core.stub.app.repository.MessageClassifierRepository;
 
+import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.MessageListener;
 
@@ -31,14 +32,16 @@ public class StubMessageListener implements MessageListener {
 
     @Override
     public void onMessage(Message message) {
-        FailedMessage failedMessage = failedMessageFactory.createFailedMessage(message);
-        LOGGER.debug("Received failedMessage with content: {}", failedMessage.getContent());
-        messageClassifierRepository
-                .getClassifiers(brokerName)
-                .stream()
-                .filter(classifier -> classifier.test(failedMessage))
-                .findFirst()
-                .orElse(defaultMessageClassifier)
-                .accept(failedMessage);
+        try {
+            FailedMessage failedMessage = failedMessageFactory.createFailedMessage(message);
+            LOGGER.debug("Received failedMessage with content: {}", failedMessage.getContent());
+            messageClassifierRepository
+                    .getClassifiers(brokerName)
+                    .stream()
+                    .filter(classifier -> classifier.test(failedMessage))
+                    .findFirst()
+                    .orElse(defaultMessageClassifier)
+                    .accept(failedMessage);
+        } catch (JMSException ignore) {}
     }
 }
