@@ -30,6 +30,7 @@ public class SearchFailedMessageRequestTest {
                         .withBroker(equalTo(Optional.empty()))
                         .withDestination(equalTo(Optional.empty()))
                         .withStatusMatcher(contains(FAILED))
+                        .withNoJmsMessageId()
         ));
     }
 
@@ -40,6 +41,7 @@ public class SearchFailedMessageRequestTest {
                         .withBroker("broker")
                         .withDestination("queue")
                         .withStatus(FAILED)
+                        .withJmsMessageId("ID:localhost.localdomain-46765-1518703251379-5:1:1:1:1")
                         .build());
 
         assertThat(OBJECT_MAPPER.readValue(json, SearchFailedMessageRequest.class), is(
@@ -47,6 +49,7 @@ public class SearchFailedMessageRequestTest {
                         .withBroker(equalTo(Optional.of("broker")))
                         .withDestination(equalTo(Optional.of("queue")))
                         .withStatusMatcher(contains(FAILED))
+                        .withJmsMessageId("ID:localhost.localdomain-46765-1518703251379-5:1:1:1:1")
         ));
     }
 }

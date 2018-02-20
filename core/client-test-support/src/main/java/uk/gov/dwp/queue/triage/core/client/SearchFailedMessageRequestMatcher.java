@@ -18,6 +18,7 @@ public class SearchFailedMessageRequestMatcher extends TypeSafeMatcher<SearchFai
     private Matcher<Optional<String>> brokerMatcher = new IsAnything<>();
     private Matcher<Optional<String>> contentMatcher = new IsAnything<>();
     private Matcher<Optional<String>> destinationMatcher = new IsAnything<>();
+    private Matcher<Optional<String>> jmsMessageIdMatcher = new IsAnything<>();
     private Matcher<Iterable<? extends FailedMessageStatus>> statusMatcher = new IsAnything<>();
 
     private SearchFailedMessageRequestMatcher(Matcher<Operator> operatorMatcher) {
@@ -31,6 +32,7 @@ public class SearchFailedMessageRequestMatcher extends TypeSafeMatcher<SearchFai
                 && contentMatcher.matches(searchFailedMessageRequest.getContent())
                 && destinationMatcher.matches(searchFailedMessageRequest.getDestination())
                 && statusMatcher.matches(searchFailedMessageRequest.getStatuses())
+                && jmsMessageIdMatcher.matches(searchFailedMessageRequest.getJmsMessageId())
                 ;
     }
 
@@ -41,7 +43,9 @@ public class SearchFailedMessageRequestMatcher extends TypeSafeMatcher<SearchFai
                 .appendText(" broker ").appendDescriptionOf(brokerMatcher)
                 .appendText(" content ").appendDescriptionOf(contentMatcher)
                 .appendText(" destination ").appendDescriptionOf(destinationMatcher)
-                .appendText(" status ").appendDescriptionOf(statusMatcher);
+                .appendText(" status ").appendDescriptionOf(statusMatcher)
+                .appendText(" jmsMessageId ").appendDescriptionOf(jmsMessageIdMatcher)
+        ;
     }
 
     public static SearchFailedMessageRequestMatcher aSearchRequestMatchingAllCriteria() {
@@ -84,6 +88,16 @@ public class SearchFailedMessageRequestMatcher extends TypeSafeMatcher<SearchFai
 
     public SearchFailedMessageRequestMatcher withStatusMatcher(Matcher<Iterable<? extends FailedMessageStatus>> statusMatcher) {
         this.statusMatcher = statusMatcher;
+        return this;
+    }
+
+    public  SearchFailedMessageRequestMatcher withNoJmsMessageId() {
+        this.jmsMessageIdMatcher = equalTo(Optional.empty());
+        return this;
+    }
+
+    public  SearchFailedMessageRequestMatcher withJmsMessageId(String jmsMessageId) {
+        this.jmsMessageIdMatcher = equalTo(Optional.of(jmsMessageId));
         return this;
     }
 }

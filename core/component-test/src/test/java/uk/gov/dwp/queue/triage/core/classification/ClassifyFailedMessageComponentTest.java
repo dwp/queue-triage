@@ -37,7 +37,7 @@ public class ClassifyFailedMessageComponentTest extends BaseCoreComponentTest<Jm
     }
 
     @Test
-    public void messageClassifiedByContentIsDeleted() throws Exception {
+    public void messageClassifiedByContentIsDeleted() {
         messageClassificationGivenStage.given().and().aMessageClassifierExistsToDeleteMessagesWithContent$On$BrokerAnd$Queue("poison", "any", "any");
         failedMessageResourceStage.and().aFailedMessage(newCreateFailedMessageRequest()
                 .withFailedMessageId(newFailedMessageId())

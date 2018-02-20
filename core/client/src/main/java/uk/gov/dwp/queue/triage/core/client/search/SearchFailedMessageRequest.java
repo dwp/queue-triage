@@ -17,6 +17,7 @@ public class SearchFailedMessageRequest {
     private final Optional<String> destination;
     private final Set<FailedMessageStatus> statuses;
     private final Optional<String> content;
+    private final Optional<String> jmsMessageId;
     private final Operator operator;
 
     public static SearchFailedMessageRequestBuilder searchMatchingAllCriteria() {
@@ -31,11 +32,13 @@ public class SearchFailedMessageRequest {
                                        @JsonProperty("destination") Optional<String> destination,
                                        @JsonProperty("statuses") Set<FailedMessageStatus> statuses,
                                        @JsonProperty("content") Optional<String> content,
+                                       @JsonProperty("jmsMessageId") Optional<String> jmsMessageId,
                                        @JsonProperty("operator") Operator operator) {
         this.broker = broker;
         this.destination = destination;
         this.statuses = statuses;
         this.content = content;
+        this.jmsMessageId = jmsMessageId;
         this.operator = operator;
     }
 
@@ -53,6 +56,10 @@ public class SearchFailedMessageRequest {
 
     public Optional<String> getContent() {
         return content;
+    }
+
+    public Optional<String> getJmsMessageId() {
+        return jmsMessageId;
     }
 
     public Operator getOperator() {
@@ -74,6 +81,7 @@ public class SearchFailedMessageRequest {
         private Optional<String> destination = Optional.empty();
         private Set<FailedMessageStatus> statuses = new HashSet<>();
         private Optional<String> content = Optional.empty();
+        private Optional<String> jmsMessageId = Optional.empty();
         private Operator operator;
 
         private SearchFailedMessageRequestBuilder(Operator operator) {
@@ -115,8 +123,13 @@ public class SearchFailedMessageRequest {
             return this;
         }
 
+        public SearchFailedMessageRequestBuilder withJmsMessageId(String jmsMessageId) {
+            this.jmsMessageId = Optional.ofNullable(jmsMessageId);
+            return this;
+        }
+
         public SearchFailedMessageRequest build() {
-            return new SearchFailedMessageRequest(broker, destination, statuses, content, operator);
+            return new SearchFailedMessageRequest(broker, destination, statuses, content, jmsMessageId, operator);
         }
     }
 }

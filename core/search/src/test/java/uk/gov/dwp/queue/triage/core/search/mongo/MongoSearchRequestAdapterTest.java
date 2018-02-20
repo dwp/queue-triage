@@ -33,6 +33,7 @@ public class MongoSearchRequestAdapterTest {
                 .withStatus(FailedMessageStatus.RESENDING)
                 .withStatus(FailedMessageStatus.SENT)
                 .withContent("id")
+                .withJmsMessageId("ID:localhost.localdomain-46765-1518703251379-5:1:1:1:1")
                 .build()
         );
         assertThat(dbObject, allOf(
@@ -40,7 +41,8 @@ public class MongoSearchRequestAdapterTest {
                 hasField("$and", containsInAnyOrder(
                     hasField("destination.brokerName", equalTo("broker-name")),
                     hasField("destination.name", equalTo("mars")),
-                    hasField("content", allOf(willMatch("user_id"), willMatch("id"), willMatch("hidden"), not(willMatch("find"))))
+                    hasField("content", allOf(willMatch("user_id"), willMatch("id"), willMatch("hidden"), not(willMatch("find")))),
+                    hasField("jmsMessageId", equalTo("ID:localhost.localdomain-46765-1518703251379-5:1:1:1:1"))
         ))));
     }
 
@@ -53,6 +55,7 @@ public class MongoSearchRequestAdapterTest {
                 .withStatus(FailedMessageStatus.RESENDING)
                 .withStatus(FailedMessageStatus.SENT)
                 .withContent("id")
+                .withJmsMessageId("ID:localhost.localdomain-46765-1518703251379-5:1:1:1:1")
                 .build()
         );
         assertThat(dbObject, allOf(
@@ -60,7 +63,8 @@ public class MongoSearchRequestAdapterTest {
                 hasField("$or", containsInAnyOrder(
                     hasField("destination.brokerName", equalTo("broker-name")),
                     hasField("destination.name", equalTo("mars")),
-                    hasField("content", allOf(willMatch("user_id"), willMatch("id"), willMatch("hidden"), not(willMatch("find"))))
+                    hasField("content", allOf(willMatch("user_id"), willMatch("id"), willMatch("hidden"), not(willMatch("find")))),
+                    hasField("jmsMessageId", equalTo("ID:localhost.localdomain-46765-1518703251379-5:1:1:1:1"))
         ))));
     }
 
