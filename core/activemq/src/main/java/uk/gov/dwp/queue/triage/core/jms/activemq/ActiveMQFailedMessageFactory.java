@@ -10,6 +10,7 @@ import uk.gov.dwp.queue.triage.core.jms.FailedMessageFactory;
 import uk.gov.dwp.queue.triage.core.jms.MessagePropertyExtractor;
 import uk.gov.dwp.queue.triage.core.jms.MessageTextExtractor;
 
+import javax.jms.JMSException;
 import javax.jms.Message;
 import java.time.Instant;
 
@@ -30,10 +31,11 @@ public class ActiveMQFailedMessageFactory implements FailedMessageFactory {
     }
 
     @Override
-    public FailedMessage createFailedMessage(Message message) {
+    public FailedMessage createFailedMessage(Message message) throws JMSException {
         validateMessageOfCorrectType(message);
         ActiveMQMessage activeMQMessage = (ActiveMQMessage) message;
         return FailedMessageBuilder.newFailedMessage()
+                .withJmsMessageId(message.getJMSMessageID())
                 .withContent(messageTextExtractor.extractText(message))
                 .withDestination(destinationExtractor.extractDestination(activeMQMessage))
                 .withSentDateTime(extractTimestamp(activeMQMessage.getTimestamp()))

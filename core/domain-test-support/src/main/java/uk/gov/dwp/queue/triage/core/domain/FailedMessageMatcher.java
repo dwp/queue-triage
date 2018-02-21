@@ -14,6 +14,7 @@ import static org.hamcrest.Matchers.equalTo;
 public class FailedMessageMatcher extends TypeSafeMatcher<FailedMessage> {
 
     private Matcher<FailedMessageId> failedMessageIdMatcher = new IsAnything<>();
+    private Matcher<String> jmsMessageIdMatcher = new IsAnything<>();
     private Matcher<String> contentMatcher = new IsAnything<>();
     private Matcher<Destination> destinationMatcher = new IsAnything<>();
     private Matcher<Instant> sentAtMatcher = new IsAnything<>();
@@ -30,6 +31,11 @@ public class FailedMessageMatcher extends TypeSafeMatcher<FailedMessage> {
 
     public FailedMessageMatcher withFailedMessageId(Matcher<FailedMessageId> failedMessageIdMatcher) {
         this.failedMessageIdMatcher = failedMessageIdMatcher;
+        return this;
+    }
+
+    public FailedMessageMatcher withJmsMessageId(Matcher<String> jmsMessageIdMatcher) {
+        this.jmsMessageIdMatcher = jmsMessageIdMatcher;
         return this;
     }
 
@@ -81,6 +87,7 @@ public class FailedMessageMatcher extends TypeSafeMatcher<FailedMessage> {
     @Override
     protected boolean matchesSafely(FailedMessage item) {
         return failedMessageIdMatcher.matches(item.getFailedMessageId())
+                && jmsMessageIdMatcher.matches(item.getJmsMessageId())
                 && contentMatcher.matches(item.getContent())
                 && destinationMatcher.matches(item.getDestination())
                 && sentAtMatcher.matches(item.getSentAt())

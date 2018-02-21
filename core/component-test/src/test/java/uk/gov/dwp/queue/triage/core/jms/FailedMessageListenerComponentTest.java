@@ -2,6 +2,7 @@ package uk.gov.dwp.queue.triage.core.jms;
 
 import com.tngtech.jgiven.annotation.ScenarioStage;
 import org.hamcrest.Matcher;
+import org.hamcrest.Matchers;
 import org.hamcrest.collection.IsIterableContainingInOrder;
 import org.junit.Test;
 import uk.gov.dwp.queue.triage.core.BaseCoreComponentTest;
@@ -37,6 +38,7 @@ public class FailedMessageListenerComponentTest extends BaseCoreComponentTest<Jm
                         .withBroker(equalTo("internal-broker"))
                         .withDestination(equalTo(Optional.of("some-queue")))
                         .withContent(equalTo("poison"))
+                        .withJmsMessageId(Matchers.notNullValue(String.class))
         ));
     }
 

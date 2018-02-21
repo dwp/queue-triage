@@ -15,6 +15,7 @@ import static org.hamcrest.Matchers.equalTo;
 public class SearchFailedMessageResponseMatcher extends TypeSafeMatcher<SearchFailedMessageResponse> {
 
     private Matcher<FailedMessageId> failedMessageId = new IsAnything<>();
+    private Matcher<String> jmsMessageId = new IsAnything<>();
     private Matcher<String> content = new IsAnything<>();
     private Matcher<String> broker = new IsAnything<>();
     private Matcher<Optional<String>> destination = new IsAnything<>();
@@ -30,6 +31,11 @@ public class SearchFailedMessageResponseMatcher extends TypeSafeMatcher<SearchFa
 
     public SearchFailedMessageResponseMatcher withFailedMessageId(Matcher<FailedMessageId> failedMessageIdMatcher) {
         this.failedMessageId = failedMessageIdMatcher;
+        return this;
+    }
+
+    public SearchFailedMessageResponseMatcher withJmsMessageId(Matcher<String> jmsMessageId) {
+        this.jmsMessageId = jmsMessageId;
         return this;
     }
 
@@ -71,6 +77,7 @@ public class SearchFailedMessageResponseMatcher extends TypeSafeMatcher<SearchFa
     @Override
     protected boolean matchesSafely(SearchFailedMessageResponse item) {
         return failedMessageId.matches(item.getFailedMessageId())
+                && jmsMessageId.matches(item.getJmsMessageId())
                 && content.matches(item.getContent())
                 && broker.matches(item.getBroker())
                 && destination.matches(item.getDestination())
@@ -83,6 +90,7 @@ public class SearchFailedMessageResponseMatcher extends TypeSafeMatcher<SearchFa
     public void describeTo(Description description) {
         description
                 .appendText("failedMessageId is ").appendDescriptionOf(failedMessageId)
+                .appendText(" jmsMessageId is ").appendDescriptionOf(jmsMessageId)
                 .appendText(" content is ").appendDescriptionOf(content)
                 .appendText(" broker is ").appendDescriptionOf(broker)
                 .appendText(" destination is ").appendDescriptionOf(destination)

@@ -25,6 +25,9 @@ public class FailedMessageListener implements MessageListener {
     public void onMessage(Message message) {
         try {
             LOGGER.debug("Received message: {} with CorrelationId: {}", message.getJMSMessageID(), message.getJMSCorrelationID());
+            // Some sort of strategy
+            // When running in ReadOnly mode if JMS Message Id already exists ignore
+            // When running in Write mode if FailedMessage with a duplicate Id already exists, i.e. it's dead-lettered again update rather than create
             failedMessageService.create(failedMessageFactory.createFailedMessage(message));
         } catch (JMSException e) {
             LOGGER.error("Could not read jmsMessageId or correlationId", e);

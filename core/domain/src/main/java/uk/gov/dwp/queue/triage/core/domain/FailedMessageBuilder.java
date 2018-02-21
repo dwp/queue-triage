@@ -12,6 +12,7 @@ import java.util.Set;
 public class FailedMessageBuilder {
 
     private FailedMessageId failedMessageId = FailedMessageId.newFailedMessageId();
+    private String jmsMessageId;
     private Destination destination;
     private Instant sentDateTime;
     private Instant failedDateTime;
@@ -31,6 +32,7 @@ public class FailedMessageBuilder {
     public static FailedMessageBuilder clone(FailedMessage failedMessage) {
         return newFailedMessage()
                 .withFailedMessageId(failedMessage.getFailedMessageId())
+                .withJmsMessageId(failedMessage.getJmsMessageId())
                 .withDestination(failedMessage.getDestination())
                 .withSentDateTime(failedMessage.getSentAt())
                 .withFailedDateTime(failedMessage.getFailedAt())
@@ -41,7 +43,7 @@ public class FailedMessageBuilder {
     }
 
     public FailedMessage build() {
-        return new FailedMessage(failedMessageId, destination, sentDateTime, failedDateTime, content, properties, statusHistoryEvent, labels);
+        return new FailedMessage(failedMessageId, jmsMessageId, destination, sentDateTime, failedDateTime, content, properties, statusHistoryEvent, labels);
     }
 
     public FailedMessageBuilder withNewFailedMessageId() {
@@ -51,6 +53,11 @@ public class FailedMessageBuilder {
 
     public FailedMessageBuilder withFailedMessageId(FailedMessageId failedMessageId) {
         this.failedMessageId = failedMessageId;
+        return this;
+    }
+
+    public FailedMessageBuilder withJmsMessageId(String jmsMessageId) {
+        this.jmsMessageId = jmsMessageId;
         return this;
     }
 

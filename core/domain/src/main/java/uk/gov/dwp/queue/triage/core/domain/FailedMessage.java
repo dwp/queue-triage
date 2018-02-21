@@ -12,6 +12,7 @@ import static org.apache.commons.lang3.builder.ToStringBuilder.reflectionToStrin
 public class FailedMessage {
 
     private final FailedMessageId failedMessageId;
+    private final String jmsMessageId;
     private final Destination destination;
     private final Instant sentAt;
     private final Instant failedAt;
@@ -21,7 +22,7 @@ public class FailedMessage {
     private final Set<String> labels;
 
     FailedMessage(FailedMessageId failedMessageId,
-                  Destination destination,
+                  String jmsMessageId, Destination destination,
                   Instant sentAt,
                   Instant failedAt,
                   String content,
@@ -29,6 +30,7 @@ public class FailedMessage {
                   StatusHistoryEvent statusHistoryEvent,
                   Set<String> labels) {
         this.failedMessageId = failedMessageId;
+        this.jmsMessageId = jmsMessageId;
         this.destination = destination;
         this.sentAt = sentAt;
         this.failedAt = failedAt;
@@ -40,6 +42,10 @@ public class FailedMessage {
 
     public FailedMessageId getFailedMessageId() {
         return failedMessageId;
+    }
+
+    public String getJmsMessageId() {
+        return jmsMessageId;
     }
 
     public Destination getDestination() {

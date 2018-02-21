@@ -5,7 +5,6 @@ import uk.gov.dwp.queue.triage.id.FailedMessageId;
 
 import javax.validation.constraints.NotNull;
 import java.time.Instant;
-import java.util.Collection;
 import java.util.Optional;
 import java.util.Set;
 
@@ -13,6 +12,7 @@ public class SearchFailedMessageResponse {
 
     @NotNull
     private final FailedMessageId failedMessageId;
+    private final String jmsMessageId;
     @NotNull
     private final String broker;
     private final Optional<String> destination;
@@ -24,6 +24,7 @@ public class SearchFailedMessageResponse {
     private final Set<String> labels;
 
     private SearchFailedMessageResponse(@JsonProperty("failedMessageId") FailedMessageId failedMessageId,
+                                        @JsonProperty("jmsMessageId") String jmsMessageId,
                                         @JsonProperty("broker") String broker,
                                         @JsonProperty("destination") Optional<String> destination,
                                         @JsonProperty("sentDateTime") Instant sentDateTime,
@@ -31,6 +32,7 @@ public class SearchFailedMessageResponse {
                                         @JsonProperty("content") String content,
                                         @JsonProperty("labels") Set<String> labels) {
         this.failedMessageId = failedMessageId;
+        this.jmsMessageId = jmsMessageId;
         this.broker = broker;
         this.destination = destination;
         this.sentDateTime = sentDateTime;
@@ -41,6 +43,10 @@ public class SearchFailedMessageResponse {
 
     public FailedMessageId getFailedMessageId() {
         return failedMessageId;
+    }
+
+    public String getJmsMessageId() {
+        return jmsMessageId;
     }
 
     public String getBroker() {
@@ -74,6 +80,7 @@ public class SearchFailedMessageResponse {
     public static class SearchFailedMessageResponseBuilder {
 
         private FailedMessageId failedMessageId;
+        private String jmsMessageId;
         private String broker;
         private Optional<String> destination = Optional.empty();
         private Instant sentDateTime;
@@ -86,6 +93,11 @@ public class SearchFailedMessageResponse {
 
         public SearchFailedMessageResponseBuilder withFailedMessageId(FailedMessageId failedMessageId) {
             this.failedMessageId = failedMessageId;
+            return this;
+        }
+
+        public SearchFailedMessageResponseBuilder withJmsMessageId(String jmsMessageId) {
+            this.jmsMessageId = jmsMessageId;
             return this;
         }
 
@@ -120,7 +132,7 @@ public class SearchFailedMessageResponse {
         }
 
         public SearchFailedMessageResponse build() {
-            return new SearchFailedMessageResponse(failedMessageId, broker, destination, sentDateTime, failedDateTime, content, labels);
+            return new SearchFailedMessageResponse(failedMessageId, jmsMessageId, broker, destination, sentDateTime, failedDateTime, content, labels);
         }
     }
 }
