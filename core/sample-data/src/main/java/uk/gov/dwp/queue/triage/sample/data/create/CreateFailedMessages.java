@@ -4,7 +4,6 @@ import org.apache.cxf.jaxrs.client.JAXRSClientFactory;
 import uk.gov.dwp.queue.triage.core.client.CreateFailedMessageClient;
 import uk.gov.dwp.queue.triage.core.client.CreateFailedMessageRequest;
 import uk.gov.dwp.queue.triage.core.client.CreateFailedMessageRequest.CreateFailedMessageRequestBuilder;
-import uk.gov.dwp.queue.triage.core.client.SearchFailedMessageClient;
 import uk.gov.dwp.queue.triage.cxf.CxfConfiguration;
 import uk.gov.dwp.queue.triage.id.FailedMessageId;
 import uk.gov.dwp.queue.triage.jackson.configuration.JacksonConfiguration;
@@ -54,5 +53,4 @@ public class CreateFailedMessages {
                         .withProperty("retries", 1)
         );
     }
-
 }
