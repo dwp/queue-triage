@@ -1,43 +1,24 @@
 package uk.gov.dwp.queue.triage.core.jms.activemq;
 
 import org.junit.Test;
-import org.mockito.ArgumentCaptor;
-import org.mockito.internal.creation.MockSettingsImpl;
-import org.mockito.internal.stubbing.defaultanswers.GloballyConfiguredAnswer;
-import org.mockito.internal.stubbing.defaultanswers.ReturnsDeepStubs;
-import org.springframework.jms.listener.DefaultMessageListenerContainer;
 
 import javax.ws.rs.NotFoundException;
 import javax.ws.rs.core.Application;
-import javax.ws.rs.core.CacheControl;
-import javax.ws.rs.core.EntityTag;
-import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.Link;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.MultivaluedMap;
-import javax.ws.rs.core.NewCookie;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.Variant;
 import javax.ws.rs.ext.RuntimeDelegate;
-
-import java.lang.annotation.Annotation;
-import java.net.URI;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
 
 import static java.util.Collections.singletonMap;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-public class JmsListenerAdminResourceTest {
+public class MessageListenerManagerResourceTest {
 
-    private final DefaultMessageListenerContainer defaultMessageListenerContainer = mock(DefaultMessageListenerContainer.class);
-    private final JmsListenerAdminResource underTest = new JmsListenerAdminResource(
+    private final MessageListenerManager defaultMessageListenerContainer = mock(MessageListenerManager.class);
+    private final MessageListenerManagerResource underTest = new MessageListenerManagerResource(
             singletonMap("internal-broker", defaultMessageListenerContainer)
     );
 

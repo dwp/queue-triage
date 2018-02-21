@@ -1,25 +1,25 @@
-package uk.gov.dwp.queue.triage.core.resend.spring;
+package uk.gov.dwp.queue.triage.core.jms.activemq.browser.spring;
 
 import org.springframework.beans.factory.support.AbstractBeanDefinition;
-import uk.gov.dwp.queue.triage.core.resend.ResendScheduledExecutorService;
+import uk.gov.dwp.queue.triage.core.jms.activemq.browser.QueueBrowserScheduledExecutorService;
 
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 import static org.springframework.beans.factory.support.BeanDefinitionBuilder.genericBeanDefinition;
 
-public class ResendScheduledExecutorServiceBeanDefinitionFactory {
+public class QueueBrowserScheduledExecutorServiceBeanDefinitionFactory {
 
-    static final String RESEND_SCHEDULED_EXECUTOR_SERVICE_BEAN_NAME_PREFIX = "resendScheduledExecutorService-";
+    static final String QUEUE_BROWSER_SCHEDULED_EXECUTOR_SERVICE_BEAN_NAME_PREFIX = "queueBrowserScheduledExecutorService-";
 
     public AbstractBeanDefinition create(ScheduledExecutorService executorService,
-                                         String resendFailedMessageServiceBeanName,
+                                         String queueBrowserServiceBeanName,
                                          long initialDelay,
                                          long executionFrequency,
                                          TimeUnit timeUnit) {
-        return genericBeanDefinition(ResendScheduledExecutorService.class)
+        return genericBeanDefinition(QueueBrowserScheduledExecutorService.class)
                 .addConstructorArgValue(executorService)
-                .addConstructorArgReference(resendFailedMessageServiceBeanName)
+                .addConstructorArgReference(queueBrowserServiceBeanName)
                 .addConstructorArgValue(initialDelay)
                 .addConstructorArgValue(executionFrequency)
                 .addConstructorArgValue(timeUnit)
@@ -29,6 +29,6 @@ public class ResendScheduledExecutorServiceBeanDefinitionFactory {
     }
 
     public String createBeanName(String brokerName) {
-        return RESEND_SCHEDULED_EXECUTOR_SERVICE_BEAN_NAME_PREFIX + brokerName;
+        return QUEUE_BROWSER_SCHEDULED_EXECUTOR_SERVICE_BEAN_NAME_PREFIX + brokerName;
     }
 }

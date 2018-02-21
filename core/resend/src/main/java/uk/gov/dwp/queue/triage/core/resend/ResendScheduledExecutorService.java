@@ -2,100 +2,40 @@ package uk.gov.dwp.queue.triage.core.resend;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import uk.gov.dwp.queue.triage.executor.AbstractScheduledExecutorService;
 
-import java.util.concurrent.RunnableScheduledFuture;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-public class ResendScheduledExecutorService {
+public class ResendScheduledExecutorService extends AbstractScheduledExecutorService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ResendScheduledExecutorService.class);
-
-    private final ScheduledExecutorService scheduledExecutorService;
-    private final Runnable runnable;
-    private final long initialDelay;
-    private final long executionFrequency;
-    private final TimeUnit timeUnit;
-    private final String brokerName;
-
-    private RunnableScheduledFuture<?> futureTask;
 
     public ResendScheduledExecutorService(ScheduledExecutorService scheduledExecutorService,
                                           ResendFailedMessageService resendFailedMessageService,
                                           long initialDelay,
                                           long executionFrequency,
                                           TimeUnit timeUnit) {
-        this.scheduledExecutorService = scheduledExecutorService;
-        this.brokerName = resendFailedMessageService.getBrokerName();
-        this.runnable = () -> {
-            try {
-                LOGGER.debug("Executing the resend FailedMessages job for broker: {}", brokerName);
-                resendFailedMessageService.resendMessages();
-            } catch (Throwable t) {
-                LOGGER.error("An error occurred resending FailedMessages for broker: " + brokerName, t);
-            }
-        };
-        this.initialDelay = initialDelay;
-        this.executionFrequency = executionFrequency;
-        this.timeUnit = timeUnit;
+        super(scheduledExecutorService,
+                resendFailedMessageService.getBrokerName(),
+                () -> {
+                    try {
+                        LOGGER.debug("Executing the resend FailedMessages job for broker: {}", resendFailedMessageService.getBrokerName());
+                        resendFailedMessageService.resendMessages();
+                    } catch (Throwable t) {
+                        LOGGER.error("An error occurred resending FailedMessages for broker: {}", resendFailedMessageService.getBrokerName(), t);
+                    }
+                },
+                initialDelay, executionFrequency, timeUnit);
     }
 
-    public void start() {
-        LOGGER.info("ResendFailedMessageService scheduled to start in {} {} and then execute every {} {}",
-                initialDelay,
-                timeUnit,
-                executionFrequency,
-                timeUnit
-        );
-        scheduleAtAFixedRate(initialDelay);
+    @Override
+    public String getServiceName() {
+        return "ResendFailedMessageService";
     }
 
-    public void execute() {
-        if (futureTask == null || futureTask.isCancelled()) {
-            LOGGER.info("Executing the ResendFailedMessageService immediately");
-            runnable.run();
-        } else {
-            LOGGER.info("Executing the ResendFailedMessageService immediately, then scheduling to execute every {} {}",
-                    executionFrequency,
-                    timeUnit);
-            futureTask.run();
-        }
-        LOGGER.info("ResendFailedMessageService has executed successfully");
-    }
-
-    public void pause() {
-        LOGGER.info("Pausing execution of the ResendFailedMessageService");
-        cancelFutureTask();
-        LOGGER.info("Execution of the ResendFailedMessageService paused");
-    }
-
-    private void cancelFutureTask() {
-        if (futureTask != null && !futureTask.isCancelled()) {
-            futureTask.cancel(true);
-        }
-    }
-
-    public void stop() {
-        LOGGER.info("Stopping execution of the ResendFailedMessageService");
-        scheduledExecutorService.shutdown();
-        LOGGER.info("Execution of the ResendFailedMessageService stopped");
-    }
-
-    public String getBrokerName() {
-        return brokerName;
-    }
-
-    public boolean isPaused() {
-        return futureTask.isCancelled();
-    }
-
-    private RunnableScheduledFuture<?> scheduleAtAFixedRate(long initialDelay) {
-        futureTask = (RunnableScheduledFuture)scheduledExecutorService.scheduleAtFixedRate(
-                runnable,
-                initialDelay,
-                executionFrequency,
-                timeUnit
-        );
-        return futureTask;
+    @Override
+    public Logger getLogger() {
+        return LOGGER;
     }
 }

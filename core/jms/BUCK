@@ -38,6 +38,8 @@ java_library(
         "//lib/spring:spring-jms",
     ],
     visibility = [
+        "//core/activemq:queue-triage-core-activemq",
+        "//core/activemq:test",
         "//core/resend:queue-triage-core-resend-spring",
         "//core/resend:test-spring",
         "//core/server:server",

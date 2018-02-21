@@ -1,5 +1,6 @@
 RESEND_DEPENDENCIES = [
     "//common/id:queue-triage-common-id",
+    "//common/executor:queue-triage-common-executor",
     "//core/client:queue-triage-core-client",
     "//core/jms:queue-triage-core-jms",
     "//core/search:queue-triage-core-search",
@@ -47,6 +48,7 @@ name = "test",
 )
 
 RESEND_SPRING_DEPENDENCIES = [
+    "//common/executor:queue-triage-common-executor",
     "//core/activemq:queue-triage-core-activemq",
     "//core/resend:queue-triage-core-resend",
     "//lib/spring:spring-core",

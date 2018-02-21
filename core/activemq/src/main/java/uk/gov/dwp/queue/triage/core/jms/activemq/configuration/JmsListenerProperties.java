@@ -24,6 +24,8 @@ public class JmsListenerProperties {
         private String url;
         private String queue;
         private ResendProperties resend;
+        private boolean readOnly;
+        private ReadOnlyProperties read;
 
         public String getName() {
             return name;
@@ -58,6 +60,19 @@ public class JmsListenerProperties {
         }
 
         public static class ResendProperties {
+            private long frequency;
+
+            public long getFrequency() {
+                return frequency;
+            }
+
+            public void setFrequency(long frequency) {
+                this.frequency = frequency;
+            }
+        }
+
+        public static class ReadOnlyProperties {
+            // TODO: Consider sensible defaults for this property? 500ms??
             private long frequency;
 
             public long getFrequency() {

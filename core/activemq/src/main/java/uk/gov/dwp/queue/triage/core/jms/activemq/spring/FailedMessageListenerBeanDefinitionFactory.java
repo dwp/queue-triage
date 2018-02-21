@@ -10,7 +10,7 @@ import static org.springframework.beans.factory.support.BeanDefinitionBuilder.ge
 
 public class FailedMessageListenerBeanDefinitionFactory {
 
-    static final String FAILED_MESSAGE_LISTENER_BEAN_NAME_PREFIX = "failedMessageListener-";
+    public static final String FAILED_MESSAGE_LISTENER_BEAN_NAME_PREFIX = "failedMessageListener-";
     private final Function<String, ActiveMQFailedMessageFactory> activeMQFailedMessageFactoryFactory;
 
     public FailedMessageListenerBeanDefinitionFactory(Function<String, ActiveMQFailedMessageFactory> activeMQFailedMessageFactoryFactory) {

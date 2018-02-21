@@ -4,8 +4,9 @@
 activemq-data/
 buck-out/
 build/
-classes/
 jgiven-reports/
+target/
 
 # Files
 *.iml
+.buckconfig.local

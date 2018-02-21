@@ -6,7 +6,7 @@ import static org.springframework.beans.factory.support.BeanDefinitionBuilder.ge
 
 public class NamedMessageListenerContainerBeanDefinitionFactory {
 
-    public static final String DEFAULT_MESSAGE_LISTENER_CONTAINER_BEAN_NAME_PREFIX = "defaultMessageListenerContainer-";
+    public static final String NAMED_MESSAGE_LISTENER_CONTAINER_BEAN_NAME_PREFIX = "namedMessageListenerContainer-";
 
     public AbstractBeanDefinition create(String brokerName,
                                          String connectionFactoryBeanName,
@@ -21,6 +21,6 @@ public class NamedMessageListenerContainerBeanDefinitionFactory {
     }
 
     public String createBeanName(String brokerName) {
-        return DEFAULT_MESSAGE_LISTENER_CONTAINER_BEAN_NAME_PREFIX + brokerName;
+        return NAMED_MESSAGE_LISTENER_CONTAINER_BEAN_NAME_PREFIX + brokerName;
     }
 }

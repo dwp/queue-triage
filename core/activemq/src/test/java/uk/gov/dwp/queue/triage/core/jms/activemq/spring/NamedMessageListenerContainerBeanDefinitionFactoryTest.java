@@ -4,14 +4,12 @@ import org.junit.Test;
 import org.springframework.beans.MutablePropertyValues;
 import org.springframework.beans.factory.config.RuntimeBeanReference;
 import org.springframework.beans.factory.support.AbstractBeanDefinition;
-import org.springframework.jms.listener.DefaultMessageListenerContainer;
-import uk.gov.dwp.queue.triage.core.jms.activemq.ActiveMQFailedMessageFactory;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.typeCompatibleWith;
 import static org.junit.Assert.assertThat;
-import static uk.gov.dwp.queue.triage.core.jms.activemq.spring.NamedMessageListenerContainerBeanDefinitionFactory.DEFAULT_MESSAGE_LISTENER_CONTAINER_BEAN_NAME_PREFIX;
+import static uk.gov.dwp.queue.triage.core.jms.activemq.spring.NamedMessageListenerContainerBeanDefinitionFactory.NAMED_MESSAGE_LISTENER_CONTAINER_BEAN_NAME_PREFIX;
 
 public class NamedMessageListenerContainerBeanDefinitionFactoryTest {
 
@@ -44,7 +42,7 @@ public class NamedMessageListenerContainerBeanDefinitionFactoryTest {
 
     @Test
     public void createBeanName() throws Exception {
-        assertThat(underTest.createBeanName("foo"), is(equalTo(DEFAULT_MESSAGE_LISTENER_CONTAINER_BEAN_NAME_PREFIX + "foo")));
+        assertThat(underTest.createBeanName("foo"), is(equalTo(NAMED_MESSAGE_LISTENER_CONTAINER_BEAN_NAME_PREFIX + "foo")));
     }
 
 }

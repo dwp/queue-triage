@@ -1,4 +1,4 @@
-package uk.gov.dwp.queue.triage.core.resend;
+package uk.gov.dwp.queue.triage.core.jms.activemq.browser;
 
 import org.junit.After;
 import org.junit.Before;
@@ -17,18 +17,18 @@ import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
 
-public class ResendScheduledExecutorServiceTest {
+public class QueueBrowserScheduledExecutorServiceTest {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(ResendScheduledExecutorServiceTest.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(QueueBrowserScheduledExecutorServiceTest.class);
 
-    private final ResendFailedMessageService resendFailedMessageService = mock(ResendFailedMessageService.class);
+    private final QueueBrowserService queueBrowserService = mock(QueueBrowserService.class);
     private final ScheduledExecutorService scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
 
     private CountDownLatch countDownLatch = new CountDownLatch(1);
 
-    private ResendScheduledExecutorService underTest = new ResendScheduledExecutorService(
+    private QueueBrowserScheduledExecutorService underTest = new QueueBrowserScheduledExecutorService(
             scheduledExecutorService,
-            resendFailedMessageService,
+            queueBrowserService,
             0,
             100,
             TimeUnit.MILLISECONDS
@@ -37,8 +37,8 @@ public class ResendScheduledExecutorServiceTest {
     @Before
     public void setUp() {
         doAnswer(decrementCountdownLatch())
-                .when(resendFailedMessageService)
-                .resendMessages();
+                .when(queueBrowserService)
+                .browse();
     }
 
     @After
@@ -50,27 +50,27 @@ public class ResendScheduledExecutorServiceTest {
     @Test
     public void jobExecutesSuccessfully() throws Exception {
         underTest.start();
-        verifyMessageClassificationServiceExecutions(75);
+        verifyQueueBrowserServiceExecutions(75);
     }
 
 
     @Test
     public void jobContinuesToExecuteIfExceptionIsThrown() throws InterruptedException {
         doAnswer(decrementCountdownLatchAndThrowException())
-                .when(resendFailedMessageService)
-                .resendMessages();
+                .when(queueBrowserService)
+                .browse();
 
         underTest.start();
 
-        verifyMessageClassificationServiceExecutions(75);
-        verifyMessageClassificationServiceExecutions(120);
+        verifyQueueBrowserServiceExecutions(75);
+        verifyQueueBrowserServiceExecutions(120);
     }
 
     @Test
     public void jobCanBeExecutedOnDemand() throws InterruptedException {
-        ResendScheduledExecutorService underTest = new ResendScheduledExecutorService(
+        QueueBrowserScheduledExecutorService underTest = new QueueBrowserScheduledExecutorService(
                 scheduledExecutorService,
-                resendFailedMessageService,
+                queueBrowserService,
                 1,
                 1,
                 TimeUnit.HOURS
@@ -81,7 +81,7 @@ public class ResendScheduledExecutorServiceTest {
 
         underTest.execute();
 
-        verifyMessageClassificationServiceExecutions(0);
+        verifyQueueBrowserServiceExecutions(0);
         assertThat(underTest.isRunning(), is(true));
     }
 
@@ -90,21 +90,21 @@ public class ResendScheduledExecutorServiceTest {
 
         underTest.start();
 
-        verifyMessageClassificationServiceExecutions(75);
+        verifyQueueBrowserServiceExecutions(75);
 
         underTest.pause();
         assertThat(countDownLatch.getCount(), is(1L));
         assertThat(underTest.isRunning(), is(false));
 
         underTest.start();
-        verifyMessageClassificationServiceExecutions(75);
+        verifyQueueBrowserServiceExecutions(75);
         assertThat(underTest.isRunning(), is(true));
     }
 
     @Test
     public void executorRemainsPausedIfExecuted() throws InterruptedException {
         underTest.start();
-        verifyMessageClassificationServiceExecutions(75);
+        verifyQueueBrowserServiceExecutions(75);
         assertThat(underTest.isRunning(), is(true));
 
         underTest.pause();
@@ -112,7 +112,7 @@ public class ResendScheduledExecutorServiceTest {
         assertThat(underTest.isRunning(), is(false));
 
         underTest.execute();
-        verifyMessageClassificationServiceExecutions(0);
+        verifyQueueBrowserServiceExecutions(0);
         assertThat(underTest.isRunning(), is(false));
     }
 
@@ -130,10 +130,10 @@ public class ResendScheduledExecutorServiceTest {
         };
     }
 
-    private void verifyMessageClassificationServiceExecutions(int timeoutInMillis) throws InterruptedException {
-        LOGGER.debug("Verifying resendFailedMessageService has been called within {}ms", timeoutInMillis);
+    private void verifyQueueBrowserServiceExecutions(int timeoutInMillis) throws InterruptedException {
+        LOGGER.debug("Verifying queueBrowserService has been called within {}ms", timeoutInMillis);
         assertThat(countDownLatch.await(timeoutInMillis, TimeUnit.MILLISECONDS), is(true));
-        LOGGER.debug("Verified resendFailedMessageService has been called");
+        LOGGER.debug("Verified queueBrowserService has been called");
         countDownLatch = new CountDownLatch(1);
     }
 }

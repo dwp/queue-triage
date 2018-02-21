@@ -3,3 +3,7 @@ jms:
     brokers:
       - name: internal-broker
         url: vm://embedded-broker?create=false
+        readOnly: true
+        read:
+          frequency: 5
+          timeUnit: SECONDS
