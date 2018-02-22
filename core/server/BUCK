@@ -1,5 +1,7 @@
+include_defs('//tools/rpm_build.def')
+
 java_library(
-    name = "server",
+    name = "queue-triage-core-server",
     srcs = glob(["src/main/java/**/*.java"]),
     resources = [
         'src/main/resources/application.yml',
@@ -66,7 +68,7 @@ java_test(
     name = "test",
     srcs = glob(['src/test/java/**/*Test.java']),
     deps = [
-        ':server',
+        ':queue-triage-core-server',
         '//core/client-test-support:queue-triage-core-client-test-support',
         '//core/domain-test-support:queue-triage-core-domain-test-support',
         '//lib:commons-lang3',
@@ -79,14 +81,25 @@ java_test(
 )
 
 java_binary(
-    name = 'queue-triage-core-server',
+    name = 'queue-triage-core',
     main_class = 'uk.gov.dwp.queue.triage.core.QueueTriageCoreApplication',
     deps = [
-        ':server'
+        ':queue-triage-core-server'
     ],
     blacklist = [
         '^(?!uk.gov.dwp.queue.triage.*|logback.xml|application.yml)',
     ]
+)
+
+rpm_build(
+    name = 'rpm-build',
+    package_name = 'dwpuc-queue-triage-core',
+    rpm_prefix = 'queue-triage-core',
+    version = '1.0.0',
+    app_home = '/srv/app/queue-triage-core',
+    lib = [
+        '$(classpath :queue-triage-core-server)',
+    ],
 )
 
 genrule(

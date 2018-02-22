@@ -25,7 +25,7 @@ java_library(
     ],
     visibility = [
         "//core/resend:test",
-        "//core/server:server",
+        '//core/server:queue-triage-core-server',
     ]
 )
 
@@ -65,7 +65,7 @@ java_library(
     visibility = [
         "//core/component-test:queue-triage-component-test",
         "//core/component-test:test",
-        "//core/server:server",
+        '//core/server:queue-triage-core-server',
     ]
 )
 

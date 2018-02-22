@@ -8,6 +8,6 @@ java_library(
         '//lib/spring:spring-context',
     ],
     visibility = [
-        '//core/server:server',
+        '//core/server:queue-triage-core-server',
     ],
 )
