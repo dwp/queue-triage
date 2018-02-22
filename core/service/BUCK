@@ -17,7 +17,7 @@ java_library(
         "//core/resend:queue-triage-core-resend",
         "//core/resend:test",
         "//core/resend:test-spring",
-        "//core/server:server",
+        '//core/server:queue-triage-core-server',
         "//core/server:test",
     ]
 )

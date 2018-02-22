@@ -39,7 +39,7 @@ test_deps = [
     '//lib/test:jgiven',
     '//lib/test:jgiven-spring',
     '//web/component-test:queue-triage-web-component-test',
-    '//web/server:server',
+    '//web/server:queue-triage-web-server',
 ]
 
 vm_args = [

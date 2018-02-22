@@ -12,6 +12,6 @@ java_library(
     ],
     visibility = [
         '//common/cxf-server:queue-triage-common-cxf-server',
-        '//core/server:server',
+        '//core/server:queue-triage-core-server',
     ]
 )

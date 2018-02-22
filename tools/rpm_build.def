@@ -1,0 +1,39 @@
+def rpm_build(
+        name,
+        package_name,
+        rpm_prefix,
+        version,
+        app_home,
+        lib  = []):
+
+    copy_libs_cmd = [
+        '$(exe //tools:copy_libs)',
+        '$OUT',
+    ] + lib
+    genrule(
+        name = 'copy_libs',
+        bash = ' '.join(copy_libs_cmd),
+        out =  '.',
+    )
+
+    cmd = [
+        'fpm',
+        '-C $(location :copy_libs)',
+        '-s dir',
+        '-t rpm',
+        '-n %s' % package_name,
+        '-p $OUT',
+        '--prefix %s' % app_home,
+        '-v %s' % version,
+        '--rpm-os LINUX',
+        '--rpm-user root',
+        '--rpm-group root',
+        '--epoch 1',
+        '--architecture noarch',
+        '.'
+    ]
+    genrule(
+        name = name,
+        bash = ' '.join(cmd),
+        out  = '%s-%s.rpm' % (rpm_prefix, version),
+    )

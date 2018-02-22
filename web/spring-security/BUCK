@@ -8,7 +8,7 @@ java_library(
         "//lib/spring:spring-web",
     ],
     visibility = [
-        "//web/server:server",
+        '//web/server:queue-triage-web-server',
     ],
 )
 
@@ -21,7 +21,7 @@ java_library(
         "//lib/spring:spring-security-ldap-with-dependencies",
     ],
     visibility = [
-        "//web/server:server",
+        '//web/server:queue-triage-web-server',
     ],
 )
 

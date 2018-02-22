@@ -18,7 +18,7 @@ java_library(
     ],
     visibility = [
         "//core/component-test:test",
-        "//core/server:server",
-        "//web/server:server",
+        '//core/server:queue-triage-core-server',
+        '//web/server:queue-triage-web-server',
     ],
 )

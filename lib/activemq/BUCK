@@ -70,7 +70,7 @@ java_library(
         "//core/activemq:test",
         "//core/component-test:test",
         "//core/resend:test-spring",
-        "//core/server:server",
+        '//core/server:queue-triage-core-server',
     ]
 )
 java_library(
