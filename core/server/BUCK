@@ -109,8 +109,8 @@ genrule(
 )
 
 # buck build //core/server:generate-swagger-output
-genrule(
-    name = "generate-swagger-output",
-    cmd  = "$(exe //lib/swagger:swagger-codegen-cli) generate -i http://localhost:9991/core/swagger.json -l html -o $OUT",
-    out  = "swagger-output",
-)
+# genrule(
+#     name = "generate-swagger-output",
+#     cmd  = "$(exe //lib/swagger:swagger-codegen-cli) generate -i http://localhost:9991/core/swagger.json -l html -o $OUT",
+#     out  = "swagger-output",
+# )
