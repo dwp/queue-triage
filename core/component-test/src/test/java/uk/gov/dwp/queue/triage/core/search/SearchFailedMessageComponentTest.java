@@ -13,6 +13,7 @@ import uk.gov.dwp.queue.triage.jgiven.ReflectionArgumentFormatter;
 
 import java.util.Arrays;
 
+import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.equalTo;
 import static uk.gov.dwp.queue.triage.core.client.CreateFailedMessageRequest.newCreateFailedMessageRequest;
 import static uk.gov.dwp.queue.triage.core.client.search.SearchFailedMessageRequest.searchMatchingAllCriteria;
@@ -28,7 +29,7 @@ public class SearchFailedMessageComponentTest extends BaseCoreComponentTest<Sear
     @Test
     public void searchByBrokerResultsNoResultsWhenNoFailedMessagesExist() {
 
-        when().aSearchIsRequested(searchMatchingAllCriteria()
+        when().aSearchIsRequestedForFailedMessages(searchMatchingAllCriteria()
                 .withBroker("broker-name"));
 
         then().theSearchResultsContain(noResults());
@@ -43,14 +44,14 @@ public class SearchFailedMessageComponentTest extends BaseCoreComponentTest<Sear
                 .withDestinationName("queue-name"))
                 .exists();
 
-        when().aSearchIsRequested(searchMatchingAllCriteria()
+        when().aSearchIsRequestedForFailedMessages(searchMatchingAllCriteria()
                 .withBroker("broker-name")
                 .withDestination("another-queue")
         );
 
         then().theSearchResultsContain(noResults());
 
-        when().aSearchIsRequested(searchMatchingAllCriteria()
+        when().aSearchIsRequestedForFailedMessages(searchMatchingAllCriteria()
                 .withBroker("broker-name")
                 .withDestination("queue-name")
         );
@@ -75,19 +76,19 @@ public class SearchFailedMessageComponentTest extends BaseCoreComponentTest<Sear
                 .withDestinationName("queue-name"))
                 .exists();
 
-        when().aSearchIsRequested(searchMatchingAnyCriteria()
+        when().aSearchIsRequestedForFailedMessages(searchMatchingAnyCriteria()
                 .withBroker("some-broker")
                 .withDestination("another-queue")
         );
 
         then().theSearchResultsContain(noResults());
 
-        when().aSearchIsRequested(searchMatchingAnyCriteria()
+        when().aSearchIsRequestedForFailedMessages(searchMatchingAnyCriteria()
                 .withBroker("broker-name")
                 .withDestination("queue-name")
         );
 
-        then().theSearchResultsContain(contains(
+        then().theSearchResultsContain(containsInAnyOrder(
                 aFailedMessage().withFailedMessageId(equalTo(failedMessageId)),
                 aFailedMessage().withFailedMessageId(equalTo(anotherFailedMessageId))
         ));
@@ -103,7 +104,7 @@ public class SearchFailedMessageComponentTest extends BaseCoreComponentTest<Sear
                 .withContent("Bodger and Badger")
                 .exists();
 
-        when().aSearchIsRequested(searchMatchingAllCriteria()
+        when().aSearchIsRequestedForFailedMessages(searchMatchingAllCriteria()
                 .withContent("and")
         );
 
@@ -111,7 +112,7 @@ public class SearchFailedMessageComponentTest extends BaseCoreComponentTest<Sear
                 aFailedMessage()
                         .withFailedMessageId(equalTo(failedMessageId))));
 
-        when().aSearchIsRequested(searchMatchingAllCriteria()
+        when().aSearchIsRequestedForFailedMessages(searchMatchingAllCriteria()
                 .withContent("Bananas")
         );
 

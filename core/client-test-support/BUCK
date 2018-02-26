@@ -4,8 +4,10 @@ java_library(
     deps = [
         '//common/id:queue-triage-common-id',
         '//core/client:queue-triage-core-client',
+        '//lib:commons-lang3',
         '//lib/test:hamcrest-core',
         '//lib/test:hamcrest-library',
+        '//lib/test:jgiven-core',
     ],
     visibility = [
         '//core/client:test',

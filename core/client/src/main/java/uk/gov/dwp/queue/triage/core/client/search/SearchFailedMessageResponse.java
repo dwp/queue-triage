@@ -23,6 +23,10 @@ public class SearchFailedMessageResponse {
     private final String content;
     private final Set<String> labels;
 
+    public static SearchFailedMessageResponseBuilder newSearchFailedMessageResponse() {
+        return new SearchFailedMessageResponseBuilder();
+    }
+
     private SearchFailedMessageResponse(@JsonProperty("failedMessageId") FailedMessageId failedMessageId,
                                         @JsonProperty("jmsMessageId") String jmsMessageId,
                                         @JsonProperty("broker") String broker,
@@ -73,8 +77,18 @@ public class SearchFailedMessageResponse {
         return labels;
     }
 
-    public static SearchFailedMessageResponseBuilder newSearchFailedMessageResponse() {
-        return new SearchFailedMessageResponseBuilder();
+    @Override
+    public String toString() {
+        return "SearchFailedMessageResponse{" +
+                "failedMessageId=" + failedMessageId +
+                ", jmsMessageId='" + jmsMessageId + '\'' +
+                ", broker='" + broker + '\'' +
+                ", destination=" + destination +
+                ", sentDateTime=" + sentDateTime +
+                ", lastFailedDateTime=" + lastFailedDateTime +
+                ", content='" + content + '\'' +
+                ", labels=" + labels +
+                '}';
     }
 
     public static class SearchFailedMessageResponseBuilder {

@@ -2,6 +2,7 @@ package uk.gov.dwp.queue.triage.core.domain;
 
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
+import org.hamcrest.TypeSafeDiagnosingMatcher;
 import org.hamcrest.TypeSafeMatcher;
 import org.hamcrest.core.IsAnything;
 import uk.gov.dwp.queue.triage.core.client.search.SearchFailedMessageResponse;
@@ -88,14 +89,18 @@ public class SearchFailedMessageResponseMatcher extends TypeSafeMatcher<SearchFa
 
     @Override
     public void describeTo(Description description) {
-        description
-                .appendText("failedMessageId is ").appendDescriptionOf(failedMessageId)
-                .appendText(" jmsMessageId is ").appendDescriptionOf(jmsMessageId)
-                .appendText(" content is ").appendDescriptionOf(content)
-                .appendText(" broker is ").appendDescriptionOf(broker)
-                .appendText(" destination is ").appendDescriptionOf(destination)
-                .appendText(" sentDateTime is ").appendDescriptionOf(sentDateTime)
-                .appendText(" failedDateTime is ").appendDescriptionOf(failedDateTime)
-        ;
+        appendIfMatcherIsNotIsAnything("failedMessageId is ", failedMessageId, description);
+        appendIfMatcherIsNotIsAnything(" jmsMessageId is ", jmsMessageId, description);
+        appendIfMatcherIsNotIsAnything(" content is ", content, description);
+        appendIfMatcherIsNotIsAnything(" broker is ", broker, description);
+        appendIfMatcherIsNotIsAnything(" destination is ", destination, description);
+        appendIfMatcherIsNotIsAnything(" sentDateTime is ", sentDateTime, description);
+        appendIfMatcherIsNotIsAnything(" failedDateTime is ", failedDateTime, description);
+    }
+
+    private void appendIfMatcherIsNotIsAnything(String text, Matcher<?> fieldMatcher, Description description) {
+        if (!IsAnything.class.equals(fieldMatcher.getClass())) {
+            description.appendText(text).appendDescriptionOf(fieldMatcher);
+        }
     }
 }

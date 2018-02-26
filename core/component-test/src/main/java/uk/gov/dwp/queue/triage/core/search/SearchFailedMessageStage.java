@@ -19,6 +19,7 @@ import org.springframework.http.ResponseEntity;
 import uk.gov.dwp.queue.triage.core.client.search.SearchFailedMessageRequest;
 import uk.gov.dwp.queue.triage.core.client.search.SearchFailedMessageRequest.SearchFailedMessageRequestBuilder;
 import uk.gov.dwp.queue.triage.core.client.search.SearchFailedMessageResponse;
+import uk.gov.dwp.queue.triage.core.domain.SearchRequestBuilderArgumentFormatter;
 import uk.gov.dwp.queue.triage.jgiven.ReflectionArgumentFormatter;
 
 import javax.ws.rs.core.Response.Status;
@@ -42,7 +43,7 @@ public class SearchFailedMessageStage extends Stage<SearchFailedMessageStage> {
     @ExpectedScenarioState
     private ResponseEntity<Collection<SearchFailedMessageResponse>> searchResponse;
 
-    public SearchFailedMessageStage aSearchIsRequested(@Format(value = ReflectionArgumentFormatter.class, args = {"broker", "destination"}) SearchFailedMessageRequestBuilder requestBuilder) {
+    public SearchFailedMessageStage aSearchIsRequestedForFailedMessages(@Format(value = SearchRequestBuilderArgumentFormatter.class) SearchFailedMessageRequestBuilder requestBuilder) {
         searchResponse = testRestTemplate.exchange(
                 "/core/failed-message/search",
                 HttpMethod.POST,
