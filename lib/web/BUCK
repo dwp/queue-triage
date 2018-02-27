@@ -1,4 +1,0 @@
-prebuilt_jar(name='mustache-compiler', binary_jar=':mustache-compiler-mvn', source_jar=":mustache-compiler-src", visibility=["PUBLIC"])
-
-remote_file(name='mustache-compiler-mvn', out='compiler-0.9.5.jar', url='mvn:com.github.spullara.mustache.java:compiler:jar:0.9.5', sha1='2d13ba8f4e9e578ef3636c064dae4ed675c8de7d')
-remote_file(name='mustache-compiler-src', out='compiler-0.9.5-sources.jar', url='mvn:com.github.spullara.mustache.java:compiler:src:0.9.5', sha1='45e36f16202869f7b3e335cb9497318380a3f59a')

@@ -1,0 +1,5 @@
+dependencies {
+    implementation 'javax.servlet:javax.servlet-api'
+    testImplementation 'org.mockito:mockito-core'
+    testImplementation 'junit:junit'
+}

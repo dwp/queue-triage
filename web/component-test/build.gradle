@@ -1,0 +1,48 @@
+apply plugin: "com.tngtech.jgiven.gradle-plugin"
+
+dependencies {
+    implementation project(':common:id')
+    implementation project(':common:jgiven')
+    implementation project(':common:ldap-test-support')
+    implementation project(':core:client')
+    implementation project(':core:client-test-support')
+
+    implementation 'ch.qos.logback:logback-classic'
+    implementation 'com.codeborne:selenide'
+    implementation 'com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider'
+    implementation 'com.spotify:hamcrest-optional'
+    implementation 'com.tngtech.jgiven:jgiven-core'
+    implementation 'com.tngtech.jgiven:jgiven-spring'
+    implementation 'com.unboundid:unboundid-ldapsdk'
+    implementation 'javax.ws.rs:javax.ws.rs-api'
+    implementation 'junit:junit'
+    implementation 'org.apache.activemq:activemq-client'
+    implementation 'org.hamcrest:hamcrest-core'
+    implementation 'org.hamcrest:hamcrest-library'
+    implementation 'org.mockito:mockito-core'
+    implementation 'org.seleniumhq.selenium:selenium-java'
+    implementation 'org.springframework.boot:spring-boot'
+    implementation 'org.springframework.boot:spring-boot-test'
+    implementation 'org.springframework:spring-test'
+    implementation 'org.springframework:spring-web'
+
+    testImplementation project(':web:server')
+    testImplementation 'org.eclipse.jetty:jetty-server'
+    testImplementation 'org.eclipse.jetty:jetty-servlet'
+    testImplementation 'org.eclipse.jetty:jetty-webapp'
+    testImplementation 'org.hibernate:hibernate-validator'
+    testImplementation 'org.seleniumhq.selenium:selenium-firefox-driver'
+    testImplementation 'org.yaml:snakeyaml'
+}
+
+test {
+//    systemProperty 'webdriver.gecko.driver', "${project.rootDir}/lib/geckodriver/geckodriver"
+
+    systemProperty "browser", project.findProperty('selenium.browser') ?: 'firefox'
+    if (project.hasProperty("selenium.remote_url")) {
+        systemProperty "remote", project.property("selenium.remote_url")
+    }
+    finalizedBy{
+        jgivenTestReport
+    }
+}

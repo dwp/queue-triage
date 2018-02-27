@@ -1,7 +1,9 @@
 package uk.gov.dwp.queue.triage.web.component;
 
+import com.codeborne.selenide.Selenide;
 import com.tngtech.jgiven.integration.spring.EnableJGiven;
 import com.tngtech.jgiven.integration.spring.SimpleSpringRuleScenarioTest;
+import org.junit.After;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.test.context.ActiveProfiles;
@@ -20,4 +22,8 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
 @ComponentScan
 public class SimpleBaseWebComponentTest<STAGE> extends SimpleSpringRuleScenarioTest<STAGE> {
 
+    @After
+    public void tearDown() {
+        Selenide.close();
+    }
 }

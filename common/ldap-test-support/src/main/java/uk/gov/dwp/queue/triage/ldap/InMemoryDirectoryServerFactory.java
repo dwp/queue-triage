@@ -40,11 +40,13 @@ public class InMemoryDirectoryServerFactory {
 
     public InMemoryDirectoryServerConfig createServerConfig() throws LDAPException {
         InMemoryDirectoryServerConfig config = new InMemoryDirectoryServerConfig(
-                properties.getProperty(BASE_DN_KEY, DEFAULT_BASE_DN)
+            properties.getProperty(BASE_DN_KEY, DEFAULT_BASE_DN)
         );
+        String property = properties.getProperty(LDAP_PORT_KEY, DEFAULT_LDAP_PORT);
+        LOGGER.info("Resolved the following port:{}", property);
         config.setListenerConfigs(createLDAPConfig(
                 "LDAP",
-                Integer.parseInt(properties.getProperty(LDAP_PORT_KEY, DEFAULT_LDAP_PORT)))
+                Integer.parseInt(property))
         );
         return config;
     }

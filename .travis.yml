@@ -11,23 +11,16 @@ notifications:
 before_script:
   # Create Mongo admin user
   - echo "db.createUser({user:'admin',pwd:'Passw0rd',roles:['userAdminAnyDatabase']})" | mongo admin
-  # Install Buck
-  - pushd $HOME
-  - git clone --branch v2017.10.01.01 --depth 1 https://github.com/facebook/buck.git
-  - cd buck && ant && popd
-  - export PATH=$HOME/buck/bin:$PATH
-  # Verify Buck installation
-  - buck --version
   # Start Firefox
   - docker run -d --net=host -v /dev/shm:/dev/shm selenium/standalone-firefox:3.8.1-francium
   - docker ps
-  - printf "[selenium]\n  remote_url=http://localhost:4444/wd/hub\n" > .buckconfig.local
 
 script:
-  - buck build //core/dao-mongo:create-users-and-roles
-  - buck fetch //... > /dev/null
-  - buck test --all --exclude component-test > /dev/null
-  - buck test --all --include component-test > /dev/null
+  - ./gradlew createUsersAndRoles
+  - ./gradlew build -Pselenium.remote_url=http://localhost:4444/wd/hub
+
+after_success:
+  - ./gradlew release
 
 services:
   - mongodb

@@ -1,5 +1,0 @@
-python_binary(
-    name = 'copy_libs',
-    main = 'copy_libs.py',
-    visibility = ['PUBLIC'],
-)

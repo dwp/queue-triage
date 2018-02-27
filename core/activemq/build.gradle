@@ -1,0 +1,49 @@
+dependencies {
+    implementation project(':common:cxf')
+    implementation project(':common:executor')
+
+    implementation project(':core:domain')
+    implementation project(':core:jms')
+    implementation project(':core:service')
+
+    implementation 'org.apache.activemq:activemq-client'
+    implementation 'org.apache.geronimo.specs:geronimo-jms_1.1_spec'
+    implementation 'javax.ws.rs:javax.ws.rs-api'
+    implementation 'org.slf4j:slf4j-api'
+
+    implementation 'org.springframework.boot:spring-boot'
+    implementation 'org.springframework.boot:spring-boot-autoconfigure'
+    implementation 'org.springframework:spring-beans'
+    implementation 'org.springframework:spring-context'
+    implementation 'org.springframework:spring-core'
+    implementation 'org.springframework:spring-jms'
+    implementation 'io.swagger:swagger-annotations'
+
+
+    testImplementation project(':core:domain-test-support')
+    testImplementation 'org.apache.geronimo.specs:geronimo-j2ee-management_1.1_spec'
+    testImplementation 'org.apache.geronimo.specs:geronimo-jms_1.1_spec'
+    testImplementation 'org.fusesource.hawtbuf:hawtbuf'
+    testImplementation 'org.apache.commons:commons-lang3'
+    testImplementation 'javax.ws.rs:javax.ws.rs-api'
+    testImplementation 'org.yaml:snakeyaml'
+
+    testImplementation 'org.springframework:spring-core'
+    testImplementation 'org.springframework:spring-aop'
+    testImplementation 'org.springframework:spring-expression'
+    testImplementation 'commons-logging:commons-logging'
+    testImplementation 'org.springframework:spring-test'
+    testImplementation 'org.springframework:spring-tx'
+
+    // this was test:common
+    testImplementation 'net.bytebuddy:byte-buddy'
+    testImplementation 'org.hamcrest:hamcrest-core'
+    testImplementation 'org.hamcrest:hamcrest-library'
+    testImplementation 'junit:junit'
+    testImplementation 'org.mockito:mockito-core'
+    testImplementation 'net.bytebuddy:byte-buddy'
+    testImplementation 'org.objenesis:objenesis:2.5.1'
+    // this was test:common - end
+
+
+}

@@ -1,0 +1,4 @@
+dependencies {
+    implementation 'org.apache.cxf:cxf-rt-rs-service-description-swagger'
+    implementation 'org.springframework:spring-context'
+}

@@ -1,0 +1,7 @@
+dependencies{
+    implementation project(':common:id')
+    implementation project(':core:domain')
+    implementation 'org.hamcrest:hamcrest-core'
+    implementation 'org.hamcrest:hamcrest-library'
+    implementation 'com.spotify:hamcrest-optional'
+}

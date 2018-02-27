@@ -1,0 +1,9 @@
+apply plugin: 'application'
+
+mainClassName = "uk.gov.dwp.queue.triage.ldap.InMemoryDirectoryServerFactory"
+
+dependencies {
+    implementation 'com.unboundid:unboundid-ldapsdk'
+    implementation 'org.slf4j:slf4j-api'
+    implementation 'ch.qos.logback:logback-classic'
+}
