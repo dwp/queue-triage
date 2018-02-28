@@ -28,7 +28,7 @@ public class DeleteFailedMessageComponentTest extends BaseCoreComponentTest<Dele
                 .exists();
 
         when().theFailedMessageWithId$IsDeleted(failedMessageId);
-        searchFailedMessageStage.and().aSearchIsRequested(searchMatchingAllCriteria()
+        searchFailedMessageStage.and().aSearchIsRequestedForFailedMessages(searchMatchingAllCriteria()
                 .withBroker("broker-name")
                 .withDestination("queue-name")
         );

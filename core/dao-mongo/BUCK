@@ -1,3 +1,5 @@
+include_defs('//tools/rpm_build.def')
+
 java_library(
     name = "queue-triage-core-dao-mongo",
     srcs = glob(["src/main/java/**/*.java"]),
@@ -31,6 +33,11 @@ java_library(
 )
 
 export_file(
+    name = 'mongo-queue-triage-indexes.sh',
+    src  = 'src/main/resources/mongo-queue-triage-indexes.sh',
+)
+
+export_file(
     name = 'mongo-queue-triage-roles.sh',
     src  = 'src/main/resources/mongo-queue-triage-roles.sh',
 )
@@ -40,9 +47,15 @@ export_file(
     src  = 'src/main/resources/mongo-queue-triage-users.sh',
 )
 
+mongo_cmd = [
+    '$(location :mongo-queue-triage-indexes.sh) > $OUT',
+    '$(location :mongo-queue-triage-roles.sh) >> $OUT',
+    '$(location :mongo-queue-triage-users.sh) >> $OUT'
+]
+
 genrule(
     name = 'create-users-and-roles',
-    cmd = '$(location :mongo-queue-triage-roles.sh) > $OUT && $(location :mongo-queue-triage-users.sh) >> $OUT',
+    cmd = ' && '.join(mongo_cmd),
     out = 'create-users-and-roles.log'
 )
 
@@ -68,5 +81,18 @@ java_test(
         '//lib/spring:spring-boot-with-dependencies',
         '//lib/spring:spring-test',
         '//lib/test:common',
+    ],
+)
+
+rpm_build(
+    name = 'rpm-build',
+    package_name = 'dwpuc-queue-triage-core-db',
+    rpm_prefix = 'queue-triage-core-db',
+    version = '1.0.0',
+    app_home = '/srv/app/mongo/queue-triage-core',
+    bin = [
+        '$(location :mongo-queue-triage-indexes.sh)',
+        '$(location :mongo-queue-triage-roles.sh)',
+        '$(location :mongo-queue-triage-users.sh)',
     ],
 )
