@@ -8,10 +8,11 @@ import static uk.gov.dwp.queue.triage.web.component.login.LoginStage.User.aUser;
 public class LoginComponentTest extends SimpleBaseWebComponentTest<LoginStage> {
 
     @Test
-    public void userAttemptsToAccessASecureArea() throws Exception {
+    public void userAttemptsToAccessASecureArea() {
         given().theUserIsUnauthenticated();
-        when().aRequestIsMadeTo("/secure");
+        when().aRequestIsMadeTo("secure");
         then().theUserIsRedirectedToTheLoginPage();
+
     }
 
     @Test

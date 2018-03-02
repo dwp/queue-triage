@@ -1,0 +1,23 @@
+def dbProjects = [':core:dao-mongo']
+
+configure(subprojects.findAll { dbProjects.contains(it.path) }) { project ->
+    apply plugin: 'distribution'
+    apply plugin: 'nebula.ospackage'
+
+    ospackage {
+        packageName = project.name
+        version = project.version
+        release = '1'
+        arch = NOARCH
+        os = LINUX
+
+        String appInstallationDir = "/srv/app/${project.name}"
+
+        from(installDist.outputs.files) {
+            into appInstallationDir
+            createDirectoryEntry true
+            includeEmptyDirs true
+        }
+    }
+    buildRpm.dependsOn installDist
+}

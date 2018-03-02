@@ -1,0 +1,16 @@
+dependencies {
+    implementation 'javax.servlet:javax.servlet-api'
+    implementation 'org.springframework:spring-web'
+    implementation 'org.springframework.boot:spring-boot'
+    implementation 'org.springframework.ldap:spring-ldap-core'
+    implementation 'org.springframework.security:spring-security-config'
+    implementation 'org.springframework.security:spring-security-ldap'
+    implementation 'org.springframework.security:spring-security-web'
+    implementation 'com.unboundid:unboundid-ldapsdk'
+
+    testImplementation 'junit:junit'
+    testImplementation 'org.hamcrest:hamcrest-core'
+    testImplementation 'org.hamcrest:hamcrest-library'
+    testImplementation 'org.springframework.boot:spring-boot-test'
+    testImplementation 'org.yaml:snakeyaml'
+}

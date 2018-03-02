@@ -1,0 +1,24 @@
+dependencies{
+    implementation project(':common:id')
+    implementation project(':core:domain')
+    implementation project(':core:service')
+    implementation 'org.apache.geronimo.specs:geronimo-jms_1.1_spec'
+    implementation 'org.slf4j:slf4j-api'
+    implementation 'org.springframework:spring-beans'
+    implementation 'org.springframework:spring-core'
+    implementation 'org.springframework:spring-jms'
+
+
+    //TEST
+    testImplementation 'org.apache.commons:commons-lang3'
+    testImplementation 'org.springframework:spring-tx'
+    // this was test:common
+    testImplementation 'net.bytebuddy:byte-buddy'
+    testImplementation 'org.hamcrest:hamcrest-core'
+    testImplementation 'org.hamcrest:hamcrest-library'
+    testImplementation 'junit:junit'
+    testImplementation 'org.mockito:mockito-core'
+    testImplementation 'net.bytebuddy:byte-buddy'
+    testImplementation 'org.objenesis:objenesis:2.5.1'
+    // this was test:common - end
+}

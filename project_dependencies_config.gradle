@@ -1,0 +1,21 @@
+project(':common:cxf-server') {
+    dependencies {
+        implementation project(':common:metrics'), project(':common:cxf')
+    }
+}
+project(':common:jackson') {
+    dependencies {
+        implementation project(':common:cxf'), project(':common:id')
+    }
+}
+
+project(':core:client') {
+    dependencies {
+        implementation project(':common:id')
+    }
+}
+project(':core:resend') {
+    dependencies {
+        implementation project(':common:executor')
+    }
+}

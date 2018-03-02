@@ -1,0 +1,52 @@
+apply plugin: "com.tngtech.jgiven.gradle-plugin"
+
+dependencies {
+    implementation project(':common:id')
+    implementation project(':common:jackson')
+    implementation project(':common:jgiven')
+    implementation project(':core:activemq')
+    implementation project(':core:client')
+    implementation project(':core:client-test-support')
+    implementation project(':core:dao-mongo-test-support')
+    implementation project(':core:domain')
+    implementation project(':core:jms')
+    implementation project(':core:message-classification')
+    implementation project(':core:server')
+    implementation project(':core:service')
+
+    implementation 'com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider'
+    implementation 'com.spotify:hamcrest-optional'
+    implementation 'com.tngtech.jgiven:jgiven-core'
+    implementation 'com.tngtech.jgiven:jgiven-spring'
+    implementation 'javax.ws.rs:javax.ws.rs-api'
+    implementation 'junit:junit'
+    implementation 'org.apache.activemq:activemq-client'
+    implementation 'org.apache.activemq.tooling:activemq-junit'
+    implementation 'org.apache.cxf:cxf-core'
+    implementation 'org.apache.cxf:cxf-rt-transports-http'
+    implementation 'org.awaitility:awaitility'
+    implementation 'org.mongodb:mongodb-driver'
+    implementation 'org.slf4j:slf4j-api'
+    implementation 'org.springframework:spring-beans'
+    implementation 'org.springframework:spring-context'
+    implementation 'org.springframework:spring-core'
+    implementation 'org.springframework:spring-jms'
+    implementation 'org.springframework:spring-test'
+    implementation 'org.springframework:spring-tx'
+    implementation 'org.springframework:spring-web'
+    implementation 'org.springframework.boot:spring-boot'
+    implementation 'org.springframework.boot:spring-boot-test'
+    implementation 'org.hamcrest:hamcrest-core'
+    implementation 'org.hamcrest:hamcrest-library'
+    implementation 'org.yaml:snakeyaml'
+
+    testImplementation 'org.apache.activemq:activemq-broker'
+    testImplementation 'org.apache.activemq:activemq-kahadb-store'
+    testImplementation 'org.eclipse.jetty:jetty-server'
+    testImplementation 'org.eclipse.jetty:jetty-servlet'
+    testImplementation 'org.eclipse.jetty:jetty-webapp'
+    testImplementation 'org.hibernate:hibernate-validator'
+
+}
+
+test.finalizedBy jgivenTestReport

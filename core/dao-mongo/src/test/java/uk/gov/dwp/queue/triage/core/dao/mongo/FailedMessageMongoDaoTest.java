@@ -59,6 +59,14 @@ public class FailedMessageMongoDaoTest extends AbstractMongoDaoTest {
     }
 
     @Test
+    public void findFailedMessageWithDeletedStatusReturnsNull() {
+
+        underTest.insert(failedMessageBuilder.withStatusHistoryEvent(DELETED).build());
+
+        assertThat(underTest.findById(failedMessageId), is(nullValue(FailedMessage.class)));
+    }
+
+    @Test
     public void saveMessageWithEmptyPropertiesAndNoLabels() throws Exception {
         failedMessageBuilder.withProperties(emptyMap());
 

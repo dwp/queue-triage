@@ -1,0 +1,170 @@
+// assumes that the necessary build script block is configured correctly in the project build.gradle
+subprojects {
+    sourceCompatibility = 1.8
+    targetCompatibility = 1.8
+
+    apply plugin: 'io.spring.dependency-management'
+
+    dependencyManagement {
+        dependencies {
+
+            dependencySet(group: 'com.fasterxml.jackson.core', version: '2.8.8') {
+                entry 'jackson-annotations'
+                entry 'jackson-core'
+                entry 'jackson-databind'
+            }
+
+            dependencySet(group: 'com.fasterxml.jackson.datatype', version: '2.8.8') {
+                entry 'jackson-dataformat-yaml'
+                entry 'jackson-datatype-jdk8'
+                entry 'jackson-datatype-jsr310'
+            }
+
+            dependencySet(group: 'com.fasterxml.jackson.jaxrs', version: '2.8.8') {
+                entry 'jackson-jaxrs-base'
+                entry 'jackson-jaxrs-json-provider'
+            }
+
+            dependencySet(group: 'com.tngtech.jgiven', version: '0.15.3') {
+                entry 'jgiven-core'
+//                entry 'jgiven-html-app'
+//                entry 'jgiven-html5-report'
+                entry 'jgiven-junit'
+                entry 'jgiven-spring'
+            }
+
+            dependencySet(group: 'io.dropwizard.metrics', version: '3.1.5') {
+                entry 'metrics-core'
+                entry 'metrics-servlet'
+            }
+
+            dependencySet(group: 'io.swagger', version: '1.5.16') {
+                entry 'swagger-annotations'
+                entry 'swagger-jaxrs'
+                entry 'swagger-core'
+                entry 'swagger-models'
+            }
+
+            dependencySet(group: 'org.apache.activemq', version: '5.15.3') {
+                entry 'activemq-client'
+                entry 'activemq-broker'
+                entry 'activemq-kahadb-store'
+            }
+
+            dependencySet(group: 'org.apache.cxf', version: '3.1.11') {
+                entry 'cxf-core'
+                entry 'cxf-rt-features-metrics'
+                entry 'cxf-rt-frontend-jaxrs'
+                entry 'cxf-rt-rs-client'
+                entry 'cxf-rt-rs-service-description-swagger'
+                entry 'cxf-rt-transports-http'
+                entry 'cxf-rt-transports-http-jetty'
+            }
+
+            dependencySet(group: 'org.eclipse.jetty', version: '9.4.4.v20170414') {
+                entry 'jetty-server'
+                entry 'jetty-servlets'
+                entry 'jetty-webapp'
+            }
+
+            dependencySet(group: 'org.hamcrest', version: '1.3') {
+                entry 'hamcrest-core'
+                entry 'hamcrest-library'
+            }
+
+            dependencySet(group: 'org.mongodb', version: '3.4.2') {
+                entry 'bson'
+                entry 'mongodb-driver-core'
+                entry 'mongodb-driver'
+            }
+
+            dependencySet(group: 'org.slf4j', version: '1.7.25') {
+                entry 'jcl-over-slf4j'
+                entry 'jul-to-slf4j'
+                entry 'log4j-over-slf4j'
+                entry 'slf4j-api'
+                entry 'slf4j-simple'
+            }
+
+            dependencySet(group: 'ch.qos.logback', version: '1.1.11') {
+                entry 'logback-classic'
+                entry 'logback-core'
+            }
+
+            dependencySet(group: 'org.springframework', version: '4.3.8.RELEASE') {
+                entry 'spring-aop'
+                entry 'spring-beans'
+                entry 'spring-context'
+                entry 'spring-core'
+                entry 'spring-expression'
+                entry 'spring-jms'
+                entry 'spring-jms'
+                entry 'spring-test'
+                entry 'spring-tx'
+                entry 'spring-web'
+                entry 'spring-webmvc'
+            }
+
+            dependencySet(group: 'org.springframework.security', version: '4.2.3.RELEASE') {
+                entry 'spring-security-config'
+                entry 'spring-security-core'
+                entry 'spring-security-ldap'
+                entry 'spring-security-web'
+            }
+
+            dependencySet(group: 'org.springframework.ldap', version: '2.3.1.RELEASE') {
+                entry 'spring-ldap-core'
+            }
+
+            dependencySet(group: 'org.springframework.boot', version: '1.5.3.RELEASE') {
+                entry 'spring-boot'
+                entry 'spring-boot-starter'
+                entry 'spring-boot-autoconfigure'
+                entry 'spring-boot-test'
+            }
+
+            dependencySet(group: 'org.seleniumhq.selenium', version: '3.8.1') {
+                entry 'selenium-firefox-driver'
+                entry 'selenium-java'
+                entry 'selenium-remote-driver'
+                entry 'selenium-support'
+            }
+
+
+            dependency 'com.codeborne:selenide:4.10.01'
+            dependency 'com.fasterxml:classmate:1.3.3'
+            dependency 'com.github.spullara.mustache.java:compiler:0.9.5'
+            dependency 'com.google.guava:guava:23.6-jre'
+            dependency 'com.jayway.jsonpath:json-path:2.2.0'
+            dependency 'com.spotify:hamcrest-optional:1.0.2'
+            dependency 'com.thoughtworks.paranamer:paranamer:2.8'
+            dependency 'com.unboundid:unboundid-ldapsdk:4.0.0'
+            dependency 'commons-logging:commons-logging:1.2'
+            dependency 'io.swagger:swagger-annotations:1.5.16'
+            dependency 'io.swagger:swagger-codegen-cli:2.2.3'
+            dependency 'javax.annotation:javax.annotation-api:1.2'
+            dependency 'javax.servlet:javax.servlet-api:3.1.0'
+            dependency 'javax.validation:validation-api:1.1.0.Final'
+            dependency 'javax.ws.rs:javax.ws.rs-api:2.0.1'
+            dependency 'junit:junit:4.12'
+            dependency 'net.bytebuddy:byte-buddy:1.6.14'
+            dependency 'net.minidev:accessors-smart:1.2'
+            dependency 'net.minidev:json-smart:2.3'
+            dependency 'org.apache.activemq.protobuf:activemq:5.15.3'
+            dependency 'org.apache.activemq.tooling:activemq-junit:5.15.3'
+            dependency 'org.apache.commons:commons-lang3:3.5'
+            dependency 'org.apache.geronimo.specs:geronimo-j2ee-management_1.1_spec:1.0.1'
+            dependency 'org.apache.geronimo.specs:geronimo-jms_1.1_spec:1.1.1'
+            dependency 'org.awaitility:awaitility:3.0.0'
+            dependency 'org.fusesource.hawtbuf:hawtbuf:1.11'
+            dependency 'org.fusesource.jansi:jansi:1.15'
+            dependency 'org.hibernate:hibernate-validator:5.4.1.Final'
+            dependency 'org.jboss.logging:jboss-logging:3.3.1.Final'
+            dependency 'org.mockito:mockito-core:2.8.9'
+            dependency 'org.mortbay.jasper:apache-el:8.0.33'
+            dependency 'org.objenesis:objenesis:2.5.1'
+            dependency 'org.valid4j:json-path-matchers:1.1'
+            dependency 'org.yaml:snakeyaml:1.17'
+        }
+    }
+}

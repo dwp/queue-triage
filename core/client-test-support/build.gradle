@@ -1,0 +1,9 @@
+dependencies {
+    implementation 'org.hamcrest:hamcrest-core'
+    implementation 'org.hamcrest:hamcrest-library'
+    implementation 'com.tngtech.jgiven:jgiven-core'
+    implementation 'org.apache.commons:commons-lang3'
+    compile project(':common:id')
+    compile project(':core:client')
+
+}

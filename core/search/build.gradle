@@ -1,0 +1,23 @@
+dependencies {
+    implementation project(':common:id')
+    implementation project(':core:client')
+    implementation project(':core:domain')
+    // TODO: Split this out into another module :core:search-mongo
+    implementation project(':core:domain')
+    implementation project(':common:jackson')
+    implementation project(':core:dao')
+    implementation project(':core:dao-mongo')
+    implementation 'com.fasterxml.jackson.core:jackson-databind'
+    implementation 'org.mongodb:mongodb-driver'
+    implementation 'org.slf4j:slf4j-api'
+    // TODO: Split this out into another module :core:search-mongo-spring
+    implementation 'org.springframework:spring-beans'
+    implementation 'org.springframework:spring-core'
+    implementation 'org.springframework.boot:spring-boot'
+
+    testImplementation project(':core:dao-mongo-test-support')
+    testImplementation 'junit:junit'
+    testImplementation 'org.hamcrest:hamcrest-core'
+    testImplementation 'org.hamcrest:hamcrest-library'
+    testImplementation 'org.mockito:mockito-core'
+}

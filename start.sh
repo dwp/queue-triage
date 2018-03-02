@@ -2,16 +2,16 @@
 
 case "$1" in
     core)
-        buck build //core/server:start-script
-        $(dirname $0)/buck-out/gen/core/server/start-script/start-core.sh &
+        ./gradlew :core:server:installDist
+        $(dirname $0)/core/server/build/install/server/bin/server &
         ;;
     ldap)
-        buck build //common/ldap-test-support:start-script
-        $(dirname $0)/buck-out/gen/common/ldap-test-support/start-script/start-ldap.sh &
+        ./gradlew :common:ldap-test-support:installDist
+        $(dirname $0)/common/ldap-test-support/build/install/ldap-test-support/bin/ldap-test-support &
         ;;
     web)
-        buck build //web/server:start-script
-        $(dirname $0)/buck-out/gen/web/server/start-script/start-web.sh &
+        ./gradlew :web:server:installDist
+        $(dirname $0)/web/server/build/install/server/bin/server &
         ;;
     *)
         echo "Usage: $0 {core|ldap|web}"

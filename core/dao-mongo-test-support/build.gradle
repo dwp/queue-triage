@@ -1,0 +1,13 @@
+dependencies {
+    implementation project(':core:dao-mongo')
+    implementation 'org.mongodb:mongodb-driver'
+    implementation 'org.slf4j:slf4j-api'
+
+    implementation 'org.springframework:spring-beans'
+    implementation 'org.springframework:spring-context'
+    implementation 'org.springframework:spring-test'
+    implementation 'org.springframework.boot:spring-boot-autoconfigure'
+    implementation 'org.springframework.boot:spring-boot-test'
+    implementation 'org.hamcrest:hamcrest-core'
+    implementation 'junit:junit'
+}

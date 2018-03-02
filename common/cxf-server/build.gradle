@@ -1,0 +1,12 @@
+dependencies {
+    implementation 'org.apache.cxf:cxf-rt-features-metrics'
+    implementation 'org.apache.cxf:cxf-rt-transports-http-jetty'
+    implementation 'org.apache.cxf:cxf-rt-frontend-jaxrs'
+    implementation 'javax.ws.rs:javax.ws.rs-api'
+    implementation 'javax.servlet:javax.servlet-api'
+    implementation 'org.springframework.boot:spring-boot'
+    implementation 'org.springframework.boot:spring-boot-autoconfigure'
+    implementation 'org.springframework:spring-context'
+    implementation 'org.springframework:spring-core'
+    implementation 'io.dropwizard.metrics:metrics-core'
+}

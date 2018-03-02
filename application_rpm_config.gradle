@@ -1,0 +1,32 @@
+def applicationProjects = [':core:server', ':web:server']
+
+configure(subprojects.findAll { applicationProjects.contains(it.path) }) { project ->
+    apply plugin: 'application'
+    apply plugin: 'nebula.ospackage'
+
+    ospackage {
+        packageName = project.name
+        version = project.version
+        release = '1'
+        arch = NOARCH
+        os = LINUX
+
+        String appInstallationDir = "/srv/app/${project.name}"
+
+        from(installDist.outputs.files) {
+            into appInstallationDir
+            createDirectoryEntry true
+            includeEmptyDirs true
+        }
+
+        from('src/main/resources') {
+            fileType CONFIG | NOREPLACE
+            into "${appInstallationDir}/conf"
+        }
+    }
+    buildRpm {
+        // Seems like this is the only way to create empty directories. Does not work if specified in the ospackage configuration.
+        directory("/srv/app/${project.name}/log")
+    }
+    buildRpm.dependsOn installDist
+}

@@ -4,6 +4,7 @@ import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
+import com.mongodb.QueryOperators;
 import com.mongodb.WriteConcern;
 import com.mongodb.WriteResult;
 import com.mongodb.operation.OrderBy;
@@ -24,6 +25,8 @@ import static uk.gov.dwp.queue.triage.core.dao.mongo.FailedMessageConverter.DEST
 import static uk.gov.dwp.queue.triage.core.dao.mongo.FailedMessageConverter.LABELS;
 import static uk.gov.dwp.queue.triage.core.dao.mongo.FailedMessageConverter.STATUS_HISTORY;
 import static uk.gov.dwp.queue.triage.core.dao.mongo.FailedMessageStatusDBObjectConverter.LAST_MODIFIED_DATE_TIME;
+import static uk.gov.dwp.queue.triage.core.dao.mongo.FailedMessageStatusDBObjectConverter.STATUS;
+import static uk.gov.dwp.queue.triage.core.domain.StatusHistoryEvent.Status.DELETED;
 
 public class FailedMessageMongoDao implements FailedMessageDao {
 
@@ -79,7 +82,9 @@ public class FailedMessageMongoDao implements FailedMessageDao {
 
     @Override
     public FailedMessage findById(FailedMessageId failedMessageId) {
-        DBObject failedMessage = collection.findOne(failedMessageConverter.createId(failedMessageId));
+        DBObject failedMessage = collection.findOne(failedMessageConverter
+                .createId(failedMessageId)
+                .append(STATUS_HISTORY + ".0." + STATUS, new BasicDBObject(QueryOperators.NE, DELETED.name())));
         return failedMessageConverter.convertToObject(failedMessage);
     }
 

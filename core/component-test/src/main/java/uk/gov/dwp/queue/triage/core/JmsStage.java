@@ -1,7 +1,6 @@
 package uk.gov.dwp.queue.triage.core;
 
 import com.tngtech.jgiven.Stage;
-import com.tngtech.jgiven.StepFunction;
 import com.tngtech.jgiven.integration.spring.JGivenStage;
 import org.hamcrest.Matchers;
 import org.slf4j.Logger;
@@ -13,11 +12,6 @@ import uk.gov.dwp.queue.triage.core.classification.action.FailedMessageAction;
 import uk.gov.dwp.queue.triage.core.classification.predicate.ContentEqualToPredicate;
 import uk.gov.dwp.queue.triage.core.stub.app.resource.StubMessageClassifierResource;
 
-import javax.jms.JMSException;
-import javax.jms.QueueBrowser;
-import javax.jms.Session;
-
-import static com.sun.org.apache.xerces.internal.util.PropertyState.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.slf4j.LoggerFactory.getLogger;
 

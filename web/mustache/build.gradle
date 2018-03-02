@@ -1,0 +1,13 @@
+dependencies {
+    implementation 'com.github.spullara.mustache.java:compiler'
+    implementation 'javax.ws.rs:javax.ws.rs-api'
+    implementation 'org.slf4j:slf4j-api'
+    //TODO: Introduce a mustache-spring module?
+    implementation project(':common:cxf')
+    implementation 'org.springframework:spring-beans'
+    implementation 'org.springframework:spring-context'
+
+    testImplementation 'junit:junit'
+    testImplementation 'org.hamcrest:hamcrest-core'
+    testImplementation 'org.hamcrest:hamcrest-library'
+}
