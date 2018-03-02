@@ -28,6 +28,13 @@ allprojects {
     apply plugin: 'idea'
 
     project.version = scmVersion.version
+
+    test {
+        testLogging {
+            events 'failed'
+            exceptionFormat 'full'
+        }
+    }
 }
 
 apply from: 'dependency_config.gradle'
