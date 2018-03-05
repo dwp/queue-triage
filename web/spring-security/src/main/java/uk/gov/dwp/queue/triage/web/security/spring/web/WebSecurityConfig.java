@@ -22,38 +22,39 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
-                .authorizeRequests()
-                .anyRequest().fullyAuthenticated()
-                .and()
+            .authorizeRequests()
+            .anyRequest().fullyAuthenticated()
+            .and()
 //        httpSecurity
-                .formLogin()
-                .loginPage("/web/login")
-                .permitAll()
-                .successHandler(new SimpleUrlAuthenticationSuccessHandler("/web/failed-messages"))
-                .and()
+            .formLogin()
+            .loginPage("/web/login")
+            .permitAll()
+            .successHandler(new SimpleUrlAuthenticationSuccessHandler("/web/failed-messages"))
+            .and()
 //        httpSecurity
-                .logout()
-                .logoutUrl("/logout")
-                .and()
+            .logout()
+            .logoutUrl("/logout")
+            .and()
 //        httpSecurity
-                .csrf()
-                .disable()
+            .csrf()
+            .disable()
         ;
     }
 
     @Override
     public void configure(WebSecurity webSecurity) throws Exception {
         webSecurity
-                .ignoring()
-                .antMatchers("/static/**")
-                .antMatchers("/ping")
+            .ignoring()
+            .antMatchers("/favicon.ico")
+            .antMatchers("/static/**")
+            .antMatchers("/ping")
         ;
     }
 
     @Override
     public void configure(AuthenticationManagerBuilder authenticationManagerBuilder) throws Exception {
         authenticationManagerBuilder
-                .apply(securityConfigurerAdapter)
+            .apply(securityConfigurerAdapter)
         ;
     }
 }
