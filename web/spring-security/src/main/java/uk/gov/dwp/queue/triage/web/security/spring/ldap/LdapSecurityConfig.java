@@ -16,7 +16,7 @@ public class LdapSecurityConfig {
 
     @Bean
     public SecurityConfigurerAdapter securityConfigurerAdapter(LdapSecurityProperties ldapSecurityProperties) {
-        return new LdapAuthenticationProviderConfigurer()
+        return new LdapAuthenticationProviderConfigurer<>()
                 .userDnPatterns(ldapSecurityProperties.getUserDnPatterns().toArray(new String[0]))
                 .groupSearchBase(ldapSecurityProperties.getGroupSearch().getBase())
                 .contextSource(contextSource(ldapSecurityProperties))

@@ -17,7 +17,7 @@ public class MessageClassifierTest {
     private FailedMessageAction failedMessageAction = mock(FailedMessageAction.class);
 
     @Test
-    public void actionIsExecutedIfThePredicateIsTrue() throws Exception {
+    public void actionIsExecutedIfThePredicateIsTrue() {
         MessageClassifier underTest = MessageClassifier.when(alwaysTrue).then(failedMessageAction);
 
         underTest.accept(failedMessage);

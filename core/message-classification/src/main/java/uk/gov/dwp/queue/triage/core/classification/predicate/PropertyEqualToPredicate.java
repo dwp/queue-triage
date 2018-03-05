@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import org.apache.commons.lang3.StringUtils;
 import uk.gov.dwp.queue.triage.core.domain.FailedMessage;
 
+import java.util.Objects;
+
 public class PropertyEqualToPredicate implements FailedMessagePredicate {
 
     @JsonProperty
@@ -16,11 +18,8 @@ public class PropertyEqualToPredicate implements FailedMessagePredicate {
         if (StringUtils.isBlank(name)) {
             throw new IllegalArgumentException("name cannot be null");
         }
-        if (value == null) {
-            throw new IllegalArgumentException("value cannot be null");
-        }
         this.name = name;
-        this.value = value;
+        this.value = Objects.requireNonNull(value, "value cannot be null");
     }
 
     @Override

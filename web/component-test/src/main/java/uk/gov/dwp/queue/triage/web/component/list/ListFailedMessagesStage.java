@@ -2,6 +2,7 @@ package uk.gov.dwp.queue.triage.web.component.list;
 
 import com.codeborne.selenide.Selenide;
 import com.tngtech.jgiven.Stage;
+import com.tngtech.jgiven.annotation.Format;
 import com.tngtech.jgiven.annotation.ProvidedScenarioState;
 import com.tngtech.jgiven.integration.spring.JGivenStage;
 import org.mockito.Mockito;
@@ -18,6 +19,7 @@ import uk.gov.dwp.queue.triage.core.client.search.SearchFailedMessageResponse;
 import uk.gov.dwp.queue.triage.core.client.search.SearchFailedMessageResponse.SearchFailedMessageResponseBuilder;
 import uk.gov.dwp.queue.triage.core.domain.SearchFailedMessageRequestMatcher;
 import uk.gov.dwp.queue.triage.id.FailedMessageId;
+import uk.gov.dwp.queue.triage.jgiven.ReflectionArgumentFormatter;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -45,7 +47,7 @@ public class ListFailedMessagesStage extends Stage<ListFailedMessagesStage> {
     @ProvidedScenarioState
     private Map<FailedMessageId, SearchFailedMessageResponse> searchFailedMessageResponses = new HashMap<>();
 
-    public ListFailedMessagesStage aFailedMessage$Exists(SearchFailedMessageResponseBuilder builder) {
+    public ListFailedMessagesStage aFailedMessage$Exists(@Format(value = ReflectionArgumentFormatter.class) SearchFailedMessageResponseBuilder builder) {
         SearchFailedMessageResponse response = builder.build();
         searchFailedMessageResponses.put(response.getFailedMessageId(), response);
         return this;
