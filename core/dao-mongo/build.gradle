@@ -49,7 +49,9 @@ task createUsersAndRoles(dependsOn: installDist) {
         FileTree listOfScripts = fileTree(dir: "${project.projectDir}/build/install/dao-mongo", include: "**/*.sh")
         listOfScripts.sort().each { file ->
             println "Executing script: $file"
-            "$file".execute()
+            exec {
+                commandLine $file
+            }    
         }
     }
 }
