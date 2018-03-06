@@ -83,7 +83,7 @@ public class MongoSearchRequestAdapterTest {
     }
 
     @Test
-    public void searchRequestWithoutDestinationAndBrokerAndDefaultStatus() throws Exception {
+    public void searchRequestWithoutDestinationAndBrokerAndDefaultStatus() {
         final DBObject dbObject = underTest.toQuery(searchMatchingAllCriteria().build());
 
         assertThat(dbObject, Matchers.allOf(

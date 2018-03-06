@@ -1,6 +1,11 @@
 package uk.gov.dwp.queue.triage.web.server.api;
 
+import org.junit.Rule;
 import org.junit.Test;
+import org.mockito.Mock;
+import org.mockito.internal.junit.JUnitRule;
+import org.mockito.junit.MockitoJUnit;
+import org.mockito.junit.MockitoRule;
 import uk.gov.dwp.queue.triage.core.client.delete.DeleteFailedMessageClient;
 import uk.gov.dwp.queue.triage.core.client.label.LabelFailedMessageClient;
 import uk.gov.dwp.queue.triage.id.FailedMessageId;
@@ -19,6 +24,9 @@ import static uk.gov.dwp.queue.triage.web.server.api.LabelRequest.newLabelReques
 
 public class FailedMessageChangeResourceTest {
 
+    @Rule
+    public MockitoRule mockitoRule = MockitoJUnit.rule();
+
     private static final FailedMessageId FAILED_MESSAGE_1_ID = FailedMessageId.newFailedMessageId();
     private static final FailedMessageId FAILED_MESSAGE_2_ID = FailedMessageId.newFailedMessageId();
 
@@ -31,8 +39,10 @@ public class FailedMessageChangeResourceTest {
             labelExtractor,
             deleteFailedMessageClient);
 
-    private final Set labels1 = mock(Set.class);
-    private final Set labels2 = mock(Set.class);
+    @Mock
+    private Set<String> labels1;
+    @Mock
+    private Set<String> labels2;
 
     @Test
     public void updateLabels() throws Exception {
