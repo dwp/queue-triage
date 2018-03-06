@@ -26,6 +26,16 @@ public class MongoDatabaseLogger {
         LOGGER.info("Logging documents in {} complete", databaseName);
     }
 
+    public void log(String databaseName, String collectionName) {
+        LOGGER.info("Logging documents in {}.{} started", databaseName, collectionName);
+        mongoClient
+                .getDatabase(databaseName)
+                .getCollection(collectionName)
+                .find()
+                .forEach(logDocument(databaseName, collectionName));
+        LOGGER.info("Logging documents in {} complete", databaseName, collectionName);
+    }
+
     private Consumer<String> logCollection(String databaseName) {
         return collection -> mongoClient.getDatabase(databaseName)
                 .getCollection(collection)
