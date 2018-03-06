@@ -23,7 +23,7 @@ public class PropertyEqualToPredicateTest {
         underTest = new PropertyEqualToPredicate(null, "foo");
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test(expected = NullPointerException.class)
     public void expectedValueCannotBeNull() {
         underTest = new PropertyEqualToPredicate("foo", null);
     }
