@@ -50,7 +50,7 @@ task createUsersAndRoles(dependsOn: installDist) {
         listOfScripts.sort().each { file ->
             println "Executing script: $file"
             exec {
-                commandLine $file
+                commandLine file
             }    
         }
     }
