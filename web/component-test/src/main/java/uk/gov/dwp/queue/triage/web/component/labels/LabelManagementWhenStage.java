@@ -1,13 +1,14 @@
 package uk.gov.dwp.queue.triage.web.component.labels;
 
 import com.codeborne.selenide.Selenide;
-import com.codeborne.selenide.SelenideElement;
 import org.openqa.selenium.By;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import uk.gov.dwp.queue.triage.id.FailedMessageId;
 import uk.gov.dwp.queue.triage.jgiven.WhenStage;
 import uk.gov.dwp.queue.triage.web.component.w2ui.FailedMessageGrid;
+
+import static uk.gov.dwp.queue.triage.web.component.w2ui.FailedMessageGrid.FailedMessageGridColumn.LABELS_COLUMN;
 
 public class LabelManagementWhenStage extends WhenStage<LabelManagementWhenStage> {
 
@@ -17,14 +18,7 @@ public class LabelManagementWhenStage extends WhenStage<LabelManagementWhenStage
         LOGGER.debug("Adding label(s): {} to failedMessage: {}", labels, failedMessageId);
         FailedMessageGrid.selectCheckboxForFailedMessage(failedMessageId);
 
-        SelenideElement cell = Selenide.$("#grid_failedMessages_rec_" + failedMessageId + " td[col='5'] div");
-
-        // Double clicking in w2ui is actually two single-clicks < 350ms apart
-        cell.click();
-        Selenide.sleep(5);
-        cell.click();
-
-        Selenide.$("#grid_failedMessages_edit_" + failedMessageId + "_5").setValue(labels);
+        FailedMessageGrid.setValueForCell(failedMessageId, LABELS_COLUMN, labels);
 
         FailedMessageGrid.selectCheckboxForFailedMessage(failedMessageId);
         return this;

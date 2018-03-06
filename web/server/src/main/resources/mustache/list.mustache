@@ -61,7 +61,6 @@
                     img: 'icon-send',
                     disabled: true,
                     onClick: function (event) {
-                        console.log(event);
                         w2ui.failedMessages.request('resend', null, w2ui.failedMessages.url.resend,
                                 function (data) {
                                     if (data.status !== 'error') {

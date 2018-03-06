@@ -35,7 +35,7 @@ public class BaseCoreComponentTest<STAGE> extends SimpleSpringRuleScenarioTest<S
         @Override
         protected void failed(Throwable e, Description description) {
             super.failed(e, description);
-            new MongoDatabaseLogger(mongoClient).log("queue-triage");
+            new MongoDatabaseLogger(mongoClient).log("queue-triage", "failedMessage");
         }
     };
 
