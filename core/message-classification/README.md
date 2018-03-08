@@ -7,7 +7,7 @@ Once a messages has been Dead-Lettered by an Application, queue triage:
 * Classifies the message using a set of Predicates
 * Performs one or more Actions
 
-Message Classifiers contain a `FailedMessagePredicate` and a `FailedMessageAction`.
+A Message Classifier contains a `FailedMessagePredicate` and a `FailedMessageAction`.
 
 #### Message Classifier with single Predicate and Action
 
@@ -90,8 +90,8 @@ Once defined the new Predicate must be registered as a sub-type with the `Object
 
 ```java
 ObjectMapper objectMapper = new ObjectMapper();
-objectMapper.registerSubtypes(MyPredicate.class, "custom");
+objectMapper.registerSubtypes(new NamedType(MyPredicate.class, "custom"));
 ```
 
-An example can be seen in the [CustomPredicateRegistrationTest](../src/core/message-classification/src/test/java/uk/gov/dwp/queue/triage/core/classification/predicate/CustomPredicateRegistrationTest.java). 
+An example can be seen in the [CustomPredicateRegistrationTest](src/test/java/uk/gov/dwp/queue/triage/core/classification/predicate/CustomPredicateRegistrationTest.java). 
 
