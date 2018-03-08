@@ -1,19 +1,17 @@
 dependencies {
     implementation project(':common:id')
+    implementation project(':core:client')
     implementation project(':core:domain')
     implementation project(':core:dao')
+    implementation project(':core:search')
     implementation 'org.slf4j:slf4j-api'
 
     //test
+    testImplementation project(':core:client-test-support')
     testImplementation project(':core:domain-test-support')
-
-    // this was test:common
     testImplementation 'net.bytebuddy:byte-buddy'
+    testImplementation 'junit:junit'
     testImplementation 'org.hamcrest:hamcrest-core'
     testImplementation 'org.hamcrest:hamcrest-library'
-    testImplementation 'junit:junit'
     testImplementation 'org.mockito:mockito-core'
-    testImplementation 'net.bytebuddy:byte-buddy'
-    testImplementation 'org.objenesis:objenesis:2.5.1'
-    // this was test:common - end
 }

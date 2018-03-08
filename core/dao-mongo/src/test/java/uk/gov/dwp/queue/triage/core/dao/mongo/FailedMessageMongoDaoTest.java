@@ -59,15 +59,7 @@ public class FailedMessageMongoDaoTest extends AbstractMongoDaoTest {
     }
 
     @Test
-    public void findFailedMessageWithDeletedStatusReturnsNull() {
-
-        underTest.insert(failedMessageBuilder.withStatusHistoryEvent(DELETED).build());
-
-        assertThat(underTest.findById(failedMessageId), is(nullValue(FailedMessage.class)));
-    }
-
-    @Test
-    public void saveMessageWithEmptyPropertiesAndNoLabels() throws Exception {
+    public void saveMessageWithEmptyPropertiesAndNoLabels() {
         failedMessageBuilder.withProperties(emptyMap());
 
         underTest.insert(failedMessageBuilder.build());
@@ -82,7 +74,7 @@ public class FailedMessageMongoDaoTest extends AbstractMongoDaoTest {
     }
 
     @Test
-    public void saveMessageWithPropertiesAndLabels() throws Exception {
+    public void saveMessageWithPropertiesAndLabels() {
         HashMapBuilder<String, Object> hashMapBuilder = newHashMap(String.class, Object.class)
                 .put("string", "Builder")
                 .put("localDateTime", LocalDateTime.now())
@@ -110,7 +102,7 @@ public class FailedMessageMongoDaoTest extends AbstractMongoDaoTest {
     }
 
     @Test
-    public void findNumberOfMessagesForBroker() throws Exception {
+    public void findNumberOfMessagesForBroker() {
         underTest.insert(failedMessageBuilder
                 .withNewFailedMessageId()
                 .withDestination(new Destination("brokerA", of("queue-name")))
@@ -124,7 +116,7 @@ public class FailedMessageMongoDaoTest extends AbstractMongoDaoTest {
     }
 
     @Test
-    public void findNumberOfMessagesForBrokerReturnsZeroWhenNoneExist() throws Exception {
+    public void findNumberOfMessagesForBrokerReturnsZeroWhenNoneExist() {
         underTest.insert(failedMessageBuilder
                 .withNewFailedMessageId()
                 .withDestination(new Destination("brokerB", of("queue-name")))
@@ -198,7 +190,7 @@ public class FailedMessageMongoDaoTest extends AbstractMongoDaoTest {
     }
 
     @Test
-    public void setLabelsOnAFailedMessageReplacesExistingLabels() throws Exception {
+    public void setLabelsOnAFailedMessageReplacesExistingLabels() {
         underTest.insert(failedMessageBuilder.withLabel("something").build());
 
         underTest.setLabels(failedMessageId, ImmutableSet.of("foo", "bar"));

@@ -82,10 +82,7 @@ public class FailedMessageMongoDao implements FailedMessageDao {
 
     @Override
     public FailedMessage findById(FailedMessageId failedMessageId) {
-        DBObject failedMessage = collection.findOne(failedMessageConverter
-                .createId(failedMessageId)
-                .append(STATUS_HISTORY + ".0." + STATUS, new BasicDBObject(QueryOperators.NE, DELETED.name())));
-        return failedMessageConverter.convertToObject(failedMessage);
+        return failedMessageConverter.convertToObject(collection.findOne(failedMessageConverter.createId(failedMessageId)));
     }
 
     @Override

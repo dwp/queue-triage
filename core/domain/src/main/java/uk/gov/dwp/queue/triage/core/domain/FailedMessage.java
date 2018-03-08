@@ -84,4 +84,8 @@ public class FailedMessage {
     public StatusHistoryEvent getStatusHistoryEvent() {
         return statusHistoryEvent;
     }
+
+    public StatusHistoryEvent.Status getStatus() {
+        return statusHistoryEvent.getStatus();
+    }
 }

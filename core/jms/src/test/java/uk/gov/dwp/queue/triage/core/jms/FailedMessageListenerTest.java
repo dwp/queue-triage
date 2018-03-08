@@ -2,7 +2,7 @@ package uk.gov.dwp.queue.triage.core.jms;
 
 import org.junit.Test;
 import uk.gov.dwp.queue.triage.core.domain.FailedMessage;
-import uk.gov.dwp.queue.triage.core.service.FailedMessageService;
+import uk.gov.dwp.queue.triage.core.service.processor.FailedMessageProcessor;
 
 import javax.jms.JMSException;
 import javax.jms.Message;
@@ -15,12 +15,12 @@ import static org.mockito.Mockito.when;
 public class FailedMessageListenerTest {
 
     private final FailedMessageFactory failedMessageFactory = mock(FailedMessageFactory.class);
-    private final FailedMessageService failedMessageService = mock(FailedMessageService.class);
+    private final FailedMessageProcessor failedMessageProcessor = mock(FailedMessageProcessor.class);
 
     private final Message message = mock(Message.class);
     private final FailedMessage failedMessage = mock(FailedMessage.class);
 
-    private final FailedMessageListener underTest = new FailedMessageListener(failedMessageFactory, failedMessageService);
+    private final FailedMessageListener underTest = new FailedMessageListener(failedMessageFactory, failedMessageProcessor);
 
     @Test
     public void processMessageSuccessfully() throws Exception {
@@ -28,7 +28,7 @@ public class FailedMessageListenerTest {
 
         underTest.onMessage(message);
 
-        verify(failedMessageService).create(failedMessage);
+        verify(failedMessageProcessor).process(failedMessage);
     }
 
     @Test
@@ -37,6 +37,6 @@ public class FailedMessageListenerTest {
 
         underTest.onMessage(message);
 
-        verifyZeroInteractions(failedMessageService);
+        verifyZeroInteractions(failedMessageProcessor);
     }
 }

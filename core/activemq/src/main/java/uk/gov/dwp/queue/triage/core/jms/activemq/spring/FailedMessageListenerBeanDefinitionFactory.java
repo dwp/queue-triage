@@ -20,7 +20,7 @@ public class FailedMessageListenerBeanDefinitionFactory {
     public AbstractBeanDefinition create(String brokerName) {
         return genericBeanDefinition(FailedMessageListener.class)
                 .addConstructorArgValue(activeMQFailedMessageFactoryFactory.apply(brokerName))
-                .addConstructorArgReference("failedMessageService")
+                .addConstructorArgReference("failedMessageProcessor")
                 .getBeanDefinition();
     }
 
