@@ -1,6 +1,7 @@
 dependencies {
     implementation project(':common:cxf')
     implementation project(':common:executor')
+    implementation project(':common:id')
 
     implementation project(':core:domain')
     implementation project(':core:jms')
