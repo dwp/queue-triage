@@ -41,6 +41,11 @@ allprojects {
     }
 }
 
+tasks.withType(AbstractArchiveTask) {
+    preserveFileTimestamps = false
+    reproducibleFileOrder = true
+}
+
 apply from: 'dependency_config.gradle'
 apply from: 'project_dependencies_config.gradle'
 apply from: 'application_rpm_config.gradle'
