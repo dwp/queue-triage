@@ -22,10 +22,7 @@ before_script:
 
 script:
   - ./gradlew createUsersAndRoles
-  - ./gradlew build -Pselenium.remote_url=http://localhost:4444/wd/hub
-
-after_success:
-  - ./gradlew release -Prelease.customUsername=$RELEASE_CREDS_USERNAME -Prelease.customPassword=$RELEASE_CREDS_PASSWORD
+  - ./gradlew build -i -Pselenium.remote_url=http://localhost:4444/wd/hub && ./gradlew release -Prelease.customUsername=$RELEASE_CREDS_USERNAME -Prelease.customPassword=$RELEASE_CREDS_PASSWORD
 
 services:
   - mongodb
