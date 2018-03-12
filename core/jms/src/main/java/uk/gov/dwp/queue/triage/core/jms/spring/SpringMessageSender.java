@@ -6,7 +6,6 @@ import org.springframework.jms.core.JmsTemplate;
 import uk.gov.dwp.queue.triage.core.domain.FailedMessage;
 import uk.gov.dwp.queue.triage.core.jms.DestinationException;
 import uk.gov.dwp.queue.triage.core.jms.MessageSender;
-import uk.gov.dwp.queue.triage.core.jms.spring.FailedMessageCreator.FailedMessageCreatorFactory;
 import uk.gov.dwp.queue.triage.id.FailedMessageId;
 
 import java.util.function.Supplier;
