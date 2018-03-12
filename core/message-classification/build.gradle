@@ -23,5 +23,6 @@ dependencies {
     testImplementation 'org.hamcrest:hamcrest-library'
     testImplementation 'org.hibernate:hibernate-validator'
     testImplementation 'org.mockito:mockito-core'
+    testImplementation 'org.valid4j:json-path-matchers'
     testImplementation 'org.yaml:snakeyaml'
 }

@@ -12,6 +12,7 @@ import uk.gov.dwp.queue.triage.id.FailedMessageId;
 
 import java.time.Instant;
 import java.util.Arrays;
+import java.util.Collections;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
@@ -62,7 +63,7 @@ public class FailedMessageStatusHistoryResourceTest {
 
     @Test
     public void singleStatusHistoryEntry() {
-        when(failedMessageDao.getStatusHistory(FAILED_MESSAGE_ID)).thenReturn(Arrays.asList(
+        when(failedMessageDao.getStatusHistory(FAILED_MESSAGE_ID)).thenReturn(Collections.singletonList(
                 new StatusHistoryEvent(StatusHistoryEvent.Status.CLASSIFIED, NOW)
         ));
         assertThat(underTest.getStatusHistory(FAILED_MESSAGE_ID), contains(
