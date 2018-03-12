@@ -17,6 +17,10 @@ apply plugin: 'pl.allegro.tech.build.axion-release'
 scmVersion {
     tag {
         prefix = 'queue-triage'
+        initialVersion = { tag, position -> '1.0.0' }
+    }
+    repository {
+        pushTagsOnly = true
     }
 }
 
