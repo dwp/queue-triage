@@ -2,7 +2,7 @@
 
 case "$1" in
     core)
-        ./gradlew :core:server:installDist
+        ./gradlew :core:core-server:installDist
         $(dirname $0)/core/server/build/install/server/bin/server &
         ;;
     ldap)
@@ -10,7 +10,7 @@ case "$1" in
         $(dirname $0)/common/ldap-test-support/build/install/ldap-test-support/bin/ldap-test-support &
         ;;
     web)
-        ./gradlew :web:server:installDist
+        ./gradlew :web:web-server:installDist
         $(dirname $0)/web/server/build/install/server/bin/server &
         ;;
     *)
