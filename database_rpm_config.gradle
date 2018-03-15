@@ -5,7 +5,7 @@ configure(subprojects.findAll { dbProjects.contains(it.path) }) { project ->
     apply plugin: 'nebula.ospackage'
 
     ospackage {
-        packageName = project.name
+        packageName = "queue-triage-" + project.name
         version = project.version
         release = '1'
         arch = NOARCH
