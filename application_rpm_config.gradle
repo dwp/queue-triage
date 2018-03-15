@@ -1,11 +1,11 @@
-def applicationProjects = [':core:server', ':web:server']
+def applicationProjects = [':core:core-server', ':web:web-server']
 
 configure(subprojects.findAll { applicationProjects.contains(it.path) }) { project ->
     apply plugin: 'application'
     apply plugin: 'nebula.ospackage'
 
     ospackage {
-        packageName = project.name
+        packageName = "queue-triage-" + project.name
         version = project.version
         release = '1'
         arch = NOARCH

@@ -26,7 +26,7 @@ dependencies {
     implementation 'org.springframework:spring-test'
     implementation 'org.springframework:spring-web'
 
-    testImplementation project(':web:server')
+    testImplementation project(':web:web-server')
     testImplementation 'org.eclipse.jetty:jetty-server'
     testImplementation 'org.eclipse.jetty:jetty-servlet'
     testImplementation 'org.eclipse.jetty:jetty-webapp'

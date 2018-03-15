@@ -24,11 +24,11 @@ include 'common:id',
         'core:resend',
         'core:sample-data',
         'core:search',
-        'core:server',
+        'core:core-server',
         'core:service',
         'web:component-test',
         'web:mustache',
-        'web:server',
+        'web:web-server',
         'web:spring-security'
 
 
