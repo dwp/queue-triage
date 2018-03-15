@@ -39,3 +39,13 @@ messageClassification:
   initialDelay: 0
   frequency: 60
   timeUnit: SECONDS
+
+vault:
+  enabled: false
+  tokenAuthentication:
+        address: http://localhost:1234/vault
+        tokenPath: /var/lib/.vault
+        openTimeout: 20 #seconds
+        readTimeOut: 20 #seconds
+        sslPemFilePath: /etc/application/vault.pem
+        sslVerify: true
