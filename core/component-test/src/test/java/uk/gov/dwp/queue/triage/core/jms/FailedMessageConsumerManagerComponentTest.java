@@ -20,6 +20,8 @@ public class FailedMessageConsumerManagerComponentTest extends BaseCoreComponent
     @ScenarioStage
     private JmsStage jmsStage;
     @ScenarioStage
+    private FailedMessageListenerAdminWhenStage messageListenerAdminWhenStage;
+    @ScenarioStage
     private SearchFailedMessageStage searchFailedMessageStage;
 
     @Test
@@ -27,7 +29,7 @@ public class FailedMessageConsumerManagerComponentTest extends BaseCoreComponent
         jmsStage.given().aMessageWithContent$WillDeadLetter("poison");
         given().theMessageListenerFor$Is$Running("internal-broker", true);
 
-        when().aRequestIsMadeToStopTheMessageListenerForBroker$("internal-broker");
+        messageListenerAdminWhenStage.when().aRequestIsMadeToStopTheMessageListenerForBroker$("internal-broker");
         then().theMessageListenerFor$Is$Running("internal-broker", false);
         jmsStage.when().aMessageWithContent$IsSentTo$OnBroker$("poison", "some-queue", "internal-broker");
 
@@ -35,7 +37,7 @@ public class FailedMessageConsumerManagerComponentTest extends BaseCoreComponent
                 searchMatchingAllCriteria().withBroker("internal-broker"),
                 Matchers.emptyIterable()
         );
-        when().aRequestIsMadeToStartTheMessageListenerForBroker$("internal-broker");
+        messageListenerAdminWhenStage.when().aRequestIsMadeToStartTheMessageListenerForBroker$("internal-broker");
 
         then().theMessageListenerFor$Is$Running("internal-broker", true);
         searchFailedMessageStage.then().aSearch$WillContain$(
@@ -49,19 +51,19 @@ public class FailedMessageConsumerManagerComponentTest extends BaseCoreComponent
 
     @Test
     public void startingABrokerThatDoesNotExistReturnsNotFound() {
-        when().aRequestIsMadeToStartTheMessageListenerForBroker$("unknown-broker");
+        messageListenerAdminWhenStage.when().aRequestIsMadeToStartTheMessageListenerForBroker$("unknown-broker");
         then().theMessageListenerAdminResourceRespondsWith$StatusCode(NOT_FOUND);
     }
 
     @Test
     public void stoppingABrokerThatDoesNotExistReturnsNotFound() {
-        when().aRequestIsMadeToStopTheMessageListenerForBroker$("unknown-broker");
+        messageListenerAdminWhenStage.when().aRequestIsMadeToStopTheMessageListenerForBroker$("unknown-broker");
         then().theMessageListenerAdminResourceRespondsWith$StatusCode(NOT_FOUND);
     }
 
     @Test
     public void gettingTheStatusOfABrokerThatDoesNotExistReturnsNotFound() {
-        when().aRequestIsMadeToGetTheStatusOfTheMessageListenerForBroker$("unknown-broker");
+        messageListenerAdminWhenStage.when().aRequestIsMadeToGetTheStatusOfTheMessageListenerForBroker$("unknown-broker");
         then().theMessageListenerAdminResourceRespondsWith$StatusCode(NOT_FOUND);
     }
 }

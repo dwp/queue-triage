@@ -1,8 +1,13 @@
 package uk.gov.dwp.queue.triage.core.jms.activemq;
 
+import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
+import uk.gov.dwp.queue.triage.core.jms.activemq.browser.QueueBrowserScheduledExecutorService;
 
 import javax.ws.rs.NotFoundException;
+import javax.ws.rs.ServerErrorException;
 import javax.ws.rs.core.Application;
 import javax.ws.rs.core.Link;
 import javax.ws.rs.core.Response;
@@ -16,13 +21,26 @@ import static org.mockito.Mockito.when;
 
 public class MessageConsumerManagerResourceTest {
 
-    private final MessageConsumerManager messageConsumerManager = mock(MessageConsumerManager.class);
+    @Rule
+    public ExpectedException expectedException = ExpectedException.none();
+
+    private final MessageConsumerManager defaultMessageListenerContainer = mock(MessageListenerManager.class);
+    private final QueueBrowserScheduledExecutorService queueBrowserScheduledExecutorService = mock(QueueBrowserScheduledExecutorService.class);
+
     private final MessageConsumerManagerResource underTest = new MessageConsumerManagerResource(
-            new MessageConsumerManagerRegistry().with("internal-broker", messageConsumerManager)
+            new MessageConsumerManagerRegistry()
+                    .with("internal-broker", messageConsumerManager)
+                    .with("readonly-broker", messageConsumerManager)
+
     );
 
     static {
         System.setProperty("javax.ws.rs.ext.RuntimeDelegate", StubRuntimeDelegate.class.getName());
+    }
+
+    @Before
+    public void setUp() {
+        StubRuntimeDelegate.setExpectedStatus(Response.Status.NOT_FOUND);
     }
 
     @Test(expected = NotFoundException.class)
@@ -39,17 +57,40 @@ public class MessageConsumerManagerResourceTest {
     public void startDefaultMessageListenerContainer() throws Exception {
         underTest.start("internal-broker");
 
-        verify(messageConsumerManager).start();
+        verify(defaultMessageListenerContainer).start();
     }
 
     @Test
-    public void stopDefaultMessageListenerContainer() throws Exception {
+    public void stopDefaultMessageListenerContainer() {
         underTest.stop("internal-broker");
 
-        verify(messageConsumerManager).stop();
+        verify(defaultMessageListenerContainer).stop();
+    }
+
+    @Test(expected = NotFoundException.class)
+    public void readMessagesThrowsANotFoundExceptionIfBrokerIsUnknown() {
+        underTest.readMessages("unknown-broker");
+    }
+
+    @Test
+    public void readMessagesThrowsAServerErrorExceptionIfBrokerIsNotReadOnly() {
+        StubRuntimeDelegate.setExpectedStatus(Response.Status.NOT_IMPLEMENTED);
+        expectedException.expect(ServerErrorException.class);
+        expectedException.expectMessage("HTTP 501 Not Implemented");
+
+        underTest.readMessages("internal-broker");
+    }
+
+    @Test
+    public void readMessagesForAReadOnlyBroker() {
+        underTest.readMessages("readonly-broker");
+
+        verify(queueBrowserScheduledExecutorService).execute();
     }
 
     public static class StubRuntimeDelegate extends RuntimeDelegate {
+
+        private static Response.Status expectedStatus;
 
         @Override
         public UriBuilder createUriBuilder() {
@@ -59,10 +100,10 @@ public class MessageConsumerManagerResourceTest {
         @Override
         public Response.ResponseBuilder createResponseBuilder() {
             Response.ResponseBuilder responseBuilder = mock(Response.ResponseBuilder.class);
-            when(responseBuilder.status((Response.StatusType)Response.Status.NOT_FOUND)).thenReturn(responseBuilder);
+            when(responseBuilder.status((Response.StatusType) expectedStatus)).thenReturn(responseBuilder);
             Response response = mock(Response.class);
             when(responseBuilder.build()).thenReturn(response);
-            when(response.getStatusInfo()).thenReturn(Response.Status.NOT_FOUND);
+            when(response.getStatusInfo()).thenReturn(expectedStatus);
             return responseBuilder;
         }
 
@@ -84,6 +125,10 @@ public class MessageConsumerManagerResourceTest {
         @Override
         public Link.Builder createLinkBuilder() {
             return null;
+        }
+
+        public static void setExpectedStatus(Response.Status status) {
+            expectedStatus = status;
         }
     }
 }

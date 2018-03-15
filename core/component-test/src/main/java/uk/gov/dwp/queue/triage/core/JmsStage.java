@@ -2,17 +2,18 @@ package uk.gov.dwp.queue.triage.core;
 
 import com.tngtech.jgiven.Stage;
 import com.tngtech.jgiven.integration.spring.JGivenStage;
+import org.awaitility.Awaitility;
 import org.hamcrest.Matchers;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jms.core.BrowserCallback;
 import org.springframework.jms.core.JmsTemplate;
 import uk.gov.dwp.queue.triage.core.classification.MessageClassifier;
 import uk.gov.dwp.queue.triage.core.classification.action.FailedMessageAction;
 import uk.gov.dwp.queue.triage.core.classification.predicate.ContentEqualToPredicate;
 import uk.gov.dwp.queue.triage.core.stub.app.resource.StubMessageClassifierResource;
 
-import static org.hamcrest.MatcherAssert.assertThat;
+import java.util.concurrent.TimeUnit;
+
 import static org.slf4j.LoggerFactory.getLogger;
 
 @JGivenStage
@@ -57,15 +58,16 @@ public class JmsStage extends Stage<JmsStage> {
     }
 
     public JmsStage deadLetterQueueContains$Messages(long numberOfMessages) {
-        dummyAppJmsTemplate.browse("ActiveMQ.DLQ", (BrowserCallback<Void>) (session, browser) -> {
-            long count = 0;
-            while (browser.getEnumeration().hasMoreElements()) {
-                browser.getEnumeration().nextElement();
-                count++;
-            }
-            assertThat(count, Matchers.is(numberOfMessages));
-            return null;
-        });
+        Awaitility.await()
+                .pollInterval(100, TimeUnit.MILLISECONDS)
+                .until(() -> dummyAppJmsTemplate.browse("ActiveMQ.DLQ", (session, browser) -> {
+                    long count = 0;
+                    while (browser.getEnumeration().hasMoreElements()) {
+                        browser.getEnumeration().nextElement();
+                        count++;
+                    }
+                    return count;
+                }), Matchers.equalTo(numberOfMessages));
         return this;
     }
 }

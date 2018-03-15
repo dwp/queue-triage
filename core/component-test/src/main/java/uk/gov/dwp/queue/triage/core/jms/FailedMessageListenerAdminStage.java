@@ -1,13 +1,12 @@
 package uk.gov.dwp.queue.triage.core.jms;
 
 import com.tngtech.jgiven.Stage;
-import com.tngtech.jgiven.annotation.ExpectedScenarioState;
 import com.tngtech.jgiven.annotation.Format;
+import com.tngtech.jgiven.annotation.ProvidedScenarioState;
 import com.tngtech.jgiven.format.BooleanFormatter;
 import com.tngtech.jgiven.integration.spring.JGivenStage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
 
 import javax.ws.rs.core.Response;
@@ -20,33 +19,19 @@ public class FailedMessageListenerAdminStage extends Stage<FailedMessageListener
 
     @Autowired
     private TestRestTemplate testRestTemplate;
-    @ExpectedScenarioState
+    @ProvidedScenarioState
     private ResponseEntity<?> response;
 
     public FailedMessageListenerAdminStage theMessageListenerFor$Is$Running(String brokerName,
                                                                             @Format(value = BooleanFormatter.class, args = {"", "not"}) boolean isRunning) {
-        aRequestIsMadeToGetTheStatusOfTheMessageListenerForBroker$(brokerName);
-        assertThat(response.getBody(), is(isRunning));
-        return this;
-    }
-
-    public FailedMessageListenerAdminStage aRequestIsMadeToStopTheMessageListenerForBroker$(String brokerName) {
-        response = new FailedMessageListenerFixture(testRestTemplate).stopListenerForBroker(brokerName);
-        return this;
-    }
-
-    public FailedMessageListenerAdminStage aRequestIsMadeToStartTheMessageListenerForBroker$(String brokerName) {
-        response = new FailedMessageListenerFixture(testRestTemplate).startListenerForBroker(brokerName);
+        assertThat(new FailedMessageListenerFixture(testRestTemplate)
+                .statusOfListenerForBroker(brokerName)
+                .getBody(), is(isRunning));
         return this;
     }
 
     public FailedMessageListenerAdminStage theMessageListenerAdminResourceRespondsWith$StatusCode(Response.Status status) {
         assertThat(response.getStatusCodeValue(), is(status.getStatusCode()));
-        return this;
-    }
-
-    public FailedMessageListenerAdminStage aRequestIsMadeToGetTheStatusOfTheMessageListenerForBroker$(String brokerName) {
-        response = new FailedMessageListenerFixture(testRestTemplate).statusOfListenerForBroker(brokerName);
         return this;
     }
 }

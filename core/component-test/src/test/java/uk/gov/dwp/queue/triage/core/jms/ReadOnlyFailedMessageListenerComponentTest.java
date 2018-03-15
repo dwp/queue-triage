@@ -27,7 +27,7 @@ public class ReadOnlyFailedMessageListenerComponentTest extends BaseCoreComponen
     @ScenarioStage
     private FailedMessageListenerAdminGivenStage messageListenerGivenStage;
     @ScenarioStage
-    private FailedMessageListenerAdminStage messageListenerAdminStage;
+    private FailedMessageListenerAdminWhenStage messageListenerAdminWhenStage;
 
     @Test
     public void messageIsProcessedAndLeftOnTheQueueWhenRunningInReadOnlyMode() {
@@ -37,7 +37,9 @@ public class ReadOnlyFailedMessageListenerComponentTest extends BaseCoreComponen
 
         when().aMessageWithContent$IsSentTo$OnBroker$("poison", "some-queue", "internal-broker");
         when().and().aMessageWithContent$IsSentTo$OnBroker$("elixir", "some-queue", "internal-broker");
-        messageListenerAdminStage.when().and().aRequestIsMadeToStartTheMessageListenerForBroker$("internal-broker");
+        then().deadLetterQueueContains$Messages(1);
+
+        messageListenerAdminWhenStage.when().theMesageListenerReadsMessagesOnBroker$("internal-broker");
 
         searchFailedMessageStage.then().aSearch$WillContain$(
                 searchMatchingAllCriteria().withBroker("internal-broker"),
@@ -46,6 +48,27 @@ public class ReadOnlyFailedMessageListenerComponentTest extends BaseCoreComponen
                         .withDestination(equalTo(Optional.of("some-queue")))
                         .withContent(equalTo("poison"))
         ));
+        then().and().deadLetterQueueContains$Messages(1);
+    }
+
+    @Test
+    public void messageReadMultipleTimesIsOnlyPersistedOnce() {
+        given().aMessageWithContent$WillDeadLetter("poison");
+        given().and().aMessageWithContent$WillBeConsumedSuccessfully("elixir");
+        messageListenerGivenStage.given().and().theMesageListenerIsStoppedForBroker$("internal-broker");
+
+        when().aMessageWithContent$IsSentTo$OnBroker$("poison", "some-queue", "internal-broker");
+        when().and().aMessageWithContent$IsSentTo$OnBroker$("elixir", "some-queue", "internal-broker");
+        messageListenerAdminWhenStage.when().and().theMesageListenerReadsMessagesOnBroker$("internal-broker");
+        messageListenerAdminWhenStage.when().and().theMesageListenerReadsMessagesOnBroker$("internal-broker");
+
+        searchFailedMessageStage.then().aSearch$WillContain$(
+                searchMatchingAllCriteria().withBroker("internal-broker"),
+                contains(aFailedMessage()
+                        .withBroker(equalTo("internal-broker"))
+                        .withDestination(equalTo(Optional.of("some-queue")))
+                        .withContent(equalTo("poison"))
+                ));
         then().and().deadLetterQueueContains$Messages(1);
     }
 
