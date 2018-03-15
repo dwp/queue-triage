@@ -49,6 +49,7 @@ subprojects {
                 entry 'activemq-client'
                 entry 'activemq-broker'
                 entry 'activemq-kahadb-store'
+                entry 'activemq-pool'
             }
 
             dependencySet(group: 'org.apache.cxf', version: '3.1.11') {

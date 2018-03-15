@@ -48,7 +48,7 @@ public class ReadOnlyFailedMessageListenerComponentTest extends BaseCoreComponen
                         .withDestination(equalTo(Optional.of("some-queue")))
                         .withContent(equalTo("poison"))
         ));
-        then().and().deadLetterQueueContains$Messages(1);
+        then().and().deadLetterQueueStillContains$Messages(1);
     }
 
     @Test

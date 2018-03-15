@@ -19,8 +19,8 @@ import static org.slf4j.LoggerFactory.getLogger;
 @JGivenStage
 public class JmsStage extends Stage<JmsStage> {
 
-    private static final Logger DEAD_LETTER_ACTION_LOGGER = getLogger("DeadLetterAction");
-    private static final Logger DO_NOTHING_LOGGER = getLogger("DoNothingAction");
+    private static final Logger LOGGER = getLogger(JmsStage.class);
+
     @Autowired
     private JmsTemplate dummyAppJmsTemplate;
     @Autowired
@@ -30,7 +30,7 @@ public class JmsStage extends Stage<JmsStage> {
         addMessageClassifierWithContent(
                 content,
                 failedMessage -> {
-                    DEAD_LETTER_ACTION_LOGGER.info("Throwing Exception for Message with content: {}", content);
+                    getLogger("DeadLetterAction").info("Throwing Exception for Message with content: {}", content);
                     throw new RuntimeException("Content is " + failedMessage.getContent());
                 }
         );
@@ -40,12 +40,12 @@ public class JmsStage extends Stage<JmsStage> {
     public JmsStage aMessageWithContent$WillBeConsumedSuccessfully(String content) {
         addMessageClassifierWithContent(
                 content,
-                failedMessage -> DO_NOTHING_LOGGER.debug("Received Message with content: {}", content)
+                failedMessage -> getLogger("DoNothingAction").debug("Received Message with content: {}", content)
         );
         return this;
     }
 
-    public void addMessageClassifierWithContent(String content, FailedMessageAction failedMessageAction) {
+    private void addMessageClassifierWithContent(String content, FailedMessageAction failedMessageAction) {
         stubMessageClassifierResource.addMessageClassifier(MessageClassifier
                 .when(new ContentEqualToPredicate(content))
                 .then(failedMessageAction)
@@ -57,7 +57,12 @@ public class JmsStage extends Stage<JmsStage> {
         return this;
     }
 
+    public JmsStage deadLetterQueueStillContains$Messages(long numberOfMessages) {
+        return deadLetterQueueContains$Messages(numberOfMessages);
+    }
+
     public JmsStage deadLetterQueueContains$Messages(long numberOfMessages) {
+        LOGGER.debug("Checking number of messages on ActiveMQ.DLQ");
         Awaitility.await()
                 .pollInterval(100, TimeUnit.MILLISECONDS)
                 .until(() -> dummyAppJmsTemplate.browse("ActiveMQ.DLQ", (session, browser) -> {
