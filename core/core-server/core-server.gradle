@@ -18,6 +18,8 @@ dependencies {
     implementation project(':core:resend')
     implementation project(':core:search')
     implementation project(':core:service')
+    implementation project(':core:config-secret-lookup')
+    implementation project(':core:vault')
 
     implementation 'ch.qos.logback:logback-classic'
     implementation 'com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider'

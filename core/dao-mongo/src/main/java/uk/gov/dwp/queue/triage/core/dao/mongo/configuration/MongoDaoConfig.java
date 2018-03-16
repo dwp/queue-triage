@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoCredential;
 import com.mongodb.ServerAddress;
+
 import org.bson.BSON;
 import org.bson.Transformer;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -11,6 +12,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.context.annotation.Import;
+
 import uk.gov.dwp.queue.triage.core.dao.FailedMessageDao;
 import uk.gov.dwp.queue.triage.core.dao.ObjectConverter;
 import uk.gov.dwp.queue.triage.core.dao.PropertiesConverter;
@@ -24,6 +26,8 @@ import uk.gov.dwp.queue.triage.core.domain.Destination;
 import uk.gov.dwp.queue.triage.core.domain.StatusHistoryEvent;
 import uk.gov.dwp.queue.triage.id.Id;
 import uk.gov.dwp.queue.triage.jackson.configuration.JacksonConfiguration;
+import uk.gov.dwp.queue.triage.secret.lookup.SensitiveConfigValueLookupRegistry;
+import uk.gov.dwp.queue.triage.secret.lookup.config.QueueTriageApplicationSecretLookupAutoConfiguration;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -39,7 +43,7 @@ import static java.time.ZoneOffset.UTC;
 import static java.util.Collections.singletonList;
 
 @Configuration
-@Import(JacksonConfiguration.class)
+@Import({JacksonConfiguration.class, QueueTriageApplicationSecretLookupAutoConfiguration.class})
 @EnableConfigurationProperties(MongoDaoProperties.class)
 public class MongoDaoConfig {
 
@@ -54,44 +58,43 @@ public class MongoDaoConfig {
     }
 
     @Bean
-    @DependsOn("mongoDaoProperties")
-    public MongoClient mongoClient(MongoDaoProperties mongoDaoProperties) {
+    public MongoClient mongoClient(MongoDaoProperties mongoDaoProperties, SensitiveConfigValueLookupRegistry sensitiveConfigValueLookupRegistry) {
         return new MongoClient(
-                createSeeds(mongoDaoProperties),
-                createCredentials(mongoDaoProperties),
-                mongoDaoProperties.mongoClientOptions()
+            createSeeds(mongoDaoProperties),
+            createCredentials(mongoDaoProperties, sensitiveConfigValueLookupRegistry),
+            mongoDaoProperties.mongoClientOptions()
         );
     }
 
-    private List<MongoCredential> createCredentials(MongoDaoProperties mongoDaoProperties) {
+    private List<MongoCredential> createCredentials(MongoDaoProperties mongoDaoProperties, SensitiveConfigValueLookupRegistry sensitiveConfigValueLookupRegistry) {
         return mongoDaoProperties.getFailedMessage().getUsername()
-                .map(username -> singletonList(createScramSha1Credential(
-                        username,
-                        mongoDaoProperties.getDbName(),
-                        mongoDaoProperties.getFailedMessage()
-                                .getPassword()
-                                .orElseThrow(() -> new IllegalArgumentException("Password is required when username specified"))
-                                .toCharArray())))
-                .orElse(Collections.emptyList());
+            .map(username -> singletonList(createScramSha1Credential(
+                username,
+                mongoDaoProperties.getDbName(),
+                mongoDaoProperties.getFailedMessage()
+                    .getPassword()
+                    .map(configValue -> sensitiveConfigValueLookupRegistry.retrieveSecret(configValue).getClearText())
+                    .orElseThrow(() -> new IllegalArgumentException("Password is required when username specified"))
+            )))
+            .orElse(Collections.emptyList());
     }
 
     private List<ServerAddress> createSeeds(MongoDaoProperties mongoDaoProperties) {
         return mongoDaoProperties.getServerAddresses()
-                .stream()
-                .map(serverAddress -> new ServerAddress(serverAddress.getHost(), serverAddress.getPort()))
-                .collect(Collectors.toList());
+            .stream()
+            .map(serverAddress -> new ServerAddress(serverAddress.getHost(), serverAddress.getPort()))
+            .collect(Collectors.toList());
     }
 
     @Bean
-    @DependsOn("mongoDaoProperties")
     public FailedMessageDao failedMessageDao(MongoClient mongoClient,
                                              MongoDaoProperties mongoDaoProperties,
                                              FailedMessageConverter failedMessageConverter,
                                              DBObjectConverter<StatusHistoryEvent> failedMessageStatusDBObjectConverter) {
         return new FailedMessageMongoDao(
-                mongoClient.getDB(mongoDaoProperties.getDbName()).getCollection(mongoDaoProperties.getFailedMessage().getName()),
-                failedMessageConverter,
-                failedMessageStatusDBObjectConverter, new RemoveRecordsQueryFactory());
+            mongoClient.getDB(mongoDaoProperties.getDbName()).getCollection(mongoDaoProperties.getFailedMessage().getName()),
+            failedMessageConverter,
+            failedMessageStatusDBObjectConverter, new RemoveRecordsQueryFactory());
     }
 
     @Bean

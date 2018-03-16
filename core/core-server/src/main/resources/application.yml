@@ -41,11 +41,11 @@ messageClassification:
   timeUnit: SECONDS
 
 vault:
-  enabled: false
+  address: http://localhost:1234/vault
+  openTimeout: 20 #seconds
+  readTimeout: 20 #seconds
   tokenAuthentication:
-        address: http://localhost:1234/vault
-        tokenPath: /var/lib/.vault
-        openTimeout: 20 #seconds
-        readTimeOut: 20 #seconds
-        sslPemFilePath: /etc/application/vault.pem
-        sslVerify: true
+    tokenPath: /var/lib/.vault
+  ssl:
+    sslPemFilePath: /etc/application/vault.pem
+    sslVerify: true

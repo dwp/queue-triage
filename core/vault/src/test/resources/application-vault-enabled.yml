@@ -1,0 +1,7 @@
+vault:
+  address: "http://localhost:8989/vaulty-vaultster"
+  readTimeout: 25 # in seconds
+  openTimeout: 25 # in seconds
+  tokenAuthentication:
+    tokenPath: /var/lib/tokenz
+

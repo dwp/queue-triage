@@ -10,7 +10,6 @@ import java.util.Optional;
 
 import static java.util.Optional.ofNullable;
 
-@Component
 @ConfigurationProperties(prefix = "dao.mongo")
 public class MongoDaoProperties {
 

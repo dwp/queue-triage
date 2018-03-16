@@ -1,45 +1,60 @@
 package uk.gov.dwp.vault.config;
 
+import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.validation.annotation.Validated;
+
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 @ConfigurationProperties(prefix = "vault")
+@Validated
 public class VaultProperties {
 
-    private boolean enabled = true;
+    @NotEmpty
     private String address;
+    @NotNull
     private Integer openTimeout;
-    private Integer readTimeOut;
+    @NotNull
+    private Integer readTimeout;
+
+    @Valid
     private TokenAuthenticationProperties tokenAuthentication = new TokenAuthenticationProperties();
+
     private SslProperties ssl = new SslProperties();
 
-    /**
-     * If null defaults to "VAULT_ADDR" environment variable
-     *
-     * @return address of vault server
-     */
+    public boolean isTokenBaseAuthentication() {
+        return isNotBlank(tokenAuthentication.getTokenPath());
+    }
+
+    public boolean isSslConfigSpecified() {
+        return isNotBlank(ssl.getSslPemFilePath());
+    }
+
     public String getAddress() {
         return address;
     }
 
+    public void setAddress(String address) {
+        this.address = address;
+    }
 
-    /**
-     * If null defaults to "VAULT_OPEN_TIMEOUT" environment variable
-     *
-     * @return open timeout in seconds
-     */
     public Integer getOpenTimeout() {
         return openTimeout;
     }
 
-    /**
-     * If null Defaults to "VAULT_READ_TIMEOUT" environment variable
-     *
-     * @return read timeout in seconds
-     */
-    public Integer getReadTimeOut() {
-        return readTimeOut;
+    public void setOpenTimeout(Integer openTimeout) {
+        this.openTimeout = openTimeout;
+    }
+
+    public Integer getReadTimeout() {
+        return readTimeout;
+    }
+
+    public void setReadTimeout(Integer readTimeout) {
+        this.readTimeout = readTimeout;
     }
 
     public TokenAuthenticationProperties getTokenAuthentication() {
@@ -50,22 +65,6 @@ public class VaultProperties {
         this.tokenAuthentication = tokenAuthentication;
     }
 
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
-    public void setOpenTimeout(Integer openTimeout) {
-        this.openTimeout = openTimeout;
-    }
-
-    public void setReadTimeOut(Integer readTimeOut) {
-        this.readTimeOut = readTimeOut;
-    }
-
-    public boolean isTokenBaseAuthentication() {
-        return isNotBlank(tokenAuthentication.getTokenPath());
-    }
-
     public SslProperties getSsl() {
         return ssl;
     }
@@ -74,20 +73,9 @@ public class VaultProperties {
         this.ssl = ssl;
     }
 
-    public boolean isSslConfigSpecified() {
-        return isNotBlank(ssl.getSslPemFilePath());
-    }
-
-    public Boolean isEnabled() {
-        return enabled;
-    }
-
-    public void setEnabled(Boolean enabled) {
-        this.enabled = enabled;
-    }
-
     public static class TokenAuthenticationProperties {
 
+        @NotEmpty
         private String tokenPath;
 
         /**
@@ -103,7 +91,6 @@ public class VaultProperties {
             this.tokenPath = tokenPath;
         }
     }
-
 
     public static class SslProperties {
 

@@ -4,8 +4,9 @@ package uk.gov.dwp.vault;
 import com.bettercloud.vault.Vault;
 import com.bettercloud.vault.VaultException;
 
+import uk.gov.dwp.queue.triage.secret.lookup.SensitiveConfigValueLookupStrategy;
 import uk.gov.dwp.vault.config.VaultProperties;
-import uk.gov.dwp.vault.domain.DecryptedValue;
+import uk.gov.dwp.queue.triage.secret.lookup.domain.DecryptedValue;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -34,9 +35,14 @@ public class SingleValueVaultLookupStrategy implements SensitiveConfigValueLooku
     }
 
     @Override
+    public int evaluationOrder() {
+        return FIRST_EVAL_ORDER;
+    }
+
+    @Override
     public DecryptedValue retrieveSecret(String secretPath) {
         Matcher matcher = PATTERN.matcher(secretPath);
-        if (vaultProperties.isEnabled() && matcher.matches()) {
+        if (matcher.matches()) {
             String vaultPath = matcher.group(1);
             try {
                 String value = vaultAPI().logical().read(vaultPath).getData().get(VALUE_KEY);
@@ -45,7 +51,7 @@ public class SingleValueVaultLookupStrategy implements SensitiveConfigValueLooku
                 int httpStatusCode = e.getHttpStatusCode();
                 switch (httpStatusCode) {
                     case 0:
-                        throw new RuntimeException("Unable to connect to vault '" + vaultProperties.getAddress() + "': the path '" + secretPath + "'", e);
+                        throw new RuntimeException("Unable to connect to vault at:'" + vaultProperties.getAddress() + "', looking up the path '" + secretPath + "'", e);
                     case 404: // Fallthrough
                     case 403:
                         throw new RuntimeException("Connected to '" + vaultProperties.getAddress() + "': unable to read secret at path '" + secretPath + "'", e);
@@ -60,12 +66,11 @@ public class SingleValueVaultLookupStrategy implements SensitiveConfigValueLooku
     }
 
     private boolean isVaultEnabledAndPatternMatches(String configPath) {
-        return vaultProperties.isEnabled() &&
-               PATTERN.matcher(configPath).matches();
+        return PATTERN.matcher(configPath).matches();
     }
 
 
-    protected Vault vaultAPI() throws VaultException {
+    private Vault vaultAPI() throws VaultException {
         return vaultApiFactory.createVaultAPI(vaultProperties);
     }
 

@@ -1,7 +1,4 @@
-package uk.gov.dwp.vault.domain;
-
-import java.util.Arrays;
-import java.util.List;
+package uk.gov.dwp.queue.triage.secret.lookup.domain;
 
 public class DecryptedValue {
 
@@ -33,7 +30,7 @@ public class DecryptedValue {
         erase(clearText);
     }
 
-    public static void erase(char[] clearText) {
+    private static void erase(char[] clearText) {
         if (clearText != null) {
             for (int index = 0; index < clearText.length; index++) {
                 // TODO: Do multiple writes of random characters first?  How strict do we need to be here?

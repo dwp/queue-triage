@@ -9,6 +9,8 @@ dependencies {
     implementation project(':common:id')
     implementation project(':common:jackson')
     implementation project(':core:client')
+    implementation project(':core:config-secret-lookup')
+    implementation project(':core:vault')
     implementation project(':web:mustache')
     implementation project(':web:spring-security')
 

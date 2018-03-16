@@ -1,8 +1,8 @@
-package uk.gov.dwp.vault;
+package uk.gov.dwp.queue.triage.secret.lookup;
 
 import org.junit.Test;
 
-import uk.gov.dwp.vault.domain.DecryptedValue;
+import uk.gov.dwp.queue.triage.secret.lookup.domain.DecryptedValue;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;

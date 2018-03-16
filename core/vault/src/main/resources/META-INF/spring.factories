@@ -1,0 +1,1 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=uk.gov.dwp.vault.config.VaultAutoConfiguration,uk.gov.dwp.vault.config.SpringBootServerPropertiesVaultLookupConfiguration

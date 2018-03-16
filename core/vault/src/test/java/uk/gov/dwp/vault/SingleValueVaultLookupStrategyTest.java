@@ -10,14 +10,15 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
+import uk.gov.dwp.queue.triage.secret.lookup.domain.DecryptedValue;
 import uk.gov.dwp.vault.config.VaultProperties;
-import uk.gov.dwp.vault.domain.DecryptedValue;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -62,21 +63,8 @@ public class SingleValueVaultLookupStrategyTest {
     }
 
     @Test
-    public void notConfiguredDoesNotMatch() throws Exception {
-        VAULT_PROPERTIES.setEnabled(false);
-        assertThat(underTest.matches(MATCHING_PATH), is(false));
-    }
-
-    @Test
     public void secretPathDoesNotMatch() throws Exception {
         assertThat(underTest.matches(NON_MATCHING_PATH), is(false));
-    }
-
-    @Test
-    public void unableToRetrieveIfNotConfigured() throws Exception {
-        expectedException.expect(IllegalStateException.class);
-
-        underTest.retrieveSecret(MATCHING_PATH);
     }
 
     @Test
@@ -94,9 +82,12 @@ public class SingleValueVaultLookupStrategyTest {
 
     @Test
     public void wrapsVaultException() throws Exception {
-        when(vault.logical()).thenThrow(new VaultException("expected"));
+        doAnswer(invocation -> {
+            throw new VaultException("expected");
+        }).when(vault).logical();
 
         expectedException.expect(RuntimeException.class);
+        expectedException.expectMessage("Unable to connect to vault at:'null', looking up the path 'VAULT(/some/secret/path)'");
 
         underTest.retrieveSecret(MATCHING_PATH);
     }

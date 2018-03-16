@@ -1,15 +1,16 @@
-package uk.gov.dwp.vault;
+package uk.gov.dwp.queue.triage.secret.lookup;
 
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import uk.gov.dwp.vault.domain.DecryptedValue;
+import uk.gov.dwp.queue.triage.secret.lookup.domain.DecryptedValue;
 
 import static java.util.Collections.singletonList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 

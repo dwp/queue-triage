@@ -1,12 +1,29 @@
 dependencies {
+    implementation project(':core:config-secret-lookup')
     implementation 'com.bettercloud:vault-java-driver'
     implementation 'org.slf4j:slf4j-api'
+    implementation 'ch.qos.logback:logback-classic'
     implementation 'org.apache.commons:commons-lang3'
     implementation 'org.springframework.boot:spring-boot'
+    implementation 'org.springframework.boot:spring-boot-autoconfigure'
+    implementation 'javax.validation:validation-api'
+    implementation 'org.hibernate:hibernate-validator'
+    implementation 'org.yaml:snakeyaml'
+
+    testImplementation 'javax.servlet:javax.servlet-api'
+    testImplementation 'org.eclipse.jetty:jetty-server'
+    testImplementation 'org.eclipse.jetty:jetty-servlet'
+    testImplementation 'org.eclipse.jetty:jetty-webapp'
+    testImplementation 'org.springframework:spring-context'
+    testImplementation 'org.springframework:spring-web'
+    testImplementation 'org.springframework:spring-webmvc'
+
 
     //test
     // this was test:common
 //    testImplementation 'net.bytebuddy:byte-buddy'
+    testImplementation 'org.springframework.boot:spring-boot-test'
+    testImplementation 'org.springframework:spring-test'
     testImplementation 'org.hamcrest:hamcrest-core'
     testImplementation 'org.hamcrest:hamcrest-library'
     testImplementation 'junit:junit'

@@ -13,7 +13,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
-class VaultApiFactory {
+public class VaultApiFactory {
 
     Vault createVaultAPI(VaultProperties vaultProperties) throws VaultException {
         // The Vault config builder appears to do some caching. If we get a dropped connection or vault is down
@@ -26,7 +26,7 @@ class VaultApiFactory {
         VaultConfig vaultConfig = new VaultConfig()
             .address(vaultProperties.getAddress())                                // Defaults to "VAULT_ADDR" environment variable
             .openTimeout(vaultProperties.getOpenTimeout())                        // Defaults to "VAULT_OPEN_TIMEOUT" environment variable
-            .readTimeout(vaultProperties.getReadTimeOut());                       // Defaults to "VAULT_READ_TIMEOUT" environment variable
+            .readTimeout(vaultProperties.getReadTimeout());                       // Defaults to "VAULT_READ_TIMEOUT" environment variable
 
         if (vaultProperties.isTokenBaseAuthentication()) {
             VaultProperties.TokenAuthenticationProperties tokenAuthentication = vaultProperties.getTokenAuthentication();
