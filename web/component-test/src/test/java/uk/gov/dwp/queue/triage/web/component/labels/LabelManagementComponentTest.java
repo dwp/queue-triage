@@ -15,6 +15,7 @@ import static java.time.temporal.ChronoUnit.HOURS;
 import static java.time.temporal.ChronoUnit.MINUTES;
 import static uk.gov.dwp.queue.triage.core.client.search.SearchFailedMessageResponse.newSearchFailedMessageResponse;
 
+@Ignore("Temporarily disabled")
 public class LabelManagementComponentTest extends SimpleBaseWebComponentTest<LabelManagementWhenStage> {
 
     private static final FailedMessageId FAILED_MESSAGE_ID_1 = FailedMessageId.newFailedMessageId();
@@ -58,7 +59,6 @@ public class LabelManagementComponentTest extends SimpleBaseWebComponentTest<Lab
         labelManagementThenStage.then().and().failedMessage$IsUpdatedWithLabels$(FAILED_MESSAGE_ID_2, "label1", "label2");
     }
 
-    @Ignore("Temporarily disabled")
     @Test
     public void removeLabelsFromAFailedMessage() throws Exception {
         listFailedMessagesStage.given().aFailedMessage$Exists(newSearchFailedMessageResponse()
