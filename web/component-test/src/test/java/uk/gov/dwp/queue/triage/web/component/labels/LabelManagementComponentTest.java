@@ -1,6 +1,7 @@
 package uk.gov.dwp.queue.triage.web.component.labels;
 
 import com.tngtech.jgiven.annotation.ScenarioStage;
+import org.junit.Ignore;
 import org.junit.Test;
 import uk.gov.dwp.queue.triage.id.FailedMessageId;
 import uk.gov.dwp.queue.triage.web.component.SimpleBaseWebComponentTest;
@@ -57,6 +58,7 @@ public class LabelManagementComponentTest extends SimpleBaseWebComponentTest<Lab
         labelManagementThenStage.then().and().failedMessage$IsUpdatedWithLabels$(FAILED_MESSAGE_ID_2, "label1", "label2");
     }
 
+    @Ignore("Temporarily disabled")
     @Test
     public void removeLabelsFromAFailedMessage() throws Exception {
         listFailedMessagesStage.given().aFailedMessage$Exists(newSearchFailedMessageResponse()
