@@ -46,7 +46,20 @@ dependencies {
     testImplementation 'org.eclipse.jetty:jetty-servlet'
     testImplementation 'org.eclipse.jetty:jetty-webapp'
     testImplementation 'org.hibernate:hibernate-validator'
-
 }
 
-test.finalizedBy jgivenTestReport
+test {
+    finalizedBy jgivenTestReport
+
+    outputs.upToDateWhen {
+        if (project.hasProperty('rerun')) {
+            println "Re-running ${project.name}"
+            return false
+        } else {
+            return true
+        }
+    }
+
+    maxParallelForks 1
+    forkEvery 1
+}

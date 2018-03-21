@@ -3,6 +3,7 @@ package uk.gov.dwp.queue.triage.core;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.jms.JmsAutoConfiguration;
 import org.springframework.boot.autoconfigure.jms.activemq.ActiveMQAutoConfiguration;
 import org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration;
 import org.springframework.boot.autoconfigure.security.SecurityAutoConfiguration;
@@ -23,6 +24,7 @@ import uk.gov.dwp.queue.triage.swagger.configuration.SwaggerConfiguration;
 })
 @EnableAutoConfiguration(
         exclude = {
+                JmsAutoConfiguration.class,
                 MongoAutoConfiguration.class,
                 ActiveMQAutoConfiguration.class,
                 SecurityAutoConfiguration.class,

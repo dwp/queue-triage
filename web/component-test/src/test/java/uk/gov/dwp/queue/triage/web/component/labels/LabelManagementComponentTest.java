@@ -1,6 +1,7 @@
 package uk.gov.dwp.queue.triage.web.component.labels;
 
 import com.tngtech.jgiven.annotation.ScenarioStage;
+import org.junit.Ignore;
 import org.junit.Test;
 import uk.gov.dwp.queue.triage.id.FailedMessageId;
 import uk.gov.dwp.queue.triage.web.component.SimpleBaseWebComponentTest;
@@ -14,6 +15,7 @@ import static java.time.temporal.ChronoUnit.HOURS;
 import static java.time.temporal.ChronoUnit.MINUTES;
 import static uk.gov.dwp.queue.triage.core.client.search.SearchFailedMessageResponse.newSearchFailedMessageResponse;
 
+@Ignore("Temporarily disabled")
 public class LabelManagementComponentTest extends SimpleBaseWebComponentTest<LabelManagementWhenStage> {
 
     private static final FailedMessageId FAILED_MESSAGE_ID_1 = FailedMessageId.newFailedMessageId();
