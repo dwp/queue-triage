@@ -1,6 +1,6 @@
 package uk.gov.dwp.queue.triage.core.jms.activemq;
 
-public interface MessageListenerManager {
+public interface MessageConsumerManager {
 
     void start();
 

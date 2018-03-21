@@ -4,9 +4,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.core.env.Environment;
-import uk.gov.dwp.queue.triage.core.jms.activemq.MessageListenerManager;
-import uk.gov.dwp.queue.triage.core.jms.activemq.MessageListenerManagerResource;
-import uk.gov.dwp.queue.triage.core.jms.activemq.browser.QueueBrowserScheduledExecutorService;
+import uk.gov.dwp.queue.triage.core.jms.activemq.MessageConsumerManager;
+import uk.gov.dwp.queue.triage.core.jms.activemq.MessageConsumerManagerRegistry;
+import uk.gov.dwp.queue.triage.core.jms.activemq.MessageConsumerManagerResource;
 import uk.gov.dwp.queue.triage.core.jms.activemq.browser.spring.QueueBrowserCallbackBeanDefinitionFactory;
 import uk.gov.dwp.queue.triage.core.jms.activemq.browser.spring.QueueBrowserScheduledExecutorServiceBeanDefinitionFactory;
 import uk.gov.dwp.queue.triage.core.jms.activemq.browser.spring.QueueBrowserServiceBeanDefinitionFactory;
@@ -14,16 +14,12 @@ import uk.gov.dwp.queue.triage.core.jms.activemq.browser.spring.QueueBrowsingBea
 import uk.gov.dwp.queue.triage.core.jms.activemq.spring.ActiveMQConnectionFactoryBeanDefinitionFactory;
 import uk.gov.dwp.queue.triage.core.jms.activemq.spring.FailedMessageListenerBeanDefinitionFactory;
 import uk.gov.dwp.queue.triage.core.jms.activemq.spring.JmsListenerBeanDefinitionFactory;
-import uk.gov.dwp.queue.triage.core.jms.activemq.spring.NamedMessageListenerContainer;
 import uk.gov.dwp.queue.triage.core.jms.activemq.spring.NamedMessageListenerContainerBeanDefinitionFactory;
 import uk.gov.dwp.queue.triage.core.jms.spring.JmsTemplateBeanDefinitionFactory;
 import uk.gov.dwp.queue.triage.cxf.CxfConfiguration;
 import uk.gov.dwp.queue.triage.cxf.ResourceRegistry;
 
-import java.util.Collections;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -60,18 +56,16 @@ public class JmsListenerConfig {
     }
 
     @Bean
-    public MessageListenerManagerResource messageListenerManagerResource(ResourceRegistry resourceRegistry,
-                                                                         Optional<List<NamedMessageListenerContainer>> namedMessageListenerContainers,
-                                                                         Optional<List<QueueBrowserScheduledExecutorService>> queueBrowserScheduledExecutorServices) {
-        final Map<String, MessageListenerManager> messageListenerMap = namedMessageListenerContainers
-                .orElse(Collections.emptyList())
+    public MessageConsumerManagerRegistry messageConsumerManagerRegistry(List<MessageConsumerManager> messageConsumerManagers) {
+        return new MessageConsumerManagerRegistry(messageConsumerManagers
                 .stream()
-                .collect(Collectors.toMap(MessageListenerManager::getBrokerName, Function.identity()));
-        messageListenerMap.putAll(queueBrowserScheduledExecutorServices
-                .orElse(Collections.emptyList())
-                .stream()
-                .collect(Collectors.toMap(MessageListenerManager::getBrokerName, Function.identity()))
+                .collect(Collectors.toMap(MessageConsumerManager::getBrokerName, Function.identity()))
         );
-        return resourceRegistry.add(new MessageListenerManagerResource(messageListenerMap));
+    }
+
+    @Bean
+    public MessageConsumerManagerResource messageListenerManagerResource(ResourceRegistry resourceRegistry,
+                                                                         MessageConsumerManagerRegistry messageConsumerManagerRegistry) {
+        return resourceRegistry.add(new MessageConsumerManagerResource(messageConsumerManagerRegistry));
     }
 }
