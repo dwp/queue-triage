@@ -9,7 +9,7 @@ import org.springframework.beans.factory.support.BeanDefinitionRegistryPostProce
 import org.springframework.core.env.Environment;
 import uk.gov.dwp.queue.triage.core.jms.activemq.browser.spring.QueueBrowsingBeanDefinitionFactory;
 
-public class JmsListenerBeanDefinitionFactory implements BeanDefinitionRegistryPostProcessor {
+public class JmsBeanDefinitionRegistryPostProcessor implements BeanDefinitionRegistryPostProcessor {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(QueueBrowsingBeanDefinitionFactory.class);
     private final Environment environment;
@@ -17,10 +17,10 @@ public class JmsListenerBeanDefinitionFactory implements BeanDefinitionRegistryP
     private final FailedMessageListenerBeanDefinitionFactory failedMessageListenerBeanDefinitionFactory;
     private final NamedMessageListenerContainerBeanDefinitionFactory namedMessageListenerContainerBeanDefinitionFactory;
 
-    public JmsListenerBeanDefinitionFactory(Environment environment,
-                                     ActiveMQConnectionFactoryBeanDefinitionFactory activeMQConnectionFactoryBeanDefinitionFactory,
-                                     FailedMessageListenerBeanDefinitionFactory failedMessageListenerBeanDefinitionFactory,
-                                     NamedMessageListenerContainerBeanDefinitionFactory namedMessageListenerContainerBeanDefinitionFactory) {
+    public JmsBeanDefinitionRegistryPostProcessor(Environment environment,
+                                                  ActiveMQConnectionFactoryBeanDefinitionFactory activeMQConnectionFactoryBeanDefinitionFactory,
+                                                  FailedMessageListenerBeanDefinitionFactory failedMessageListenerBeanDefinitionFactory,
+                                                  NamedMessageListenerContainerBeanDefinitionFactory namedMessageListenerContainerBeanDefinitionFactory) {
         this.environment = environment;
         this.activeMQConnectionFactoryBeanDefinitionFactory = activeMQConnectionFactoryBeanDefinitionFactory;
         this.failedMessageListenerBeanDefinitionFactory = failedMessageListenerBeanDefinitionFactory;

@@ -13,7 +13,7 @@ import uk.gov.dwp.queue.triage.core.jms.activemq.browser.spring.QueueBrowserServ
 import uk.gov.dwp.queue.triage.core.jms.activemq.browser.spring.QueueBrowsingBeanDefinitionFactory;
 import uk.gov.dwp.queue.triage.core.jms.activemq.spring.ActiveMQConnectionFactoryBeanDefinitionFactory;
 import uk.gov.dwp.queue.triage.core.jms.activemq.spring.FailedMessageListenerBeanDefinitionFactory;
-import uk.gov.dwp.queue.triage.core.jms.activemq.spring.JmsListenerBeanDefinitionFactory;
+import uk.gov.dwp.queue.triage.core.jms.activemq.spring.JmsBeanDefinitionRegistryPostProcessor;
 import uk.gov.dwp.queue.triage.core.jms.activemq.spring.NamedMessageListenerContainerBeanDefinitionFactory;
 import uk.gov.dwp.queue.triage.core.jms.spring.JmsTemplateBeanDefinitionFactory;
 import uk.gov.dwp.queue.triage.cxf.CxfConfiguration;
@@ -31,10 +31,10 @@ import java.util.stream.Collectors;
 public class JmsListenerConfig {
 
     @Bean
-    public static JmsListenerBeanDefinitionFactory jmsListenerBeanDefinitionFactory(Environment environment,
-                                                                                    ActiveMQConnectionFactoryBeanDefinitionFactory activeMQConnectionFactoryBeanDefinitionFactory,
-                                                                                    FailedMessageListenerBeanDefinitionFactory failedMessageListenerBeanDefinitionFactory) {
-        return new JmsListenerBeanDefinitionFactory(
+    public static JmsBeanDefinitionRegistryPostProcessor jmsListenerBeanDefinitionFactory(Environment environment,
+                                                                                          ActiveMQConnectionFactoryBeanDefinitionFactory activeMQConnectionFactoryBeanDefinitionFactory,
+                                                                                          FailedMessageListenerBeanDefinitionFactory failedMessageListenerBeanDefinitionFactory) {
+        return new JmsBeanDefinitionRegistryPostProcessor(
                 environment,
                 activeMQConnectionFactoryBeanDefinitionFactory,
                 failedMessageListenerBeanDefinitionFactory,
