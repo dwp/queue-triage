@@ -1,10 +1,10 @@
 package uk.gov.dwp.queue.triage.core.search;
 
 import com.tngtech.jgiven.integration.spring.EnableJGiven;
-import com.tngtech.jgiven.integration.spring.SimpleSpringRuleScenarioTest;
 import org.hamcrest.Matchers;
 import org.junit.Test;
 import org.springframework.boot.test.context.SpringBootTest;
+import uk.gov.dwp.queue.triage.core.BaseCoreComponentTest;
 import uk.gov.dwp.queue.triage.core.FailedMessageResourceStage;
 import uk.gov.dwp.queue.triage.id.FailedMessageId;
 
@@ -19,14 +19,14 @@ import static uk.gov.dwp.queue.triage.id.FailedMessageId.newFailedMessageId;
 
 @EnableJGiven
 @SpringBootTest(webEnvironment= RANDOM_PORT)
-public class FailedMessageResourceComponentTest extends SimpleSpringRuleScenarioTest<FailedMessageResourceStage> {
+public class FailedMessageResourceComponentTest extends BaseCoreComponentTest<FailedMessageResourceStage> {
 
     private static final Instant NOW = Instant.now();
 
     private final FailedMessageId failedMessageId = newFailedMessageId();
 
     @Test
-    public void findMessageByIdThatExists() throws Exception {
+    public void findMessageByIdThatExists() {
         given().aFailedMessage()
                 .withFailedMessageId(failedMessageId)
                 .withContent("Hello World")
@@ -49,7 +49,7 @@ public class FailedMessageResourceComponentTest extends SimpleSpringRuleScenario
     }
 
     @Test
-    public void findMessageByIdThatDoesNotExist() throws Exception {
+    public void findMessageByIdThatDoesNotExist() {
         given().aFailedMessage()
                 .withFailedMessageId(failedMessageId)
                 .doesNotExist();

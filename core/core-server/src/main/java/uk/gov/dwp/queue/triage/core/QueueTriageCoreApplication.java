@@ -8,6 +8,8 @@ import org.springframework.boot.autoconfigure.jms.activemq.ActiveMQAutoConfigura
 import org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration;
 import org.springframework.boot.autoconfigure.security.SecurityAutoConfiguration;
 import org.springframework.context.annotation.Import;
+import uk.gov.dwp.queue.triage.core.jms.activemq.configuration.MessageConsumerApplicationInitializer;
+import uk.gov.dwp.queue.triage.core.resend.spring.configuration.ResendFailedMessageApplicationInitializer;
 import uk.gov.dwp.queue.triage.cxf.server.configuration.CxfBusConfiguration;
 import uk.gov.dwp.queue.triage.cxf.server.configuration.CxfMetricsConfiguration;
 import uk.gov.dwp.queue.triage.metrics.configuration.MetricRegistryConfiguration;
@@ -33,6 +35,9 @@ import uk.gov.dwp.queue.triage.swagger.configuration.SwaggerConfiguration;
 public class QueueTriageCoreApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(QueueTriageCoreApplication.class, args);
+        final SpringApplication springApplication = new SpringApplication(QueueTriageCoreApplication.class);
+        springApplication.addInitializers(new MessageConsumerApplicationInitializer());
+        springApplication.addInitializers(new ResendFailedMessageApplicationInitializer());
+        springApplication.run(args);
     }
 }

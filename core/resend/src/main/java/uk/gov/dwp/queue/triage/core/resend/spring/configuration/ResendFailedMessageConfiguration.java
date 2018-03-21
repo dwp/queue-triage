@@ -28,19 +28,6 @@ import java.util.stream.Collectors;
 public class ResendFailedMessageConfiguration {
 
     @Bean
-    public static ResendBeanDefinitionFactory resendBeanDefinitionFactory(Environment environment) {
-        return new ResendBeanDefinitionFactory(
-                environment,
-                new ActiveMQConnectionFactoryBeanDefinitionFactory(),
-                new ResendFailedMessageServiceBeanDefinitionFactory(new HistoricStatusPredicate()),
-                new FailedMessageSenderBeanDefinitionFactory(),
-                new SpringMessageSenderBeanDefinitionFactory(),
-                new JmsTemplateBeanDefinitionFactory(),
-                new ResendScheduledExecutorServiceBeanDefinitionFactory()
-        );
-    }
-
-    @Bean
     public ResendScheduledExecutorsResource resendScheduledExecutorsResource(ResourceRegistry resourceRegistry,
                                                                              List<ResendScheduledExecutorService> resendScheduledExecutorServices) {
         return resourceRegistry.add(new ResendScheduledExecutorsResource(

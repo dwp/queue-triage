@@ -7,11 +7,12 @@ dependencies {
     implementation project(':core:activemq')
     implementation project(':core:client')
     implementation project(':core:client-test-support')
+    implementation project(':core:core-server')
     implementation project(':core:dao-mongo-test-support')
     implementation project(':core:domain')
     implementation project(':core:jms')
     implementation project(':core:message-classification')
-    implementation project(':core:core-server')
+    implementation project(':core:resend')
     implementation project(':core:service')
 
     implementation 'com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider'

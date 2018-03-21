@@ -15,6 +15,7 @@ import org.springframework.jms.listener.DefaultMessageListenerContainer;
 import uk.gov.dwp.queue.triage.core.jms.FailedMessageListener;
 import uk.gov.dwp.queue.triage.core.jms.activemq.browser.QueueBrowserScheduledExecutorService;
 import uk.gov.dwp.queue.triage.core.jms.activemq.configuration.JmsListenerConfig;
+import uk.gov.dwp.queue.triage.core.jms.activemq.configuration.MessageConsumerApplicationInitializer;
 import uk.gov.dwp.queue.triage.core.service.FailedMessageService;
 
 import java.util.Properties;
@@ -101,6 +102,7 @@ public class JmsBeanDefinitionRegistryPostProcessorTest {
     private AnnotationConfigApplicationContext createApplicationContext(String yamlFilename) {
         AnnotationConfigApplicationContext applicationContext = new AnnotationConfigApplicationContext();
         applicationContext.setEnvironment(createEnvironment(yamlFilename));
+        new MessageConsumerApplicationInitializer().initialize(applicationContext);
         applicationContext.register(JmsListenerConfig.class, AdditionalConfig.class);
         applicationContext.refresh();
         return applicationContext;

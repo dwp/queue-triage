@@ -16,6 +16,7 @@ import uk.gov.dwp.queue.triage.core.jms.spring.SpringMessageSender;
 import uk.gov.dwp.queue.triage.core.resend.FailedMessageSender;
 import uk.gov.dwp.queue.triage.core.resend.ResendFailedMessageService;
 import uk.gov.dwp.queue.triage.core.resend.ResendScheduledExecutorService;
+import uk.gov.dwp.queue.triage.core.resend.spring.configuration.ResendFailedMessageApplicationInitializer;
 import uk.gov.dwp.queue.triage.core.resend.spring.configuration.ResendFailedMessageConfiguration;
 import uk.gov.dwp.queue.triage.core.search.FailedMessageSearchService;
 import uk.gov.dwp.queue.triage.core.service.FailedMessageService;
@@ -101,6 +102,7 @@ public class ResendBeanDefinitionFactoryTest {
     private AnnotationConfigApplicationContext createApplicationContext(String yamlFilename) {
         AnnotationConfigApplicationContext applicationContext = new AnnotationConfigApplicationContext();
         applicationContext.setEnvironment(createEnvironment(yamlFilename));
+        new ResendFailedMessageApplicationInitializer().initialize(applicationContext);
         applicationContext.register(ResendFailedMessageConfiguration.class, AdditionalConfig.class);
         applicationContext.refresh();
         return applicationContext;
