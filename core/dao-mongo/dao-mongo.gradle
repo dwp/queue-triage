@@ -3,7 +3,6 @@ dependencies {
     implementation project(':common:jackson')
     implementation project(':core:dao')
     implementation project(':core:domain')
-    implementation project(':core:config-secret-lookup')
     implementation 'com.fasterxml.jackson.core:jackson-databind'
     implementation 'org.mongodb:mongodb-driver'
     implementation 'org.slf4j:slf4j-api'

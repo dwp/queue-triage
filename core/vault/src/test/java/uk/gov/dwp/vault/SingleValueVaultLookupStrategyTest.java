@@ -10,8 +10,8 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import uk.gov.dwp.queue.triage.secret.lookup.domain.DecryptedValue;
 import uk.gov.dwp.vault.config.VaultProperties;
+import uk.gov.dwp.vault.domain.DecryptedValue;
 
 import java.util.HashMap;
 import java.util.Map;

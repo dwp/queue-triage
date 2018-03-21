@@ -24,6 +24,8 @@ dao:
       name: failedMessage
       username: failedMessageUser
       password: Passw0rd
+#      password: "VAULT(/path/secret/Passw0rd)"
+
 
 jms:
   activemq:
@@ -40,12 +42,12 @@ messageClassification:
   frequency: 60
   timeUnit: SECONDS
 
-vault:
-  address: http://localhost:1234/vault
-  openTimeout: 20 #seconds
-  readTimeout: 20 #seconds
-  tokenAuthentication:
-    tokenPath: /var/lib/.vault
-  ssl:
-    sslPemFilePath: /etc/application/vault.pem
-    sslVerify: true
+#vault:
+#  address: http://localhost:1234/vault
+#  openTimeout: 20 #seconds
+#  readTimeout: 20 #seconds
+#  tokenAuthentication:
+#    tokenPath: /var/lib/.vault
+#  ssl:
+#    sslPemFilePath: /etc/application/vault.pem
+#    sslVerify: true

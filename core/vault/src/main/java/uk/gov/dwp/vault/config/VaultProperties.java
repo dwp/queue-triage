@@ -1,16 +1,13 @@
 package uk.gov.dwp.vault.config;
 
 import org.hibernate.validator.constraints.NotEmpty;
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.validation.annotation.Validated;
+import org.springframework.stereotype.Component;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
-@ConfigurationProperties(prefix = "vault")
-@Validated
 public class VaultProperties {
 
     @NotEmpty

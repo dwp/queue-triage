@@ -10,7 +10,6 @@ import org.bson.Transformer;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.DependsOn;
 import org.springframework.context.annotation.Import;
 
 import uk.gov.dwp.queue.triage.core.dao.FailedMessageDao;
@@ -26,8 +25,6 @@ import uk.gov.dwp.queue.triage.core.domain.Destination;
 import uk.gov.dwp.queue.triage.core.domain.StatusHistoryEvent;
 import uk.gov.dwp.queue.triage.id.Id;
 import uk.gov.dwp.queue.triage.jackson.configuration.JacksonConfiguration;
-import uk.gov.dwp.queue.triage.secret.lookup.SensitiveConfigValueLookupRegistry;
-import uk.gov.dwp.queue.triage.secret.lookup.config.QueueTriageApplicationSecretLookupAutoConfiguration;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -43,7 +40,7 @@ import static java.time.ZoneOffset.UTC;
 import static java.util.Collections.singletonList;
 
 @Configuration
-@Import({JacksonConfiguration.class, QueueTriageApplicationSecretLookupAutoConfiguration.class})
+@Import(JacksonConfiguration.class)
 @EnableConfigurationProperties(MongoDaoProperties.class)
 public class MongoDaoConfig {
 
@@ -58,22 +55,21 @@ public class MongoDaoConfig {
     }
 
     @Bean
-    public MongoClient mongoClient(MongoDaoProperties mongoDaoProperties, SensitiveConfigValueLookupRegistry sensitiveConfigValueLookupRegistry) {
+    public MongoClient mongoClient(MongoDaoProperties mongoDaoProperties) {
         return new MongoClient(
             createSeeds(mongoDaoProperties),
-            createCredentials(mongoDaoProperties, sensitiveConfigValueLookupRegistry),
+            createCredentials(mongoDaoProperties),
             mongoDaoProperties.mongoClientOptions()
         );
     }
 
-    private List<MongoCredential> createCredentials(MongoDaoProperties mongoDaoProperties, SensitiveConfigValueLookupRegistry sensitiveConfigValueLookupRegistry) {
-        return mongoDaoProperties.getFailedMessage().getUsername()
+    private List<MongoCredential> createCredentials(MongoDaoProperties mongoDaoProperties) {
+        return mongoDaoProperties.getFailedMessage().getOptionalUsername()
             .map(username -> singletonList(createScramSha1Credential(
                 username,
                 mongoDaoProperties.getDbName(),
                 mongoDaoProperties.getFailedMessage()
-                    .getPassword()
-                    .map(configValue -> sensitiveConfigValueLookupRegistry.retrieveSecret(configValue).getClearText())
+                    .getOptionalPassword()
                     .orElseThrow(() -> new IllegalArgumentException("Password is required when username specified"))
             )))
             .orElse(Collections.emptyList());

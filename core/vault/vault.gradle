@@ -1,5 +1,4 @@
 dependencies {
-    implementation project(':core:config-secret-lookup')
     implementation 'com.bettercloud:vault-java-driver'
     implementation 'org.slf4j:slf4j-api'
     implementation 'ch.qos.logback:logback-classic'

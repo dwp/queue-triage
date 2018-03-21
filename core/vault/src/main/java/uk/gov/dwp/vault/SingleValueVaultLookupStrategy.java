@@ -4,16 +4,17 @@ package uk.gov.dwp.vault;
 import com.bettercloud.vault.Vault;
 import com.bettercloud.vault.VaultException;
 
-import uk.gov.dwp.queue.triage.secret.lookup.SensitiveConfigValueLookupStrategy;
+import org.springframework.util.Assert;
+
 import uk.gov.dwp.vault.config.VaultProperties;
-import uk.gov.dwp.queue.triage.secret.lookup.domain.DecryptedValue;
+import uk.gov.dwp.vault.domain.DecryptedValue;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * This assumes that values looked up in vault are basically in the format of "<VALUE_KEY>=<SECRET_VALUE>". Vault is capable of storing an object as the secret, but
- * this strategy is only concerned with single field values defined by the key called "value"
+ * This assumes that values looked up in vault are basically in the format of "<VALUE_KEY>=<SECRET_VALUE>". Vault is capable of storing an object as the secret, but this strategy is only concerned
+ * with single field values defined by the key called "value"
  */
 public class SingleValueVaultLookupStrategy implements SensitiveConfigValueLookupStrategy {
 

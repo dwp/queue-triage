@@ -6,11 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import uk.gov.dwp.queue.triage.secret.lookup.SameValueLookupStrategy;
-import uk.gov.dwp.queue.triage.secret.lookup.SensitiveConfigValueLookupRegistry;
+import uk.gov.dwp.vault.SensitiveConfigValueLookupRegistry;
 
 import static java.util.stream.Collectors.toList;
 import static org.hamcrest.core.Is.is;
@@ -30,14 +28,13 @@ public class QueueTriageVaultAutoConfigurationWhenVaultIsDisabledIntegrationTest
     @Autowired(required = false)
     public VaultProperties vaultProperties;
 
-    @Autowired
+    @Autowired(required = false)
     public SensitiveConfigValueLookupRegistry sensitiveConfigValueLookupRegistry;
 
     @Test
     public void ensureThatIfVaultIsDisabled_thenSameValueLookupStrategyShouldBeTheOnlyLookupServiceAvailable() throws Exception {
         assertNull(vaultProperties);
-        assertThat(sensitiveConfigValueLookupRegistry.getSortedResolutionStrategies().collect(toList()).size(), is(1));
-        assertThat(sensitiveConfigValueLookupRegistry.getSortedResolutionStrategies().collect(toList()).get(0), instanceOf(SameValueLookupStrategy.class));
+        assertNull(sensitiveConfigValueLookupRegistry);
     }
 
 }

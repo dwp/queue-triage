@@ -1,4 +1,4 @@
-package uk.gov.dwp.queue.triage.secret.lookup.domain;
+package uk.gov.dwp.vault.domain;
 
 public class DecryptedValue {
 

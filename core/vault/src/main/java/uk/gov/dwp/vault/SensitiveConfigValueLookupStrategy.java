@@ -1,7 +1,6 @@
-package uk.gov.dwp.queue.triage.secret.lookup;
+package uk.gov.dwp.vault;
 
-
-import uk.gov.dwp.queue.triage.secret.lookup.domain.DecryptedValue;
+import uk.gov.dwp.vault.domain.DecryptedValue;
 
 public interface SensitiveConfigValueLookupStrategy {
 

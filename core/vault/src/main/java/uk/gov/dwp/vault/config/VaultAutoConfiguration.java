@@ -1,33 +1,112 @@
 package uk.gov.dwp.vault.config;
 
-import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
+import org.springframework.beans.MutablePropertyValues;
+import org.springframework.boot.autoconfigure.AutoConfigureOrder;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.boot.bind.RelaxedDataBinder;
+import org.springframework.boot.context.properties.ConfigurationPropertiesBinding;
+import org.springframework.boot.context.properties.ConfigurationPropertiesBindingPostProcessor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
+import org.springframework.core.Ordered;
+import org.springframework.core.convert.support.DefaultConversionService;
+import org.springframework.core.env.ConfigurableEnvironment;
+import org.springframework.core.env.MapPropertySource;
 
-import uk.gov.dwp.queue.triage.secret.lookup.config.QueueTriageApplicationSecretLookupAutoConfiguration;
+import uk.gov.dwp.vault.SensitiveConfigValueLookupRegistry;
+import uk.gov.dwp.vault.SensitiveConfigValueLookupStrategy;
 import uk.gov.dwp.vault.SingleValueVaultLookupStrategy;
 import uk.gov.dwp.vault.VaultApiFactory;
+import uk.gov.dwp.vault.core.env.VaultConfigurationPropertiesBindingPostProcessor;
+import uk.gov.dwp.vault.core.env.VaultPropertySource;
+
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
+
+import static java.util.stream.Collectors.toMap;
 
 @Configuration
 @ComponentScan(basePackages = "uk.gov.dwp.vault.config")
-// Make sure we actually have something configured.
+// Make vault is actually configured for use.
 @ConditionalOnProperty(prefix = "vault", name = "address")
-@ImportAutoConfiguration(QueueTriageApplicationSecretLookupAutoConfiguration.class)
-@EnableConfigurationProperties(VaultProperties.class)
+@AutoConfigureOrder(Ordered.HIGHEST_PRECEDENCE)
 public class VaultAutoConfiguration {
 
     @Bean
+    public VaultProperties vaultProperties(ConfigurableEnvironment environment) {
+        VaultProperties vaultProperties = new VaultProperties();
+        RelaxedDataBinder binder = createDataBinderFor(vaultProperties);
+
+        Map<String, Object> vaultConfigProperties = getConfigValuesFromEnvironmentAsStream(environment)
+            .filter(item -> item.getKey().startsWith("vault."))
+            .collect(toMap(Map.Entry::getKey, Map.Entry::getValue));
+
+        binder.bind(new MutablePropertyValues(vaultConfigProperties));
+
+        return vaultProperties;
+    }
+
+    @Bean
+    public SensitiveConfigValueLookupRegistry sensitiveConfigValueDelegatingService(List<SensitiveConfigValueLookupStrategy> strategies) {
+        return new SensitiveConfigValueLookupRegistry(strategies);
+    }
+
+    @Bean
+    @ConfigurationPropertiesBinding
     public VaultApiFactory vaultApiFactory() {
         return new VaultApiFactory();
     }
 
     @Bean
+    @ConfigurationPropertiesBinding
     public SingleValueVaultLookupStrategy singleValueVaultLookupStrategy(VaultApiFactory vaultFactoryApi,
                                                                          VaultProperties vaultProperties) {
         return new SingleValueVaultLookupStrategy(vaultProperties, vaultFactoryApi);
+    }
+
+
+    @Bean
+    public VaultPropertySource vaultPropertySource(ConfigurableEnvironment configurableEnvironment, SensitiveConfigValueLookupRegistry registry) {
+
+        Map<String, Object> collect = getConfigValuesFromEnvironmentAsStream(configurableEnvironment)
+            .filter(item -> item.getValue().toString().startsWith("VAULT("))
+            .collect(toMap(Map.Entry::getKey, Map.Entry::getValue));
+
+        return new VaultPropertySource(collect, registry);
+    }
+
+    @Bean
+    public VaultConfigurationPropertiesBindingPostProcessor vaultPropertiesBeanPostProcessor(ConfigurationPropertiesBindingPostProcessor configurationPropertiesBindingPostProcessor) {
+        //This is to ensure that the ConfigurationPropertiesBindingPostProcessor executes BEFORE our PostProcessor
+        return new VaultConfigurationPropertiesBindingPostProcessor(configurationPropertiesBindingPostProcessor.getOrder() + 1);
+    }
+
+    @Bean
+    public PropertySourcesPlaceholderConfigurer propertySourcesPlaceholderConfigurer() {
+        PropertySourcesPlaceholderConfigurer vaultPlaceholderConfigurer = new PropertySourcesPlaceholderConfigurer();
+        return vaultPlaceholderConfigurer;
+    }
+
+
+    private RelaxedDataBinder createDataBinderFor(VaultProperties vaultProperties) {
+        RelaxedDataBinder binder = new RelaxedDataBinder(vaultProperties, "vault");
+        binder.setConversionService(new DefaultConversionService());
+
+        binder.setIgnoreUnknownFields(true);
+        binder.setIgnoreInvalidFields(false);
+        binder.setIgnoreNestedProperties(false);
+        return binder;
+    }
+
+    private Stream<Map.Entry<String, Object>> getConfigValuesFromEnvironmentAsStream(ConfigurableEnvironment configurableEnvironment) {
+        return StreamSupport.stream(configurableEnvironment.getPropertySources().spliterator(), false)
+            .filter(c -> c instanceof MapPropertySource)
+            .map(i -> ((MapPropertySource) i).getSource())
+            .flatMap(g -> g.entrySet().stream());
     }
 
 }

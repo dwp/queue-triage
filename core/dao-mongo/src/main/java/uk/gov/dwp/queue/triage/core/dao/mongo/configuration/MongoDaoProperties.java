@@ -1,8 +1,8 @@
 package uk.gov.dwp.queue.triage.core.dao.mongo.configuration;
 
 import com.mongodb.MongoClientOptions;
+
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,16 +52,16 @@ public class MongoDaoProperties {
 
     public MongoClientOptions mongoClientOptions() {
         return new MongoClientOptions.Builder()
-                .sslEnabled(options.ssl.enabled)
-                .sslInvalidHostNameAllowed(options.ssl.invalidHostnameAllowed)
-                .build();
+            .sslEnabled(options.ssl.enabled)
+            .sslInvalidHostNameAllowed(options.ssl.invalidHostnameAllowed)
+            .build();
     }
 
     public static class Collection {
 
         private String name = "failedMessage";
-        private Optional<String> username = Optional.empty();
-        private Optional<String> password = Optional.empty();
+        private String username;
+        private char[] password;
 
         public String getName() {
             return name;
@@ -71,24 +71,33 @@ public class MongoDaoProperties {
             this.name = name;
         }
 
-        public Optional<String> getUsername() {
+        public Optional<String> getOptionalUsername() {
+            return ofNullable(username);
+        }
+
+        public String getUsername() {
             return username;
         }
 
-        public void setUsername(Optional<String> username) {
+        public void setUsername(String username) {
             this.username = username;
         }
 
-        public Optional<String> getPassword() {
+        public Optional<char[]> getOptionalPassword() {
+            return ofNullable(password);
+        }
+
+        public char[] getPassword() {
             return password;
         }
 
-        public void setPassword(Optional<String> password) {
+        public void setPassword(char[] password) {
             this.password = password;
         }
     }
 
     public static class MongoServerAddress {
+
         private String host;
         private Integer port;
 
@@ -122,6 +131,7 @@ public class MongoDaoProperties {
         }
 
         public static class SSL {
+
             private boolean enabled;
             private boolean invalidHostnameAllowed;
 
