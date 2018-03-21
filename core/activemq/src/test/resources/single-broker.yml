@@ -1,6 +1,6 @@
 jms:
   activemq:
     brokers:
-      - name: broker-one
+      - name: read-write-broker
         url: tcp://localhost:1111
         queue: ActiveMQ.DLQ

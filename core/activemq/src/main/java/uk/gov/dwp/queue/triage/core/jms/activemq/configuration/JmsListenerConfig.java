@@ -10,7 +10,6 @@ import uk.gov.dwp.queue.triage.core.jms.activemq.MessageConsumerManagerResource;
 import uk.gov.dwp.queue.triage.core.jms.activemq.browser.spring.QueueBrowserCallbackBeanDefinitionFactory;
 import uk.gov.dwp.queue.triage.core.jms.activemq.browser.spring.QueueBrowserScheduledExecutorServiceBeanDefinitionFactory;
 import uk.gov.dwp.queue.triage.core.jms.activemq.browser.spring.QueueBrowserServiceBeanDefinitionFactory;
-import uk.gov.dwp.queue.triage.core.jms.activemq.browser.spring.QueueBrowsingBeanDefinitionFactory;
 import uk.gov.dwp.queue.triage.core.jms.activemq.spring.ActiveMQConnectionFactoryBeanDefinitionFactory;
 import uk.gov.dwp.queue.triage.core.jms.activemq.spring.FailedMessageListenerBeanDefinitionFactory;
 import uk.gov.dwp.queue.triage.core.jms.activemq.spring.JmsBeanDefinitionRegistryPostProcessor;
@@ -38,21 +37,12 @@ public class JmsListenerConfig {
                 environment,
                 activeMQConnectionFactoryBeanDefinitionFactory,
                 failedMessageListenerBeanDefinitionFactory,
-                new NamedMessageListenerContainerBeanDefinitionFactory()
-        );
-    }
-
-    @Bean
-    public static QueueBrowsingBeanDefinitionFactory queueBrowsingBeanDefinitionFactory(Environment environment,
-                                                                                        ActiveMQConnectionFactoryBeanDefinitionFactory activeMQConnectionFactoryBeanDefinitionFactory,
-                                                                                        FailedMessageListenerBeanDefinitionFactory failedMessageListenerBeanDefinitionFactory) {
-        return new QueueBrowsingBeanDefinitionFactory(
-                environment,
-                activeMQConnectionFactoryBeanDefinitionFactory,
+                new NamedMessageListenerContainerBeanDefinitionFactory(),
                 new JmsTemplateBeanDefinitionFactory(),
-                failedMessageListenerBeanDefinitionFactory,
-                new QueueBrowserCallbackBeanDefinitionFactory(), new QueueBrowserServiceBeanDefinitionFactory(),
-                new QueueBrowserScheduledExecutorServiceBeanDefinitionFactory());
+                new QueueBrowserCallbackBeanDefinitionFactory(),
+                new QueueBrowserServiceBeanDefinitionFactory(),
+                new QueueBrowserScheduledExecutorServiceBeanDefinitionFactory()
+        );
     }
 
     @Bean
