@@ -35,7 +35,7 @@ import static uk.gov.dwp.queue.triage.core.resend.spring.FailedMessageSenderBean
 import static uk.gov.dwp.queue.triage.core.resend.spring.ResendFailedMessageServiceBeanDefinitionFactory.RESEND_FAILED_MESSAGE_SERVICE_BEAN_NAME_PREFIX;
 import static uk.gov.dwp.queue.triage.core.resend.spring.ResendScheduledExecutorServiceBeanDefinitionFactory.RESEND_SCHEDULED_EXECUTOR_SERVICE_BEAN_NAME_PREFIX;
 
-public class ResendBeanDefinitionFactoryTest {
+public class ResendBeanDefinitionRegistryPostProcessorTest {
 
     private AnnotationConfigApplicationContext applicationContext;
 

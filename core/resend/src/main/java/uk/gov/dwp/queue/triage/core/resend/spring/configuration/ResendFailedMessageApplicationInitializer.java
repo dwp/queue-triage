@@ -8,7 +8,7 @@ import uk.gov.dwp.queue.triage.core.jms.spring.JmsTemplateBeanDefinitionFactory;
 import uk.gov.dwp.queue.triage.core.jms.spring.SpringMessageSenderBeanDefinitionFactory;
 import uk.gov.dwp.queue.triage.core.resend.HistoricStatusPredicate;
 import uk.gov.dwp.queue.triage.core.resend.spring.FailedMessageSenderBeanDefinitionFactory;
-import uk.gov.dwp.queue.triage.core.resend.spring.ResendBeanDefinitionFactory;
+import uk.gov.dwp.queue.triage.core.resend.spring.ResendBeanDefinitionRegistryPostProcessor;
 import uk.gov.dwp.queue.triage.core.resend.spring.ResendFailedMessageServiceBeanDefinitionFactory;
 import uk.gov.dwp.queue.triage.core.resend.spring.ResendScheduledExecutorServiceBeanDefinitionFactory;
 
@@ -17,7 +17,7 @@ public class ResendFailedMessageApplicationInitializer implements ApplicationCon
     @Override
     public void initialize(ConfigurableApplicationContext applicationContext) {
         final ConfigurableEnvironment environment = applicationContext.getEnvironment();
-        applicationContext.addBeanFactoryPostProcessor(new ResendBeanDefinitionFactory(
+        applicationContext.addBeanFactoryPostProcessor(new ResendBeanDefinitionRegistryPostProcessor(
                 environment,
                 new ActiveMQConnectionFactoryBeanDefinitionFactory(),
                 new ResendFailedMessageServiceBeanDefinitionFactory(new HistoricStatusPredicate()),
