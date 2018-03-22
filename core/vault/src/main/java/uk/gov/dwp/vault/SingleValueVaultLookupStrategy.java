@@ -4,8 +4,6 @@ package uk.gov.dwp.vault;
 import com.bettercloud.vault.Vault;
 import com.bettercloud.vault.VaultException;
 
-import org.springframework.util.Assert;
-
 import uk.gov.dwp.vault.config.VaultProperties;
 import uk.gov.dwp.vault.domain.DecryptedValue;
 
@@ -33,11 +31,6 @@ public class SingleValueVaultLookupStrategy implements SensitiveConfigValueLooku
     @Override
     public boolean matches(String secret) {
         return isVaultEnabledAndPatternMatches(secret);
-    }
-
-    @Override
-    public int evaluationOrder() {
-        return FIRST_EVAL_ORDER;
     }
 
     @Override

@@ -15,16 +15,11 @@ public class SensitiveConfigValueLookupRegistry {
     }
 
     public DecryptedValue retrieveSecret(String secretPath) {
-        return getSortedResolutionStrategies()
+        return resolutionStrategies
+            .stream()
             .filter(service -> service.matches(secretPath))
             .findFirst()
             .map(service -> service.retrieveSecret(secretPath))
-            .orElseThrow(() -> new IllegalArgumentException("No Decryption Service registered for: " + secretPath));
-    }
-
-    public Stream<SensitiveConfigValueLookupStrategy> getSortedResolutionStrategies() {
-        return resolutionStrategies
-            .stream()
-            .sorted(Comparator.comparing(SensitiveConfigValueLookupStrategy::evaluationOrder));
+            .orElseThrow(() -> new IllegalArgumentException("No relevant strategy could be found to resolve vault path for: " + secretPath));
     }
 }
