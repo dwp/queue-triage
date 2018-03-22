@@ -24,20 +24,10 @@ public class VaultPropertySource extends MapPropertySource {
 
     @Override
     public char[] getProperty(String name) {
-        LOGGER.trace("Attempting to lookup property key = {}", name);
         if (containsProperty(name)) {
-            return sensitiveConfigValueLookupRegistry.retrieveSecret(name).getClearText();
+            LOGGER.trace("Attempting to lookup property key = {}", name);
+            return sensitiveConfigValueLookupRegistry.retrieveSecret(super.getProperty(name).toString()).getClearText();
         }
         return null;
-    }
-
-    @Override
-    public boolean containsProperty(String name) {
-        LOGGER.trace("Attempting to check if property source has key = {}", name);
-        return super.containsProperty(name);
-    }
-
-    boolean containsPropertiesWithPrefix(String prefix) {
-        return source.keySet().stream().filter(key -> key.startsWith(prefix)).findAny().isPresent();
     }
 }

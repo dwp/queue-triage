@@ -5,21 +5,21 @@ import org.springframework.boot.autoconfigure.AutoConfigureOrder;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.bind.RelaxedDataBinder;
 import org.springframework.boot.context.properties.ConfigurationPropertiesBinding;
-import org.springframework.boot.context.properties.ConfigurationPropertiesBindingPostProcessor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.core.Ordered;
 import org.springframework.core.convert.support.DefaultConversionService;
 import org.springframework.core.env.ConfigurableEnvironment;
 import org.springframework.core.env.MapPropertySource;
+import org.springframework.core.env.PropertySource;
 
 import uk.gov.dwp.vault.SensitiveConfigValueLookupRegistry;
 import uk.gov.dwp.vault.SensitiveConfigValueLookupStrategy;
 import uk.gov.dwp.vault.SingleValueVaultLookupStrategy;
 import uk.gov.dwp.vault.VaultApiFactory;
-import uk.gov.dwp.vault.core.env.VaultConfigurationPropertiesBindingPostProcessor;
 import uk.gov.dwp.vault.core.env.VaultPropertySource;
 
 import java.util.List;
@@ -56,13 +56,11 @@ public class VaultAutoConfiguration {
     }
 
     @Bean
-    @ConfigurationPropertiesBinding
     public VaultApiFactory vaultApiFactory() {
         return new VaultApiFactory();
     }
 
     @Bean
-    @ConfigurationPropertiesBinding
     public SingleValueVaultLookupStrategy singleValueVaultLookupStrategy(VaultApiFactory vaultFactoryApi,
                                                                          VaultProperties vaultProperties) {
         return new SingleValueVaultLookupStrategy(vaultProperties, vaultFactoryApi);
@@ -76,19 +74,21 @@ public class VaultAutoConfiguration {
             .filter(item -> item.getValue().toString().startsWith("VAULT("))
             .collect(toMap(Map.Entry::getKey, Map.Entry::getValue));
 
-        return new VaultPropertySource(collect, registry);
+        VaultPropertySource vaultPropertySource = new VaultPropertySource(collect, registry);
+        // get property source names which pertain to the application config, so that we can inject the vault stuff in there.
+        StreamSupport.stream(configurableEnvironment.getPropertySources().spliterator(), false)
+            .map(PropertySource::getName)
+            .filter(name -> name.startsWith("applicationConfig"))
+            .findFirst()
+            .ifPresent(appConfigName -> configurableEnvironment.getPropertySources().addBefore(appConfigName, vaultPropertySource));
+
+        return vaultPropertySource;
     }
 
     @Bean
-    public VaultConfigurationPropertiesBindingPostProcessor vaultPropertiesBeanPostProcessor(ConfigurationPropertiesBindingPostProcessor configurationPropertiesBindingPostProcessor) {
-        //This is to ensure that the ConfigurationPropertiesBindingPostProcessor executes BEFORE our PostProcessor
-        return new VaultConfigurationPropertiesBindingPostProcessor(configurationPropertiesBindingPostProcessor.getOrder() + 1);
-    }
-
-    @Bean
+    @DependsOn("vaultPropertySource")
     public PropertySourcesPlaceholderConfigurer propertySourcesPlaceholderConfigurer() {
-        PropertySourcesPlaceholderConfigurer vaultPlaceholderConfigurer = new PropertySourcesPlaceholderConfigurer();
-        return vaultPlaceholderConfigurer;
+        return new PropertySourcesPlaceholderConfigurer();
     }
 
 

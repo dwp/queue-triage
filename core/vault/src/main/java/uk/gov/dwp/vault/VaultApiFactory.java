@@ -5,13 +5,15 @@ import com.bettercloud.vault.Vault;
 import com.bettercloud.vault.VaultConfig;
 import com.bettercloud.vault.VaultException;
 
+import org.springframework.util.ResourceUtils;
+
 import uk.gov.dwp.vault.config.VaultProperties;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.nio.file.Paths;
 
 public class VaultApiFactory {
 
@@ -38,7 +40,7 @@ public class VaultApiFactory {
             VaultProperties.SslProperties sslProperties = vaultProperties.getSsl();
             vaultConfig.sslConfig(
                 new SslConfig()
-                    .pemFile(new File(sslProperties.getSslPemFilePath()))
+                    .pemFile(getSslPemFile(sslProperties.getSslPemFilePath()))
                     .verify(sslProperties.getSslVerify())
                     .build());
         }
@@ -46,9 +48,17 @@ public class VaultApiFactory {
         return vaultConfig.build();
     }
 
+    private File getSslPemFile(String sslPemFilePath) throws VaultException {
+        try {
+            return ResourceUtils.getFile(sslPemFilePath);
+        } catch (FileNotFoundException e) {
+            throw new VaultException(e);
+        }
+    }
+
     private String readTokenFile(String path) throws VaultException {
         try {
-            byte[] encoded = Files.readAllBytes(Paths.get(path));
+            byte[] encoded = Files.readAllBytes(ResourceUtils.getFile(path).toPath());
             return new String(encoded, StandardCharsets.UTF_8).trim();
         } catch (IOException e) {
             throw new VaultException(e);

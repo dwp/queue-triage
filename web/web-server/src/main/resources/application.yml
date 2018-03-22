@@ -11,10 +11,3 @@ client:
 ldap:
   urls:
     - ldap://localhost:8389/
-
-vault:
-  address: http://boom/boom
-  readTimeout: 20
-  openTimeout: 20
-  tokenAuthentication:
-    tokenPath: /var/lib/.tokenz

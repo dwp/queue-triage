@@ -40,6 +40,7 @@ dependencies {
     implementation 'org.hamcrest:hamcrest-core'
     implementation 'org.hamcrest:hamcrest-library'
     implementation 'org.yaml:snakeyaml'
+    implementation 'com.github.tomakehurst:wiremock'
 
     testImplementation 'org.apache.activemq:activemq-broker'
     testImplementation 'org.apache.activemq:activemq-kahadb-store'
@@ -47,6 +48,8 @@ dependencies {
     testImplementation 'org.eclipse.jetty:jetty-servlet'
     testImplementation 'org.eclipse.jetty:jetty-webapp'
     testImplementation 'org.hibernate:hibernate-validator'
+
+
 }
 
 test {

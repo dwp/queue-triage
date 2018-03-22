@@ -8,20 +8,6 @@ public class DecryptedValue {
         this.clearText = clearText;
     }
 
-    public boolean matches(DecryptedValue otherPassword) {
-        if (clearText.length != otherPassword.clearText.length) {
-            return false;
-        }
-
-        for (int index = 0; index < clearText.length; index++) {
-            if (clearText[index] != otherPassword.clearText[index]) {
-                return false;
-            }
-        }
-
-        return true;
-    }
-
     public char[] getClearText() {
         return clearText;
     }
@@ -30,7 +16,7 @@ public class DecryptedValue {
         erase(clearText);
     }
 
-    private static void erase(char[] clearText) {
+    private void erase(char[] clearText) {
         if (clearText != null) {
             for (int index = 0; index < clearText.length; index++) {
                 // TODO: Do multiple writes of random characters first?  How strict do we need to be here?
