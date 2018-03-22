@@ -1,9 +1,0 @@
-jms:
-  activemq:
-    brokers:
-      - name: broker-one
-        url: tcp://localhost:11111
-        queue: ActiveMQ.DLQ
-      - name: broker-two
-        url: tcp://localhost:22222
-        queue: ActiveMQ.DLQ

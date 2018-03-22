@@ -1,14 +1,14 @@
 jms:
   activemq:
     brokers:
-      - name: broker-one
+      - name: read-only-broker
         url: tcp://localhost:11111
         queue: ActiveMQ.DLQ
         readOnly: true
         read:
           frequency: 1
           timeUnit: SECOND
-      - name: broker-two
+      - name: read-write-broker
         url: tcp://localhost:22222
         queue: ActiveMQ.DLQ
         readOnly: false

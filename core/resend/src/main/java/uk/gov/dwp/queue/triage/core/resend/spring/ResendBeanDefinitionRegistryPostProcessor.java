@@ -13,7 +13,7 @@ import uk.gov.dwp.queue.triage.core.jms.spring.SpringMessageSenderBeanDefinition
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
-public class ResendBeanDefinitionFactory implements BeanDefinitionRegistryPostProcessor {
+public class ResendBeanDefinitionRegistryPostProcessor implements BeanDefinitionRegistryPostProcessor {
 
     private final Environment environment;
     private final ActiveMQConnectionFactoryBeanDefinitionFactory activeMQConnectionFactoryBeanDefinitionFactory;
@@ -23,13 +23,13 @@ public class ResendBeanDefinitionFactory implements BeanDefinitionRegistryPostPr
     private final JmsTemplateBeanDefinitionFactory jmsTemplateBeanDefinitionFactory;
     private final ResendScheduledExecutorServiceBeanDefinitionFactory resendScheduledExecutorServiceBeanDefinitionFactory;
 
-    public ResendBeanDefinitionFactory(Environment environment,
-                                       ActiveMQConnectionFactoryBeanDefinitionFactory activeMQConnectionFactoryBeanDefinitionFactory,
-                                       ResendFailedMessageServiceBeanDefinitionFactory resendFailedMessageServiceBeanDefinitionFactory,
-                                       FailedMessageSenderBeanDefinitionFactory failedMessageSenderBeanDefinitionFactory,
-                                       SpringMessageSenderBeanDefinitionFactory springMessageSenderBeanDefinitionFactory,
-                                       JmsTemplateBeanDefinitionFactory jmsTemplateBeanDefinitionFactory,
-                                       ResendScheduledExecutorServiceBeanDefinitionFactory resendScheduledExecutorServiceBeanDefinitionFactory) {
+    public ResendBeanDefinitionRegistryPostProcessor(Environment environment,
+                                                     ActiveMQConnectionFactoryBeanDefinitionFactory activeMQConnectionFactoryBeanDefinitionFactory,
+                                                     ResendFailedMessageServiceBeanDefinitionFactory resendFailedMessageServiceBeanDefinitionFactory,
+                                                     FailedMessageSenderBeanDefinitionFactory failedMessageSenderBeanDefinitionFactory,
+                                                     SpringMessageSenderBeanDefinitionFactory springMessageSenderBeanDefinitionFactory,
+                                                     JmsTemplateBeanDefinitionFactory jmsTemplateBeanDefinitionFactory,
+                                                     ResendScheduledExecutorServiceBeanDefinitionFactory resendScheduledExecutorServiceBeanDefinitionFactory) {
         this.environment = environment;
         this.activeMQConnectionFactoryBeanDefinitionFactory = activeMQConnectionFactoryBeanDefinitionFactory;
         this.resendFailedMessageServiceBeanDefinitionFactory = resendFailedMessageServiceBeanDefinitionFactory;

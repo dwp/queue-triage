@@ -10,16 +10,15 @@ import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.Variant;
 import javax.ws.rs.ext.RuntimeDelegate;
 
-import static java.util.Collections.singletonMap;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-public class MessageListenerManagerResourceTest {
+public class MessageConsumerManagerResourceTest {
 
-    private final MessageListenerManager defaultMessageListenerContainer = mock(MessageListenerManager.class);
-    private final MessageListenerManagerResource underTest = new MessageListenerManagerResource(
-            singletonMap("internal-broker", defaultMessageListenerContainer)
+    private final MessageConsumerManager messageConsumerManager = mock(MessageConsumerManager.class);
+    private final MessageConsumerManagerResource underTest = new MessageConsumerManagerResource(
+            new MessageConsumerManagerRegistry().with("internal-broker", messageConsumerManager)
     );
 
     static {
@@ -40,14 +39,14 @@ public class MessageListenerManagerResourceTest {
     public void startDefaultMessageListenerContainer() throws Exception {
         underTest.start("internal-broker");
 
-        verify(defaultMessageListenerContainer).start();
+        verify(messageConsumerManager).start();
     }
 
     @Test
     public void stopDefaultMessageListenerContainer() throws Exception {
         underTest.stop("internal-broker");
 
-        verify(defaultMessageListenerContainer).stop();
+        verify(messageConsumerManager).stop();
     }
 
     public static class StubRuntimeDelegate extends RuntimeDelegate {

@@ -2,13 +2,13 @@ package uk.gov.dwp.queue.triage.core.jms.activemq.browser;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import uk.gov.dwp.queue.triage.core.jms.activemq.MessageListenerManager;
+import uk.gov.dwp.queue.triage.core.jms.activemq.MessageConsumerManager;
 import uk.gov.dwp.queue.triage.executor.AbstractScheduledExecutorService;
 
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-public class QueueBrowserScheduledExecutorService extends AbstractScheduledExecutorService implements MessageListenerManager {
+public class QueueBrowserScheduledExecutorService extends AbstractScheduledExecutorService implements MessageConsumerManager {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(QueueBrowserScheduledExecutorService.class);
 

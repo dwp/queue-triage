@@ -10,7 +10,7 @@ import static org.springframework.beans.factory.support.BeanDefinitionBuilder.ge
 
 public class QueueBrowserScheduledExecutorServiceBeanDefinitionFactory {
 
-    static final String QUEUE_BROWSER_SCHEDULED_EXECUTOR_SERVICE_BEAN_NAME_PREFIX = "queueBrowserScheduledExecutorService-";
+    public static final String QUEUE_BROWSER_SCHEDULED_EXECUTOR_SERVICE_BEAN_NAME_PREFIX = "queueBrowserScheduledExecutorService-";
 
     public AbstractBeanDefinition create(ScheduledExecutorService executorService,
                                          String queueBrowserServiceBeanName,

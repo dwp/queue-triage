@@ -13,19 +13,17 @@ import javax.ws.rs.NotFoundException;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
-import java.util.Map;
-import java.util.Optional;
 
 @Api(value = "Manage JMS Listeners")
 @Path("/admin/jms-listener")
-public class MessageListenerManagerResource {
+public class MessageConsumerManagerResource {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(MessageListenerManagerResource.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(MessageConsumerManagerResource.class);
 
-    private final Map<String, MessageListenerManager> messageListenerAdmins;
+    private final MessageConsumerManagerRegistry messageConsumerManagerRegistry;
 
-    public MessageListenerManagerResource(Map<String, MessageListenerManager> messageListenerAdmins) {
-        this.messageListenerAdmins = messageListenerAdmins;
+    public MessageConsumerManagerResource(MessageConsumerManagerRegistry messageConsumerManagerRegistry) {
+        this.messageConsumerManagerRegistry = messageConsumerManagerRegistry;
     }
 
     @ApiOperation("Start consuming messages from the DLQ on the given broker")
@@ -39,7 +37,7 @@ public class MessageListenerManagerResource {
             @ApiParam(value = "name of the broker as defined in application.yml", required = true)
             @PathParam("brokerName") String brokerName) {
         LOGGER.info("Starting consuming messages of the {} broker", brokerName);
-        Optional.ofNullable(messageListenerAdmins.get(brokerName))
+        messageConsumerManagerRegistry.get(brokerName)
                 .orElseThrow(NotFoundException::new)
                 .start();
     }
@@ -55,7 +53,7 @@ public class MessageListenerManagerResource {
             @ApiParam(value = "name of the broker as defined in application.yml", required = true)
             @PathParam("brokerName") String brokerName) {
         LOGGER.info("Stopping consuming messages of the {} broker", brokerName);
-        Optional.ofNullable(messageListenerAdmins.get(brokerName))
+        messageConsumerManagerRegistry.get(brokerName)
                 .orElseThrow(NotFoundException::new)
                 .stop();
     }
@@ -70,7 +68,7 @@ public class MessageListenerManagerResource {
     public String isRunning(
             @ApiParam(value = "name of the broker as defined in application.yml", required = true)
             @PathParam("brokerName") String brokerName) {
-        return Boolean.toString(Optional.ofNullable(messageListenerAdmins.get(brokerName))
+        return Boolean.toString(messageConsumerManagerRegistry.get(brokerName)
                 .orElseThrow(NotFoundException::new)
                 .isRunning());
     }

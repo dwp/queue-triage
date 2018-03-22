@@ -15,7 +15,7 @@ import static org.hamcrest.Matchers.equalTo;
 import static uk.gov.dwp.queue.triage.core.client.search.SearchFailedMessageRequest.searchMatchingAllCriteria;
 import static uk.gov.dwp.queue.triage.core.domain.SearchFailedMessageResponseMatcher.aFailedMessage;
 
-public class FailedMessageListenerManagerComponentTest extends BaseCoreComponentTest<FailedMessageListenerAdminStage> {
+public class FailedMessageConsumerManagerComponentTest extends BaseCoreComponentTest<FailedMessageListenerAdminStage> {
 
     @ScenarioStage
     private JmsStage jmsStage;

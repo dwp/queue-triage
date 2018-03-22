@@ -42,7 +42,16 @@ test {
     if (project.hasProperty("selenium.remote_url")) {
         systemProperty "remote", project.property("selenium.remote_url")
     }
-    finalizedBy{
-        jgivenTestReport
+
+    finalizedBy jgivenTestReport
+
+    outputs.upToDateWhen {
+        if (project.hasProperty('rerun')) {
+            println "Re-running ${project.name}"
+            return false
+        } else {
+            return true
+        }
     }
+
 }
