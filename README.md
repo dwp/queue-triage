@@ -90,3 +90,12 @@ If you'd like to test these options out, then you can run in dry-run mode:
 ./gradlew release -Prelease.dryRun
 ```
 
+## Message Classification
+Message Classification is really the core of the queue-triage application.
+
+Once a messages has been Dead-Lettered by an Application, queue triage:
+* De-queues the message
+* Classifies the message using a set of Predicates
+* Performs one or more Actions
+
+For more information see [README.md](core/message-classification/README.md) in [core/message-classification](core/message-classification)
