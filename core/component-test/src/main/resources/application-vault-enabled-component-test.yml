@@ -1,0 +1,16 @@
+jms:
+  activemq:
+    brokers:
+      - name: internal-broker
+        url: vm://embedded-broker?create=false
+dao:
+  mongo:
+    failedMessage:
+      password: "VAULT(queue-triage/mongo-dao/failedMessageUser)"
+
+vault:
+  address: http://localhost:1234/vault
+  openTimeout: 20 #seconds
+  readTimeout: 20 #seconds
+  tokenAuthentication:
+    tokenPath: classpath:.vault

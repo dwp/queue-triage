@@ -1,0 +1,9 @@
+vault:
+  address: "http://localhost:8989/vaulty-vaultster"
+  openTimeout: 20 # in seconds
+  readTimeout: 25 # in seconds
+  tokenAuthentication:
+    tokenPath: /var/lib/tokenz
+  ssl:
+    sslPemFilePath: /var/pem/file
+    sslVerify: true

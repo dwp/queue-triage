@@ -4,13 +4,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoCredential;
 import com.mongodb.ServerAddress;
+
 import org.bson.BSON;
 import org.bson.Transformer;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.DependsOn;
 import org.springframework.context.annotation.Import;
+
 import uk.gov.dwp.queue.triage.core.dao.FailedMessageDao;
 import uk.gov.dwp.queue.triage.core.dao.ObjectConverter;
 import uk.gov.dwp.queue.triage.core.dao.PropertiesConverter;
@@ -54,44 +55,42 @@ public class MongoDaoConfig {
     }
 
     @Bean
-    @DependsOn("mongoDaoProperties")
     public MongoClient mongoClient(MongoDaoProperties mongoDaoProperties) {
         return new MongoClient(
-                createSeeds(mongoDaoProperties),
-                createCredentials(mongoDaoProperties),
-                mongoDaoProperties.mongoClientOptions()
+            createSeeds(mongoDaoProperties),
+            createCredentials(mongoDaoProperties),
+            mongoDaoProperties.mongoClientOptions()
         );
     }
 
     private List<MongoCredential> createCredentials(MongoDaoProperties mongoDaoProperties) {
-        return mongoDaoProperties.getFailedMessage().getUsername()
-                .map(username -> singletonList(createScramSha1Credential(
-                        username,
-                        mongoDaoProperties.getDbName(),
-                        mongoDaoProperties.getFailedMessage()
-                                .getPassword()
-                                .orElseThrow(() -> new IllegalArgumentException("Password is required when username specified"))
-                                .toCharArray())))
-                .orElse(Collections.emptyList());
+        return mongoDaoProperties.getFailedMessage().getOptionalUsername()
+            .map(username -> singletonList(createScramSha1Credential(
+                username,
+                mongoDaoProperties.getDbName(),
+                mongoDaoProperties.getFailedMessage()
+                    .getOptionalPassword()
+                    .orElseThrow(() -> new IllegalArgumentException("Password is required when username specified"))
+            )))
+            .orElse(Collections.emptyList());
     }
 
     private List<ServerAddress> createSeeds(MongoDaoProperties mongoDaoProperties) {
         return mongoDaoProperties.getServerAddresses()
-                .stream()
-                .map(serverAddress -> new ServerAddress(serverAddress.getHost(), serverAddress.getPort()))
-                .collect(Collectors.toList());
+            .stream()
+            .map(serverAddress -> new ServerAddress(serverAddress.getHost(), serverAddress.getPort()))
+            .collect(Collectors.toList());
     }
 
     @Bean
-    @DependsOn("mongoDaoProperties")
     public FailedMessageDao failedMessageDao(MongoClient mongoClient,
                                              MongoDaoProperties mongoDaoProperties,
                                              FailedMessageConverter failedMessageConverter,
                                              DBObjectConverter<StatusHistoryEvent> failedMessageStatusDBObjectConverter) {
         return new FailedMessageMongoDao(
-                mongoClient.getDB(mongoDaoProperties.getDbName()).getCollection(mongoDaoProperties.getFailedMessage().getName()),
-                failedMessageConverter,
-                failedMessageStatusDBObjectConverter, new RemoveRecordsQueryFactory());
+            mongoClient.getDB(mongoDaoProperties.getDbName()).getCollection(mongoDaoProperties.getFailedMessage().getName()),
+            failedMessageConverter,
+            failedMessageStatusDBObjectConverter, new RemoveRecordsQueryFactory());
     }
 
     @Bean
