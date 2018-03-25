@@ -1,6 +1,6 @@
 package uk.gov.dwp.queue.triage.core.stub.app.configuration;
 
-import org.apache.activemq.pool.PooledConnectionFactory;
+import org.apache.activemq.ActiveMQConnectionFactory;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -83,7 +83,7 @@ public class StubAppJmsConfiguration {
         String brokerUrl = brokerProperties.getUrl();
         brokerUrl += (brokerUrl.contains("?") ? "&" : "?");
         brokerUrl += "jms.redeliveryPolicy.maximumRedeliveries=0";
-        return new PooledConnectionFactory(brokerUrl);
+        return new ActiveMQConnectionFactory(brokerUrl);
     }
 
 }

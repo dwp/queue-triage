@@ -24,13 +24,13 @@ public class MessageConsumerManagerResourceTest {
     @Rule
     public ExpectedException expectedException = ExpectedException.none();
 
-    private final MessageConsumerManager defaultMessageListenerContainer = mock(MessageListenerManager.class);
+    private final MessageConsumerManager defaultMessageListenerContainer = mock(MessageConsumerManager.class);
     private final QueueBrowserScheduledExecutorService queueBrowserScheduledExecutorService = mock(QueueBrowserScheduledExecutorService.class);
 
     private final MessageConsumerManagerResource underTest = new MessageConsumerManagerResource(
             new MessageConsumerManagerRegistry()
-                    .with("internal-broker", messageConsumerManager)
-                    .with("readonly-broker", messageConsumerManager)
+                    .with("internal-broker", defaultMessageListenerContainer)
+                    .with("readonly-broker", queueBrowserScheduledExecutorService)
 
     );
 
@@ -44,17 +44,17 @@ public class MessageConsumerManagerResourceTest {
     }
 
     @Test(expected = NotFoundException.class)
-    public void startThrowsANotFoundExceptionIfBrokerIsUnknown() throws Exception {
+    public void startThrowsANotFoundExceptionIfBrokerIsUnknown() {
         underTest.start("unknown-broker");
     }
 
     @Test(expected = NotFoundException.class)
-    public void stopThrowsANotFoundExceptionIfBrokerIsUnknown() throws Exception {
+    public void stopThrowsANotFoundExceptionIfBrokerIsUnknown() {
         underTest.stop("unknown-broker");
     }
 
     @Test
-    public void startDefaultMessageListenerContainer() throws Exception {
+    public void startDefaultMessageListenerContainer() {
         underTest.start("internal-broker");
 
         verify(defaultMessageListenerContainer).start();

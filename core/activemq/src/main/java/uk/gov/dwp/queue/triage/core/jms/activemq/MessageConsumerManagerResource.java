@@ -17,7 +17,6 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.ServerErrorException;
 import javax.ws.rs.core.Response;
-import java.util.Map;
 import java.util.Optional;
 
 @Api(value = "Manage JMS Listeners")
@@ -43,9 +42,7 @@ public class MessageConsumerManagerResource {
             @ApiParam(value = "name of the broker as defined in application.yml", required = true)
             @PathParam("brokerName") String brokerName) {
         LOGGER.info("Starting consuming messages of the {} broker", brokerName);
-        messageConsumerManagerRegistry.get(brokerName)
-                .orElseThrow(NotFoundException::new)
-                .start();
+        getMessageConsumerManager(brokerName).start();
     }
 
     @ApiOperation("Stop consuming messages from the DLQ on the given broker")
@@ -59,9 +56,7 @@ public class MessageConsumerManagerResource {
             @ApiParam(value = "name of the broker as defined in application.yml", required = true)
             @PathParam("brokerName") String brokerName) {
         LOGGER.info("Stopping consuming messages of the {} broker", brokerName);
-        messageConsumerManagerRegistry.get(brokerName)
-                .orElseThrow(NotFoundException::new)
-                .stop();
+        getMessageConsumerManager(brokerName).stop();
     }
 
     @ApiOperation("Check the status of DLQ consumption on the given broker")
@@ -74,9 +69,12 @@ public class MessageConsumerManagerResource {
     public String isRunning(
             @ApiParam(value = "name of the broker as defined in application.yml", required = true)
             @PathParam("brokerName") String brokerName) {
-        return Boolean.toString(messageConsumerManagerRegistry.get(brokerName)
-                .orElseThrow(NotFoundException::new)
-                .isRunning());
+        return Boolean.toString(getMessageConsumerManager(brokerName).isRunning());
+    }
+
+    private MessageConsumerManager getMessageConsumerManager(@ApiParam(value = "name of the broker as defined in application.yml", required = true) @PathParam("brokerName") String brokerName) {
+        return messageConsumerManagerRegistry.get(brokerName)
+                .orElseThrow(NotFoundException::new);
     }
 
     @ApiOperation("Read all messages on the DLQ for the given broker.  This operation is only supported if the queue on the given broker is in read-only mode")

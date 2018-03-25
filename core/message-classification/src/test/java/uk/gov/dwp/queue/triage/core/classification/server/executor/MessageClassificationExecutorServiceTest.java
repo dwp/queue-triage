@@ -43,7 +43,7 @@ public class MessageClassificationExecutorServiceTest {
     }
 
     @After
-    public void tearDown() throws Exception {
+    public void tearDown() {
         LOGGER.debug("Shutting down the scheduledExecutorService");
         scheduledExecutorService.shutdownNow();
     }
@@ -109,6 +109,13 @@ public class MessageClassificationExecutorServiceTest {
 
         underTest.execute();
         verifyMessageClassificationServiceExecutions(0);
+    }
+
+    @Test
+    public void executorCanBeStopped() {
+        underTest.stop();
+
+        assertThat(scheduledExecutorService.isShutdown(), is(true));
     }
 
     private Answer decrementCountdownLatch() {

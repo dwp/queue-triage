@@ -16,7 +16,7 @@ import uk.gov.dwp.queue.triage.core.jms.FailedMessageListener;
 import uk.gov.dwp.queue.triage.core.jms.activemq.browser.QueueBrowserScheduledExecutorService;
 import uk.gov.dwp.queue.triage.core.jms.activemq.configuration.JmsListenerConfig;
 import uk.gov.dwp.queue.triage.core.jms.activemq.configuration.MessageConsumerApplicationInitializer;
-import uk.gov.dwp.queue.triage.core.service.FailedMessageService;
+import uk.gov.dwp.queue.triage.core.service.processor.FailedMessageProcessor;
 
 import java.util.Properties;
 
@@ -114,7 +114,7 @@ public class JmsBeanDefinitionRegistryPostProcessorTest {
         return environment;
     }
 
-    public Properties loadPropertiesFromYaml(String yamlFilename) {
+    private Properties loadPropertiesFromYaml(String yamlFilename) {
         YamlPropertiesFactoryBean yamlPropertiesFactoryBean = new YamlPropertiesFactoryBean();
         yamlPropertiesFactoryBean.setResources(new ClassPathResource(yamlFilename));
         return yamlPropertiesFactoryBean.getObject();
@@ -124,8 +124,8 @@ public class JmsBeanDefinitionRegistryPostProcessorTest {
     public static class AdditionalConfig {
 
         @Bean
-        public FailedMessageService failedMessageService() {
-            return mock(FailedMessageService.class);
+        public FailedMessageProcessor failedMessageProcessor() {
+            return mock(FailedMessageProcessor.class);
         }
 
     }
