@@ -10,6 +10,7 @@ dependencies{
 
 
     //TEST
+    testImplementation 'com.google.guava:guava'
     testImplementation 'org.apache.commons:commons-lang3'
     testImplementation 'org.springframework:spring-tx'
     // this was test:common
