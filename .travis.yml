@@ -21,7 +21,6 @@ before_script:
   - docker ps
 
 script:
-  - ./gradlew createUsersAndRoles
   - ./gradlew build -Pselenium.remote_url=http://localhost:4444/wd/hub
 
 # Perform release with relevant credentials, and ignore checking if current branch is ahead of the remote, because travis will checkout in a detached head state.
