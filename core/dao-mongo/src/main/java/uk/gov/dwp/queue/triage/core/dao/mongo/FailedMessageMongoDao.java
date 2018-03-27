@@ -4,7 +4,6 @@ import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
-import com.mongodb.QueryOperators;
 import com.mongodb.WriteConcern;
 import com.mongodb.WriteResult;
 import com.mongodb.operation.OrderBy;
@@ -25,8 +24,6 @@ import static uk.gov.dwp.queue.triage.core.dao.mongo.FailedMessageConverter.DEST
 import static uk.gov.dwp.queue.triage.core.dao.mongo.FailedMessageConverter.LABELS;
 import static uk.gov.dwp.queue.triage.core.dao.mongo.FailedMessageConverter.STATUS_HISTORY;
 import static uk.gov.dwp.queue.triage.core.dao.mongo.FailedMessageStatusDBObjectConverter.LAST_MODIFIED_DATE_TIME;
-import static uk.gov.dwp.queue.triage.core.dao.mongo.FailedMessageStatusDBObjectConverter.STATUS;
-import static uk.gov.dwp.queue.triage.core.domain.StatusHistoryEvent.Status.DELETED;
 
 public class FailedMessageMongoDao implements FailedMessageDao {
 
@@ -59,6 +56,19 @@ public class FailedMessageMongoDao implements FailedMessageDao {
     }
 
     @Override
+    public void update(FailedMessage failedMessage) {
+        collection.update(
+                failedMessageConverter.createId(failedMessage.getFailedMessageId()),
+                new BasicDBObject()
+                        .append("$push", new BasicDBObject(STATUS_HISTORY, new BasicDBObject()
+                                .append("$each", singletonList(failedMessageStatusConverter.convertFromObject(failedMessage.getStatusHistoryEvent())))
+                                .append("$sort", new BasicDBObject(LAST_MODIFIED_DATE_TIME, OrderBy.DESC.getIntRepresentation()))))
+                        .append("$set", failedMessageConverter.convertForUpdate(failedMessage)),
+                NO_UPSERT, SINGLE_ROW, WriteConcern.ACKNOWLEDGED
+        );
+    }
+
+    @Override
     public void updateStatus(FailedMessageId failedMessageId, StatusHistoryEvent statusHistoryEvent) {
         collection.update(
                 failedMessageConverter.createId(failedMessageId),
@@ -71,7 +81,7 @@ public class FailedMessageMongoDao implements FailedMessageDao {
 
     @Override
     public List<StatusHistoryEvent> getStatusHistory(FailedMessageId failedMessageId) {
-        return ((BasicDBList)collection
+        return ((BasicDBList) collection
                 .findOne(failedMessageConverter.createId(failedMessageId), new BasicDBObject(STATUS_HISTORY, 1))
                 .get(STATUS_HISTORY))
                 .stream()

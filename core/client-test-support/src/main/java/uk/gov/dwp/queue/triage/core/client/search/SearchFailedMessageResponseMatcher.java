@@ -1,11 +1,9 @@
-package uk.gov.dwp.queue.triage.core.domain;
+package uk.gov.dwp.queue.triage.core.client.search;
 
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
-import org.hamcrest.TypeSafeDiagnosingMatcher;
 import org.hamcrest.TypeSafeMatcher;
 import org.hamcrest.core.IsAnything;
-import uk.gov.dwp.queue.triage.core.client.search.SearchFailedMessageResponse;
 import uk.gov.dwp.queue.triage.id.FailedMessageId;
 
 import java.time.Instant;
@@ -22,6 +20,7 @@ public class SearchFailedMessageResponseMatcher extends TypeSafeMatcher<SearchFa
     private Matcher<Optional<String>> destination = new IsAnything<>();
     private Matcher<Instant> sentDateTime = new IsAnything<>();
     private Matcher<Instant> failedDateTime = new IsAnything<>();
+    private Matcher<Iterable<? extends String>> labels = new IsAnything<>();
 
     private SearchFailedMessageResponseMatcher() {
     }
@@ -75,6 +74,11 @@ public class SearchFailedMessageResponseMatcher extends TypeSafeMatcher<SearchFa
         return this;
     }
 
+    public SearchFailedMessageResponseMatcher withLabels(Matcher<Iterable<? extends String>> labelsMatcher) {
+        this.labels = labelsMatcher;
+        return this;
+    }
+
     @Override
     protected boolean matchesSafely(SearchFailedMessageResponse item) {
         return failedMessageId.matches(item.getFailedMessageId())
@@ -84,6 +88,7 @@ public class SearchFailedMessageResponseMatcher extends TypeSafeMatcher<SearchFa
                 && destination.matches(item.getDestination())
                 && sentDateTime.matches(item.getSentDateTime())
                 && failedDateTime.matches(item.getLastFailedDateTime())
+                && labels.matches(item.getLabels())
                 ;
     }
 
@@ -96,6 +101,7 @@ public class SearchFailedMessageResponseMatcher extends TypeSafeMatcher<SearchFa
         appendIfMatcherIsNotIsAnything(" destination is ", destination, description);
         appendIfMatcherIsNotIsAnything(" sentDateTime is ", sentDateTime, description);
         appendIfMatcherIsNotIsAnything(" failedDateTime is ", failedDateTime, description);
+        appendIfMatcherIsNotIsAnything(" labels is ", labels, description);
     }
 
     private void appendIfMatcherIsNotIsAnything(String text, Matcher<?> fieldMatcher, Description description) {

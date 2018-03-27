@@ -19,7 +19,8 @@ import org.springframework.http.ResponseEntity;
 import uk.gov.dwp.queue.triage.core.client.search.SearchFailedMessageRequest;
 import uk.gov.dwp.queue.triage.core.client.search.SearchFailedMessageRequest.SearchFailedMessageRequestBuilder;
 import uk.gov.dwp.queue.triage.core.client.search.SearchFailedMessageResponse;
-import uk.gov.dwp.queue.triage.core.domain.SearchRequestBuilderArgumentFormatter;
+import uk.gov.dwp.queue.triage.core.client.search.SearchFailedMessageResponseMatcher;
+import uk.gov.dwp.queue.triage.core.client.search.SearchRequestBuilderArgumentFormatter;
 import uk.gov.dwp.queue.triage.jgiven.ReflectionArgumentFormatter;
 
 import javax.ws.rs.core.Response.Status;
@@ -28,6 +29,8 @@ import java.util.Collection;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static org.awaitility.Awaitility.await;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.Matchers.emptyIterable;
 import static org.hamcrest.Matchers.is;
 
 @JGivenStage
@@ -64,6 +67,23 @@ public class SearchFailedMessageStage extends Stage<SearchFailedMessageStage> {
     ) {
         await().pollInterval(100, MILLISECONDS)
                 .until(() -> doSearch(requestBuilder), resultsMatcher);
+        return this;
+    }
+
+    public SearchFailedMessageStage aSearch$ContainsNoResults(
+            @Format(value = ReflectionArgumentFormatter.class, args = {"broker", "destination"}) SearchFailedMessageRequestBuilder requestBuilder
+    ) {
+        await().pollInterval(100, MILLISECONDS)
+                .until(() -> doSearch(requestBuilder), emptyIterable());
+        return this;
+    }
+
+    public SearchFailedMessageStage aSearch$WillContainAResponseWhere$(
+            @Format(value = ReflectionArgumentFormatter.class, args = {"broker", "destination"}) SearchFailedMessageRequestBuilder requestBuilder,
+            SearchFailedMessageResponseMatcher responseMatcher
+    ) {
+        await().pollInterval(100, MILLISECONDS)
+                .until(() -> doSearch(requestBuilder), contains(responseMatcher));
         return this;
     }
 

@@ -10,8 +10,8 @@ import uk.gov.dwp.queue.triage.web.component.login.LoginGivenStage;
 
 import java.util.Optional;
 
+import static uk.gov.dwp.queue.triage.core.client.search.SearchFailedMessageRequestMatcher.aSearchRequestMatchingAnyCriteria;
 import static uk.gov.dwp.queue.triage.core.client.search.SearchFailedMessageResponse.newSearchFailedMessageResponse;
-import static uk.gov.dwp.queue.triage.core.domain.SearchFailedMessageRequestMatcher.aSearchRequestMatchingAnyCriteria;
 
 public class SearchFailedMessageComponentTest extends WebComponentTest<ListFailedMessagesStage, SearchFailedMessageWhenStage, FailedMessageListThenStage> {
 

@@ -104,8 +104,8 @@ public class FailedMessageConverterTest {
 
     @Test
     public void convertFailedMessage() {
-        primePropertiesConverter(SOME_PROPERTIES, "{ \"propertyName\": \"propertyValue\" }");
-        primeDestinationConverter(SOME_DESTINATION, DESTINATION_DB_OBJECT);
+        when(propertiesConverter.convertFromObject(SOME_PROPERTIES)).thenReturn("{ \"propertyName\": \"propertyValue\" }");
+        when(destinationDBObjectConverter.convertFromObject(SOME_DESTINATION)).thenReturn(DESTINATION_DB_OBJECT);
         primeFailedMessageStatusConverter(SOME_STATUS, STATUS_DB_OBJECT);
 
         DBObject dbObject = underTest.convertFromObject(failedMessageBuilder.build());
@@ -118,6 +118,8 @@ public class FailedMessageConverterTest {
                 hasField(LABELS, equalTo(toBasicDBList(singletonList("PR-1234"))))
         ));
 
+        when(propertiesConverter.convertToObject("{ \"propertyName\": \"propertyValue\" }")).thenReturn(SOME_PROPERTIES);
+        when(destinationDBObjectConverter.convertToObject(DESTINATION_DB_OBJECT)).thenReturn(SOME_DESTINATION);
         assertThat(underTest.convertToObject(dbObject), is(aFailedMessage()
                 .withFailedMessageId(equalTo(FAILED_MESSAGE_ID))
                 .withJmsMessageId(equalTo(JMS_MESSAGE_ID_VALUE))
@@ -131,14 +133,17 @@ public class FailedMessageConverterTest {
         ));
     }
 
-    private void primeDestinationConverter(Destination destination, BasicDBObject destinationDbObject) {
-        when(destinationDBObjectConverter.convertFromObject(destination)).thenReturn(destinationDbObject);
-        when(destinationDBObjectConverter.convertToObject(destinationDbObject)).thenReturn(destination);
-    }
+    @Test
+    public void convertFailedMessageForUpdate() {
+        when(propertiesConverter.convertFromObject(SOME_PROPERTIES)).thenReturn("{ \"propertyName\": \"propertyValue\" }");
+        when(destinationDBObjectConverter.convertFromObject(SOME_DESTINATION)).thenReturn(DESTINATION_DB_OBJECT);
 
-    private void primePropertiesConverter(Map<String, Object> properties, String propertiesAsJson) {
-        when(propertiesConverter.convertFromObject(properties)).thenReturn(propertiesAsJson);
-        when(propertiesConverter.convertToObject(propertiesAsJson)).thenReturn(properties);
+        assertThat(underTest.convertForUpdate(failedMessageBuilder.build()), allOf(
+                hasField(JMS_MESSAGE_ID, equalTo(JMS_MESSAGE_ID_VALUE)),
+                hasField(CONTENT, equalTo("Hello")),
+                hasField(DESTINATION, equalTo(DESTINATION_DB_OBJECT)),
+                hasField(PROPERTIES, equalTo("{ \"propertyName\": \"propertyValue\" }"))
+        ));
     }
 
     private void primeFailedMessageStatusConverter(StatusHistoryEvent statusHistoryEvent, BasicDBObject statusDBObject) {

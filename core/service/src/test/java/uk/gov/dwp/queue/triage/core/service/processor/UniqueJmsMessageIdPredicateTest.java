@@ -16,7 +16,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.hamcrest.MockitoHamcrest.argThat;
-import static uk.gov.dwp.queue.triage.core.domain.SearchFailedMessageRequestMatcher.aSearchRequestMatchingAllCriteria;
+import static uk.gov.dwp.queue.triage.core.client.search.SearchFailedMessageRequestMatcher.aSearchRequestMatchingAllCriteria;
 
 public class UniqueJmsMessageIdPredicateTest {
 

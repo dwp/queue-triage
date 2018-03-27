@@ -1,4 +1,4 @@
-package uk.gov.dwp.queue.triage.core.domain;
+package uk.gov.dwp.queue.triage.core.client.search;
 
 import com.tngtech.jgiven.format.ArgumentFormatter;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;

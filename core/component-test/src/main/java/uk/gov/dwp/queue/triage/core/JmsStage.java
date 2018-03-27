@@ -10,6 +10,7 @@ import org.springframework.jms.core.JmsTemplate;
 import uk.gov.dwp.queue.triage.core.classification.MessageClassifier;
 import uk.gov.dwp.queue.triage.core.classification.action.FailedMessageAction;
 import uk.gov.dwp.queue.triage.core.classification.predicate.ContentEqualToPredicate;
+import uk.gov.dwp.queue.triage.core.jms.TextMessageBuilder;
 import uk.gov.dwp.queue.triage.core.stub.app.resource.StubMessageClassifierResource;
 
 import java.util.concurrent.TimeUnit;
@@ -54,6 +55,11 @@ public class JmsStage extends Stage<JmsStage> {
 
     public JmsStage aMessageWithContent$IsSentTo$OnBroker$(String content, String destination, String brokerName) {
         dummyAppJmsTemplate.send(destination, session -> session.createTextMessage(content));
+        return this;
+    }
+
+    public JmsStage aMessage$IsSentTo$OnBroker$(TextMessageBuilder textMessageBuilder, String destination, String broker) {
+        dummyAppJmsTemplate.send(destination, session -> textMessageBuilder.build(session));
         return this;
     }
 

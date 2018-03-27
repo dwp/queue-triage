@@ -8,6 +8,7 @@ import uk.gov.dwp.queue.triage.core.search.FailedMessageSearchService;
 import uk.gov.dwp.queue.triage.core.search.mongo.spring.MongoSearchConfiguration;
 import uk.gov.dwp.queue.triage.core.service.FailedMessageService;
 import uk.gov.dwp.queue.triage.core.service.processor.DisregardingFailedMessageProcessor;
+import uk.gov.dwp.queue.triage.core.service.processor.ExistingFailedMessageProcessor;
 import uk.gov.dwp.queue.triage.core.service.processor.PredicateOutcomeFailedMessageProcessor;
 import uk.gov.dwp.queue.triage.core.service.processor.UniqueFailedMessageIdPredicate;
 import uk.gov.dwp.queue.triage.core.service.processor.UniqueJmsMessageIdPredicate;
@@ -28,7 +29,7 @@ public class FailedMessageProcessorConfiguration {
                 new PredicateOutcomeFailedMessageProcessor(
                         new UniqueFailedMessageIdPredicate(failedMessageDao),
                         failedMessageService::create,
-                        new DisregardingFailedMessageProcessor(failedMessage -> "is not unique, disregarding for now.")
+                        new ExistingFailedMessageProcessor(failedMessageDao)
                 ),
                 new DisregardingFailedMessageProcessor(failedMessage -> "with JMSMessageId=" + failedMessage.getJmsMessageId() + " is not unique")
         );

@@ -14,8 +14,7 @@ import uk.gov.dwp.queue.triage.id.FailedMessageId;
 import static org.hamcrest.Matchers.equalTo;
 import static uk.gov.dwp.queue.triage.core.client.CreateFailedMessageRequest.newCreateFailedMessageRequest;
 import static uk.gov.dwp.queue.triage.core.client.search.SearchFailedMessageRequest.searchMatchingAllCriteria;
-import static uk.gov.dwp.queue.triage.core.domain.SearchFailedMessageResponseMatcher.aFailedMessage;
-import static uk.gov.dwp.queue.triage.core.jms.FailedMessageListenerComponentTest.contains;
+import static uk.gov.dwp.queue.triage.core.client.search.SearchFailedMessageResponseMatcher.aFailedMessage;
 import static uk.gov.dwp.queue.triage.id.FailedMessageId.newFailedMessageId;
 
 public class ClassifyFailedMessageComponentTest extends BaseCoreComponentTest<JmsStage> {
@@ -54,11 +53,11 @@ public class ClassifyFailedMessageComponentTest extends BaseCoreComponentTest<Jm
 
         messageClassificationWhenStage.when().theMessageClassificationJobExecutes();
 
-        searchFailedMessageStage.then().aSearch$WillContain$(
+        searchFailedMessageStage.then().aSearch$WillContainAResponseWhere$(
                 searchMatchingAllCriteria().withBroker("some-broker"),
-                contains(aFailedMessage()
+                aFailedMessage()
                         .withFailedMessageId(equalTo(failedMessageId))
-                        .withContent(equalTo("nuts")))
+                        .withContent(equalTo("nuts"))
         );
     }
 
@@ -83,9 +82,9 @@ public class ClassifyFailedMessageComponentTest extends BaseCoreComponentTest<Jm
 
         messageClassificationWhenStage.when().theMessageClassificationJobExecutes();
 
-        searchFailedMessageStage.then().aSearch$WillContain$(
+        searchFailedMessageStage.then().aSearch$WillContainAResponseWhere$(
                 searchMatchingAllCriteria().withDestination("some-queue"),
-                contains(aFailedMessage().withFailedMessageId(equalTo(failedMessageId)))
+                aFailedMessage().withFailedMessageId(equalTo(failedMessageId))
         );
     }
 
