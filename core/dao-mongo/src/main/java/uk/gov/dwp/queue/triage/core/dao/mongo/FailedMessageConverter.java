@@ -118,6 +118,15 @@ public class FailedMessageConverter implements DBObjectWithIdConverter<FailedMes
                 ;
     }
 
+    public BasicDBObject convertForUpdate(FailedMessage item) {
+        return new BasicDBObject()
+                .append(JMS_MESSAGE_ID, item.getJmsMessageId())
+                .append(DESTINATION, destinationDBObjectMapper.convertFromObject(item.getDestination()))
+                .append(CONTENT, item.getContent())
+                .append(PROPERTIES, propertiesMongoMapper.convertFromObject(item.getProperties()))
+                ;
+    }
+
     @Override
     public BasicDBObject createId(FailedMessageId failedMessageId) {
         return new BasicDBObject("_id", failedMessageId.getId().toString());

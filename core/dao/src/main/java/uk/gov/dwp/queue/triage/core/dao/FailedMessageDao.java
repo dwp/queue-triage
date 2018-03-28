@@ -15,6 +15,8 @@ public interface FailedMessageDao {
 
     long findNumberOfMessagesForBroker(String broker);
 
+    void update(FailedMessage failedMessage);
+
     void updateStatus(FailedMessageId failedMessageId, StatusHistoryEvent statusHistoryEvent);
 
     List<StatusHistoryEvent> getStatusHistory(FailedMessageId failedMessageId);

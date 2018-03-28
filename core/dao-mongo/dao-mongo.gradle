@@ -44,14 +44,22 @@ distributions {
     }
 }
 
-task createUsersAndRoles(dependsOn: installDist) {
-    doLast {
-        FileTree listOfScripts = fileTree(dir: "${project.projectDir}/build/install/dao-mongo", include: "**/*.sh")
-        listOfScripts.sort().each { file ->
-            println "Executing script: $file"
-            exec {
-                commandLine file
-            }    
-        }
-    }
+task createMongoRoles(type: Exec) {
+    workingDir './src/main/resources'
+
+    commandLine './mongo-queue-triage-roles.sh'
 }
+
+task createMongoUsers(type: Exec) {
+    workingDir './src/main/resources'
+
+    commandLine './mongo-queue-triage-users.sh'
+}
+
+task createMongoIndexes(type: Exec) {
+    workingDir './src/main/resources'
+
+    commandLine './mongo-queue-triage-indexes.sh'
+}
+
+tasks.test.dependsOn createMongoRoles, createMongoUsers, createMongoIndexes

@@ -54,32 +54,32 @@ public class StubAppJmsConfiguration {
     }
 
     @Bean(destroyMethod = "shutdown")
-    public DefaultMessageListenerContainer dummyAppMessageListenerContainer(JmsListenerProperties jmsListenerProperties,
+    public DefaultMessageListenerContainer dummyAppMessageListenerContainer(ConnectionFactory dummyAppConnectionFactory,
                                                                             MessageListener stubMessageListener) {
-        ConnectionFactory connectionFactory = createConnectionFactory(jmsListenerProperties, BROKER_NAME);
         DefaultMessageListenerContainer defaultMessageListenerContainer = new DefaultMessageListenerContainer();
-        defaultMessageListenerContainer.setConnectionFactory(connectionFactory);
+        defaultMessageListenerContainer.setConnectionFactory(dummyAppConnectionFactory);
         defaultMessageListenerContainer.setDestinationName("some-queue");
         defaultMessageListenerContainer.setMessageListener(stubMessageListener);
-        defaultMessageListenerContainer.setTransactionManager(new JmsTransactionManager(connectionFactory));
+        defaultMessageListenerContainer.setTransactionManager(new JmsTransactionManager(dummyAppConnectionFactory));
         defaultMessageListenerContainer.setSessionTransacted(true);
         return defaultMessageListenerContainer;
     }
 
     @Bean
-    public JmsTemplate dummyAppJmsTemplate(JmsListenerProperties jmsListenerProperties) {
-        JmsTemplate jmsTemplate = new JmsTemplate(createConnectionFactory(jmsListenerProperties, BROKER_NAME));
+    public JmsTemplate dummyAppJmsTemplate(ConnectionFactory dummyAppConnectionFactory) {
+        JmsTemplate jmsTemplate = new JmsTemplate(dummyAppConnectionFactory);
         jmsTemplate.setDeliveryPersistent(true);
         return jmsTemplate;
     }
 
-    private ConnectionFactory createConnectionFactory(JmsListenerProperties jmsListenerProperties, String brokerName) {
+    @Bean
+    public ConnectionFactory dummyAppConnectionFactory(JmsListenerProperties jmsListenerProperties) {
         JmsListenerProperties.BrokerProperties brokerProperties = jmsListenerProperties
                 .getBrokers()
                 .stream()
-                .filter(broker -> brokerName.equalsIgnoreCase(broker.getName()))
+                .filter(broker -> BROKER_NAME.equalsIgnoreCase(broker.getName()))
                 .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("Cannot find configuration for " + brokerName));
+                .orElseThrow(() -> new IllegalArgumentException("Cannot find configuration for " + BROKER_NAME));
         String brokerUrl = brokerProperties.getUrl();
         brokerUrl += (brokerUrl.contains("?") ? "&" : "?");
         brokerUrl += "jms.redeliveryPolicy.maximumRedeliveries=0";

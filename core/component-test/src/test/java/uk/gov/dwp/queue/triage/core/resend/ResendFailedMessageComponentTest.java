@@ -31,7 +31,7 @@ public class ResendFailedMessageComponentTest extends BaseCoreComponentTest<JmsS
     private JmsStage jmsStage;
 
     @Test
-    public void markMessageForResending() throws Exception {
+    public void markMessageForResending() {
         FailedMessageId failedMessageId = FailedMessageId.newFailedMessageId();
         FailedMessageId failedMessageIdToResend = newFailedMessageId();
 

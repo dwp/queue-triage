@@ -37,4 +37,12 @@ public class FailedMessageListenerFixture {
                 brokerName);
     }
 
+    public void readMessagesForBroker(String brokerName) {
+        testRestTemplate.put(
+                "/core/admin/jms-listener/read-messages/{brokerName}",
+                null,
+                brokerName
+        );
+    }
+
 }

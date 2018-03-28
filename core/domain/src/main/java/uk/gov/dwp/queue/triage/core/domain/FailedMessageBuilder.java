@@ -7,6 +7,7 @@ import java.time.Instant;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
 public class FailedMessageBuilder {
@@ -108,6 +109,14 @@ public class FailedMessageBuilder {
 
     public FailedMessageBuilder withLabel(String label) {
         labels.add(label);
+        return this;
+    }
+
+    public FailedMessageBuilder withFailedMessageIdFromPropertyIfPresent() {
+        Optional.ofNullable(properties.get("failedMessageId"))
+                .map(String.class::cast)
+                .map(FailedMessageId::fromString)
+                .ifPresent(this::withFailedMessageId);
         return this;
     }
 }

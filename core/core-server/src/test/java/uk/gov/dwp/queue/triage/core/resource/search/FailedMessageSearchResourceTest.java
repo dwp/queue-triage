@@ -9,6 +9,7 @@ import uk.gov.dwp.queue.triage.core.client.search.SearchFailedMessageRequest;
 import uk.gov.dwp.queue.triage.core.client.search.SearchFailedMessageResponse;
 import uk.gov.dwp.queue.triage.core.dao.FailedMessageDao;
 import uk.gov.dwp.queue.triage.core.domain.FailedMessage;
+import uk.gov.dwp.queue.triage.core.domain.StatusHistoryEvent;
 import uk.gov.dwp.queue.triage.core.search.FailedMessageSearchService;
 import uk.gov.dwp.queue.triage.core.search.SearchFailedMessageResponseAdapter;
 import uk.gov.dwp.queue.triage.id.FailedMessageId;
@@ -26,6 +27,8 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
+import static uk.gov.dwp.queue.triage.core.domain.StatusHistoryEvent.Status.DELETED;
+import static uk.gov.dwp.queue.triage.core.domain.StatusHistoryEvent.Status.FAILED;
 
 public class FailedMessageSearchResourceTest {
 
@@ -49,18 +52,31 @@ public class FailedMessageSearchResourceTest {
     );
 
     @Test
-    public void findMessageById() throws Exception {
+    public void findMessageById() {
         when(failedMessageDao.findById(FAILED_MESSAGE_ID)).thenReturn(failedMessage);
+        when(failedMessage.getStatus()).thenReturn(FAILED);
         when(failedMessageResponseFactory.create(failedMessage)).thenReturn(failedMessageResponse);
 
         assertThat(underTest.getFailedMessage(FAILED_MESSAGE_ID), is(failedMessageResponse));
     }
 
     @Test
-    public void findMessageByIdThrowsNotFoundException() throws Exception {
+    public void findMessageByIdThrowsNotFoundExceptionWhenMessageDoesNotExist() {
         expectedException.expect(NotFoundException.class);
         expectedException.expectMessage("Failed Message: " + FAILED_MESSAGE_ID + " not found");
         when(failedMessageDao.findById(FAILED_MESSAGE_ID)).thenReturn(null);
+
+        underTest.getFailedMessage(FAILED_MESSAGE_ID);
+
+        verifyZeroInteractions(failedMessageResponseFactory);
+    }
+
+    @Test
+    public void findMessageByIdThrowsNotFoundExceptionWhenMessageIsDeleted() {
+        expectedException.expect(NotFoundException.class);
+        expectedException.expectMessage("Failed Message: " + FAILED_MESSAGE_ID + " not found");
+        when(failedMessageDao.findById(FAILED_MESSAGE_ID)).thenReturn(failedMessage);
+        when(failedMessage.getStatus()).thenReturn(DELETED);
 
         underTest.getFailedMessage(FAILED_MESSAGE_ID);
 

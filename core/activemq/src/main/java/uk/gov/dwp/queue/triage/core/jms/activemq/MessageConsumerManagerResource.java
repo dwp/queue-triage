@@ -7,12 +7,17 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import uk.gov.dwp.queue.triage.core.jms.activemq.browser.QueueBrowserScheduledExecutorService;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.NotFoundException;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
+import javax.ws.rs.ServerErrorException;
+import javax.ws.rs.core.Response;
+import java.util.Optional;
 
 @Api(value = "Manage JMS Listeners")
 @Path("/admin/jms-listener")
@@ -37,9 +42,7 @@ public class MessageConsumerManagerResource {
             @ApiParam(value = "name of the broker as defined in application.yml", required = true)
             @PathParam("brokerName") String brokerName) {
         LOGGER.info("Starting consuming messages of the {} broker", brokerName);
-        messageConsumerManagerRegistry.get(brokerName)
-                .orElseThrow(NotFoundException::new)
-                .start();
+        getMessageConsumerManager(brokerName).start();
     }
 
     @ApiOperation("Stop consuming messages from the DLQ on the given broker")
@@ -53,9 +56,7 @@ public class MessageConsumerManagerResource {
             @ApiParam(value = "name of the broker as defined in application.yml", required = true)
             @PathParam("brokerName") String brokerName) {
         LOGGER.info("Stopping consuming messages of the {} broker", brokerName);
-        messageConsumerManagerRegistry.get(brokerName)
-                .orElseThrow(NotFoundException::new)
-                .stop();
+        getMessageConsumerManager(brokerName).stop();
     }
 
     @ApiOperation("Check the status of DLQ consumption on the given broker")
@@ -68,8 +69,34 @@ public class MessageConsumerManagerResource {
     public String isRunning(
             @ApiParam(value = "name of the broker as defined in application.yml", required = true)
             @PathParam("brokerName") String brokerName) {
-        return Boolean.toString(messageConsumerManagerRegistry.get(brokerName)
-                .orElseThrow(NotFoundException::new)
-                .isRunning());
+        return Boolean.toString(getMessageConsumerManager(brokerName).isRunning());
+    }
+
+    private MessageConsumerManager getMessageConsumerManager(@ApiParam(value = "name of the broker as defined in application.yml", required = true) @PathParam("brokerName") String brokerName) {
+        return messageConsumerManagerRegistry.get(brokerName)
+                .orElseThrow(NotFoundException::new);
+    }
+
+    @ApiOperation("Read all messages on the DLQ for the given broker.  This operation is only supported if the queue on the given broker is in read-only mode")
+    @ApiResponses({
+            @ApiResponse(code = 204, message = "Queue Browser executed successfully"),
+            @ApiResponse(code = 404, message = "brokerName not found"),
+            @ApiResponse(code = 501, message = "Broker does not support this operation")
+    })
+    @PUT
+    @Path("/read-messages/{brokerName}")
+    public void readMessages(
+            @ApiParam(value = "name of the broker as defined in application.yml", required = true)
+            @PathParam("brokerName") String brokerName) {
+        final Optional<MessageConsumerManager> messageListenerManager = messageConsumerManagerRegistry.get(brokerName);
+        if (messageListenerManager.isPresent()) {
+            messageListenerManager
+                    .filter(QueueBrowserScheduledExecutorService.class::isInstance)
+                    .map(QueueBrowserScheduledExecutorService.class::cast)
+                    .orElseThrow(() -> new ServerErrorException(Response.Status.NOT_IMPLEMENTED))
+                    .execute();
+        } else {
+            throw new NotFoundException();
+        }
     }
 }

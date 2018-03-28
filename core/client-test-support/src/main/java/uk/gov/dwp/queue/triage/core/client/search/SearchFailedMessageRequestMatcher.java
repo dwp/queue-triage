@@ -1,11 +1,10 @@
-package uk.gov.dwp.queue.triage.core.domain;
+package uk.gov.dwp.queue.triage.core.client.search;
 
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
 import org.hamcrest.core.IsAnything;
 import uk.gov.dwp.queue.triage.core.client.FailedMessageStatus;
-import uk.gov.dwp.queue.triage.core.client.search.SearchFailedMessageRequest;
 import uk.gov.dwp.queue.triage.core.client.search.SearchFailedMessageRequest.Operator;
 
 import java.util.Optional;

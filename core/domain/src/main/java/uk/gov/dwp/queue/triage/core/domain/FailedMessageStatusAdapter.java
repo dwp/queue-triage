@@ -6,27 +6,29 @@ import org.slf4j.LoggerFactory;
 import uk.gov.dwp.queue.triage.core.client.FailedMessageStatus;
 import uk.gov.dwp.queue.triage.core.domain.StatusHistoryEvent.Status;
 
+import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-public class FailedMessageStatusAdapter {
+public final class FailedMessageStatusAdapter {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(FailedMessageStatusAdapter.class);
 
-    private static Map<Status, FailedMessageStatus> statusToFailedMessageStatus = new HashMap<Status, FailedMessageStatus>() {{
-        put(Status.FAILED, FailedMessageStatus.FAILED);
-        put(Status.CLASSIFIED, FailedMessageStatus.FAILED);
-        put(Status.RESEND, FailedMessageStatus.RESENDING);
-        put(Status.SENT, FailedMessageStatus.SENT);
-    }};
+    private static Map<Status, FailedMessageStatus> statusToFailedMessageStatus = new HashMap<>();
+    private static Map<FailedMessageStatus, Set<Status>> failedMessageStatusToStatusMapping = new EnumMap<>(FailedMessageStatus.class);
 
-    private static Map<FailedMessageStatus, Set<Status>> failedMessageStatusToStatusMapping = new HashMap<FailedMessageStatus, Set<Status>>() {{
-        put(FailedMessageStatus.FAILED, Sets.immutableEnumSet(Status.FAILED, Status.CLASSIFIED));
-        put(FailedMessageStatus.RESENDING, Sets.immutableEnumSet(Status.RESEND));
-        put(FailedMessageStatus.SENT, Sets.immutableEnumSet(Status.SENT));
-    }};
+    static {
+        statusToFailedMessageStatus.put(Status.FAILED, FailedMessageStatus.FAILED);
+        statusToFailedMessageStatus.put(Status.CLASSIFIED, FailedMessageStatus.FAILED);
+        statusToFailedMessageStatus.put(Status.RESEND, FailedMessageStatus.RESENDING);
+        statusToFailedMessageStatus.put(Status.SENT, FailedMessageStatus.SENT);
+
+        failedMessageStatusToStatusMapping.put(FailedMessageStatus.FAILED, Sets.immutableEnumSet(Status.FAILED, Status.CLASSIFIED));
+        failedMessageStatusToStatusMapping.put(FailedMessageStatus.RESENDING, Sets.immutableEnumSet(Status.RESEND));
+        failedMessageStatusToStatusMapping.put(FailedMessageStatus.SENT, Sets.immutableEnumSet(Status.SENT));
+    }
 
 
     public static FailedMessageStatus toFailedMessageStatus(Status status) {

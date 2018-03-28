@@ -1,10 +1,12 @@
 package uk.gov.dwp.queue.triage.core.dao.mongo;
 
 import com.google.common.collect.ImmutableSet;
+import org.hamcrest.collection.IsMapContaining;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import uk.gov.dwp.queue.triage.core.dao.util.HashMapBuilder;
 import uk.gov.dwp.queue.triage.core.domain.Destination;
+import uk.gov.dwp.queue.triage.core.domain.DestinationMatcher;
 import uk.gov.dwp.queue.triage.core.domain.FailedMessage;
 import uk.gov.dwp.queue.triage.core.domain.FailedMessageBuilder;
 import uk.gov.dwp.queue.triage.core.domain.StatusHistoryEvent;
@@ -41,10 +43,12 @@ public class FailedMessageMongoDaoTest extends AbstractMongoDaoTest {
 
     private static final Instant SIX_DAYS_AGO =  now().minus(6, DAYS);
     private static final Instant EIGHT_DAYS_AGO =  now().minus(8, DAYS);
+    private static final String JMS_MESSAGE_ID = "jms-message-id";
 
     private final FailedMessageId failedMessageId = newFailedMessageId();
     private final FailedMessageBuilder failedMessageBuilder = FailedMessageBuilder.newFailedMessage()
             .withFailedMessageId(failedMessageId)
+            .withJmsMessageId(JMS_MESSAGE_ID)
             .withDestination(new Destination("broker", of("queue.name")))
             .withContent("Hello")
             .withSentDateTime(now())
@@ -59,15 +63,7 @@ public class FailedMessageMongoDaoTest extends AbstractMongoDaoTest {
     }
 
     @Test
-    public void findFailedMessageWithDeletedStatusReturnsNull() {
-
-        underTest.insert(failedMessageBuilder.withStatusHistoryEvent(DELETED).build());
-
-        assertThat(underTest.findById(failedMessageId), is(nullValue(FailedMessage.class)));
-    }
-
-    @Test
-    public void saveMessageWithEmptyPropertiesAndNoLabels() throws Exception {
+    public void saveMessageWithEmptyPropertiesAndNoLabels() {
         failedMessageBuilder.withProperties(emptyMap());
 
         underTest.insert(failedMessageBuilder.build());
@@ -82,7 +78,7 @@ public class FailedMessageMongoDaoTest extends AbstractMongoDaoTest {
     }
 
     @Test
-    public void saveMessageWithPropertiesAndLabels() throws Exception {
+    public void saveMessageWithPropertiesAndLabels() {
         HashMapBuilder<String, Object> hashMapBuilder = newHashMap(String.class, Object.class)
                 .put("string", "Builder")
                 .put("localDateTime", LocalDateTime.now())
@@ -110,7 +106,7 @@ public class FailedMessageMongoDaoTest extends AbstractMongoDaoTest {
     }
 
     @Test
-    public void findNumberOfMessagesForBroker() throws Exception {
+    public void findNumberOfMessagesForBroker() {
         underTest.insert(failedMessageBuilder
                 .withNewFailedMessageId()
                 .withDestination(new Destination("brokerA", of("queue-name")))
@@ -124,7 +120,7 @@ public class FailedMessageMongoDaoTest extends AbstractMongoDaoTest {
     }
 
     @Test
-    public void findNumberOfMessagesForBrokerReturnsZeroWhenNoneExist() throws Exception {
+    public void findNumberOfMessagesForBrokerReturnsZeroWhenNoneExist() {
         underTest.insert(failedMessageBuilder
                 .withNewFailedMessageId()
                 .withDestination(new Destination("brokerB", of("queue-name")))
@@ -198,7 +194,7 @@ public class FailedMessageMongoDaoTest extends AbstractMongoDaoTest {
     }
 
     @Test
-    public void setLabelsOnAFailedMessageReplacesExistingLabels() throws Exception {
+    public void setLabelsOnAFailedMessageReplacesExistingLabels() {
         underTest.insert(failedMessageBuilder.withLabel("something").build());
 
         underTest.setLabels(failedMessageId, ImmutableSet.of("foo", "bar"));
@@ -230,6 +226,28 @@ public class FailedMessageMongoDaoTest extends AbstractMongoDaoTest {
 
         //TODO: What should be the behaviour (no current use case)? Throw an Exception?  Return a Boolean?
         assertThat(collection.count(), is(0L));
+    }
+
+    @Test
+    public void updateFailedMessage() {
+        underTest.insert(failedMessageBuilder.build());
+
+        underTest.update(failedMessageBuilder
+                .withJmsMessageId("new-" + JMS_MESSAGE_ID)
+                .withDestination(new Destination("broker", of("another.queue.name")))
+                .withContent("Goodbye")
+                .withProperty("some", "property")
+                .withStatusHistoryEvent(RESEND)
+                .build()
+        );
+
+        assertThat(underTest.findById(failedMessageId), aFailedMessage()
+                .withJmsMessageId(equalTo("new-" + JMS_MESSAGE_ID))
+                .withDestination(DestinationMatcher.aDestination().withBrokerName("broker").withName("another.queue.name"))
+                .withContent(equalTo("Goodbye"))
+                .withProperties(IsMapContaining.hasEntry("some", "property"))
+                .withFailedMessageStatus(StatusHistoryEventMatcher.equalTo(RESEND))
+        );
     }
 
     public FailedMessage newFailedMessageWithStatus(StatusHistoryEvent.Status status, Instant instant) {

@@ -5,15 +5,15 @@ import java.time.Instant;
 public class StatusHistoryEvent {
 
     private final Status status;
-    private final Instant effectiveDateTimme;
+    private final Instant effectiveDateTime;
 
     public static StatusHistoryEvent statusHistoryEvent(Status status) {
         return new StatusHistoryEvent(status, Instant.now());
     }
 
-    public StatusHistoryEvent(Status status, Instant effectiveDateTimme) {
+    public StatusHistoryEvent(Status status, Instant effectiveDateTime) {
         this.status = status;
-        this.effectiveDateTimme = effectiveDateTimme;
+        this.effectiveDateTime = effectiveDateTime;
     }
 
     public Status getStatus() {
@@ -21,7 +21,15 @@ public class StatusHistoryEvent {
     }
 
     public Instant getEffectiveDateTime() {
-        return effectiveDateTimme;
+        return effectiveDateTime;
+    }
+
+    @Override
+    public String toString() {
+        return "StatusHistoryEvent{" +
+                "status=" + status +
+                ", effectiveDateTime=" + effectiveDateTime +
+                '}';
     }
 
     public enum Status {

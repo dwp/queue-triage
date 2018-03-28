@@ -49,9 +49,6 @@ public class ResendScheduledExecutorsResource {
     }
 
     private ResendScheduledExecutorService getExecutor(String brokerName) {
-        if (brokerName == null) {
-            throw new BadRequestException("A broker must be specified");
-        }
         ResendScheduledExecutorService resendScheduledExecutorService = resendScheduledExecutors.get(brokerName);
         if (resendScheduledExecutorService == null) {
             throw new BadRequestException("Cannot find a ResendScheduledExecutorService for broker: " + brokerName);
