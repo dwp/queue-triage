@@ -26,6 +26,7 @@ scmVersion {
 
 allprojects {
     repositories {
+        mavenCentral()
         jcenter()
     }
     apply plugin: 'java'
