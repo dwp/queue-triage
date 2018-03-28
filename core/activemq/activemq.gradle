@@ -20,6 +20,8 @@ dependencies {
     implementation 'org.springframework:spring-core'
     implementation 'org.springframework:spring-jms'
 
+    implementation 'org.hibernate:hibernate-validator'
+    implementation 'javax.validation:validation-api'
 
     testImplementation project(':core:domain-test-support')
     testImplementation 'org.apache.geronimo.specs:geronimo-j2ee-management_1.1_spec'

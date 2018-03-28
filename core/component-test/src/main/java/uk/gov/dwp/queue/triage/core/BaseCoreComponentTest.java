@@ -11,11 +11,14 @@ import org.junit.rules.TestWatcher;
 import org.junit.runner.Description;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringBootConfiguration;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import uk.gov.dwp.queue.triage.core.dao.mongo.MongoDatabaseCleaner;
 import uk.gov.dwp.queue.triage.core.dao.mongo.MongoDatabaseLogger;
+import uk.gov.dwp.queue.triage.core.jms.activemq.configuration.JmsListenerProperties;
 import uk.gov.dwp.queue.triage.core.jms.activemq.configuration.MessageConsumerApplicationInitializer;
 import uk.gov.dwp.queue.triage.core.resend.spring.configuration.ResendFailedMessageApplicationInitializer;
 import uk.gov.dwp.queue.triage.core.stub.app.resource.StubMessageClassifierResource;
@@ -29,6 +32,7 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
         MessageConsumerApplicationInitializer.class,
         ResendFailedMessageApplicationInitializer.class
 })
+@EnableConfigurationProperties(JmsListenerProperties.class)
 public class BaseCoreComponentTest<STAGE> extends SimpleSpringRuleScenarioTest<STAGE> {
 
     @Autowired

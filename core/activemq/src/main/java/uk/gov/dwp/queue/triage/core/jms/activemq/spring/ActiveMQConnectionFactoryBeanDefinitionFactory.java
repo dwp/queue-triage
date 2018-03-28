@@ -9,10 +9,10 @@ public class ActiveMQConnectionFactoryBeanDefinitionFactory {
 
     public static final String ACTIVE_MQ_CONNECTION_FACTORY_BEAN_NAME_PREFIX = "activeMqConnectionFactory-";
 
-    public AbstractBeanDefinition create(String url) {
+    public AbstractBeanDefinition create(String nameOfFactoryBean) {
         return genericBeanDefinition(ActiveMQConnectionFactory.class)
-                .addConstructorArgValue(url)
-                .getBeanDefinition();
+            .setFactoryMethodOnBean("create", nameOfFactoryBean)
+            .getBeanDefinition();
     }
 
     public String createBeanName(String brokerName) {

@@ -4,6 +4,7 @@ import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.core.env.ConfigurableEnvironment;
 import uk.gov.dwp.queue.triage.core.jms.activemq.spring.ActiveMQConnectionFactoryBeanDefinitionFactory;
+import uk.gov.dwp.queue.triage.core.jms.activemq.spring.ActiveMQConnectionFactoryFactoryBeanDefinitionFactory;
 import uk.gov.dwp.queue.triage.core.jms.spring.JmsTemplateBeanDefinitionFactory;
 import uk.gov.dwp.queue.triage.core.jms.spring.SpringMessageSenderBeanDefinitionFactory;
 import uk.gov.dwp.queue.triage.core.resend.HistoricStatusPredicate;
@@ -19,6 +20,7 @@ public class ResendFailedMessageApplicationInitializer implements ApplicationCon
         final ConfigurableEnvironment environment = applicationContext.getEnvironment();
         applicationContext.addBeanFactoryPostProcessor(new ResendBeanDefinitionRegistryPostProcessor(
                 environment,
+                new ActiveMQConnectionFactoryFactoryBeanDefinitionFactory(),
                 new ActiveMQConnectionFactoryBeanDefinitionFactory(),
                 new ResendFailedMessageServiceBeanDefinitionFactory(new HistoricStatusPredicate()),
                 new FailedMessageSenderBeanDefinitionFactory(),
