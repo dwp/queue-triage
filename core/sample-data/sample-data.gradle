@@ -16,3 +16,7 @@ dependencies {
     implementation 'org.apache.cxf:cxf-rt-transports-http-jetty'
     implementation 'org.slf4j:slf4j-api'
 }
+
+sonarqube {
+    skipProject = true
+}

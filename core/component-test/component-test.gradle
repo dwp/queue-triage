@@ -67,3 +67,7 @@ test {
     maxParallelForks 1
     forkEvery 1
 }
+
+sonarqube {
+    skipProject = true
+}
