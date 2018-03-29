@@ -4,14 +4,16 @@ import com.tngtech.jgiven.integration.spring.JGivenStage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpEntity;
-import uk.gov.dwp.queue.triage.core.classification.MessageClassifier.MessageClassifierBuilder;
 import uk.gov.dwp.queue.triage.core.classification.action.DeleteMessageAction;
 import uk.gov.dwp.queue.triage.core.classification.action.LabelMessageAction;
+import uk.gov.dwp.queue.triage.core.classification.predicate.AndPredicate;
 import uk.gov.dwp.queue.triage.core.classification.predicate.BrokerEqualsPredicate;
 import uk.gov.dwp.queue.triage.core.classification.predicate.ContentEqualToPredicate;
 import uk.gov.dwp.queue.triage.core.classification.predicate.DestinationEqualsPredicate;
+import uk.gov.dwp.queue.triage.core.classification.predicate.FailedMessagePredicate;
 import uk.gov.dwp.queue.triage.jgiven.GivenStage;
 
+import java.util.ArrayList;
 import java.util.Optional;
 
 @JGivenStage
@@ -24,25 +26,25 @@ public class MessageClassificationGivenStage extends GivenStage<MessageClassific
             String content,
             String broker,
             String queue) {
-        MessageClassifierBuilder predicateBuilder = MessageClassifier.when(new ContentEqualToPredicate(content));
+        ArrayList<FailedMessagePredicate> predicates = new ArrayList<>();
+        predicates.add(new ContentEqualToPredicate(content));
         if (!"any".equalsIgnoreCase(broker)) {
-            predicateBuilder.and(new BrokerEqualsPredicate(broker));
+            predicates.add(new BrokerEqualsPredicate(broker));
         }
         if (!"any".equalsIgnoreCase(queue)) {
-            predicateBuilder.and(new DestinationEqualsPredicate(Optional.of(queue)));
+            predicates.add(new DestinationEqualsPredicate(Optional.of(queue)));
         }
         testRestTemplate.postForLocation(
                 "/core/message-classification",
-                predicateBuilder.then(new DeleteMessageAction(null))
+                new MessageClassifier(new AndPredicate(predicates), new DeleteMessageAction(null))
         );
         return this;
     }
 
     public MessageClassificationGivenStage aMessageClassifierExistsToLabelAnyMessage$FromBroker$(String label, String broker) {
-        MessageClassifierBuilder predicateBuilder = MessageClassifier.when(new BrokerEqualsPredicate(broker));
         testRestTemplate.postForLocation(
                 "/core/message-classification",
-                predicateBuilder.then(new LabelMessageAction(label, null))
+                new MessageClassifier(new BrokerEqualsPredicate(broker), new LabelMessageAction(label, null))
         );
         return this;
     }
