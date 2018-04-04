@@ -7,6 +7,7 @@ dependencies {
 
     //test
     testImplementation project(':common:jackson')
+    testImplementation 'com.google.guava:guava'
     testImplementation 'com.jayway.jsonpath:json-path'
     testImplementation 'net.minidev:accessors-smart'
     testImplementation 'net.minidev:json-smart'
