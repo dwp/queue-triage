@@ -11,3 +11,7 @@ dependencies {
     implementation 'org.hamcrest:hamcrest-core'
     implementation 'junit:junit'
 }
+
+sonarqube {
+    skipProject = true
+}

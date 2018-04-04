@@ -9,6 +9,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+import static javax.servlet.http.HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
+
 public class PingServlet extends HttpServlet {
 
     private static Logger LOGGER = LoggerFactory.getLogger(PingServlet.class);
@@ -24,7 +26,8 @@ public class PingServlet extends HttpServlet {
         try {
             responseWriter.write(resp.getWriter());
         } catch (IOException e) {
-            LOGGER.error("Unable to response writer", e);
+            LOGGER.error("Unable to get response writer", e);
+            resp.sendError(SC_INTERNAL_SERVER_ERROR, "An error occurred writing the response");
         }
     }
 }

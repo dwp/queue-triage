@@ -2,7 +2,6 @@ package uk.gov.dwp.queue.triage.core.classification.action;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import uk.gov.dwp.queue.triage.core.classification.predicate.OrPredicate;
 import uk.gov.dwp.queue.triage.core.domain.FailedMessage;
 
 import java.util.function.Consumer;

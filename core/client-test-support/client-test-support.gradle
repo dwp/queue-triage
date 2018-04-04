@@ -5,5 +5,8 @@ dependencies {
     implementation 'org.apache.commons:commons-lang3'
     compile project(':common:id')
     compile project(':core:client')
+}
 
+sonarqube {
+    skipProject = true
 }
