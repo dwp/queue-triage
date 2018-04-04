@@ -46,11 +46,7 @@ public class StubAppJmsConfiguration {
     }
 
     private MessageClassifier defaultMessageClassifier() {
-        return MessageClassifier
-                .when(failedMessage -> true)
-                .then(failedMessage -> {
-                    throw new RuntimeException("Head Shot!");
-                });
+        return new MessageClassifier(failedMessage -> true, failedMessage -> { throw new RuntimeException("Head Shot!"); });
     }
 
     @Bean(destroyMethod = "shutdown")

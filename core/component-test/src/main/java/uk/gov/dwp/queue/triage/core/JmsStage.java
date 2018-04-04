@@ -47,9 +47,8 @@ public class JmsStage extends Stage<JmsStage> {
     }
 
     private void addMessageClassifierWithContent(String content, FailedMessageAction failedMessageAction) {
-        stubMessageClassifierResource.addMessageClassifier(MessageClassifier
-                .when(new ContentEqualToPredicate(content))
-                .then(failedMessageAction)
+        stubMessageClassifierResource.addMessageClassifier(new MessageClassifier(
+                new ContentEqualToPredicate(content), failedMessageAction)
         );
     }
 

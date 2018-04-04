@@ -18,7 +18,7 @@ public class MessageClassifierTest {
 
     @Test
     public void actionIsExecutedIfThePredicateIsTrue() {
-        MessageClassifier underTest = MessageClassifier.when(alwaysTrue).then(failedMessageAction);
+        MessageClassifier underTest = new MessageClassifier(alwaysTrue, failedMessageAction);
 
         underTest.accept(failedMessage);
 
@@ -27,11 +27,10 @@ public class MessageClassifierTest {
 
     @Test
     public void actionIsNotExecutedIfThePredicateIsFalse() {
-        MessageClassifier underTest = MessageClassifier.when(alwaysFalse).then(failedMessageAction);
+        MessageClassifier underTest = new MessageClassifier(alwaysFalse, failedMessageAction);
 
         underTest.accept(failedMessage);
 
         verifyZeroInteractions(failedMessageAction);
     }
-
 }
