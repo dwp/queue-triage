@@ -2,8 +2,6 @@ package uk.gov.dwp.queue.triage.core.client;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.Info;
-import io.swagger.annotations.SwaggerDefinition;
 
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.Consumes;

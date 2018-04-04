@@ -1,7 +1,6 @@
 package uk.gov.dwp.vault.config;
 
 import org.hibernate.validator.constraints.NotEmpty;
-import org.springframework.stereotype.Component;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;

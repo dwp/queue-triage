@@ -3,9 +3,9 @@ package uk.gov.dwp.queue.triage.core.dao;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.collect.ImmutableMap;
 import org.junit.Before;
 import org.junit.Test;
-import uk.gov.dwp.queue.triage.core.dao.util.HashMapBuilder;
 import uk.gov.dwp.queue.triage.jackson.configuration.JacksonConfiguration;
 
 import java.io.IOException;
@@ -31,7 +31,6 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.valid4j.matchers.jsonpath.JsonPathMatchers.hasJsonPath;
-import static uk.gov.dwp.queue.triage.core.dao.util.HashMapBuilder.newHashMap;
 
 public class PropertiesConverterTest {
 
@@ -49,16 +48,17 @@ public class PropertiesConverterTest {
     }
 
     @Test
-    public void testMapPropertiesWithEmbededHashMap() throws Exception {
-        HashMapBuilder<String, Object> hashMapBuilder = newHashMap(String.class, Object.class)
+    public void testMapPropertiesWithEmbededHashMap() {
+        Map<String, Object> props = ImmutableMap.<String, Object>builder()
                 .put("string", "some string")
                 .put("localDateTime", SOME_LOCAL_DATE_TIME)
                 .put("date", SOME_DATE)
                 .put("integer", 1)
                 .put("long", 100L)
-                .put("uuid", SOME_UUID);
-        HashMap<String, Object> properties = hashMapBuilder.build();
-        properties.put("properties", hashMapBuilder.build());
+                .put("uuid", SOME_UUID)
+                .build();
+        Map<String, Object> properties = new HashMap<>(props);
+        properties.put("properties", new HashMap<>(props));
 
         String json = underTest.convertFromObject(properties);
 
@@ -102,7 +102,5 @@ public class PropertiesConverterTest {
         when(objectMapper.writeValueAsString(singletonMap("foo", "bar"))).thenThrow(JsonProcessingException.class);
 
         assertThat(new PropertiesConverter(objectMapper).convertFromObject(singletonMap("foo", "bar")), is(nullValue()));
-
-
     }
 }

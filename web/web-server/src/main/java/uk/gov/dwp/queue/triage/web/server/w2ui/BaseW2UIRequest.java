@@ -5,7 +5,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import uk.gov.dwp.queue.triage.id.FailedMessageId;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;

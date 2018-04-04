@@ -4,7 +4,6 @@ import org.springframework.beans.MutablePropertyValues;
 import org.springframework.boot.autoconfigure.AutoConfigureOrder;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.bind.RelaxedDataBinder;
-import org.springframework.boot.context.properties.ConfigurationPropertiesBinding;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -15,7 +14,6 @@ import org.springframework.core.convert.support.DefaultConversionService;
 import org.springframework.core.env.ConfigurableEnvironment;
 import org.springframework.core.env.MapPropertySource;
 import org.springframework.core.env.PropertySource;
-
 import uk.gov.dwp.vault.SensitiveConfigValueLookupRegistry;
 import uk.gov.dwp.vault.SensitiveConfigValueLookupStrategy;
 import uk.gov.dwp.vault.SingleValueVaultLookupStrategy;
