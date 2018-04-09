@@ -13,6 +13,7 @@ notifications:
 branches:
   except:
     - /queue-triage-\d+\.\d+\.\d+.*/
+    - /issue_146.*/
 
 before_script:
   # Create Mongo admin user

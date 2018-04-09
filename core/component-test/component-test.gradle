@@ -21,6 +21,7 @@ dependencies {
     implementation 'com.tngtech.jgiven:jgiven-spring'
     implementation 'javax.ws.rs:javax.ws.rs-api'
     implementation 'junit:junit'
+    implementation 'org.apache.activemq:activemq-broker'
     implementation 'org.apache.activemq:activemq-client'
     implementation 'org.apache.activemq.tooling:activemq-junit'
     implementation 'org.apache.cxf:cxf-core'
