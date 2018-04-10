@@ -21,7 +21,7 @@ public class RemoveFailedMessageService {
     public void removeFailedMessages() {
         try {
             logger.info("Attempting to remove FailedMessages");
-            final int count = failedMessageDao.removeFailedMessages();
+            final long count = failedMessageDao.removeFailedMessages();
             logger.info("Successfully removed {} messages", count);
         } catch (Exception e) {
             logger.error("Could not remove messages", e);

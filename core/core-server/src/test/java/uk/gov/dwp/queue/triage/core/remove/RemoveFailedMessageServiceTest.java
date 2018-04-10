@@ -10,7 +10,7 @@ import static org.mockito.Mockito.when;
 
 public class RemoveFailedMessageServiceTest {
 
-    private static final int NUMBER_OF_MESSAGES_REMOVED = 2;
+    private static final long NUMBER_OF_MESSAGES_REMOVED = 2;
     private final FailedMessageDao failedMessageDao = mock(FailedMessageDao.class);
     private final Logger logger = mock(Logger.class);
 
@@ -18,7 +18,7 @@ public class RemoveFailedMessageServiceTest {
     private final Exception exception = new RuntimeException();
 
     @Test
-    public void removeDelegatesToTheDao() throws Exception {
+    public void removeDelegatesToTheDao() {
         when(failedMessageDao.removeFailedMessages()).thenReturn(NUMBER_OF_MESSAGES_REMOVED);
 
         underTest.removeFailedMessages();

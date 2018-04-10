@@ -4,23 +4,26 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoCredential;
 import com.mongodb.ServerAddress;
-
-import org.bson.BSON;
+import org.bson.BsonType;
 import org.bson.Transformer;
+import org.bson.codecs.BsonTypeClassMap;
+import org.bson.codecs.DocumentCodecProvider;
+import org.bson.codecs.configuration.CodecRegistries;
+import org.bson.codecs.configuration.CodecRegistry;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
-
 import uk.gov.dwp.queue.triage.core.dao.FailedMessageDao;
 import uk.gov.dwp.queue.triage.core.dao.ObjectConverter;
 import uk.gov.dwp.queue.triage.core.dao.PropertiesConverter;
-import uk.gov.dwp.queue.triage.core.dao.mongo.DBObjectConverter;
-import uk.gov.dwp.queue.triage.core.dao.mongo.DestinationDBObjectConverter;
+import uk.gov.dwp.queue.triage.core.dao.mongo.DestinationDocumentConverter;
+import uk.gov.dwp.queue.triage.core.dao.mongo.DocumentConverter;
 import uk.gov.dwp.queue.triage.core.dao.mongo.FailedMessageConverter;
 import uk.gov.dwp.queue.triage.core.dao.mongo.FailedMessageMongoDao;
-import uk.gov.dwp.queue.triage.core.dao.mongo.FailedMessageStatusDBObjectConverter;
+import uk.gov.dwp.queue.triage.core.dao.mongo.FailedMessageStatusDocumentConverter;
 import uk.gov.dwp.queue.triage.core.dao.mongo.RemoveRecordsQueryFactory;
+import uk.gov.dwp.queue.triage.core.dao.mongo.codec.InstantAsDateTimeCodec;
 import uk.gov.dwp.queue.triage.core.domain.Destination;
 import uk.gov.dwp.queue.triage.core.domain.StatusHistoryEvent;
 import uk.gov.dwp.queue.triage.id.Id;
@@ -30,6 +33,7 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
@@ -46,12 +50,12 @@ public class MongoDaoConfig {
 
     static {
         TimeZone.setDefault(TimeZone.getTimeZone(UTC));
-        BSON.addDecodingHook(LocalDateTime.class, new LocalDateTimeTransformer());
-        BSON.addEncodingHook(LocalDateTime.class, new LocalDateTimeTransformer());
-        BSON.addDecodingHook(Instant.class, new InstantTransformer());
-        BSON.addEncodingHook(Instant.class, new InstantTransformer());
-        BSON.addEncodingHook(Id.class, new IdTransformer());
-        BSON.addDecodingHook(Date.class, new InstantTransformer());
+//        BSON.addDecodingHook(LocalDateTime.class, new LocalDateTimeTransformer());
+//        BSON.addEncodingHook(LocalDateTime.class, new LocalDateTimeTransformer());
+//        BSON.addDecodingHook(Instant.class, new InstantTransformer());
+//        BSON.addEncodingHook(Instant.class, new InstantTransformer());
+//        BSON.addEncodingHook(Id.class, new IdTransformer());
+//        BSON.addDecodingHook(Date.class, new InstantTransformer());
     }
 
     @Bean
@@ -59,7 +63,18 @@ public class MongoDaoConfig {
         return new MongoClient(
             createSeeds(mongoDaoProperties),
             createCredentials(mongoDaoProperties),
-            mongoDaoProperties.mongoClientOptions()
+            mongoDaoProperties.mongoClientOptions().codecRegistry(codecRegistry()).build()
+        );
+    }
+
+    private CodecRegistry codecRegistry() {
+        Map<BsonType, Class<?>> replacements = new HashMap<>();
+        replacements.put(BsonType.DATE_TIME, Instant.class);
+
+        return CodecRegistries.fromRegistries(
+                CodecRegistries.fromCodecs(new InstantAsDateTimeCodec()),
+                CodecRegistries.fromProviders(new DocumentCodecProvider(new BsonTypeClassMap(replacements))),
+                MongoClient.getDefaultCodecRegistry()
         );
     }
 
@@ -86,18 +101,20 @@ public class MongoDaoConfig {
     public FailedMessageDao failedMessageDao(MongoClient mongoClient,
                                              MongoDaoProperties mongoDaoProperties,
                                              FailedMessageConverter failedMessageConverter,
-                                             DBObjectConverter<StatusHistoryEvent> failedMessageStatusDBObjectConverter) {
+                                             DocumentConverter<StatusHistoryEvent> failedMessageStatusDocumentConverter) {
         return new FailedMessageMongoDao(
-            mongoClient.getDB(mongoDaoProperties.getDbName()).getCollection(mongoDaoProperties.getFailedMessage().getName()),
-            failedMessageConverter,
-            failedMessageStatusDBObjectConverter, new RemoveRecordsQueryFactory());
+                mongoClient.getDatabase(mongoDaoProperties.getDbName()).getCollection(mongoDaoProperties.getFailedMessage().getName()),
+                failedMessageConverter,
+                failedMessageStatusDocumentConverter,
+                new RemoveRecordsQueryFactory()
+        );
     }
 
     @Bean
-    public FailedMessageConverter failedMessageConverter(DBObjectConverter<Destination> destinationDBObjectConverter,
-                                                         DBObjectConverter<StatusHistoryEvent> failedMessageStatusDBObjectConverter,
+    public FailedMessageConverter failedMessageConverter(DocumentConverter<Destination> destinationDocumentConverter,
+                                                         DocumentConverter<StatusHistoryEvent> failedMessageStatusDocumentConverter,
                                                          ObjectConverter<Map<String, Object>, String> propertiesObjectConverter) {
-        return new FailedMessageConverter(destinationDBObjectConverter, failedMessageStatusDBObjectConverter, propertiesObjectConverter);
+        return new FailedMessageConverter(destinationDocumentConverter, failedMessageStatusDocumentConverter, propertiesObjectConverter);
     }
 
     @Bean
@@ -106,13 +123,13 @@ public class MongoDaoConfig {
     }
 
     @Bean
-    public DestinationDBObjectConverter destinationDBObjectConverter() {
-        return new DestinationDBObjectConverter();
+    public DestinationDocumentConverter destinationDocumentConverter() {
+        return new DestinationDocumentConverter();
     }
 
     @Bean
-    public FailedMessageStatusDBObjectConverter failedMessageStatusDBObjectConverter() {
-        return new FailedMessageStatusDBObjectConverter();
+    public FailedMessageStatusDocumentConverter failedMessageStatusDocumentConverter() {
+        return new FailedMessageStatusDocumentConverter();
     }
 
     public static class LocalDateTimeTransformer implements Transformer {

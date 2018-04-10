@@ -1,6 +1,6 @@
 package uk.gov.dwp.queue.triage.core.dao.mongo;
 
-import com.mongodb.DBObject;
+import org.bson.Document;
 import org.junit.Test;
 import uk.gov.dwp.queue.triage.core.domain.StatusHistoryEvent;
 
@@ -11,17 +11,17 @@ import static org.junit.Assert.assertThat;
 import static uk.gov.dwp.queue.triage.core.domain.StatusHistoryEvent.Status.FAILED;
 import static uk.gov.dwp.queue.triage.core.domain.StatusHistoryEventMatcher.equalTo;
 
-public class StatusHistoryEventDBObjectConverterTest {
+public class StatusHistoryEventDocumentConverterTest {
 
     private static final Instant NOW = Instant.now();
 
-    private final FailedMessageStatusDBObjectConverter underTest = new FailedMessageStatusDBObjectConverter();
+    private final FailedMessageStatusDocumentConverter underTest = new FailedMessageStatusDocumentConverter();
 
     @Test
-    public void testConvertQueueToDBObjectAndBack() throws Exception {
-        DBObject basicDBObject = underTest.convertFromObject(new StatusHistoryEvent(FAILED, NOW));
+    public void testConvertQueueToDocumentAndBack() {
+        Document document = underTest.convertFromObject(new StatusHistoryEvent(FAILED, NOW));
 
-        assertThat(underTest.convertToObject(basicDBObject), is(equalTo(FAILED).withUpdatedDateTime(NOW)));
+        assertThat(underTest.convertToObject(document), is(equalTo(FAILED).withUpdatedDateTime(NOW)));
     }
 
 

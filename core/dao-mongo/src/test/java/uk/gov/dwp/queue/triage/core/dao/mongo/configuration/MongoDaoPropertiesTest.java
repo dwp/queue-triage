@@ -3,7 +3,6 @@ package uk.gov.dwp.queue.triage.core.dao.mongo.configuration;
 import org.hamcrest.Description;
 import org.hamcrest.TypeSafeDiagnosingMatcher;
 import org.hamcrest.TypeSafeMatcher;
-import org.hamcrest.collection.IsArrayContainingInOrder;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.config.YamlPropertiesFactoryBean;
@@ -13,7 +12,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.PropertiesPropertySource;
 import org.springframework.core.env.StandardEnvironment;
 import org.springframework.core.io.ClassPathResource;
-
 import uk.gov.dwp.queue.triage.core.dao.mongo.configuration.MongoDaoProperties.Collection;
 import uk.gov.dwp.queue.triage.core.dao.mongo.configuration.MongoDaoProperties.MongoOptions;
 import uk.gov.dwp.queue.triage.core.dao.mongo.configuration.MongoDaoProperties.MongoOptions.SSL;
@@ -27,7 +25,6 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.is;
-import static org.hamcrest.collection.IsArrayContainingInOrder.*;
 
 public class MongoDaoPropertiesTest {
 
@@ -42,7 +39,7 @@ public class MongoDaoPropertiesTest {
     }
 
     @Test
-    public void createMongoConfigurationWithMultipleServers() throws Exception {
+    public void createMongoConfigurationWithMultipleServers() {
         AnnotationConfigApplicationContext applicationContext = createApplicationContext("mongo-dao-multiple-servers-and-auth.yml");
 
         MongoDaoProperties properties = applicationContext.getBean(MongoDaoProperties.class);

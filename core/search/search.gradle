@@ -15,10 +15,16 @@ dependencies {
     implementation 'org.springframework:spring-core'
     implementation 'org.springframework.boot:spring-boot'
 
-    testImplementation project(':core:dao-mongo-test-support')
     testImplementation project(':core:client-test-support')
+    testImplementation project(':core:dao-mongo-test-support')
+    testImplementation project(':core:domain-test-support')
+    testImplementation 'javax.validation:validation-api'
     testImplementation 'junit:junit'
     testImplementation 'org.hamcrest:hamcrest-core'
     testImplementation 'org.hamcrest:hamcrest-library'
     testImplementation 'org.mockito:mockito-core'
+
+    testRuntime        'org.hibernate:hibernate-validator'
+    testRuntime        'org.yaml:snakeyaml'
+
 }

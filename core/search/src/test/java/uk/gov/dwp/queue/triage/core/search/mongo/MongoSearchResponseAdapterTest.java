@@ -1,6 +1,6 @@
 package uk.gov.dwp.queue.triage.core.search.mongo;
 
-import com.mongodb.BasicDBObject;
+import org.bson.Document;
 import org.hamcrest.Description;
 import org.hamcrest.TypeSafeMatcher;
 import org.junit.Test;
@@ -22,20 +22,20 @@ public class MongoSearchResponseAdapterTest {
     private static final FailedMessageId FAILED_MESSAGE_ID = FailedMessageId.newFailedMessageId();
 
     private final FailedMessageConverter failedMessageConverter = mock(FailedMessageConverter.class);
-    private final BasicDBObject basicDBObject = mock(BasicDBObject.class);
+    private final Document document = mock(Document.class);
 
     private final MongoSearchResponseAdapter underTest = new MongoSearchResponseAdapter(failedMessageConverter);
 
     @Test
-    public void convertBasicDBbjectToSearchResponse() throws Exception {
-        when(failedMessageConverter.getDestination(basicDBObject)).thenReturn(
+    public void convertBasicDBbjectToSearchResponse() {
+        when(failedMessageConverter.getDestination(document)).thenReturn(
                 new Destination("broker-name", Optional.of("queue-name")));
-        when(failedMessageConverter.getFailedMessageId(basicDBObject)).thenReturn(FAILED_MESSAGE_ID);
-        when(failedMessageConverter.getContent(basicDBObject)).thenReturn("some-content");
-        when(failedMessageConverter.getFailedDateTime(basicDBObject)).thenReturn(NOW);
-        when(failedMessageConverter.getSentDateTime(basicDBObject)).thenReturn(NOW);
+        when(failedMessageConverter.getFailedMessageId(document)).thenReturn(FAILED_MESSAGE_ID);
+        when(failedMessageConverter.getContent(document)).thenReturn("some-content");
+        when(failedMessageConverter.getFailedDateTime(document)).thenReturn(NOW);
+        when(failedMessageConverter.getSentDateTime(document)).thenReturn(NOW);
 
-        SearchFailedMessageResponse response = underTest.toResponse(basicDBObject);
+        SearchFailedMessageResponse response = underTest.toResponse(document);
 
         assertThat(response, new TypeSafeMatcher<SearchFailedMessageResponse>() {
             @Override

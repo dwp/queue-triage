@@ -1,8 +1,8 @@
 package uk.gov.dwp.queue.triage.core.dao.mongo;
 
-import com.mongodb.BasicDBObject;
-import com.mongodb.DB;
 import com.mongodb.MongoClient;
+import com.mongodb.client.MongoDatabase;
+import org.bson.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,27 +17,27 @@ public class MongoDatabaseCleaner {
     }
 
     public void cleanAllDatabases() {
-        for (DB db : mongoClient.getUsedDatabases()) {
-            if (!"admin".equals(db.getName())) {
-                cleanCollections(db);
+        for (String dbName : mongoClient.listDatabaseNames()) {
+            if (!"admin".equals(dbName)) {
+                cleanDatabase(dbName);
             }
         }
     }
 
     public void cleanDatabase(String databaseName) {
-        cleanCollections(mongoClient.getDB(databaseName));
+        cleanCollections(mongoClient.getDatabase(databaseName));
     }
 
-    public void cleanCollections(DB db) {
+    public void cleanCollections(MongoDatabase db) {
         LOGGER.info("Removing data from '{}' database", db.getName());
-        for (String collectionName : db.getCollectionNames()) {
+        for (String collectionName : db.listCollectionNames()) {
             LOGGER.debug("Removing data from the '{}.{}' collection", db.getName(), collectionName);
-            db.getCollection(collectionName).remove(new BasicDBObject());
+            db.getCollection(collectionName).deleteMany(new Document());
         }
         LOGGER.info("Removing data from '{}' database complete", db.getName());
     }
 
     public void cleanCollection(String databaseName, String collectionName) {
-        mongoClient.getDatabase(databaseName).getCollection(collectionName).deleteMany(new BasicDBObject());
+        mongoClient.getDatabase(databaseName).getCollection(collectionName).deleteMany(new Document());
     }
 }
