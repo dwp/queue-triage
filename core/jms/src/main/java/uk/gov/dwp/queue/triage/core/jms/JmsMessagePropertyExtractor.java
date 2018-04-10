@@ -21,18 +21,20 @@ public class JmsMessagePropertyExtractor implements MessagePropertyExtractor {
         Map<String, Object> properties = new HashMap<>();
         try {
             for (Enumeration propertyNames = message.getPropertyNames(); propertyNames.hasMoreElements(); ) {
-                String propertyName = (String) propertyNames.nextElement();
-                try {
-                    properties.put(propertyName, message.getObjectProperty(propertyName));
-                } catch (JMSException e) {
-                    String errorMessage = String.format("Could not extract property: '%s' from Message '%s'", propertyName, message);
-                    LOGGER.error(errorMessage, e);
-                    throw new RuntimeException(errorMessage, e);
-                }
+                extractPropertyFromMessage((String) propertyNames.nextElement(), message, properties);
             }
         } catch (JMSException e) {
-            e.printStackTrace();
+            LOGGER.error("Could not read propertyNames from message '%s'", message, e);
         }
         return properties;
+    }
+
+    private void extractPropertyFromMessage(String propertyName, Message message, Map<String, Object> properties) {
+        try {
+            properties.put(propertyName, message.getObjectProperty(propertyName));
+        } catch (JMSException e) {
+            String errorMessage = String.format("Could not extract property: '%s' from Message '%s'", propertyName, message);
+            LOGGER.error(errorMessage, e);
+        }
     }
 }

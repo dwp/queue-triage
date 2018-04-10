@@ -46,6 +46,13 @@ allprojects {
     }
 }
 
+// Temporarily exclude test-support modules from sonar scans
+configure(subprojects.findAll { it.name.endsWith("test-support") }) { project ->
+    sonarqube {
+        skipProject = true
+    }
+}
+
 task codeCoverageReport(type: JacocoReport) {
 
     // Gather execution data from all subprojects

@@ -5,8 +5,6 @@ import com.tngtech.jgiven.base.StageBase;
 
 public class ThenStage<SELF extends ThenStage<?>> extends StageBase<SELF> {
 
-    public ThenStage() {}
-
     @IntroWord
     public SELF then() {
         return this.self();

@@ -2,11 +2,8 @@ package uk.gov.dwp.queue.triage.core.service.processor;
 
 import uk.gov.dwp.queue.triage.core.dao.FailedMessageDao;
 import uk.gov.dwp.queue.triage.core.domain.FailedMessage;
-import uk.gov.dwp.queue.triage.core.search.FailedMessageSearchService;
 
 import java.util.function.Predicate;
-
-import static uk.gov.dwp.queue.triage.core.client.search.SearchFailedMessageRequest.searchMatchingAllCriteria;
 
 public class UniqueFailedMessageIdPredicate implements Predicate<FailedMessage> {
 

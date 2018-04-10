@@ -7,7 +7,6 @@ import com.unboundid.ldif.LDIFReader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
 import java.util.Properties;
 
 import static com.unboundid.ldap.listener.InMemoryListenerConfig.createLDAPConfig;
@@ -38,7 +37,7 @@ public class InMemoryDirectoryServerFactory {
         return server;
     }
 
-    public InMemoryDirectoryServerConfig createServerConfig() throws LDAPException {
+    private InMemoryDirectoryServerConfig createServerConfig() throws LDAPException {
         InMemoryDirectoryServerConfig config = new InMemoryDirectoryServerConfig(
             properties.getProperty(BASE_DN_KEY, DEFAULT_BASE_DN)
         );
@@ -52,12 +51,12 @@ public class InMemoryDirectoryServerFactory {
     }
 
     public InMemoryDirectoryServer createDirectoryServer(String ldifPath) throws LDAPException {
-        InMemoryDirectoryServer server = createDirectoryServer();;
+        InMemoryDirectoryServer server = createDirectoryServer();
         server.importFromLDIF(true, new LDIFReader(getClass().getClassLoader().getResourceAsStream(ldifPath)));
         return server;
     }
 
-    public static void main(String[] args) throws LDAPException, IOException {
+    public static void main(String[] args) throws LDAPException {
         new InMemoryDirectoryServerFactory()
                 .createDirectoryServer("example.ldif")
         ;

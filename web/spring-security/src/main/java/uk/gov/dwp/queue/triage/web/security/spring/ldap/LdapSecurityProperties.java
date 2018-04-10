@@ -1,12 +1,13 @@
 package uk.gov.dwp.queue.triage.web.security.spring.ldap;
 
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @ConfigurationProperties(prefix = "ldap")
-public class LdapSecurityProperties {
+public class LdapSecurityProperties implements InitializingBean {
 
     static final String DEFAULT_BASE_DN = "dc=dwp,dc=gov,dc=uk";
     static final String DEFAULT_USER_DN_PATTERN = "uid={0},ou=Users";
@@ -17,9 +18,7 @@ public class LdapSecurityProperties {
     private List<String> urls = new ArrayList<>();
     private String baseDn = DEFAULT_BASE_DN;
     private GroupSearch groupSearch = new GroupSearch();
-    private List<String> userDnPatterns = new ArrayList<String>() {{
-        add(DEFAULT_USER_DN_PATTERN);
-    }};
+    private List<String> userDnPatterns = new ArrayList<>();
     private Password password = new Password();
 
     public List<String> getUrls() {
@@ -44,6 +43,13 @@ public class LdapSecurityProperties {
 
     public Password getPassword() {
         return password;
+    }
+
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        if (userDnPatterns.isEmpty()) {
+            userDnPatterns.add(DEFAULT_USER_DN_PATTERN);
+        }
     }
 
     public static class GroupSearch {

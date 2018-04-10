@@ -1,10 +1,10 @@
 package uk.gov.dwp.queue.triage.core.dao.mongo;
 
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import org.hamcrest.collection.IsMapContaining;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import uk.gov.dwp.queue.triage.core.dao.util.HashMapBuilder;
 import uk.gov.dwp.queue.triage.core.domain.Destination;
 import uk.gov.dwp.queue.triage.core.domain.DestinationMatcher;
 import uk.gov.dwp.queue.triage.core.domain.FailedMessage;
@@ -17,6 +17,7 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 import static java.time.Instant.now;
@@ -30,7 +31,6 @@ import static org.hamcrest.Matchers.emptyIterable;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
-import static uk.gov.dwp.queue.triage.core.dao.util.HashMapBuilder.newHashMap;
 import static uk.gov.dwp.queue.triage.core.domain.FailedMessageMatcher.aFailedMessage;
 import static uk.gov.dwp.queue.triage.core.domain.StatusHistoryEvent.Status.DELETED;
 import static uk.gov.dwp.queue.triage.core.domain.StatusHistoryEvent.Status.FAILED;
@@ -79,16 +79,17 @@ public class FailedMessageMongoDaoTest extends AbstractMongoDaoTest {
 
     @Test
     public void saveMessageWithPropertiesAndLabels() {
-        HashMapBuilder<String, Object> hashMapBuilder = newHashMap(String.class, Object.class)
+        Map<String, Object> props = ImmutableMap.<String, Object>builder()
                 .put("string", "Builder")
                 .put("localDateTime", LocalDateTime.now())
                 .put("date", new Date())
                 .put("integer", 1)
                 .put("long", 1L)
-                .put("uuid", UUID.randomUUID());
+                .put("uuid", UUID.randomUUID())
+                .build();
 
-        HashMap<String, Object> properties = hashMapBuilder.build();
-        properties.put("properties", hashMapBuilder.build());
+        Map<String, Object> properties = new HashMap<>(props);
+        properties.put("properties", new HashMap<>(props));
         failedMessageBuilder
                 .withProperties(properties)
                 .withLabel("foo")

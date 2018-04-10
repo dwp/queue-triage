@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.InjectableValues;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import uk.gov.dwp.queue.triage.core.dao.FailedMessageDao;
-import uk.gov.dwp.queue.triage.core.domain.FailedMessage;
 import uk.gov.dwp.queue.triage.core.service.FailedMessageLabelService;
 import uk.gov.dwp.queue.triage.core.service.FailedMessageService;
 

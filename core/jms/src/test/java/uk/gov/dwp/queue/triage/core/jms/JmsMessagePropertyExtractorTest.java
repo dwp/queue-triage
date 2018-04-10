@@ -7,6 +7,7 @@ import org.junit.rules.ExpectedException;
 
 import javax.jms.JMSException;
 import javax.jms.Message;
+import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.Map;
 import java.util.Vector;
@@ -17,6 +18,7 @@ import static java.util.Collections.emptyMap;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasEntry;
+import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -49,6 +51,25 @@ public class JmsMessagePropertyExtractorTest {
 
         Map<String, Object> actual = underTest.extractProperties(message);
         assertThat(actual, hasEntry("foo", "bar"));
+        assertThat(actual, hasEntry("one", 1));
+    }
+
+    @Test
+    public void cannotReadPropertyNamesFromMessage() throws JMSException {
+        when(message.getPropertyNames()).thenThrow(JMSException.class);
+
+        assertThat(underTest.extractProperties(message), is(emptyMap()));
+    }
+
+    @Test
+    public void cannotReadOnePropertyFromMessage() throws JMSException {
+        Vector<String> propertyNames = new Vector<>(Arrays.asList("foo", "one"));
+        when(message.getObjectProperty("foo")).thenThrow(JMSException.class);
+        when(message.getObjectProperty("one")).thenReturn(1);
+
+        when(message.getPropertyNames()).thenReturn(propertyNames.elements());
+
+        Map<String, Object> actual = underTest.extractProperties(message);
         assertThat(actual, hasEntry("one", 1));
     }
 

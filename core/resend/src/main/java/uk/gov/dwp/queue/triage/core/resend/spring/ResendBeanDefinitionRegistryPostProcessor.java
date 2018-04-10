@@ -1,6 +1,5 @@
 package uk.gov.dwp.queue.triage.core.resend.spring;
 
-import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.beans.factory.support.AbstractBeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
@@ -40,7 +39,7 @@ public class ResendBeanDefinitionRegistryPostProcessor implements BeanDefinition
     }
 
     @Override
-    public void postProcessBeanDefinitionRegistry(BeanDefinitionRegistry registry) throws BeansException {
+    public void postProcessBeanDefinitionRegistry(BeanDefinitionRegistry registry) {
         int index = 0;
         while (hasMoreBrokers(index)) {
             String brokerName = environment.getProperty(getPropertyKey(index, "name"));
@@ -114,7 +113,8 @@ public class ResendBeanDefinitionRegistryPostProcessor implements BeanDefinition
     }
 
     @Override
-    public void postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory) throws BeansException {
+    public void postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory) {
+        // Do nothing
     }
 
     private boolean hasMoreBrokers(int index) {

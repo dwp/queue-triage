@@ -2,7 +2,6 @@ package uk.gov.dwp.queue.triage.core.jms.activemq.spring;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.beans.factory.support.AbstractBeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
@@ -48,7 +47,7 @@ public class JmsBeanDefinitionRegistryPostProcessor implements BeanDefinitionReg
     }
 
     @Override
-    public void postProcessBeanDefinitionRegistry(BeanDefinitionRegistry registry) throws BeansException {
+    public void postProcessBeanDefinitionRegistry(BeanDefinitionRegistry registry) {
         int index = 0;
         while (hasMoreBrokers(index)) {
                 String brokerName = getProperty(index, "name");
@@ -124,7 +123,7 @@ public class JmsBeanDefinitionRegistryPostProcessor implements BeanDefinitionReg
     }
 
     @Override
-    public void postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory) throws BeansException {
+    public void postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory) {
         // Do nothing
     }
 

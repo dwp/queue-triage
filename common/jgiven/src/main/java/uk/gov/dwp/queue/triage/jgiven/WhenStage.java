@@ -5,8 +5,6 @@ import com.tngtech.jgiven.base.StageBase;
 
 public class WhenStage<SELF extends WhenStage<?>> extends StageBase<SELF> {
 
-    public WhenStage() {}
-
     @IntroWord
     public SELF when() {
         return this.self();

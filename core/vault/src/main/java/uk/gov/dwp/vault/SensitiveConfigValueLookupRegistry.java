@@ -2,9 +2,7 @@ package uk.gov.dwp.vault;
 
 import uk.gov.dwp.vault.domain.DecryptedValue;
 
-import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Stream;
 
 public class SensitiveConfigValueLookupRegistry {
 

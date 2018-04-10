@@ -5,3 +5,7 @@ dependencies{
     implementation 'org.hamcrest:hamcrest-library'
     implementation 'com.spotify:hamcrest-optional'
 }
+
+sonarqube {
+    skipProject = true
+}
