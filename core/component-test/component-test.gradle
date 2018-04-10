@@ -49,7 +49,7 @@ dependencies {
     testImplementation 'org.eclipse.jetty:jetty-servlet'
     testImplementation 'org.eclipse.jetty:jetty-webapp'
     testImplementation 'org.hibernate:hibernate-validator'
-
+    testImplementation 'org.mockito:mockito-core'
 
 }
 

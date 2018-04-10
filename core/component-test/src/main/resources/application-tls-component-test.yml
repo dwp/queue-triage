@@ -3,8 +3,9 @@ jms:
     brokers:
       - name: internal-broker
         url: ssl://localhost:2023?jms.redeliveryPolicy.maximumRedeliveries=0
+        queue: ActiveMQ.DLQ
         tls:
-          keyStoreFilePath: ./tls_activemq/broker.ks
-          keyStorePassword: brokerpassword
+          keyStoreFilePath: ./tls_activemq/client.ks
+          keyStorePassword: clientpassword
           trustStoreFilePath: ./tls_activemq/client.ts
           trustStorePassword: clientpassword
