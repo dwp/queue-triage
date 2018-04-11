@@ -1,33 +1,29 @@
-#!/bin/bash
+#!/usr/bin/env python
 
-MONGO_DB_ADDRESS=${MONGO_DB_ADDRESS:-"localhost:27017/queue-triage"}
-MONGO_COLLECTION=${MONGO_COLLECTION:-"failedMessage"}
-MONGO_ADMIN_USER=${MONGO_ADMIN_USER:-"admin"}
-MONGO_ADMIN_PASSWORD=${MONGO_ADMIN_PASSWORD:-"Passw0rd"}
-MONGO_ADMIN_DB=${MONGO_ADMIN_DB:-"admin"}
+import mongoUtils
 
-echo "Connecting to ${MONGO_DB_ADDRESS} as ${MONGO_ADMIN_USER}"
+parser = mongoUtils.create_default_argument_parser()
 
-mongo --username=${MONGO_ADMIN_USER} \
-      --password=${MONGO_ADMIN_PASSWORD} \
-      --authenticationDatabase=${MONGO_ADMIN_DB} \
-      ${MONGO_DB_ADDRESS} <<!
+options = parser.parse_args()
+
+mongoUtils.execute_mongo_command(options, """\
 db.dropRole("failedMessageReadOnly")
 db.createRole({
   role: "failedMessageReadOnly",
     privileges: [
-      { resource: { db: "queue-triage", collection: "failedMessage" }, actions: [ "find" ] }
+      { resource: { db: "%s", collection: "failedMessage" }, actions: [ "find" ] }
     ],
     roles: []
-})
+})""" % options.appDb )
+
+mongoUtils.execute_mongo_command(options, """\
 db.dropRole("failedMessageReadWrite")
 db.createRole({
   role: "failedMessageReadWrite",
   privileges: [
-    { resource: { db: "queue-triage", collection: "failedMessage" }, actions: [ "update", "insert", "remove" ] }
+    { resource: { db: "%s", collection: "failedMessage" }, actions: [ "update", "insert", "remove" ] }
   ],
   roles: [
     { role: "failedMessageReadOnly", db: "queue-triage" }
   ]
-})
-!
+})""" % options.appDb )
