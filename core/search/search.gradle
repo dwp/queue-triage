@@ -16,6 +16,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot'
 
     testImplementation project(':core:dao-mongo-test-support')
+    testImplementation project(':core:client-test-support')
     testImplementation 'junit:junit'
     testImplementation 'org.hamcrest:hamcrest-core'
     testImplementation 'org.hamcrest:hamcrest-library'

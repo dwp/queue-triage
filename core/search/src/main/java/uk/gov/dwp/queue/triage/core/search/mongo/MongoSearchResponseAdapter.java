@@ -20,7 +20,7 @@ public class MongoSearchResponseAdapter {
         return newSearchFailedMessageResponse()
                 .withFailedMessageId(failedMessageConverter.getFailedMessageId(basicDBObject))
                 .withBroker(destination.getBrokerName())
-                .withDestination(destination.getName())
+                .withDestination(destination.getName().orElse(null))
                 .withContent(failedMessageConverter.getContent(basicDBObject))
                 .withSentDateTime(failedMessageConverter.getSentDateTime(basicDBObject))
                 .withFailedDateTime(failedMessageConverter.getFailedDateTime(basicDBObject))

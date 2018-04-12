@@ -5,6 +5,7 @@ import uk.gov.dwp.queue.triage.id.FailedMessageId;
 
 import javax.validation.constraints.NotNull;
 import java.time.Instant;
+import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
@@ -15,7 +16,7 @@ public class SearchFailedMessageResponse {
     private final String jmsMessageId;
     @NotNull
     private final String broker;
-    private final Optional<String> destination;
+    private final String destination;
     @NotNull
     private final Instant sentDateTime;
     @NotNull
@@ -30,7 +31,7 @@ public class SearchFailedMessageResponse {
     private SearchFailedMessageResponse(@JsonProperty("failedMessageId") FailedMessageId failedMessageId,
                                         @JsonProperty("jmsMessageId") String jmsMessageId,
                                         @JsonProperty("broker") String broker,
-                                        @JsonProperty("destination") Optional<String> destination,
+                                        @JsonProperty("destination") String destination,
                                         @JsonProperty("sentDateTime") Instant sentDateTime,
                                         @JsonProperty("failedDateTime") Instant lastFailedDateTime,
                                         @JsonProperty("content") String content,
@@ -58,7 +59,7 @@ public class SearchFailedMessageResponse {
     }
 
     public Optional<String> getDestination() {
-        return destination;
+        return Optional.ofNullable(destination);
     }
 
     public Instant getSentDateTime() {
@@ -96,11 +97,11 @@ public class SearchFailedMessageResponse {
         private FailedMessageId failedMessageId;
         private String jmsMessageId;
         private String broker;
-        private Optional<String> destination = Optional.empty();
+        private String destination;
         private Instant sentDateTime;
         private Instant failedDateTime;
         private String content;
-        private Set<String> labels;
+        private Set<String> labels = new HashSet<>();
 
         private SearchFailedMessageResponseBuilder() {
         }
@@ -120,7 +121,7 @@ public class SearchFailedMessageResponse {
             return this;
         }
 
-        public SearchFailedMessageResponseBuilder withDestination(Optional<String> destination) {
+        public SearchFailedMessageResponseBuilder withDestination(String destination) {
             this.destination = destination;
             return this;
         }

@@ -3,12 +3,10 @@ package uk.gov.dwp.queue.triage.web.component.list;
 import com.tngtech.jgiven.annotation.ScenarioStage;
 import org.junit.Test;
 import uk.gov.dwp.queue.triage.id.FailedMessageId;
-import uk.gov.dwp.queue.triage.web.component.SimpleBaseWebComponentTest;
 import uk.gov.dwp.queue.triage.web.component.WebComponentTest;
 import uk.gov.dwp.queue.triage.web.component.login.LoginGivenStage;
 
 import java.time.Instant;
-import java.util.Optional;
 
 import static java.time.temporal.ChronoUnit.HOURS;
 import static java.time.temporal.ChronoUnit.MINUTES;
@@ -27,7 +25,7 @@ public class ViewFailedMessagesComponentTest extends WebComponentTest<ListFailed
         given().aFailedMessage$Exists(newSearchFailedMessageResponse()
                 .withFailedMessageId(FAILED_MESSAGE_ID_1)
                 .withBroker("main-broker")
-                .withDestination(Optional.of("queue-name"))
+                .withDestination("queue-name")
                 .withSentDateTime(NOW.minus(1, MINUTES))
                 .withFailedDateTime(NOW)
                 .withContent("Boom")
@@ -35,7 +33,7 @@ public class ViewFailedMessagesComponentTest extends WebComponentTest<ListFailed
         given().and().aFailedMessage$Exists(newSearchFailedMessageResponse()
                 .withFailedMessageId(FAILED_MESSAGE_ID_2)
                 .withBroker("another-broker")
-                .withDestination(Optional.of("topic-name"))
+                .withDestination("topic-name")
                 .withSentDateTime(NOW.minus(1, HOURS))
                 .withFailedDateTime(NOW.minus(2, MINUTES))
                 .withContent("Failure")
@@ -60,7 +58,7 @@ public class ViewFailedMessagesComponentTest extends WebComponentTest<ListFailed
         given().aFailedMessage$Exists(newSearchFailedMessageResponse()
                 .withFailedMessageId(FAILED_MESSAGE_ID_1)
                 .withBroker("main-broker")
-                .withDestination(Optional.of("queue-name"))
+                .withDestination("queue-name")
                 .withSentDateTime(NOW.minus(1, MINUTES))
                 .withFailedDateTime(NOW)
                 .withContent("Boom")

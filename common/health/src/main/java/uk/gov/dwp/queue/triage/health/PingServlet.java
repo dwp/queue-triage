@@ -12,7 +12,7 @@ import static javax.servlet.http.HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
 
 public class PingServlet extends HttpServlet {
 
-    private static Logger LOGGER = LoggerFactory.getLogger(PingServlet.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(PingServlet.class);
 
     private final PingResponseWriter responseWriter;
 

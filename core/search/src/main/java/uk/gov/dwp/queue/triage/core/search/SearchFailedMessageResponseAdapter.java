@@ -11,7 +11,7 @@ public class SearchFailedMessageResponseAdapter {
         return newSearchFailedMessageResponse()
                 .withBroker(failedMessage.getDestination().getBrokerName())
                 .withContent(failedMessage.getContent())
-                .withDestination(failedMessage.getDestination().getName())
+                .withDestination(failedMessage.getDestination().getName().orElse(null))
                 .withFailedDateTime(failedMessage.getFailedAt())
                 .withFailedMessageId(failedMessage.getFailedMessageId())
                 .withJmsMessageId(failedMessage.getJmsMessageId())

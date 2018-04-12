@@ -7,7 +7,6 @@ import uk.gov.dwp.queue.triage.core.client.FailedMessageStatus;
 import uk.gov.dwp.queue.triage.core.domain.StatusHistoryEvent.Status;
 
 import java.util.EnumMap;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -16,7 +15,7 @@ public final class FailedMessageStatusAdapter {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(FailedMessageStatusAdapter.class);
 
-    private static Map<Status, FailedMessageStatus> statusToFailedMessageStatus = new HashMap<>();
+    private static Map<Status, FailedMessageStatus> statusToFailedMessageStatus = new EnumMap<>(Status.class);
     private static Map<FailedMessageStatus, Set<Status>> failedMessageStatusToStatusMapping = new EnumMap<>(FailedMessageStatus.class);
 
     static {
@@ -30,6 +29,9 @@ public final class FailedMessageStatusAdapter {
         failedMessageStatusToStatusMapping.put(FailedMessageStatus.SENT, Sets.immutableEnumSet(Status.SENT));
     }
 
+    private FailedMessageStatusAdapter() {
+        // No-op
+    }
 
     public static FailedMessageStatus toFailedMessageStatus(Status status) {
         FailedMessageStatus failedMessageStatus = statusToFailedMessageStatus.get(status);

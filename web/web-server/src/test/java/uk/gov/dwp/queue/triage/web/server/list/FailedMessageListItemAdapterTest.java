@@ -14,7 +14,6 @@ import java.time.LocalTime;
 import java.time.ZonedDateTime;
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.Optional;
 import java.util.UUID;
 
 import static java.time.ZoneOffset.UTC;
@@ -39,7 +38,7 @@ public class FailedMessageListItemAdapterTest {
         SearchFailedMessageResponse failedMessage1 = SearchFailedMessageResponse.newSearchFailedMessageResponse()
                 .withFailedMessageId(FailedMessageId.fromString(FAILED_MESSAGE_ID_1))
                 .withBroker("internal-broker")
-                .withDestination(Optional.of("queue-name"))
+                .withDestination("queue-name")
                 .withSentDateTime(EPOCH)
                 .withFailedDateTime(SOME_DATE_TIME)
                 .withContent("Some Content")
@@ -47,7 +46,7 @@ public class FailedMessageListItemAdapterTest {
         SearchFailedMessageResponse failedMessage2 = SearchFailedMessageResponse.newSearchFailedMessageResponse()
                 .withFailedMessageId(FailedMessageId.fromString(FAILED_MESSAGE_ID_2))
                 .withBroker("internal-broker")
-                .withDestination(Optional.of("another-queue"))
+                .withDestination("another-queue")
                 .withSentDateTime(SOME_DATE_TIME)
                 .withFailedDateTime(SOME_DATE_TIME.with(MILLI_OF_SECOND, 123))
                 .withContent("More Content")
