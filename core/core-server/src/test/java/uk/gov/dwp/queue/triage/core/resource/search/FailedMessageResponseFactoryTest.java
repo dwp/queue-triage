@@ -4,7 +4,6 @@ import org.hamcrest.Matchers;
 import org.junit.Test;
 import uk.gov.dwp.queue.triage.core.client.FailedMessageResponse;
 import uk.gov.dwp.queue.triage.core.domain.Destination;
-import uk.gov.dwp.queue.triage.core.domain.FailedMessageStatusAdapter;
 import uk.gov.dwp.queue.triage.id.FailedMessageId;
 
 import java.time.Instant;
@@ -22,7 +21,7 @@ public class FailedMessageResponseFactoryTest {
     private static final Instant NOW = Instant.now();
     private static final FailedMessageId FAILED_MESSAGE_ID = FailedMessageId.newFailedMessageId();
 
-    private final FailedMessageResponseFactory underTest = new FailedMessageResponseFactory(new FailedMessageStatusAdapter());
+    private final FailedMessageResponseFactory underTest = new FailedMessageResponseFactory();
 
     @Test
     public void createFailedMessageResponseFromAFailedMessage() {
