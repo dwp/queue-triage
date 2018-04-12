@@ -9,6 +9,7 @@ import java.time.Instant;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
 public class CreateFailedMessageRequest {
@@ -132,7 +133,7 @@ public class CreateFailedMessageRequest {
         }
 
         public CreateFailedMessageRequestBuilder withProperties(Map<String, Object> properties) {
-            this.properties = (properties != null) ? properties : new HashMap<>();
+            this.properties = Optional.ofNullable(properties).map(HashMap::new).orElse(new HashMap<>());
             return this;
         }
 
@@ -142,7 +143,7 @@ public class CreateFailedMessageRequest {
         }
 
         public CreateFailedMessageRequestBuilder withLabels(Set<String> labels) {
-            this.labels = (labels != null) ? labels : new HashSet<>();
+            this.labels = Optional.ofNullable(labels).map(HashSet::new).orElse(new HashSet<>());
             return this;
         }
 
