@@ -32,8 +32,7 @@ public class FailedMessageListItemAdapter {
                         toString(fm.getLastFailedDateTime()),
                         Optional.ofNullable(fm.getLabels())
                                 .filter(IS_EMPTY.negate())
-                                .map(Collection::stream)
-                                .map(x -> x.collect(Collectors.joining(", ")))
+                                .map(x -> String.join(", ", x))
                                 .orElse(null)))
                 .collect(Collectors.toList());
     }
