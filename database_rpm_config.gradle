@@ -13,6 +13,10 @@ configure(subprojects.findAll { dbProjects.contains(it.path) }) { project ->
 
         String appInstallationDir = "/srv/app/${project.name}"
 
+        // Pre-compile any python modules
+        postInstall "python -m compileall ${appInstallationDir}"
+        preUninstall "find ${appInstallationDir} -name '*.pyc' -exec rm -f {} \\;"
+
         from(installDist.outputs.files) {
             into appInstallationDir
             createDirectoryEntry true

@@ -1,23 +1,19 @@
-#!/bin/bash
+#!/usr/bin/env python
 
-MONGO_DB_ADDRESS=${MONGO_DB_ADDRESS:-"localhost:27017/queue-triage"}
-MONGO_COLLECTION=${MONGO_COLLECTION:-"failedMessage"}
-MONGO_ADMIN_USER=${MONGO_ADMIN_USER:-"admin"}
-MONGO_ADMIN_PASSWORD=${MONGO_ADMIN_PASSWORD:-"Passw0rd"}
-MONGO_ADMIN_DB=${MONGO_ADMIN_DB:-"admin"}
+import mongoUtils
 
-echo "Connecting to ${MONGO_DB_ADDRESS} as ${MONGO_ADMIN_USER}"
+parser = mongoUtils.create_default_argument_parser()
+parser.add_argument('--appUser', help='username for the queue-triage application', default='failedMessageUser')
+parser.add_argument('--appPassword', nargs='?', help='password for the application user', action=mongoUtils.PasswordAction, default='Passw0rd')
 
-mongo --username=${MONGO_ADMIN_USER} \
-      --password=${MONGO_ADMIN_PASSWORD} \
-      --authenticationDatabase=${MONGO_ADMIN_DB} \
-      ${MONGO_DB_ADDRESS} <<!
-db.dropUser("failedMessageUser")
+options = parser.parse_args()
+
+mongoUtils.execute_mongo_command(options, """\
+db.dropUser("%s")
 db.createUser({
-  user: "failedMessageUser",
-  pwd: "Passw0rd",
-  roles: [
-    "failedMessageReadWrite"
-  ]
-})
-!
+    user: "%s",
+    pwd: "%s",
+    roles: [
+        "failedMessageReadWrite"
+    ]
+})""" % (options.appUser, options.appUser, options.appPassword))
