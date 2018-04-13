@@ -8,8 +8,6 @@ import uk.gov.dwp.queue.triage.web.component.list.FailedMessageListThenStage;
 import uk.gov.dwp.queue.triage.web.component.list.ListFailedMessagesStage;
 import uk.gov.dwp.queue.triage.web.component.login.LoginGivenStage;
 
-import java.util.Optional;
-
 import static uk.gov.dwp.queue.triage.core.client.search.SearchFailedMessageRequestMatcher.aSearchRequestMatchingAnyCriteria;
 import static uk.gov.dwp.queue.triage.core.client.search.SearchFailedMessageResponse.newSearchFailedMessageResponse;
 
@@ -32,7 +30,7 @@ public class SearchFailedMessageComponentTest extends WebComponentTest<ListFaile
                 newSearchFailedMessageResponse()
                         .withFailedMessageId(FAILED_MESSAGE_ID_1)
                         .withBroker("main-broker")
-                        .withDestination(Optional.of("queue-name"))
+                        .withDestination("queue-name")
                         .withContent("This message contains some-text")
                         .build()
         );
@@ -51,7 +49,7 @@ public class SearchFailedMessageComponentTest extends WebComponentTest<ListFaile
                 newSearchFailedMessageResponse()
                         .withFailedMessageId(FAILED_MESSAGE_ID_1)
                         .withBroker("main-broker")
-                        .withDestination(Optional.of("queue-name"))
+                        .withDestination("queue-name")
                         .withContent("This message contains some-text")
                         .build()
         );

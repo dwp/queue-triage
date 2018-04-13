@@ -6,6 +6,7 @@ dependencies {
     implementation 'io.swagger:swagger-annotations'
 
     testImplementation project(':core:client-test-support')
+    testImplementation project(':common:jackson')
     testImplementation 'junit:junit'
     testImplementation "org.hamcrest:hamcrest-library"
     testImplementation "com.fasterxml.jackson.datatype:jackson-datatype-jdk8"

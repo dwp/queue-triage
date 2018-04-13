@@ -8,6 +8,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import static java.time.ZoneOffset.UTC;
@@ -16,6 +18,7 @@ import static java.time.format.DateTimeFormatter.ofPattern;
 public class FailedMessageListItemAdapter {
 
     private static final DateTimeFormatter ISO_DATE_TIME_WITH_MS = ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").withZone(UTC);
+    private static final Predicate<Set<String>> IS_EMPTY = Set::isEmpty;
 
     public List<FailedMessageListItem> adapt(Collection<SearchFailedMessageResponse> failedMessages) {
         return failedMessages
@@ -28,7 +31,8 @@ public class FailedMessageListItemAdapter {
                         toString(fm.getSentDateTime()),
                         toString(fm.getLastFailedDateTime()),
                         Optional.ofNullable(fm.getLabels())
-                                .map(labels -> labels.stream().collect(Collectors.joining(", ")))
+                                .filter(IS_EMPTY.negate())
+                                .map(x -> String.join(", ", x))
                                 .orElse(null)))
                 .collect(Collectors.toList());
     }

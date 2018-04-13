@@ -9,7 +9,6 @@ import uk.gov.dwp.queue.triage.web.component.list.ListFailedMessagesStage;
 import uk.gov.dwp.queue.triage.web.component.login.LoginGivenStage;
 
 import java.time.Instant;
-import java.util.Optional;
 
 import static java.time.temporal.ChronoUnit.HOURS;
 import static java.time.temporal.ChronoUnit.MINUTES;
@@ -34,7 +33,7 @@ public class LabelManagementComponentTest extends SimpleBaseWebComponentTest<Lab
         listFailedMessagesStage.given().aFailedMessage$Exists(newSearchFailedMessageResponse()
                 .withFailedMessageId(FAILED_MESSAGE_ID_1)
                 .withBroker("main-broker")
-                .withDestination(Optional.of("queue-name"))
+                .withDestination("queue-name")
                 .withSentDateTime(NOW.minus(1, MINUTES))
                 .withFailedDateTime(NOW)
                 .withContent("Boom")
@@ -42,7 +41,7 @@ public class LabelManagementComponentTest extends SimpleBaseWebComponentTest<Lab
         listFailedMessagesStage.given().and().aFailedMessage$Exists(newSearchFailedMessageResponse()
                 .withFailedMessageId(FAILED_MESSAGE_ID_2)
                 .withBroker("another-broker")
-                .withDestination(Optional.of("topic-name"))
+                .withDestination("topic-name")
                 .withSentDateTime(NOW.minus(1, HOURS))
                 .withFailedDateTime(NOW.minus(2, MINUTES))
                 .withContent("Failure")
@@ -60,11 +59,11 @@ public class LabelManagementComponentTest extends SimpleBaseWebComponentTest<Lab
     }
 
     @Test
-    public void removeLabelsFromAFailedMessage() throws Exception {
+    public void removeLabelsFromAFailedMessage() {
         listFailedMessagesStage.given().aFailedMessage$Exists(newSearchFailedMessageResponse()
                 .withFailedMessageId(FAILED_MESSAGE_ID_1)
                 .withBroker("main-broker")
-                .withDestination(Optional.of("queue-name"))
+                .withDestination("queue-name")
                 .withSentDateTime(NOW.minus(1, MINUTES))
                 .withFailedDateTime(NOW)
                 .withContent("Boom")
@@ -72,7 +71,7 @@ public class LabelManagementComponentTest extends SimpleBaseWebComponentTest<Lab
         listFailedMessagesStage.given().and().aFailedMessage$Exists(newSearchFailedMessageResponse()
                 .withFailedMessageId(FAILED_MESSAGE_ID_2)
                 .withBroker("another-broker")
-                .withDestination(Optional.of("topic-name"))
+                .withDestination("topic-name")
                 .withSentDateTime(NOW.minus(1, HOURS))
                 .withFailedDateTime(NOW.minus(2, MINUTES))
                 .withContent("Failure")
