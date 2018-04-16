@@ -54,6 +54,8 @@ task createMongoUsers(type: Exec) {
     workingDir './src/main/resources'
 
     commandLine './mongo-queue-triage-users.sh'
+
+    dependsOn createMongoRoles
 }
 
 task createMongoIndexes(type: Exec) {
