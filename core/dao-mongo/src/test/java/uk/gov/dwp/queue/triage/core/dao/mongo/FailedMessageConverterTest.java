@@ -1,7 +1,6 @@
 package uk.gov.dwp.queue.triage.core.dao.mongo;
 
-import com.mongodb.BasicDBObject;
-import com.mongodb.DBObject;
+import org.bson.Document;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -31,8 +30,8 @@ import static org.hamcrest.Matchers.notNullValue;
 import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.when;
-import static uk.gov.dwp.queue.triage.core.dao.mongo.DBObjectConverter.toBasicDBList;
-import static uk.gov.dwp.queue.triage.core.dao.mongo.DBObjectMatcher.hasField;
+import static uk.gov.dwp.queue.triage.core.dao.mongo.DocumentConverter.toBasicDBList;
+import static uk.gov.dwp.queue.triage.core.dao.mongo.DocumentMatcher.hasField;
 import static uk.gov.dwp.queue.triage.core.dao.mongo.FailedMessageConverter.CONTENT;
 import static uk.gov.dwp.queue.triage.core.dao.mongo.FailedMessageConverter.DESTINATION;
 import static uk.gov.dwp.queue.triage.core.dao.mongo.FailedMessageConverter.JMS_MESSAGE_ID;
@@ -56,16 +55,16 @@ public class FailedMessageConverterTest {
         put("propertyName", "propertyValue");
     }};
     private static final Destination SOME_DESTINATION = new Destination("broker", of("queue.name"));
-    private static final BasicDBObject DESTINATION_DB_OBJECT = new BasicDBObject();
+    private static final Document DESTINATION_DB_OBJECT = new Document();
     private static final StatusHistoryEvent SOME_STATUS = statusHistoryEvent(SENT);
-    private static final BasicDBObject STATUS_DB_OBJECT = new BasicDBObject();
+    private static final Document STATUS_DB_OBJECT = new Document();
     private static final Instant SENT_AT = Instant.now().minus(5, ChronoUnit.MINUTES);
     private static final Instant FAILED_AT = Instant.now();
 
     @Mock
-    private DBObjectConverter<Destination> destinationDBObjectConverter;
+    private DocumentConverter<Destination> destinationDocumentConverter;
     @Mock
-    private DBObjectConverter<StatusHistoryEvent> failedMessageStatusDBObjectConverter;
+    private DocumentConverter<StatusHistoryEvent> failedMessageStatusDocumentConverter;
     @Mock
     private ObjectConverter<Map<String, Object>, String> propertiesConverter;
 
@@ -86,30 +85,30 @@ public class FailedMessageConverterTest {
                 .withLabel("PR-1234")
         ;
         underTest = new MongoDaoConfig().failedMessageConverter(
-                destinationDBObjectConverter,
-                failedMessageStatusDBObjectConverter,
+                destinationDocumentConverter,
+                failedMessageStatusDocumentConverter,
                 propertiesConverter
         );
     }
 
     @Test
     public void createId() {
-        assertThat(underTest.createId(FAILED_MESSAGE_ID), equalTo(new BasicDBObject("_id", FAILED_MESSAGE_ID_AS_STRING)));
+        assertThat(underTest.createId(FAILED_MESSAGE_ID), equalTo(new Document("_id", FAILED_MESSAGE_ID_AS_STRING)));
     }
 
     @Test
-    public void mapNullDBObjectToFailedMessage() {
+    public void mapNullDocumentToFailedMessage() {
         assertThat(underTest.convertToObject(null), is(nullValue()));
     }
 
     @Test
     public void convertFailedMessage() {
         when(propertiesConverter.convertFromObject(SOME_PROPERTIES)).thenReturn("{ \"propertyName\": \"propertyValue\" }");
-        when(destinationDBObjectConverter.convertFromObject(SOME_DESTINATION)).thenReturn(DESTINATION_DB_OBJECT);
+        when(destinationDocumentConverter.convertFromObject(SOME_DESTINATION)).thenReturn(DESTINATION_DB_OBJECT);
         primeFailedMessageStatusConverter(SOME_STATUS, STATUS_DB_OBJECT);
 
-        DBObject dbObject = underTest.convertFromObject(failedMessageBuilder.build());
-        assertThat(dbObject, allOf(
+        Document document = underTest.convertFromObject(failedMessageBuilder.build());
+        assertThat(document, allOf(
                 hasField("_id", equalTo(FAILED_MESSAGE_ID_AS_STRING)),
                 hasField(JMS_MESSAGE_ID, equalTo(JMS_MESSAGE_ID_VALUE)),
                 hasField(CONTENT, equalTo("Hello")),
@@ -119,8 +118,8 @@ public class FailedMessageConverterTest {
         ));
 
         when(propertiesConverter.convertToObject("{ \"propertyName\": \"propertyValue\" }")).thenReturn(SOME_PROPERTIES);
-        when(destinationDBObjectConverter.convertToObject(DESTINATION_DB_OBJECT)).thenReturn(SOME_DESTINATION);
-        assertThat(underTest.convertToObject(dbObject), is(aFailedMessage()
+        when(destinationDocumentConverter.convertToObject(DESTINATION_DB_OBJECT)).thenReturn(SOME_DESTINATION);
+        assertThat(underTest.convertToObject(document), is(aFailedMessage()
                 .withFailedMessageId(equalTo(FAILED_MESSAGE_ID))
                 .withJmsMessageId(equalTo(JMS_MESSAGE_ID_VALUE))
                 .withContent(equalTo("Hello"))
@@ -136,7 +135,7 @@ public class FailedMessageConverterTest {
     @Test
     public void convertFailedMessageForUpdate() {
         when(propertiesConverter.convertFromObject(SOME_PROPERTIES)).thenReturn("{ \"propertyName\": \"propertyValue\" }");
-        when(destinationDBObjectConverter.convertFromObject(SOME_DESTINATION)).thenReturn(DESTINATION_DB_OBJECT);
+        when(destinationDocumentConverter.convertFromObject(SOME_DESTINATION)).thenReturn(DESTINATION_DB_OBJECT);
 
         assertThat(underTest.convertForUpdate(failedMessageBuilder.build()), allOf(
                 hasField(JMS_MESSAGE_ID, equalTo(JMS_MESSAGE_ID_VALUE)),
@@ -146,8 +145,8 @@ public class FailedMessageConverterTest {
         ));
     }
 
-    private void primeFailedMessageStatusConverter(StatusHistoryEvent statusHistoryEvent, BasicDBObject statusDBObject) {
-        when(failedMessageStatusDBObjectConverter.convertFromObject(statusHistoryEvent)).thenReturn(statusDBObject);
-        when(failedMessageStatusDBObjectConverter.convertToObject(statusDBObject)).thenReturn(statusHistoryEvent);
+    private void primeFailedMessageStatusConverter(StatusHistoryEvent statusHistoryEvent, Document statusDocument) {
+        when(failedMessageStatusDocumentConverter.convertFromObject(statusHistoryEvent)).thenReturn(statusDocument);
+        when(failedMessageStatusDocumentConverter.convertToObject(statusDocument)).thenReturn(statusHistoryEvent);
     }
 }

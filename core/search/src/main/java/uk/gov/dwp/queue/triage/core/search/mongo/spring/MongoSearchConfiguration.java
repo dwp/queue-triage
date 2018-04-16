@@ -21,7 +21,7 @@ public class MongoSearchConfiguration {
                                                                  MongoDaoProperties mongoDaoProperties,
                                                                  FailedMessageConverter failedMessageConverter) {
         return new MongoFailedMessageSearchService(
-                mongoClient.getDB(mongoDaoProperties.getDbName()).getCollection(mongoDaoProperties.getFailedMessage().getName()),
+                mongoClient.getDatabase(mongoDaoProperties.getDbName()).getCollection(mongoDaoProperties.getFailedMessage().getName()),
                 new MongoSearchRequestAdapter(),
                 failedMessageConverter,
                 new MongoStatusHistoryQueryBuilder());

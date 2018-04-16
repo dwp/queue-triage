@@ -1,6 +1,6 @@
 package uk.gov.dwp.queue.triage.core.search.mongo;
 
-import com.mongodb.BasicDBObject;
+import org.bson.Document;
 import uk.gov.dwp.queue.triage.core.client.search.SearchFailedMessageResponse;
 import uk.gov.dwp.queue.triage.core.dao.mongo.FailedMessageConverter;
 import uk.gov.dwp.queue.triage.core.domain.Destination;
@@ -15,15 +15,15 @@ public class MongoSearchResponseAdapter {
         this.failedMessageConverter = failedMessageConverter;
     }
 
-    public SearchFailedMessageResponse toResponse(BasicDBObject basicDBObject) {
-        Destination destination = failedMessageConverter.getDestination(basicDBObject);
+    public SearchFailedMessageResponse toResponse(Document document) {
+        Destination destination = failedMessageConverter.getDestination(document);
         return newSearchFailedMessageResponse()
-                .withFailedMessageId(failedMessageConverter.getFailedMessageId(basicDBObject))
+                .withFailedMessageId(failedMessageConverter.getFailedMessageId(document))
                 .withBroker(destination.getBrokerName())
                 .withDestination(destination.getName().orElse(null))
-                .withContent(failedMessageConverter.getContent(basicDBObject))
-                .withSentDateTime(failedMessageConverter.getSentDateTime(basicDBObject))
-                .withFailedDateTime(failedMessageConverter.getFailedDateTime(basicDBObject))
+                .withContent(failedMessageConverter.getContent(document))
+                .withSentDateTime(failedMessageConverter.getSentDateTime(document))
+                .withFailedDateTime(failedMessageConverter.getFailedDateTime(document))
                 .build();
 
     }

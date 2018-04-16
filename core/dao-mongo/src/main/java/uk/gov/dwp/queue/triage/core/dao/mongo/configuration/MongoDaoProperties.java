@@ -1,7 +1,6 @@
 package uk.gov.dwp.queue.triage.core.dao.mongo.configuration;
 
 import com.mongodb.MongoClientOptions;
-
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 import java.util.ArrayList;
@@ -50,11 +49,10 @@ public class MongoDaoProperties {
         this.options = options;
     }
 
-    public MongoClientOptions mongoClientOptions() {
+    public MongoClientOptions.Builder mongoClientOptions() {
         return new MongoClientOptions.Builder()
             .sslEnabled(options.ssl.enabled)
-            .sslInvalidHostNameAllowed(options.ssl.invalidHostnameAllowed)
-            .build();
+            .sslInvalidHostNameAllowed(options.ssl.invalidHostnameAllowed);
     }
 
     public static class Collection {

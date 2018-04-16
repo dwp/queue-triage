@@ -1,6 +1,6 @@
 package uk.gov.dwp.queue.triage.core.search.mongo;
 
-import com.mongodb.DBObject;
+import org.bson.Document;
 import org.hamcrest.Description;
 import org.hamcrest.Matchers;
 import org.hamcrest.TypeSafeMatcher;
@@ -18,7 +18,7 @@ import static org.hamcrest.Matchers.hasItems;
 import static org.hamcrest.Matchers.not;
 import static uk.gov.dwp.queue.triage.core.client.search.SearchFailedMessageRequest.searchMatchingAllCriteria;
 import static uk.gov.dwp.queue.triage.core.client.search.SearchFailedMessageRequest.searchMatchingAnyCriteria;
-import static uk.gov.dwp.queue.triage.core.dao.mongo.DBObjectMatcher.hasField;
+import static uk.gov.dwp.queue.triage.core.dao.mongo.DocumentMatcher.hasField;
 
 public class MongoSearchRequestAdapterTest {
 
@@ -26,7 +26,7 @@ public class MongoSearchRequestAdapterTest {
 
     @Test
     public void searchRequestMatchingAllCriteriaWithAllParametersSpecified() {
-        final DBObject dbObject = underTest.toQuery(searchMatchingAllCriteria()
+        final Document document = underTest.toQuery(searchMatchingAllCriteria()
                 .withBroker("broker-name")
                 .withDestination("mars")
                 .withStatus(FailedMessageStatus.FAILED)
@@ -36,7 +36,7 @@ public class MongoSearchRequestAdapterTest {
                 .withJmsMessageId("ID:localhost.localdomain-46765-1518703251379-5:1:1:1:1")
                 .build()
         );
-        assertThat(dbObject, allOf(
+        assertThat(document, allOf(
                 hasField("statusHistory.0.status", hasField(IN, hasItems("FAILED", "CLASSIFIED", "RESEND", "SENT"))),
                 hasField("$and", containsInAnyOrder(
                     hasField("destination.brokerName", equalTo("broker-name")),
@@ -48,7 +48,7 @@ public class MongoSearchRequestAdapterTest {
 
     @Test
     public void searchRequestMatchingAnyCriteriaWithAllParametersSpecified() {
-        final DBObject dbObject = underTest.toQuery(searchMatchingAnyCriteria()
+        final Document document = underTest.toQuery(searchMatchingAnyCriteria()
                 .withBroker("broker-name")
                 .withDestination("mars")
                 .withStatus(FailedMessageStatus.FAILED)
@@ -58,7 +58,7 @@ public class MongoSearchRequestAdapterTest {
                 .withJmsMessageId("ID:localhost.localdomain-46765-1518703251379-5:1:1:1:1")
                 .build()
         );
-        assertThat(dbObject, allOf(
+        assertThat(document, allOf(
                 hasField("statusHistory.0.status", hasField(IN, hasItems("FAILED", "CLASSIFIED", "RESEND", "SENT"))),
                 hasField("$or", containsInAnyOrder(
                     hasField("destination.brokerName", equalTo("broker-name")),
@@ -84,9 +84,9 @@ public class MongoSearchRequestAdapterTest {
 
     @Test
     public void searchRequestWithoutDestinationAndBrokerAndDefaultStatus() {
-        final DBObject dbObject = underTest.toQuery(searchMatchingAllCriteria().build());
+        final Document document = underTest.toQuery(searchMatchingAllCriteria().build());
 
-        assertThat(dbObject, Matchers.allOf(
+        assertThat(document, Matchers.allOf(
                 hasField("statusHistory.0.status", hasField("$ne", equalTo("DELETED")))
         ));
     }

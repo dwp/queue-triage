@@ -1,8 +1,8 @@
 package uk.gov.dwp.queue.triage.core.dao.mongo;
 
-import com.mongodb.BasicDBObject;
-import com.mongodb.DBCollection;
 import com.mongodb.MongoClient;
+import com.mongodb.client.MongoCollection;
+import org.bson.Document;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.runner.RunWith;
@@ -25,17 +25,17 @@ public abstract class AbstractMongoDaoTest {
     protected MongoClient mongoClient;
     @Autowired
     protected MongoDaoProperties mongoDaoProperties;
-    protected DBCollection collection;
+    protected MongoCollection<Document> collection;
 
     @Before
     public void setUp() {
-        collection = mongoClient.getDB(mongoDaoProperties.getDbName()).getCollection(getCollectionName());
-        collection.remove(new BasicDBObject());
+        collection = mongoClient.getDatabase(mongoDaoProperties.getDbName()).getCollection(getCollectionName());
+        collection.deleteMany(new Document());
     }
 
     @After
     public void tearDown() {
-        collection.remove(new BasicDBObject());
+        collection.deleteMany(new Document());
     }
 
     protected abstract String getCollectionName();

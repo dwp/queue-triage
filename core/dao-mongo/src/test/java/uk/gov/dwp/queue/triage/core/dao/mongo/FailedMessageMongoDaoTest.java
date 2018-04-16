@@ -143,7 +143,7 @@ public class FailedMessageMongoDaoTest extends AbstractMongoDaoTest {
 
     @Test
     public void removeOnAnEmptyCollection() {
-        assertThat(underTest.removeFailedMessages(), is(0));
+        assertThat(underTest.removeFailedMessages(), is(0L));
     }
 
     @Test
@@ -152,7 +152,7 @@ public class FailedMessageMongoDaoTest extends AbstractMongoDaoTest {
         underTest.insert(newFailedMessageWithStatus(RESEND, EIGHT_DAYS_AGO));
         underTest.insert(newFailedMessageWithStatus(SENT, EIGHT_DAYS_AGO));
 
-        assertThat(underTest.removeFailedMessages(), is(0));
+        assertThat(underTest.removeFailedMessages(), is(0L));
         assertThat(collection.count(), is(3L));
     }
 
@@ -166,7 +166,7 @@ public class FailedMessageMongoDaoTest extends AbstractMongoDaoTest {
         underTest.insert(newFailedMessageWithStatus(DELETED, EIGHT_DAYS_AGO));
         underTest.insert(newFailedMessageWithStatus(DELETED, EIGHT_DAYS_AGO));
 
-        assertThat(underTest.removeFailedMessages(), is(2));
+        assertThat(underTest.removeFailedMessages(), is(2L));
         assertThat(collection.count(), is(4L));
     }
 
