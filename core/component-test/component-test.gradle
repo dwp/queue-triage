@@ -43,7 +43,6 @@ dependencies {
     implementation 'org.yaml:snakeyaml'
     implementation 'com.github.tomakehurst:wiremock'
 
-    testImplementation 'org.apache.activemq:activemq-broker'
     testImplementation 'org.apache.activemq:activemq-kahadb-store'
     testImplementation 'org.eclipse.jetty:jetty-server'
     testImplementation 'org.eclipse.jetty:jetty-servlet'

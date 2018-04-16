@@ -1,8 +1,8 @@
 jms:
   activemq:
     brokers:
-      - name: internal-broker
-        url: ssl://localhost:2023?jms.redeliveryPolicy.maximumRedeliveries=0
+      - name: tls-broker
+        url: ssl://localhost:2023
         queue: ActiveMQ.DLQ
         tls:
           keyStoreFilePath: ./tls_activemq/client.ks
