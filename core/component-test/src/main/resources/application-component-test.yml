@@ -2,4 +2,4 @@ jms:
   activemq:
     brokers:
       - name: internal-broker
-        url: vm://embedded-broker?create=false
+        url: vm://embedded-broker?create=false&jms.redeliveryPolicy.maximumRedeliveries=0

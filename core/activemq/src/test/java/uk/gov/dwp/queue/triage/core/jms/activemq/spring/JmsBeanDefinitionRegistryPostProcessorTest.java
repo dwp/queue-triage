@@ -5,6 +5,8 @@ import org.junit.After;
 import org.junit.Test;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.beans.factory.config.YamlPropertiesFactoryBean;
+import org.springframework.boot.autoconfigure.jms.JmsProperties;
+import org.springframework.boot.context.properties.ConfigurationPropertiesBindingPostProcessor;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,6 +17,7 @@ import org.springframework.jms.listener.DefaultMessageListenerContainer;
 import uk.gov.dwp.queue.triage.core.jms.FailedMessageListener;
 import uk.gov.dwp.queue.triage.core.jms.activemq.browser.QueueBrowserScheduledExecutorService;
 import uk.gov.dwp.queue.triage.core.jms.activemq.configuration.JmsListenerConfig;
+import uk.gov.dwp.queue.triage.core.jms.activemq.configuration.JmsListenerProperties;
 import uk.gov.dwp.queue.triage.core.jms.activemq.configuration.MessageConsumerApplicationInitializer;
 import uk.gov.dwp.queue.triage.core.service.processor.FailedMessageProcessor;
 
@@ -103,7 +106,8 @@ public class JmsBeanDefinitionRegistryPostProcessorTest {
         AnnotationConfigApplicationContext applicationContext = new AnnotationConfigApplicationContext();
         applicationContext.setEnvironment(createEnvironment(yamlFilename));
         new MessageConsumerApplicationInitializer().initialize(applicationContext);
-        applicationContext.register(JmsListenerConfig.class, AdditionalConfig.class);
+        applicationContext.register(ConfigurationPropertiesBindingPostProcessor.class);
+        applicationContext.register(JmsListenerProperties.class, JmsListenerConfig.class, AdditionalConfig.class);
         applicationContext.refresh();
         return applicationContext;
     }

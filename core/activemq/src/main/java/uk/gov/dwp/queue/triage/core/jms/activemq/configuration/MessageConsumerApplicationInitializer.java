@@ -11,6 +11,7 @@ import uk.gov.dwp.queue.triage.core.jms.activemq.browser.spring.QueueBrowserCall
 import uk.gov.dwp.queue.triage.core.jms.activemq.browser.spring.QueueBrowserScheduledExecutorServiceBeanDefinitionFactory;
 import uk.gov.dwp.queue.triage.core.jms.activemq.browser.spring.QueueBrowserServiceBeanDefinitionFactory;
 import uk.gov.dwp.queue.triage.core.jms.activemq.spring.ActiveMQConnectionFactoryBeanDefinitionFactory;
+import uk.gov.dwp.queue.triage.core.jms.activemq.spring.ActiveMQConnectionFactoryFactoryBeanDefinitionFactory;
 import uk.gov.dwp.queue.triage.core.jms.activemq.spring.FailedMessageListenerBeanDefinitionFactory;
 import uk.gov.dwp.queue.triage.core.jms.activemq.spring.JmsBeanDefinitionRegistryPostProcessor;
 import uk.gov.dwp.queue.triage.core.jms.activemq.spring.NamedMessageListenerContainerBeanDefinitionFactory;
@@ -23,6 +24,7 @@ public class MessageConsumerApplicationInitializer implements ApplicationContext
         final ConfigurableEnvironment environment = applicationContext.getEnvironment();
         applicationContext.addBeanFactoryPostProcessor(new JmsBeanDefinitionRegistryPostProcessor(
                 environment,
+                new ActiveMQConnectionFactoryFactoryBeanDefinitionFactory(),
                 new ActiveMQConnectionFactoryBeanDefinitionFactory(),
                 new FailedMessageListenerBeanDefinitionFactory(brokerName -> new ActiveMQFailedMessageFactory(
                         new MessageTextExtractor(),

@@ -13,6 +13,7 @@ dependencies {
     implementation project(':common:cxf')
     implementation project(':core:activemq')
     implementation 'org.springframework:spring-context'
+    implementation 'org.springframework.boot:spring-boot'
     implementation 'org.springframework:spring-core'
 
     testImplementation project(':common:jackson')

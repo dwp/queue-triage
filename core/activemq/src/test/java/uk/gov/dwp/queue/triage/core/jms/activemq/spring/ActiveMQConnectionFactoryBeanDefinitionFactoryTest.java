@@ -12,17 +12,17 @@ import static uk.gov.dwp.queue.triage.core.jms.activemq.spring.ActiveMQConnectio
 
 public class ActiveMQConnectionFactoryBeanDefinitionFactoryTest {
 
-    private static final String BROKER_URL = "some-url";
+    private static final String NAME_OF_FACTORY_BEAN = "some-factory-bean";
 
     private final ActiveMQConnectionFactoryBeanDefinitionFactory underTest = new ActiveMQConnectionFactoryBeanDefinitionFactory();
 
     @Test
     public void createABeanDefinitionForActiveMqConnectionFactory() throws Exception {
-        AbstractBeanDefinition abstractBeanDefinition = underTest.create(BROKER_URL);
+        AbstractBeanDefinition abstractBeanDefinition = underTest.create(NAME_OF_FACTORY_BEAN);
 
         assertThat(abstractBeanDefinition.getBeanClass(), typeCompatibleWith(ActiveMQConnectionFactory.class));
-        assertThat(abstractBeanDefinition.getConstructorArgumentValues().getIndexedArgumentValues().size(), is(1));
-        assertThat(abstractBeanDefinition.getConstructorArgumentValues().getArgumentValue(0, String.class).getValue(), is(BROKER_URL));
+        assertThat(abstractBeanDefinition.getFactoryMethodName(), is("create"));
+        assertThat(abstractBeanDefinition.getFactoryBeanName(), is(NAME_OF_FACTORY_BEAN));
     }
 
     @Test

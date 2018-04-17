@@ -4,6 +4,7 @@ import org.apache.activemq.ActiveMQConnectionFactory;
 import org.junit.After;
 import org.junit.Test;
 import org.springframework.beans.factory.config.YamlPropertiesFactoryBean;
+import org.springframework.boot.context.properties.ConfigurationPropertiesBindingPostProcessor;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -12,6 +13,7 @@ import org.springframework.core.env.StandardEnvironment;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.jms.core.JmsTemplate;
 import uk.gov.dwp.queue.triage.core.dao.FailedMessageDao;
+import uk.gov.dwp.queue.triage.core.jms.activemq.configuration.JmsListenerProperties;
 import uk.gov.dwp.queue.triage.core.jms.spring.SpringMessageSender;
 import uk.gov.dwp.queue.triage.core.resend.FailedMessageSender;
 import uk.gov.dwp.queue.triage.core.resend.ResendFailedMessageService;
@@ -103,7 +105,8 @@ public class ResendBeanDefinitionRegistryPostProcessorTest {
         AnnotationConfigApplicationContext applicationContext = new AnnotationConfigApplicationContext();
         applicationContext.setEnvironment(createEnvironment(yamlFilename));
         new ResendFailedMessageApplicationInitializer().initialize(applicationContext);
-        applicationContext.register(ResendFailedMessageConfiguration.class, AdditionalConfig.class);
+        applicationContext.register(ConfigurationPropertiesBindingPostProcessor.class);
+        applicationContext.register(JmsListenerProperties.class, ResendFailedMessageConfiguration.class, AdditionalConfig.class);
         applicationContext.refresh();
         return applicationContext;
     }

@@ -1,0 +1,11 @@
+jms:
+  activemq:
+    brokers:
+      - name: tls-broker
+        url: ssl://localhost:2023
+        queue: ActiveMQ.DLQ
+        tls:
+          keyStoreFilePath: ./tls_activemq/client.ks
+          keyStorePassword: clientpassword
+          trustStoreFilePath: ./tls_activemq/client.ts
+          trustStorePassword: clientpassword

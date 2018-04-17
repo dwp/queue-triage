@@ -6,6 +6,7 @@ import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.beans.factory.support.BeanDefinitionRegistryPostProcessor;
 import org.springframework.core.env.Environment;
 import uk.gov.dwp.queue.triage.core.jms.activemq.spring.ActiveMQConnectionFactoryBeanDefinitionFactory;
+import uk.gov.dwp.queue.triage.core.jms.activemq.spring.ActiveMQConnectionFactoryFactoryBeanDefinitionFactory;
 import uk.gov.dwp.queue.triage.core.jms.spring.JmsTemplateBeanDefinitionFactory;
 import uk.gov.dwp.queue.triage.core.jms.spring.SpringMessageSenderBeanDefinitionFactory;
 
@@ -15,6 +16,7 @@ import java.util.concurrent.TimeUnit;
 public class ResendBeanDefinitionRegistryPostProcessor implements BeanDefinitionRegistryPostProcessor {
 
     private final Environment environment;
+    private final ActiveMQConnectionFactoryFactoryBeanDefinitionFactory activeMQConnectionFactoryFactoryBeanDefinitionFactory;
     private final ActiveMQConnectionFactoryBeanDefinitionFactory activeMQConnectionFactoryBeanDefinitionFactory;
     private final ResendFailedMessageServiceBeanDefinitionFactory resendFailedMessageServiceBeanDefinitionFactory;
     private final FailedMessageSenderBeanDefinitionFactory failedMessageSenderBeanDefinitionFactory;
@@ -23,6 +25,7 @@ public class ResendBeanDefinitionRegistryPostProcessor implements BeanDefinition
     private final ResendScheduledExecutorServiceBeanDefinitionFactory resendScheduledExecutorServiceBeanDefinitionFactory;
 
     public ResendBeanDefinitionRegistryPostProcessor(Environment environment,
+                                                     ActiveMQConnectionFactoryFactoryBeanDefinitionFactory activeMQConnectionFactoryFactoryBeanDefinitionFactory,
                                                      ActiveMQConnectionFactoryBeanDefinitionFactory activeMQConnectionFactoryBeanDefinitionFactory,
                                                      ResendFailedMessageServiceBeanDefinitionFactory resendFailedMessageServiceBeanDefinitionFactory,
                                                      FailedMessageSenderBeanDefinitionFactory failedMessageSenderBeanDefinitionFactory,
@@ -30,6 +33,7 @@ public class ResendBeanDefinitionRegistryPostProcessor implements BeanDefinition
                                                      JmsTemplateBeanDefinitionFactory jmsTemplateBeanDefinitionFactory,
                                                      ResendScheduledExecutorServiceBeanDefinitionFactory resendScheduledExecutorServiceBeanDefinitionFactory) {
         this.environment = environment;
+        this.activeMQConnectionFactoryFactoryBeanDefinitionFactory = activeMQConnectionFactoryFactoryBeanDefinitionFactory;
         this.activeMQConnectionFactoryBeanDefinitionFactory = activeMQConnectionFactoryBeanDefinitionFactory;
         this.resendFailedMessageServiceBeanDefinitionFactory = resendFailedMessageServiceBeanDefinitionFactory;
         this.failedMessageSenderBeanDefinitionFactory = failedMessageSenderBeanDefinitionFactory;
@@ -44,12 +48,19 @@ public class ResendBeanDefinitionRegistryPostProcessor implements BeanDefinition
         while (hasMoreBrokers(index)) {
             String brokerName = environment.getProperty(getPropertyKey(index, "name"));
 
+            // Create the Factory to create the factory
+            String factoryBeanName = activeMQConnectionFactoryFactoryBeanDefinitionFactory.createBeanName(brokerName);
+            registry.registerBeanDefinition(
+                factoryBeanName,
+                activeMQConnectionFactoryFactoryBeanDefinitionFactory.create(brokerName)
+            );
+
             // Create ConnectionFactory
             String connectionFactoryBeanName = activeMQConnectionFactoryBeanDefinitionFactory.createBeanName("resender-" + brokerName);
             registry.registerBeanDefinition(
                     connectionFactoryBeanName,
                     activeMQConnectionFactoryBeanDefinitionFactory.create(
-                            environment.getProperty(getPropertyKey(index, "url")))
+                        factoryBeanName)
             );
 
             // Create JmsTemplate

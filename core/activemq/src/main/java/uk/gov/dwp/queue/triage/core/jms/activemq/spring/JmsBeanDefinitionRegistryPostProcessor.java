@@ -7,6 +7,7 @@ import org.springframework.beans.factory.support.AbstractBeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.beans.factory.support.BeanDefinitionRegistryPostProcessor;
 import org.springframework.core.env.Environment;
+
 import uk.gov.dwp.queue.triage.core.jms.activemq.browser.spring.QueueBrowserCallbackBeanDefinitionFactory;
 import uk.gov.dwp.queue.triage.core.jms.activemq.browser.spring.QueueBrowserScheduledExecutorServiceBeanDefinitionFactory;
 import uk.gov.dwp.queue.triage.core.jms.activemq.browser.spring.QueueBrowserServiceBeanDefinitionFactory;
@@ -20,6 +21,7 @@ public class JmsBeanDefinitionRegistryPostProcessor implements BeanDefinitionReg
     private static final Logger LOGGER = LoggerFactory.getLogger(JmsBeanDefinitionRegistryPostProcessor.class);
 
     private final Environment environment;
+    private final ActiveMQConnectionFactoryFactoryBeanDefinitionFactory activeMQConnectionFactoryFactoryBeanDefinitionFactory;
     private final ActiveMQConnectionFactoryBeanDefinitionFactory activeMQConnectionFactoryBeanDefinitionFactory;
     private final FailedMessageListenerBeanDefinitionFactory failedMessageListenerBeanDefinitionFactory;
     private final NamedMessageListenerContainerBeanDefinitionFactory namedMessageListenerContainerBeanDefinitionFactory;
@@ -29,6 +31,7 @@ public class JmsBeanDefinitionRegistryPostProcessor implements BeanDefinitionReg
     private final QueueBrowserScheduledExecutorServiceBeanDefinitionFactory queueBrowserScheduledExecutorServiceBeanDefinitionFactory;
 
     public JmsBeanDefinitionRegistryPostProcessor(Environment environment,
+                                                  ActiveMQConnectionFactoryFactoryBeanDefinitionFactory activeMQConnectionFactoryFactoryBeanDefinitionFactory,
                                                   ActiveMQConnectionFactoryBeanDefinitionFactory activeMQConnectionFactoryBeanDefinitionFactory,
                                                   FailedMessageListenerBeanDefinitionFactory failedMessageListenerBeanDefinitionFactory,
                                                   NamedMessageListenerContainerBeanDefinitionFactory namedMessageListenerContainerBeanDefinitionFactory,
@@ -37,6 +40,7 @@ public class JmsBeanDefinitionRegistryPostProcessor implements BeanDefinitionReg
                                                   QueueBrowserServiceBeanDefinitionFactory queueBrowserServiceBeanDefinitionFactory,
                                                   QueueBrowserScheduledExecutorServiceBeanDefinitionFactory queueBrowserScheduledExecutorServiceBeanDefinitionFactory) {
         this.environment = environment;
+        this.activeMQConnectionFactoryFactoryBeanDefinitionFactory = activeMQConnectionFactoryFactoryBeanDefinitionFactory;
         this.activeMQConnectionFactoryBeanDefinitionFactory = activeMQConnectionFactoryBeanDefinitionFactory;
         this.failedMessageListenerBeanDefinitionFactory = failedMessageListenerBeanDefinitionFactory;
         this.namedMessageListenerContainerBeanDefinitionFactory = namedMessageListenerContainerBeanDefinitionFactory;
@@ -50,38 +54,45 @@ public class JmsBeanDefinitionRegistryPostProcessor implements BeanDefinitionReg
     public void postProcessBeanDefinitionRegistry(BeanDefinitionRegistry registry) {
         int index = 0;
         while (hasMoreBrokers(index)) {
-                String brokerName = getProperty(index, "name");
+            String brokerName = getProperty(index, "name");
 
-                // Create ConnectionFactory
-                String connectionFactoryBeanName = activeMQConnectionFactoryBeanDefinitionFactory.createBeanName(brokerName);
+            // Create the Factory to create the factory
+            String factoryBeanName = activeMQConnectionFactoryFactoryBeanDefinitionFactory.createBeanName(brokerName);
+            registry.registerBeanDefinition(
+                factoryBeanName,
+                activeMQConnectionFactoryFactoryBeanDefinitionFactory.create(brokerName)
+            );
+
+            // Create ConnectionFactory
+            String connectionFactoryBeanName = activeMQConnectionFactoryBeanDefinitionFactory.createBeanName(brokerName);
+            registry.registerBeanDefinition(
+                connectionFactoryBeanName,
+                activeMQConnectionFactoryBeanDefinitionFactory.create(factoryBeanName)
+            );
+
+            // Create MessageListener
+            String failedMessageListenerBeanName = failedMessageListenerBeanDefinitionFactory.createBeanName(brokerName);
+            registry.registerBeanDefinition(
+                failedMessageListenerBeanName,
+                failedMessageListenerBeanDefinitionFactory.create(brokerName)
+            );
+
+            if (isBrokerReadOnly(index)) {
+                createReadOnlyMessageConsumer(registry, index, brokerName, connectionFactoryBeanName, failedMessageListenerBeanName);
+            } else {
+                // Create NamedMessageListenerContainer
+                final String queueName = getProperty(index, "queue");
                 registry.registerBeanDefinition(
+                    namedMessageListenerContainerBeanDefinitionFactory.createBeanName(brokerName),
+                    namedMessageListenerContainerBeanDefinitionFactory.create(
+                        brokerName,
                         connectionFactoryBeanName,
-                        activeMQConnectionFactoryBeanDefinitionFactory.create(getProperty(index, "url"))
+                        queueName,
+                        failedMessageListenerBeanName
+                    )
                 );
-
-                // Create MessageListener
-                String failedMessageListenerBeanName = failedMessageListenerBeanDefinitionFactory.createBeanName(brokerName);
-                registry.registerBeanDefinition(
-                        failedMessageListenerBeanName,
-                        failedMessageListenerBeanDefinitionFactory.create(brokerName)
-                );
-
-                if (isBrokerReadOnly(index)) {
-                    createReadOnlyMessageConsumer(registry, index, brokerName, connectionFactoryBeanName, failedMessageListenerBeanName);
-                } else {
-                    // Create NamedMessageListenerContainer
-                    final String queueName = getProperty(index, "queue");
-                    registry.registerBeanDefinition(
-                            namedMessageListenerContainerBeanDefinitionFactory.createBeanName(brokerName),
-                            namedMessageListenerContainerBeanDefinitionFactory.create(
-                                    brokerName,
-                                    connectionFactoryBeanName,
-                                    queueName,
-                                    failedMessageListenerBeanName
-                            )
-                    );
-                    LOGGER.info("MessageConsumer configured for {} on {}", queueName, brokerName);
-                }
+                LOGGER.info("MessageConsumer configured for {} on {}", queueName, brokerName);
+            }
             index++;
         }
     }
@@ -90,35 +101,35 @@ public class JmsBeanDefinitionRegistryPostProcessor implements BeanDefinitionReg
         // Create QueueBrowserCallback
         String queueBrowserCallbackBeanName = queueBrowserCallbackBeanDefinitionFactory.createBeanName(brokerName);
         registry.registerBeanDefinition(
-                queueBrowserCallbackBeanName,
-                queueBrowserCallbackBeanDefinitionFactory.create(failedMessageListenerBeanName)
+            queueBrowserCallbackBeanName,
+            queueBrowserCallbackBeanDefinitionFactory.create(failedMessageListenerBeanName)
         );
 
         // Create JmsTemplate
         String jmsTemplateBeanName = jmsTemplateBeanDefinitionFactory.createBeanName(brokerName);
         registry.registerBeanDefinition(
-                jmsTemplateBeanName,
-                jmsTemplateBeanDefinitionFactory.create(connectionFactoryBeanName)
+            jmsTemplateBeanName,
+            jmsTemplateBeanDefinitionFactory.create(connectionFactoryBeanName)
         );
 
         // Create QueueBrowser
         final String queueBrowserServiceBeanName = queueBrowserServiceBeanDefinitionFactory.createBeanName(brokerName);
         final String queueName = getProperty(index, "queue");
         registry.registerBeanDefinition(
-                queueBrowserServiceBeanName,
-                queueBrowserServiceBeanDefinitionFactory.create(
-                        queueBrowserCallbackBeanName,
-                        jmsTemplateBeanName,
-                        brokerName,
-                        queueName
-                )
+            queueBrowserServiceBeanName,
+            queueBrowserServiceBeanDefinitionFactory.create(
+                queueBrowserCallbackBeanName,
+                jmsTemplateBeanName,
+                brokerName,
+                queueName
+            )
         );
         LOGGER.info("Read-only MessageConsumer configured for {} on {}", queueName, brokerName);
 
         // Create QueueBrowserScheduledExecutor
         registry.registerBeanDefinition(
-                queueBrowserScheduledExecutorServiceBeanDefinitionFactory.createBeanName(brokerName),
-                createQueueBrowserScheduledExecutorBeanDefinition(index, queueBrowserServiceBeanName)
+            queueBrowserScheduledExecutorServiceBeanDefinitionFactory.createBeanName(brokerName),
+            createQueueBrowserScheduledExecutorBeanDefinition(index, queueBrowserServiceBeanName)
         );
     }
 
@@ -130,23 +141,23 @@ public class JmsBeanDefinitionRegistryPostProcessor implements BeanDefinitionReg
     private AbstractBeanDefinition createQueueBrowserScheduledExecutorBeanDefinition(int index,
                                                                                      String queueBrowserServiceBeanName) {
         Long initialDelay = environment.getProperty(
-                getPropertyKey(index, "resend.initialDelay"),
-                Long.class,
-                0L);
+            getPropertyKey(index, "resend.initialDelay"),
+            Long.class,
+            0L);
         Long executionFrequency = environment.getProperty(
-                getPropertyKey(index, "resend.frequency"),
-                Long.class,
-                60L);
+            getPropertyKey(index, "resend.frequency"),
+            Long.class,
+            60L);
         TimeUnit timeUnit = environment.getProperty(
-                getPropertyKey(index, "resend.unit"),
-                TimeUnit.class,
-                TimeUnit.SECONDS);
+            getPropertyKey(index, "resend.unit"),
+            TimeUnit.class,
+            TimeUnit.SECONDS);
         return queueBrowserScheduledExecutorServiceBeanDefinitionFactory.create(
-                Executors.newSingleThreadScheduledExecutor(),
-                queueBrowserServiceBeanName,
-                initialDelay,
-                executionFrequency,
-                timeUnit);
+            Executors.newSingleThreadScheduledExecutor(),
+            queueBrowserServiceBeanName,
+            initialDelay,
+            executionFrequency,
+            timeUnit);
     }
 
     private boolean hasMoreBrokers(int index) {

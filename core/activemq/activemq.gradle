@@ -7,6 +7,7 @@ dependencies {
     implementation project(':core:jms')
     implementation project(':core:service')
 
+
     implementation 'com.google.guava:guava'
     implementation 'io.swagger:swagger-annotations'
     implementation 'javax.ws.rs:javax.ws.rs-api'
@@ -20,8 +21,12 @@ dependencies {
     implementation 'org.springframework:spring-core'
     implementation 'org.springframework:spring-jms'
 
+    implementation 'org.hibernate:hibernate-validator'
+    implementation 'javax.validation:validation-api'
 
     testImplementation project(':core:domain-test-support')
+    testImplementation 'org.apache.activemq:activemq-broker'
+    testImplementation 'org.apache.activemq.tooling:activemq-junit'
     testImplementation 'org.apache.geronimo.specs:geronimo-j2ee-management_1.1_spec'
     testImplementation 'org.apache.geronimo.specs:geronimo-jms_1.1_spec'
     testImplementation 'org.fusesource.hawtbuf:hawtbuf'
@@ -44,6 +49,7 @@ dependencies {
     testImplementation 'org.mockito:mockito-core'
     testImplementation 'net.bytebuddy:byte-buddy'
     testImplementation 'org.objenesis:objenesis:2.5.1'
+    testImplementation 'org.awaitility:awaitility'
     // this was test:common - end
 
 
