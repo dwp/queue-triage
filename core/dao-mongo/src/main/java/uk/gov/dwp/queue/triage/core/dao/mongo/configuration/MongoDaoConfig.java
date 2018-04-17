@@ -33,7 +33,7 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.Date;
-import java.util.HashMap;
+import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
@@ -50,12 +50,6 @@ public class MongoDaoConfig {
 
     static {
         TimeZone.setDefault(TimeZone.getTimeZone(UTC));
-//        BSON.addDecodingHook(LocalDateTime.class, new LocalDateTimeTransformer());
-//        BSON.addEncodingHook(LocalDateTime.class, new LocalDateTimeTransformer());
-//        BSON.addDecodingHook(Instant.class, new InstantTransformer());
-//        BSON.addEncodingHook(Instant.class, new InstantTransformer());
-//        BSON.addEncodingHook(Id.class, new IdTransformer());
-//        BSON.addDecodingHook(Date.class, new InstantTransformer());
     }
 
     @Bean
@@ -68,7 +62,7 @@ public class MongoDaoConfig {
     }
 
     private CodecRegistry codecRegistry() {
-        Map<BsonType, Class<?>> replacements = new HashMap<>();
+        Map<BsonType, Class<?>> replacements = new EnumMap<>(BsonType.class);
         replacements.put(BsonType.DATE_TIME, Instant.class);
 
         return CodecRegistries.fromRegistries(
