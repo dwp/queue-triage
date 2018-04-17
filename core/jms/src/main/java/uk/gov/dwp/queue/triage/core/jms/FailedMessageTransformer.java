@@ -9,11 +9,11 @@ import javax.jms.JMSException;
 import javax.jms.TextMessage;
 import java.util.Map;
 
-public class FailedMessageDataProvider implements JmsMessageDataProvider<TextMessage, FailedMessage> {
+public class FailedMessageTransformer implements JmsMessageTransformer<TextMessage, FailedMessage> {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(FailedMessageDataProvider.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(FailedMessageTransformer.class);
     @Override
-    public void provide(TextMessage textMessage, FailedMessage data) throws JMSException {
+    public void transform(TextMessage textMessage, FailedMessage data) throws JMSException {
         textMessage.setText(data.getContent());
         Map<String, Object> properties = data.getProperties();
         properties.keySet().forEach(key -> {

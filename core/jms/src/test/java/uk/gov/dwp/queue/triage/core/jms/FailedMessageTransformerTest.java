@@ -13,14 +13,14 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-public class FailedMessageDataProviderTest {
+public class FailedMessageTransformerTest {
 
     private static final FailedMessageId FAILED_MESSAGE_ID = FailedMessageId.newFailedMessageId();
 
     private final FailedMessage failedMessage = mock(FailedMessage.class);
     private final TextMessage textMessage = mock(TextMessage.class);
 
-    private final FailedMessageDataProvider underTest = new FailedMessageDataProvider();
+    private final FailedMessageTransformer underTest = new FailedMessageTransformer();
 
     @Test
     public void processingContinuesObjectPropertyCannotBeWritten() throws JMSException {
@@ -29,7 +29,7 @@ public class FailedMessageDataProviderTest {
         when(failedMessage.getFailedMessageId()).thenReturn(FAILED_MESSAGE_ID);
         doThrow(new JMSException("Arrrghhhhh")).when(textMessage).setObjectProperty("foo", "bar");
 
-        underTest.provide(textMessage, failedMessage);
+        underTest.transform(textMessage, failedMessage);
 
         verify(textMessage).setText("content");
         verify(textMessage).setObjectProperty("foo", "bar");
