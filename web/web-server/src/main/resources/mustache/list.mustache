@@ -6,10 +6,14 @@
     <link rel="stylesheet" type="text/css" href="/static/css/queue-triage.css" />
     <script type="text/javascript" src="/static/js/jquery-2.1.0.min.js"></script>
     <script type="text/javascript" src="/static/js/w2ui-1.5.rc1.js"></script>
+    <script type="text/javascript" src="/static/js/test-utils.js"></script>
+    <script type="text/javascript" src="/static/js/failed-message-popup.js"></script>
 </head>
 <body>
 
-<div id="failed-message-list-grid" style="width: 100%; height: 250px;"></div>
+<div>
+    <div id="failed-message-list-grid" style="width: 100%; height: 400px;"></div>
+</div>
 
 <script type="text/javascript">
     w2utils.settings['dataType'] = 'JSON';
@@ -38,7 +42,15 @@
                 { field: 'sentDateTime', caption: 'Originally Sent', size: '160px', sortable: true },
                 { field: 'failedDateTime', caption: 'Failed', size: '160px', sortable: true },
                 { field: 'labels', caption: 'Labels', size: '20%', editable: { type: 'text' } },
-                { field: 'content', caption: 'Content', size: '80%', sortable: true, searchable: true }
+                { field: 'content', caption: 'Content', size: '80%', sortable: true, searchable: true },
+{{#popupRendered}}
+                {
+                    field: 'edit', caption: '', size: '28px',
+                    render: function (record) {
+                        return '<button class="show-more-btn w2ui-btn" onclick="displayFailedMessageDetails(\'' + record.recid + '\',\'' + record.content + '\');">...</button>';
+                    }
+                }
+{{/popupRendered}}
             ],
             onSelect: function(event) {
                 event.onComplete = function() {
