@@ -25,7 +25,7 @@ import static javax.ws.rs.core.Response.serverError;
 @Produces({MediaType.TEXT_HTML, MediaType.APPLICATION_XHTML_XML})
 public class PageMessageBodyWriter implements MessageBodyWriter<Page> {
     private static final Logger logger = LoggerFactory.getLogger(PageMessageBodyWriter.class);
-    public static final String TEMPLATE_ERROR_MSG =
+    private static final String TEMPLATE_ERROR_MSG =
             "<html>" +
                     "<head><title>Template Error</title></head>" +
                     "<body><h1>Template Error</h1><p>Something went wrong rendering the page</p></body>" +

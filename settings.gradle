@@ -29,8 +29,8 @@ include 'common:id',
         'core:vault',
         'web:component-test',
         'web:mustache',
-        'web:web-server',
-        'web:spring-security'
+        'web:spring-security',
+        'web:web-server'
 
 
 

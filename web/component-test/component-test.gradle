@@ -32,6 +32,7 @@ dependencies {
     testImplementation 'org.eclipse.jetty:jetty-webapp'
     testImplementation 'org.hibernate:hibernate-validator'
     testImplementation 'org.seleniumhq.selenium:selenium-firefox-driver'
+    testImplementation 'org.valid4j:json-path-matchers'
     testImplementation 'org.yaml:snakeyaml'
 }
 

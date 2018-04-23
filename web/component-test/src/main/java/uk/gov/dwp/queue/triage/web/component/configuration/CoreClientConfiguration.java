@@ -7,6 +7,7 @@ import uk.gov.dwp.queue.triage.core.client.SearchFailedMessageClient;
 import uk.gov.dwp.queue.triage.core.client.delete.DeleteFailedMessageClient;
 import uk.gov.dwp.queue.triage.core.client.label.LabelFailedMessageClient;
 import uk.gov.dwp.queue.triage.core.client.resend.ResendFailedMessageClient;
+import uk.gov.dwp.queue.triage.core.client.status.FailedMessageStatusHistoryClient;
 
 import static org.mockito.Mockito.mock;
 
@@ -32,5 +33,10 @@ public class CoreClientConfiguration {
     @Bean
     public ResendFailedMessageClient resendFailedMessageClient() {
         return mock(ResendFailedMessageClient.class);
+    }
+
+    @Bean
+    public FailedMessageStatusHistoryClient failedMessageStatusHistoryClient() {
+        return mock(FailedMessageStatusHistoryClient.class);
     }
 }

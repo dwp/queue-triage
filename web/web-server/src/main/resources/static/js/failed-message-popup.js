@@ -19,7 +19,7 @@ $(function() {
             columns: [
                 { field: 'recid', caption: 'recid', hidden: true },
                 { field: 'status', caption: 'Status', size: '20%' },
-                { field: 'effectiveDate', caption: 'Effective Date', size: '80%' }
+                { field: 'effectiveDateTime', caption: 'Effective Date', size: '80%' }
             ]
         },
         messageProperties: {
@@ -81,19 +81,19 @@ $(function() {
 
 });
 
-function displayFailedMessageDetails(failedMessageId, content) {
-    // Populate the components with data
-
-    // Simulate the AJAX Request to get messageProperties
-    w2ui['messageProperties'].records = [
-        { recid: 1, key: 'traceId', value: 'b47befb9-1d21-4115-b6ef-588061de2bba' },
-        { recid: 2, key: 'correlationId', value: 'f6b68ddf-3bcc-4bbd-a5bf-59542f040076' },
-    ];
-    // Simulate the AJAX Request to get statusHistory
-    w2ui['statusHistory'].records = [];
-    w2ui['messageContent'].record = { "content": content };
-    w2ui['messageContent'].get('content').disabled = true;
-    // w2ui['messageContent'].refresh();
+function displayFailedMessageDetails(failedMessageId) {
+    // Currently the Status History has to be loaded from a separate endpoint
+    w2ui['statusHistory'].load('/web/api/failed-messages/status-history/' + failedMessageId);
+    // Obtain all the details associated with the failedMessageId
+    $.getJSON('/web/failed-messages/search/' + failedMessageId)
+        .done(function(data) {
+            // Consider transforming the message properties on the server side?
+            w2ui['messageProperties'].records = $.map(data.properties, function(e1,e2) {
+                return {key:e2, value:e1};
+            });
+            w2ui['messageContent'].record = { 'content': data.content };
+            w2ui['messageContent'].get('content').disabled = true;
+        });
 
     w2popup.open({
         title   : 'Failed Message ' + failedMessageId,
@@ -103,9 +103,9 @@ function displayFailedMessageDetails(failedMessageId, content) {
         body    : '<div id="failedMessageDetails" style="position: absolute; left: 0px; top: 0px; right: 0px; bottom: 0px;"></div>',
         onOpen  : function (event) {
             event.onComplete = function () {
-                $('#w2ui-popup #main').w2render('layout');
-                w2ui.layout.content('left', w2ui['statusHistory'])
-                w2ui.layout.content('main', w2ui['messageProperties'])
+                $('#w2ui-popup #failedMessageDetails').w2render('layout');
+                w2ui.layout.content('left', w2ui['statusHistory']);
+                w2ui.layout.content('main', w2ui['messageProperties']);
                 w2ui.layout.content('bottom', w2ui['messageContent']);
             }
         },
