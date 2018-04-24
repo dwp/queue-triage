@@ -3,6 +3,7 @@ package uk.gov.dwp.queue.triage.web.component.labels;
 import com.tngtech.jgiven.annotation.ScenarioStage;
 import org.junit.Ignore;
 import org.junit.Test;
+import uk.gov.dwp.queue.triage.core.client.FailedMessageStatus;
 import uk.gov.dwp.queue.triage.id.FailedMessageId;
 import uk.gov.dwp.queue.triage.web.component.SimpleBaseWebComponentTest;
 import uk.gov.dwp.queue.triage.web.component.list.ListFailedMessagesStage;
@@ -10,7 +11,6 @@ import uk.gov.dwp.queue.triage.web.component.login.LoginGivenStage;
 
 import java.time.Instant;
 
-import static java.time.temporal.ChronoUnit.HOURS;
 import static java.time.temporal.ChronoUnit.MINUTES;
 import static uk.gov.dwp.queue.triage.core.client.search.SearchFailedMessageResponse.newSearchFailedMessageResponse;
 
@@ -29,21 +29,21 @@ public class LabelManagementComponentTest extends SimpleBaseWebComponentTest<Lab
     private LabelManagementThenStage labelManagementThenStage;
 
     @Test
-    public void addSingleLabelToAFailedMessage() throws Exception {
+    public void addSingleLabelToAFailedMessage() {
         listFailedMessagesStage.given().aFailedMessage$Exists(newSearchFailedMessageResponse()
                 .withFailedMessageId(FAILED_MESSAGE_ID_1)
                 .withBroker("main-broker")
                 .withDestination("queue-name")
-                .withSentDateTime(NOW.minus(1, MINUTES))
-                .withFailedDateTime(NOW)
+                .withStatus(FailedMessageStatus.FAILED)
+                .withStatusDateTime(NOW)
                 .withContent("Boom")
         );
         listFailedMessagesStage.given().and().aFailedMessage$Exists(newSearchFailedMessageResponse()
                 .withFailedMessageId(FAILED_MESSAGE_ID_2)
                 .withBroker("another-broker")
                 .withDestination("topic-name")
-                .withSentDateTime(NOW.minus(1, HOURS))
-                .withFailedDateTime(NOW.minus(2, MINUTES))
+                .withStatus(FailedMessageStatus.RESENDING)
+                .withStatusDateTime(NOW.minus(2, MINUTES))
                 .withContent("Failure")
         );
         listFailedMessagesStage.given().and().theSearchResultsWillContainFailedMessages$(FAILED_MESSAGE_ID_1, FAILED_MESSAGE_ID_2);
@@ -64,16 +64,16 @@ public class LabelManagementComponentTest extends SimpleBaseWebComponentTest<Lab
                 .withFailedMessageId(FAILED_MESSAGE_ID_1)
                 .withBroker("main-broker")
                 .withDestination("queue-name")
-                .withSentDateTime(NOW.minus(1, MINUTES))
-                .withFailedDateTime(NOW)
+                .withStatus(FailedMessageStatus.FAILED)
+                .withStatusDateTime(NOW)
                 .withContent("Boom")
         );
         listFailedMessagesStage.given().and().aFailedMessage$Exists(newSearchFailedMessageResponse()
                 .withFailedMessageId(FAILED_MESSAGE_ID_2)
                 .withBroker("another-broker")
                 .withDestination("topic-name")
-                .withSentDateTime(NOW.minus(1, HOURS))
-                .withFailedDateTime(NOW.minus(2, MINUTES))
+                .withStatus(FailedMessageStatus.RESENDING)
+                .withStatusDateTime(NOW.minus(2, MINUTES))
                 .withContent("Failure")
         );
         listFailedMessagesStage.given().and().theSearchResultsWillContainFailedMessages$(FAILED_MESSAGE_ID_1, FAILED_MESSAGE_ID_2);

@@ -20,7 +20,7 @@ public class FailedMessageListThenStage extends ThenStage<FailedMessageListThenS
         return this;
     }
 
-    public FailedMessageListThenStage theMessageListContainsAFailedMessageWithId(FailedMessageId failedMessageId) throws InterruptedException {
+    public FailedMessageListThenStage theMessageListContainsAFailedMessageWithId(FailedMessageId failedMessageId) {
         LOGGER.debug("Asserting FailedMessageId: {} is in the MessageList", failedMessageId);
         Selenide.$(By.cssSelector("tr[recid='" + failedMessageId.toString() + "']")).should(exist);
         return this;

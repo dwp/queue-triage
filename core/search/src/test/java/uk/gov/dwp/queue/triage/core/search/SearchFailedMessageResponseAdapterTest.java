@@ -1,6 +1,7 @@
 package uk.gov.dwp.queue.triage.core.search;
 
 import org.junit.Test;
+import uk.gov.dwp.queue.triage.core.client.FailedMessageStatus;
 import uk.gov.dwp.queue.triage.core.domain.Destination;
 import uk.gov.dwp.queue.triage.core.domain.FailedMessageBuilder;
 import uk.gov.dwp.queue.triage.core.domain.StatusHistoryEvent;
@@ -30,9 +31,7 @@ public class SearchFailedMessageResponseAdapterTest {
     private final FailedMessageBuilder failedMessageBuilder = FailedMessageBuilder.newFailedMessage()
             .withContent(SOME_CONTENT)
             .withFailedMessageId(FAILED_MESSAGE_ID)
-            .withFailedDateTime(NOW.plusSeconds(1))
             .withJmsMessageId(JMS_MESSAGE_ID)
-            .withSentDateTime(NOW)
             .withProperties(Collections.singletonMap("foo", "bar"))
             .withLabel("foo")
             .withStatusHistoryEvent(new StatusHistoryEvent(FAILED, NOW));
@@ -45,10 +44,10 @@ public class SearchFailedMessageResponseAdapterTest {
                 .withBroker(equalTo(BROKER_NAME))
                 .withContent(equalTo(SOME_CONTENT))
                 .withDestination(equalTo(Optional.empty()))
-                .withFailedDateTime(NOW.plusSeconds(1))
+                .withStatus(FailedMessageStatus.FAILED)
+                .withStatusDateTime(NOW)
                 .withFailedMessageId(equalTo(FAILED_MESSAGE_ID))
                 .withJmsMessageId(equalTo(JMS_MESSAGE_ID))
-                .withSentDateTime(NOW)
                 .withLabels(contains("foo"))
         ));
     }
@@ -59,10 +58,10 @@ public class SearchFailedMessageResponseAdapterTest {
                 .withBroker(equalTo(BROKER_NAME))
                 .withContent(equalTo(SOME_CONTENT))
                 .withDestination(equalTo(Optional.of(DESTINATION_NAME)))
-                .withFailedDateTime(NOW.plusSeconds(1))
+                .withStatus(FailedMessageStatus.FAILED)
+                .withStatusDateTime(NOW)
                 .withFailedMessageId(equalTo(FAILED_MESSAGE_ID))
                 .withJmsMessageId(equalTo(JMS_MESSAGE_ID))
-                .withSentDateTime(NOW)
                 .withLabels(contains("foo"))
         ));
     }
