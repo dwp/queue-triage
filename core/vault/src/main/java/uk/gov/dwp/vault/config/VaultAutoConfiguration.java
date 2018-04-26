@@ -10,10 +10,13 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.core.Ordered;
+import org.springframework.core.convert.ConversionService;
+import org.springframework.core.convert.converter.Converter;
 import org.springframework.core.convert.support.DefaultConversionService;
 import org.springframework.core.env.ConfigurableEnvironment;
 import org.springframework.core.env.MapPropertySource;
 import org.springframework.core.env.PropertySource;
+
 import uk.gov.dwp.vault.SensitiveConfigValueLookupRegistry;
 import uk.gov.dwp.vault.SensitiveConfigValueLookupStrategy;
 import uk.gov.dwp.vault.SingleValueVaultLookupStrategy;
@@ -87,6 +90,23 @@ public class VaultAutoConfiguration {
     @DependsOn("vaultPropertySource")
     public PropertySourcesPlaceholderConfigurer propertySourcesPlaceholderConfigurer() {
         return new PropertySourcesPlaceholderConfigurer();
+    }
+
+
+    private Converter<char[], String> chararacterArrayToStringConverter() {
+        return new Converter<char[], String>() {
+            @Override
+            public String convert(char[] source) {
+                return new String(source);
+            }
+        };
+    }
+
+    @Bean
+    public ConversionService conversionService() {
+        DefaultConversionService defaultConversionService = new DefaultConversionService();
+        defaultConversionService.addConverter(chararacterArrayToStringConverter());
+        return defaultConversionService;
     }
 
 
