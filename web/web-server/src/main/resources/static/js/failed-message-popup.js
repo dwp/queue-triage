@@ -20,7 +20,10 @@ $(function() {
                 { field: 'recid', caption: 'recid', hidden: true },
                 { field: 'status', caption: 'Status', size: '20%' },
                 { field: 'effectiveDateTime', caption: 'Effective Date', size: '80%' }
-            ]
+            ],
+            onRender: function(event) {
+                this.lock();
+            }
         },
         messageProperties: {
             name: 'messageProperties',
@@ -29,10 +32,58 @@ $(function() {
                 header: true,
                 columnHeaders: false
             },
+            style: 'background-color: #f1f1f1',
             columns: [
-                { field: 'key', caption: 'Key', size: '30%', sortable: true },
-                { field: 'value', caption: 'Value', size: '70%' }
-            ]
+                {
+                    field: 'key', caption: 'Key', size: '30%', sortable: true,
+                    editable: function(record) {
+                        return record.editKey ? {type: 'text'} : null;
+                    },
+                    render: function(record) {
+                        return record.editKey ? record.key : '<span style="color: #777777;">' + record.key + '</span>';
+                    }
+                },
+                {
+                    field: 'value', caption: 'Value', size: '70%',
+                    editable: function(record) {
+                        return record.editValue ? {type: 'text'} : null;
+                    },
+                    render: function(record) {
+                        return record.editValue ? record.value : '<span style="color: #777777;">' + record.value + '</span>';
+                    }
+                }
+            ],
+            onRender: function(event) {
+                this.lock();
+            },
+            initialise: function(data) {
+                // Consider transforming the message properties on the server side
+                var properties = $.map(data.properties, function(e1, e2) {
+                    return {
+                        recid: '_property_' + e2,
+                        key: e2,
+                        value: e1,
+                        editKey: true,
+                        editValue: true
+                    };
+                });
+                // Add the 'broker' and 'destination' as custom properties
+                properties.push({
+                    recid: '_field_broker',
+                    key: 'Broker',
+                    value: data.broker,
+                    editKey: false,
+                    editValue: true
+                });
+                properties.push({
+                    recid: '_field_destination',
+                    key: 'Destination',
+                    value: data.destination,
+                    editKey: false,
+                    editValue: true
+                });
+                this.records = properties;
+            }
         },
         messageContent: {
             name: 'messageContent',
@@ -52,23 +103,31 @@ $(function() {
                 { field: 'content', type: 'textarea', disabled: true }
             ],
             record: {
-                content: '{ foo: "bar" }'
+                content: 'x'
             },
             actions: {
                 edit: function () {
                     var form = this;
-                    if (form.get("content").disabled) {
-                        form.get("content").disabled = false;
-                        form.refresh();
-                        document.getElementById("edit").style.display = "none";
-                        document.getElementById("save").style.display = "";
-                    } else {
-                        // Save and close popup
-                    }
+                    w2ui['messageProperties'].unlock();
+                    w2ui['statusHistory'].unlock();
+                    form.get("content").disabled = false;
+                    form.refresh();
+                    document.getElementById("edit").style.display = "none";
+                    document.getElementById("save").style.display = "";
+                },
+                save: function() {
+                    // Save and close popup
+                    console.log('Changes to properties: ' + JSON.stringify(w2ui['messageProperties'].getChanges()));
+                    console.log('Changes to messageContent: ' + JSON.stringify(this.getChanges()));
+                    w2popup.close();
                 },
                 cancel: function () {
                     w2popup.close();
                 }
+            },
+            initialise: function(data) {
+                this.record = { content: data.content };
+                this.get('content').disabled = true;
             }
         }
     };
@@ -87,32 +146,27 @@ function displayFailedMessageDetails(failedMessageId) {
     // Obtain all the details associated with the failedMessageId
     $.getJSON('/web/failed-messages/search/' + failedMessageId)
         .done(function(data) {
-            // Consider transforming the message properties on the server side?
-            w2ui['messageProperties'].records = $.map(data.properties, function(e1,e2) {
-                return {key:e2, value:e1};
+            w2ui['messageProperties'].initialise(data);
+            w2ui['messageContent'].initialise(data);
+            w2popup.open({
+                title   : 'Failed Message ' + failedMessageId,
+                width   : 800,
+                height  : 600,
+                showMax : true,
+                body    : '<div id="failedMessageDetails" style="position: absolute; left: 0; top: 0; right: 0; bottom: 0;"></div>',
+                onOpen  : function (event) {
+                    event.onComplete = function () {
+                        $('#w2ui-popup').find('#failedMessageDetails').w2render('layout');
+                        w2ui.layout.content('left', w2ui['statusHistory']);
+                        w2ui.layout.content('main', w2ui['messageProperties']);
+                        w2ui.layout.content('bottom', w2ui['messageContent']);
+                    }
+                },
+                onToggle: function (event) {
+                    event.onComplete = function () {
+                        w2ui.layout.resize();
+                    }
+                }
             });
-            w2ui['messageContent'].record = { 'content': data.content };
-            w2ui['messageContent'].get('content').disabled = true;
         });
-
-    w2popup.open({
-        title   : 'Failed Message ' + failedMessageId,
-        width   : 800,
-        height  : 600,
-        showMax : true,
-        body    : '<div id="failedMessageDetails" style="position: absolute; left: 0px; top: 0px; right: 0px; bottom: 0px;"></div>',
-        onOpen  : function (event) {
-            event.onComplete = function () {
-                $('#w2ui-popup #failedMessageDetails').w2render('layout');
-                w2ui.layout.content('left', w2ui['statusHistory']);
-                w2ui.layout.content('main', w2ui['messageProperties']);
-                w2ui.layout.content('bottom', w2ui['messageContent']);
-            }
-        },
-        onToggle: function (event) {
-            event.onComplete = function () {
-                w2ui.layout.resize();
-            }
-        }
-    });
 }
