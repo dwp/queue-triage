@@ -57,31 +57,26 @@ $(function() {
                 this.lock();
             },
             initialise: function(data) {
-                // Consider transforming the message properties on the server side
+                var recid = 0;
+                // Transform the message properties to w2ui grid record format
                 var properties = $.map(data.properties, function(e1, e2) {
                     return {
-                        recid: '_property_' + e2,
+                        recid: recid++,
+                        recordType: 'property',
                         key: e2,
                         value: e1,
                         editKey: true,
                         editValue: true
                     };
                 });
-                // Add the 'broker' and 'destination' as custom properties
-                properties.push({
-                    recid: '_field_broker',
-                    key: 'Broker',
-                    value: data.broker,
-                    editKey: false,
-                    editValue: true
-                });
-                properties.push({
-                    recid: '_field_destination',
-                    key: 'Destination',
-                    value: data.destination,
-                    editKey: false,
-                    editValue: true
-                });
+
+                // Add the 'broker', 'destination' and 'jmsMessageId 'as custom properties
+                properties.push({recid: recid++, recordType: 'field', key: 'broker', value: data.broker, editKey: false, editValue: true});
+                properties.push({recid: recid++, recordType: 'field', key: 'destination', value: data.destination, editKey: false, editValue: true});
+                if (data.jmsMessageId) {
+                    properties.push({recid: recid++, recordType: 'field', key: 'jmsMessageId', value: data.jmsMessageId, editKey: false, editValue: false});
+                }
+
                 this.records = properties;
             }
         },
@@ -117,8 +112,27 @@ $(function() {
                 },
                 save: function() {
                     // Save and close popup
-                    console.log('Changes to properties: ' + JSON.stringify(w2ui['messageProperties'].getChanges()));
-                    console.log('Changes to messageContent: ' + JSON.stringify(this.getChanges()));
+                    var messagePropertyUpdates = w2ui['messageProperties'].getChanges();
+                    var updatedContent = this.getChanges().content;
+                    if (messagePropertyUpdates.length > 0 || updatedContent) {
+                        var record = {
+                            failedMessageId: this.record.failedMessageId,
+                            content: updatedContent ? updatedContent : this.record.content,
+                            properties: []
+                        };
+                        // Iterate over all the records
+                        w2ui['messageProperties'].records
+                            .forEach(function(property) {
+                                var updatedRecord = messagePropertyUpdates.find(function(rec) { return rec.recid === property.recid });
+                                if (property.recordType === 'field') {
+                                    record[property.key] = updatedRecord ? updatedRecord.value : property.value;
+                                } else {
+                                    var newProperty = {};
+                                    newProperty[updatedRecord.key ? updatedRecord.key : property.key] = updatedRecord.value ? updatedRecord.value : property.value;
+                                    record.properties.push(newProperty);
+                                }
+                            });
+                    }
                     w2popup.close();
                 },
                 cancel: function () {
@@ -126,7 +140,7 @@ $(function() {
                 }
             },
             initialise: function(data) {
-                this.record = { content: data.content };
+                this.record = { content: data.content, failedMessageId: data.failedMessageId };
                 this.get('content').disabled = true;
             }
         }
