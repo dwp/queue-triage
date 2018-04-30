@@ -5,6 +5,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.core.convert.ConversionService;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -29,6 +30,9 @@ public class QueueTriageVaultAutoConfigurationWhenVaultIsEnabledIntegrationTest 
     @Autowired
     public SensitiveConfigValueLookupRegistry sensitiveConfigValueLookupRegistry;
 
+    @Autowired
+    public ConversionService conversionService;
+
     @Test
     public void ensureThatWhenConfiguringVault_thatTheOrderOfTheServicesAreWhatWeExpect() throws Exception {
         assertNotNull(vaultProperties);
@@ -43,5 +47,16 @@ public class QueueTriageVaultAutoConfigurationWhenVaultIsEnabledIntegrationTest 
         assertNotNull(sensitiveConfigValueLookupRegistry);
     }
 
+    @Test
+    public void ensureConversionServiceHasAConverterRegisteredToConvertFromCharArrayToString() throws Exception {
+        assertNotNull("There needs to be a registered ConversionService bean instance", conversionService);
 
+        assertThat("There is no converter registered which can convert from char[] to String. "
+                   + "This is necessary for the implementation of the VaultPropertySource, which returns a char[] for storing "
+                   + "passwords in ConfigurationProperties POJO's. This is mainly used for instances where Vault resolved values "
+                   + "need to be converted into String for POJO's that we have no control over. For an example, "
+                   + "see the org.springframework.boot.context.embedded.Ssl.java which stores the keyStorePassword field as a String.",
+                   conversionService.canConvert(char[].class, String.class),
+                   is(true));
+    }
 }
