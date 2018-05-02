@@ -11,10 +11,17 @@ import static javax.ws.rs.core.MediaType.TEXT_HTML;
 @Path("/failed-messages")
 public class FailedMessageListController {
 
+    private final boolean popupRendered;
+
+    public FailedMessageListController(boolean popupRendered) {
+
+        this.popupRendered = popupRendered;
+    }
+
     @GET
     @Consumes(APPLICATION_JSON)
     @Produces(TEXT_HTML)
     public FailedMessageListPage getFailedMessages() {
-        return new FailedMessageListPage();
+        return new FailedMessageListPage(popupRendered);
     }
 }

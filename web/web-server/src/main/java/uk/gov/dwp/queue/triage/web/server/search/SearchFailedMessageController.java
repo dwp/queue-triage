@@ -1,13 +1,19 @@
 package uk.gov.dwp.queue.triage.web.server.search;
 
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
+import uk.gov.dwp.queue.triage.core.client.FailedMessageResponse;
 import uk.gov.dwp.queue.triage.core.client.SearchFailedMessageClient;
 import uk.gov.dwp.queue.triage.core.client.search.SearchFailedMessageResponse;
+import uk.gov.dwp.queue.triage.id.FailedMessageId;
 import uk.gov.dwp.queue.triage.web.server.list.FailedMessageListItem;
 import uk.gov.dwp.queue.triage.web.server.w2ui.W2UIResponse;
 
 import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import java.util.Collection;
 
@@ -35,10 +41,14 @@ public class SearchFailedMessageController {
         Collection<SearchFailedMessageResponse> failedMessages = searchFailedMessageClient.search(
                 searchFailedMessageRequestAdapter.adapt(request)
         );
-        return new W2UIResponse<>(
-                "success",
-                failedMessages.size(),
-                failedMessageListItemAdapter.adapt(failedMessages)
-        );
+        return W2UIResponse.success(failedMessageListItemAdapter.adapt(failedMessages));
+    }
+
+    @GET
+    @Consumes(APPLICATION_JSON)
+    @Produces(APPLICATION_JSON)
+    @Path("/{failedMessageId}")
+    public FailedMessageResponse getFailedMessageById(@PathParam("failedMessageId") FailedMessageId failedMessageId) {
+        return searchFailedMessageClient.getFailedMessage(failedMessageId);
     }
 }

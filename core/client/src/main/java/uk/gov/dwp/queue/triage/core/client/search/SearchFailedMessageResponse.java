@@ -1,6 +1,7 @@
 package uk.gov.dwp.queue.triage.core.client.search;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import uk.gov.dwp.queue.triage.core.client.FailedMessageStatus;
 import uk.gov.dwp.queue.triage.id.FailedMessageId;
 
 import javax.validation.constraints.NotNull;
@@ -17,10 +18,8 @@ public class SearchFailedMessageResponse {
     @NotNull
     private final String broker;
     private final String destination;
-    @NotNull
-    private final Instant sentDateTime;
-    @NotNull
-    private final Instant lastFailedDateTime;
+    private final FailedMessageStatus status;
+    private final Instant statusDateTime;
     private final String content;
     private final Set<String> labels;
 
@@ -32,16 +31,16 @@ public class SearchFailedMessageResponse {
                                         @JsonProperty("jmsMessageId") String jmsMessageId,
                                         @JsonProperty("broker") String broker,
                                         @JsonProperty("destination") String destination,
-                                        @JsonProperty("sentDateTime") Instant sentDateTime,
-                                        @JsonProperty("failedDateTime") Instant lastFailedDateTime,
+                                        @JsonProperty("status") FailedMessageStatus status,
+                                        @JsonProperty("statusDateTime") Instant statusDateTime,
                                         @JsonProperty("content") String content,
                                         @JsonProperty("labels") Set<String> labels) {
         this.failedMessageId = failedMessageId;
         this.jmsMessageId = jmsMessageId;
         this.broker = broker;
         this.destination = destination;
-        this.sentDateTime = sentDateTime;
-        this.lastFailedDateTime = lastFailedDateTime;
+        this.status = status;
+        this.statusDateTime = statusDateTime;
         this.content = content;
         this.labels = labels;
     }
@@ -62,12 +61,12 @@ public class SearchFailedMessageResponse {
         return Optional.ofNullable(destination);
     }
 
-    public Instant getSentDateTime() {
-        return sentDateTime;
+    public FailedMessageStatus getStatus() {
+        return status;
     }
 
-    public Instant getLastFailedDateTime() {
-        return lastFailedDateTime;
+    public Instant getStatusDateTime() {
+        return statusDateTime;
     }
 
     public String getContent() {
@@ -85,8 +84,8 @@ public class SearchFailedMessageResponse {
                 ", jmsMessageId='" + jmsMessageId + '\'' +
                 ", broker='" + broker + '\'' +
                 ", destination=" + destination +
-                ", sentDateTime=" + sentDateTime +
-                ", lastFailedDateTime=" + lastFailedDateTime +
+                ", status=" + status +
+                ", statusDateTime=" + statusDateTime +
                 ", content='" + content + '\'' +
                 ", labels=" + labels +
                 '}';
@@ -98,8 +97,8 @@ public class SearchFailedMessageResponse {
         private String jmsMessageId;
         private String broker;
         private String destination;
-        private Instant sentDateTime;
-        private Instant failedDateTime;
+        private FailedMessageStatus status;
+        private Instant statusDateTime;
         private String content;
         private Set<String> labels = new HashSet<>();
 
@@ -126,13 +125,13 @@ public class SearchFailedMessageResponse {
             return this;
         }
 
-        public SearchFailedMessageResponseBuilder withSentDateTime(Instant sentDateTime) {
-            this.sentDateTime = sentDateTime;
+        public SearchFailedMessageResponseBuilder withStatus(FailedMessageStatus status) {
+            this.status = status;
             return this;
         }
 
-        public SearchFailedMessageResponseBuilder withFailedDateTime(Instant failedDateTime) {
-            this.failedDateTime = failedDateTime;
+        public SearchFailedMessageResponseBuilder withStatusDateTime(Instant statusDateTime) {
+            this.statusDateTime = statusDateTime;
             return this;
         }
 
@@ -147,7 +146,7 @@ public class SearchFailedMessageResponse {
         }
 
         public SearchFailedMessageResponse build() {
-            return new SearchFailedMessageResponse(failedMessageId, jmsMessageId, broker, destination, sentDateTime, failedDateTime, content, labels);
+            return new SearchFailedMessageResponse(failedMessageId, jmsMessageId, broker, destination, status, statusDateTime, content, labels);
         }
     }
 }

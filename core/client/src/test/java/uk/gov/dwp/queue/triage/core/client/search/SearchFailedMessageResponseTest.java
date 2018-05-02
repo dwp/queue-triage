@@ -2,6 +2,7 @@ package uk.gov.dwp.queue.triage.core.client.search;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Test;
+import uk.gov.dwp.queue.triage.core.client.FailedMessageStatus;
 import uk.gov.dwp.queue.triage.core.client.search.SearchFailedMessageResponse.SearchFailedMessageResponseBuilder;
 import uk.gov.dwp.queue.triage.id.FailedMessageId;
 import uk.gov.dwp.queue.triage.jackson.configuration.JacksonConfiguration;
@@ -34,9 +35,9 @@ public class SearchFailedMessageResponseTest {
             .withBroker(BROKER_NAME)
             .withContent(SOME_CONTENT)
             .withFailedMessageId(FAILED_MESSAGE_ID)
-            .withFailedDateTime(NOW.plusSeconds(1))
             .withJmsMessageId(JMS_MESSAGE_ID)
-            .withSentDateTime(NOW);
+            .withStatus(FailedMessageStatus.FAILED)
+            .withStatusDateTime(NOW);
 
     @Test
     public void serialiseAndDeserialiseObjectWithDefaults() throws IOException {
@@ -47,10 +48,10 @@ public class SearchFailedMessageResponseTest {
                 .withBroker(equalTo(BROKER_NAME))
                 .withContent(equalTo(SOME_CONTENT))
                 .withDestination(equalTo(Optional.empty()))
-                .withFailedDateTime(NOW.plusSeconds(1))
                 .withFailedMessageId(equalTo(FAILED_MESSAGE_ID))
                 .withJmsMessageId(equalTo(JMS_MESSAGE_ID))
-                .withSentDateTime(NOW)
+                .withStatus(FailedMessageStatus.FAILED)
+                .withStatusDateTime(NOW)
                 .withLabels(emptyIterable())
         ));
     }
@@ -66,13 +67,11 @@ public class SearchFailedMessageResponseTest {
                 .withBroker(equalTo(BROKER_NAME))
                 .withContent(equalTo(SOME_CONTENT))
                 .withDestination(equalTo(Optional.of(DESTINATION_NAME)))
-                .withFailedDateTime(NOW.plusSeconds(1))
                 .withFailedMessageId(equalTo(FAILED_MESSAGE_ID))
                 .withJmsMessageId(equalTo(JMS_MESSAGE_ID))
-                .withSentDateTime(NOW)
+                .withStatus(FailedMessageStatus.FAILED)
+                .withStatusDateTime(NOW)
                 .withLabels(contains("foo"))
         ));
     }
-
-
 }

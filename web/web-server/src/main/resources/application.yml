@@ -11,3 +11,6 @@ client:
 ldap:
   urls:
     - ldap://localhost:8389/
+
+features:
+  failedMessageDetailsPopupRendered: false

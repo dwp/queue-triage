@@ -16,6 +16,6 @@ public class ReflectionArgumentFormatter implements ArgumentFormatter<Object> {
                     .map(item -> format(item, fieldsToInclude))
                     .collect(joining(", and "));
         }
-        return ReflectionToStringBuilder.toString(argumentToFormat, toStringWithFields(fieldsToInclude));
+        return ReflectionToStringBuilder.toString(argumentToFormat, fieldsToInclude != null ? toStringWithFields(fieldsToInclude) : null);
     }
 }

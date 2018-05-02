@@ -10,6 +10,7 @@ import uk.gov.dwp.queue.triage.core.client.SearchFailedMessageClient;
 import uk.gov.dwp.queue.triage.core.client.delete.DeleteFailedMessageClient;
 import uk.gov.dwp.queue.triage.core.client.label.LabelFailedMessageClient;
 import uk.gov.dwp.queue.triage.core.client.resend.ResendFailedMessageClient;
+import uk.gov.dwp.queue.triage.core.client.status.FailedMessageStatusHistoryClient;
 import uk.gov.dwp.queue.triage.jackson.configuration.JacksonConfiguration;
 
 import static java.util.Collections.singletonList;
@@ -55,6 +56,16 @@ public class CoreClientConfiguration {
         return JAXRSClientFactory.create(
                 clientProperties.getCore().getUrl(),
                 ResendFailedMessageClient.class,
+                singletonList(jacksonJsonProvider)
+        );
+    }
+
+    @Bean
+    public FailedMessageStatusHistoryClient failedMessageStatusHistoryClient(JacksonJsonProvider jacksonJsonProvider,
+                                                                             ClientProperties clientProperties) {
+        return JAXRSClientFactory.create(
+                clientProperties.getCore().getUrl(),
+                FailedMessageStatusHistoryClient.class,
                 singletonList(jacksonJsonProvider)
         );
     }

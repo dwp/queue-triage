@@ -47,3 +47,17 @@ body {
     border-top-left-radius: 0;
     border-top-right-radius: 0;
 }
+
+#message-content {
+    padding: 0;
+}
+
+#message-content #content {
+    border-width: 0;
+}
+
+button.show-more-btn {
+    min-width: 20px;
+    margin: 0;
+    padding: 2px;
+}
