@@ -27,7 +27,7 @@ public class MessageClassificationService {
 
     public void classifyFailedMessages() {
         Collection<FailedMessage> failedMessages = failedMessageSearchService.findByStatus(FAILED);
-        if (failedMessages.size() == 0) {
+        if (failedMessages.isEmpty()) {
             LOGGER.info("No messages require classification");
             return;
         }

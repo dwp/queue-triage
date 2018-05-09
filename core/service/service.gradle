@@ -4,6 +4,7 @@ dependencies {
     implementation project(':core:domain')
     implementation project(':core:dao')
     implementation project(':core:search')
+    implementation 'com.fasterxml.jackson.core:jackson-annotations'
     implementation 'org.slf4j:slf4j-api'
 
     //test

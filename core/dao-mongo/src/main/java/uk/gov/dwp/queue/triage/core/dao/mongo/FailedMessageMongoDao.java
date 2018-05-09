@@ -12,6 +12,7 @@ import uk.gov.dwp.queue.triage.core.domain.StatusHistoryEvent;
 import uk.gov.dwp.queue.triage.id.FailedMessageId;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -60,16 +61,6 @@ public class FailedMessageMongoDao implements FailedMessageDao {
     }
 
     @Override
-    public void updateStatus(FailedMessageId failedMessageId, StatusHistoryEvent statusHistoryEvent) {
-        collection.updateOne(
-                failedMessageConverter.createId(failedMessageId),
-                new Document("$push", new Document(STATUS_HISTORY, new Document()
-                        .append("$each", singletonList(failedMessageStatusConverter.convertFromObject(statusHistoryEvent)))
-                        .append("$sort", new Document(LAST_MODIFIED_DATE_TIME, OrderBy.DESC.getIntRepresentation()))))
-        );
-    }
-
-    @Override
     public List<StatusHistoryEvent> getStatusHistory(FailedMessageId failedMessageId) {
         final List<Document> list = collection
                 .find(failedMessageConverter.createId(failedMessageId))
@@ -83,8 +74,11 @@ public class FailedMessageMongoDao implements FailedMessageDao {
     }
 
     @Override
-    public FailedMessage findById(FailedMessageId failedMessageId) {
-        return collection.find(failedMessageConverter.createId(failedMessageId)).map(failedMessageConverter::convertToObject).first();
+    public Optional<FailedMessage> findById(FailedMessageId failedMessageId) {
+        return Optional.ofNullable(collection
+                .find(failedMessageConverter.createId(failedMessageId))
+                .map(failedMessageConverter::convertToObject)
+                .first());
     }
 
     @Override

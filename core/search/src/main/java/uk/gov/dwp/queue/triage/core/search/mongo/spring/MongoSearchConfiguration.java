@@ -24,6 +24,6 @@ public class MongoSearchConfiguration {
                 mongoClient.getDatabase(mongoDaoProperties.getDbName()).getCollection(mongoDaoProperties.getFailedMessage().getName()),
                 new MongoSearchRequestAdapter(),
                 failedMessageConverter,
-                new MongoStatusHistoryQueryBuilder());
+                new MongoStatusHistoryQueryBuilder(), null); //TODO
     }
 }

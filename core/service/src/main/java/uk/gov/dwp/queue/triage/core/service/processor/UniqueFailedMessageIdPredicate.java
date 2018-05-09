@@ -15,6 +15,6 @@ public class UniqueFailedMessageIdPredicate implements Predicate<FailedMessage> 
 
     @Override
     public boolean test(FailedMessage failedMessage) {
-        return failedMessageDao.findById(failedMessage.getFailedMessageId()) == null;
+        return !failedMessageDao.findById(failedMessage.getFailedMessageId()).isPresent();
     }
 }

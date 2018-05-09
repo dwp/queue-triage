@@ -5,7 +5,6 @@ import uk.gov.dwp.queue.triage.core.client.SearchFailedMessageClient;
 import uk.gov.dwp.queue.triage.core.client.search.SearchFailedMessageRequest;
 import uk.gov.dwp.queue.triage.core.client.search.SearchFailedMessageResponse;
 import uk.gov.dwp.queue.triage.core.dao.FailedMessageDao;
-import uk.gov.dwp.queue.triage.core.domain.FailedMessage;
 import uk.gov.dwp.queue.triage.core.search.FailedMessageSearchService;
 import uk.gov.dwp.queue.triage.core.search.SearchFailedMessageResponseAdapter;
 import uk.gov.dwp.queue.triage.id.FailedMessageId;
@@ -36,11 +35,10 @@ public class FailedMessageSearchResource implements SearchFailedMessageClient {
 
     @Override
     public FailedMessageResponse getFailedMessage(FailedMessageId failedMessageId) {
-        FailedMessage failedMessage = failedMessageDao.findById(failedMessageId);
-        if ((failedMessage == null) || (DELETED.equals(failedMessage.getStatus()))) {
-            throw new NotFoundException(format("Failed Message: %s not found", failedMessageId));
-        }
-        return failedMessageResponseFactory.create(failedMessage);
+        return failedMessageDao.findById(failedMessageId)
+                .filter(failedMessage -> !DELETED.equals(failedMessage.getStatus()))
+                .map(failedMessageResponseFactory::create)
+                .orElseThrow(() -> new NotFoundException(format("Failed Message: %s not found", failedMessageId)));
     }
 
     @Override

@@ -1,10 +1,11 @@
 package uk.gov.dwp.queue.triage.core.service.processor;
 
-import org.hamcrest.Matchers;
 import org.junit.Test;
 import uk.gov.dwp.queue.triage.core.dao.FailedMessageDao;
 import uk.gov.dwp.queue.triage.core.domain.FailedMessage;
 import uk.gov.dwp.queue.triage.id.FailedMessageId;
+
+import java.util.Optional;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -24,7 +25,7 @@ public class UniqueFailedMessageIdPredicateTest {
     @Test
     public void predicateReturnsTrueWhenFailedMesageWithIdDoesNotExist() {
         when(failedMessage.getFailedMessageId()).thenReturn(FAILED_MESSAGE_ID);
-        when(failedMessageDao.findById(FAILED_MESSAGE_ID)).thenReturn(null);
+        when(failedMessageDao.findById(FAILED_MESSAGE_ID)).thenReturn(Optional.empty());
 
         assertThat(underTest.test(failedMessage), is(true));
     }
@@ -32,7 +33,7 @@ public class UniqueFailedMessageIdPredicateTest {
     @Test
     public void predicateReturnsFalseWhenFailedMessageWithIdExists() {
         when(failedMessage.getFailedMessageId()).thenReturn(FAILED_MESSAGE_ID);
-        when(failedMessageDao.findById(FAILED_MESSAGE_ID)).thenReturn(failedMessage);
+        when(failedMessageDao.findById(FAILED_MESSAGE_ID)).thenReturn(Optional.of(failedMessage));
 
         assertThat(underTest.test(failedMessage), is(false));
     }

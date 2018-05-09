@@ -12,6 +12,7 @@ import uk.gov.dwp.queue.triage.core.resource.resend.ResendFailedMessageResource;
 import uk.gov.dwp.queue.triage.core.resource.search.FailedMessageResponseFactory;
 import uk.gov.dwp.queue.triage.core.resource.search.FailedMessageSearchResource;
 import uk.gov.dwp.queue.triage.core.resource.status.FailedMessageStatusHistoryResource;
+import uk.gov.dwp.queue.triage.core.resource.update.UpdateFailedMessageResource;
 import uk.gov.dwp.queue.triage.core.search.FailedMessageSearchService;
 import uk.gov.dwp.queue.triage.core.search.SearchFailedMessageResponseAdapter;
 import uk.gov.dwp.queue.triage.core.service.FailedMessageLabelService;
@@ -66,5 +67,11 @@ public class FailedMessageResourceConfiguration {
     public FailedMessageStatusHistoryResource failedMessageStatusHistoryResource(ResourceRegistry resourceRegistry,
                                                                                  FailedMessageDao failedMessageDao) {
         return resourceRegistry.add(new FailedMessageStatusHistoryResource(failedMessageDao));
+    }
+
+    @Bean
+    public UpdateFailedMessageResource updateFailedMessageResource(ResourceRegistry resourceRegistry,
+                                                                   FailedMessageService failedMessageService) {
+        return resourceRegistry.add(new UpdateFailedMessageResource(failedMessageService));
     }
 }

@@ -1,11 +1,14 @@
 package uk.gov.dwp.queue.triage.core.domain;
 
+import uk.gov.dwp.queue.triage.core.client.update.UpdateRequest;
 import uk.gov.dwp.queue.triage.core.domain.StatusHistoryEvent.Status;
+import uk.gov.dwp.queue.triage.core.domain.update.adapter.UpdateRequestAdapterRegistry;
 import uk.gov.dwp.queue.triage.id.FailedMessageId;
 
 import java.time.Instant;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -21,6 +24,7 @@ public class FailedMessageBuilder {
     private Map<String, Object> properties = new HashMap<>();
     private StatusHistoryEvent statusHistoryEvent;
     private Set<String> labels = new HashSet<>();
+    private UpdateRequestAdapterRegistry updateRequestAdapterRegistry;
 
     private FailedMessageBuilder() {
     }
@@ -92,6 +96,11 @@ public class FailedMessageBuilder {
         return this;
     }
 
+    public FailedMessageBuilder removeProperty(String key) {
+        this.properties.remove(key);
+        return this;
+    }
+
     public FailedMessageBuilder withStatusHistoryEvent(Status status) {
         this.statusHistoryEvent = StatusHistoryEvent.statusHistoryEvent(status);
         return this;
@@ -117,6 +126,18 @@ public class FailedMessageBuilder {
                 .map(String.class::cast)
                 .map(FailedMessageId::fromString)
                 .ifPresent(this::withFailedMessageId);
+        return this;
+    }
+
+    public FailedMessageBuilder withUpdateRequestAdapterRegistry(UpdateRequestAdapterRegistry updateRequestAdapterRegistry) {
+        this.updateRequestAdapterRegistry = updateRequestAdapterRegistry;
+        return this;
+    }
+
+    public FailedMessageBuilder apply(List<? extends UpdateRequest> updateRequests) {
+        for (UpdateRequest updateRequest : updateRequests) {
+            updateRequestAdapterRegistry.getAdapter(updateRequest).adapt(updateRequest, this);
+        }
         return this;
     }
 }
