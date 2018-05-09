@@ -1,8 +1,9 @@
 dependencies {
     implementation project(':common:id')
     implementation project(':core:client')
-    implementation 'org.apache.commons:commons-lang3'
+    implementation 'com.fasterxml.jackson.core:jackson-annotations'
     implementation 'com.google.guava:guava'
+    implementation 'org.apache.commons:commons-lang3'
     implementation 'org.slf4j:slf4j-api'
 
     testImplementation project(':core:domain-test-support')

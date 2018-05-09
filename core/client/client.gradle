@@ -7,8 +7,9 @@ dependencies {
 
     testImplementation project(':core:client-test-support')
     testImplementation project(':common:jackson')
-    testImplementation 'junit:junit'
-    testImplementation "org.hamcrest:hamcrest-library"
     testImplementation "com.fasterxml.jackson.datatype:jackson-datatype-jdk8"
     testImplementation "com.fasterxml.jackson.core:jackson-annotations"
+    testImplementation 'junit:junit'
+    testImplementation "org.hamcrest:hamcrest-library"
+    testImplementation 'org.valid4j:json-path-matchers'
 }
