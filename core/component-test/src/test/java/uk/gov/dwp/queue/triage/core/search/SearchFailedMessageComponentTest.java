@@ -1,10 +1,9 @@
 package uk.gov.dwp.queue.triage.core.search;
 
-import com.tngtech.jgiven.annotation.ScenarioStage;
 import org.hamcrest.Matcher;
 import org.hamcrest.collection.IsIterableContainingInOrder;
 import org.junit.Test;
-import uk.gov.dwp.queue.triage.core.BaseCoreComponentTest;
+import uk.gov.dwp.queue.triage.core.CoreComponentTestBase;
 import uk.gov.dwp.queue.triage.core.FailedMessageResourceStage;
 import uk.gov.dwp.queue.triage.core.client.search.SearchFailedMessageResponse;
 import uk.gov.dwp.queue.triage.core.client.search.SearchFailedMessageResponseMatcher;
@@ -19,12 +18,10 @@ import static uk.gov.dwp.queue.triage.core.client.CreateFailedMessageRequest.new
 import static uk.gov.dwp.queue.triage.core.client.search.SearchFailedMessageRequest.searchMatchingAllCriteria;
 import static uk.gov.dwp.queue.triage.core.client.search.SearchFailedMessageRequest.searchMatchingAnyCriteria;
 import static uk.gov.dwp.queue.triage.core.client.search.SearchFailedMessageResponseMatcher.aFailedMessage;
-import static uk.gov.dwp.queue.triage.core.search.SearchFailedMessageStage.noResults;
+import static uk.gov.dwp.queue.triage.core.search.SearchFailedMessageThenStage.noResults;
 
-public class SearchFailedMessageComponentTest extends BaseCoreComponentTest<SearchFailedMessageStage> {
-
-    @ScenarioStage
-    private FailedMessageResourceStage failedMessageResourceStage;
+public class SearchFailedMessageComponentTest
+        extends CoreComponentTestBase<FailedMessageResourceStage, SearchFailedMessageWhenStage, SearchFailedMessageThenStage> {
 
     @Test
     public void searchByBrokerResultsNoResultsWhenNoFailedMessagesExist() {
@@ -38,11 +35,10 @@ public class SearchFailedMessageComponentTest extends BaseCoreComponentTest<Sear
     @Test
     public void searchByBrokerAndByQueueWhenAllCriteriaNeedsBeToMatched() {
         FailedMessageId failedMessageId = FailedMessageId.newFailedMessageId();
-        failedMessageResourceStage.given().aFailedMessage(newCreateFailedMessageRequest()
+        given().aFailedMessage$Exists(newCreateFailedMessageRequest()
                 .withFailedMessageId(failedMessageId)
                 .withBrokerName("broker-name")
-                .withDestinationName("queue-name"))
-                .exists();
+                .withDestinationName("queue-name"));
 
         when().aSearchIsRequestedForFailedMessages(searchMatchingAllCriteria()
                 .withBroker("broker-name")
@@ -65,16 +61,14 @@ public class SearchFailedMessageComponentTest extends BaseCoreComponentTest<Sear
     public void searchByBrokerAndByQueueWhenAnyCriteriaCanBeMatched() {
         FailedMessageId failedMessageId = FailedMessageId.newFailedMessageId();
         FailedMessageId anotherFailedMessageId = FailedMessageId.newFailedMessageId();
-        failedMessageResourceStage.given().aFailedMessage(newCreateFailedMessageRequest()
+        given().aFailedMessage$Exists(newCreateFailedMessageRequest()
                 .withFailedMessageId(failedMessageId)
                 .withBrokerName("broker-name")
-                .withDestinationName("queue-name"))
-                .exists();
-        failedMessageResourceStage.given().aFailedMessage(newCreateFailedMessageRequest()
+                .withDestinationName("queue-name"));
+        given().aFailedMessage$Exists(newCreateFailedMessageRequest()
                 .withFailedMessageId(anotherFailedMessageId)
                 .withBrokerName("another-broker")
-                .withDestinationName("queue-name"))
-                .exists();
+                .withDestinationName("queue-name"));
 
         when().aSearchIsRequestedForFailedMessages(searchMatchingAnyCriteria()
                 .withBroker("some-broker")
@@ -97,24 +91,17 @@ public class SearchFailedMessageComponentTest extends BaseCoreComponentTest<Sear
     @Test
     public void searchByMessageContentMatchesTextAnywhere() {
         FailedMessageId failedMessageId = FailedMessageId.newFailedMessageId();
-        failedMessageResourceStage.given().aFailedMessage(newCreateFailedMessageRequest()
+        given().aFailedMessage$Exists(newCreateFailedMessageRequest()
                 .withFailedMessageId(failedMessageId)
                 .withBrokerName("broker-name")
-                .withDestinationName("queue-name"))
-                .withContent("Bodger and Badger")
-                .exists();
+                .withDestinationName("queue-name")
+                .withContent("Bodger and Badger"));
 
-        when().aSearchIsRequestedForFailedMessages(searchMatchingAllCriteria()
-                .withContent("and")
-        );
+        when().aSearchIsRequestedForFailedMessages(searchMatchingAllCriteria().withContent("and"));
 
-        then().theSearchResultsContain(contains(
-                aFailedMessage()
-                        .withFailedMessageId(equalTo(failedMessageId))));
+        then().theSearchResultsContain(contains(aFailedMessage().withFailedMessageId(equalTo(failedMessageId))));
 
-        when().aSearchIsRequestedForFailedMessages(searchMatchingAllCriteria()
-                .withContent("Bananas")
-        );
+        when().aSearchIsRequestedForFailedMessages(searchMatchingAllCriteria().withContent("Bananas"));
 
         then().theSearchResultsContain(noResults());
     }

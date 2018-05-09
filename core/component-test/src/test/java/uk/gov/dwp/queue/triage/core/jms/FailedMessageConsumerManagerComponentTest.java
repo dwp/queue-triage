@@ -2,9 +2,9 @@ package uk.gov.dwp.queue.triage.core.jms;
 
 import com.tngtech.jgiven.annotation.ScenarioStage;
 import org.junit.Test;
-import uk.gov.dwp.queue.triage.core.BaseCoreComponentTest;
 import uk.gov.dwp.queue.triage.core.JmsStage;
-import uk.gov.dwp.queue.triage.core.search.SearchFailedMessageStage;
+import uk.gov.dwp.queue.triage.core.SimpleCoreComponentTestBase;
+import uk.gov.dwp.queue.triage.core.search.SearchFailedMessageThenStage;
 
 import java.util.Optional;
 
@@ -13,14 +13,14 @@ import static org.hamcrest.Matchers.equalTo;
 import static uk.gov.dwp.queue.triage.core.client.search.SearchFailedMessageRequest.searchMatchingAllCriteria;
 import static uk.gov.dwp.queue.triage.core.client.search.SearchFailedMessageResponseMatcher.aFailedMessage;
 
-public class FailedMessageConsumerManagerComponentTest extends BaseCoreComponentTest<FailedMessageListenerAdminStage> {
+public class FailedMessageConsumerManagerComponentTest extends SimpleCoreComponentTestBase<FailedMessageListenerAdminStage> {
 
     @ScenarioStage
     private JmsStage jmsStage;
     @ScenarioStage
     private FailedMessageListenerAdminWhenStage messageListenerAdminWhenStage;
     @ScenarioStage
-    private SearchFailedMessageStage searchFailedMessageStage;
+    private SearchFailedMessageThenStage searchFailedMessageThenStage;
 
     @Test
     public void consumingFromQueueCanBeStoppedAndStarted() {
@@ -31,13 +31,13 @@ public class FailedMessageConsumerManagerComponentTest extends BaseCoreComponent
         then().theMessageListenerFor$Is$Running("internal-broker", false);
         jmsStage.when().aMessageWithContent$IsSentTo$OnBroker$("poison", "some-queue", "internal-broker");
 
-        searchFailedMessageStage.then().aSearch$ContainsNoResults(
+        searchFailedMessageThenStage.then().aSearch$ContainsNoResults(
                 searchMatchingAllCriteria().withBroker("internal-broker")
         );
         messageListenerAdminWhenStage.when().aRequestIsMadeToStartTheMessageListenerForBroker$("internal-broker");
 
         then().theMessageListenerFor$Is$Running("internal-broker", true);
-        searchFailedMessageStage.then().aSearch$WillContainAResponseWhere$(
+        searchFailedMessageThenStage.then().aSearch$WillContainAResponseWhere$(
                 searchMatchingAllCriteria().withBroker("internal-broker"),
                 aFailedMessage()
                         .withBroker(equalTo("internal-broker"))

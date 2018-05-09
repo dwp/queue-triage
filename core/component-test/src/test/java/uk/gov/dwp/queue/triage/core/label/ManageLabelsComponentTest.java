@@ -1,12 +1,9 @@
 package uk.gov.dwp.queue.triage.core.label;
 
-import com.tngtech.jgiven.annotation.ScenarioStage;
-import org.hamcrest.Matchers;
 import org.junit.Test;
-import uk.gov.dwp.queue.triage.core.BaseCoreComponentTest;
+import uk.gov.dwp.queue.triage.core.CoreComponentTestBase;
 import uk.gov.dwp.queue.triage.core.FailedMessageResourceStage;
-import uk.gov.dwp.queue.triage.core.client.CreateFailedMessageRequest;
-import uk.gov.dwp.queue.triage.core.domain.FailedMessageResponseMatcher;
+import uk.gov.dwp.queue.triage.core.search.SearchFailedMessageThenStage;
 import uk.gov.dwp.queue.triage.id.FailedMessageId;
 
 import static org.hamcrest.Matchers.contains;
@@ -16,51 +13,47 @@ import static uk.gov.dwp.queue.triage.core.client.CreateFailedMessageRequest.new
 import static uk.gov.dwp.queue.triage.core.domain.FailedMessageResponseMatcher.aFailedMessage;
 import static uk.gov.dwp.queue.triage.id.FailedMessageId.newFailedMessageId;
 
-public class ManageLabelsComponentTest extends BaseCoreComponentTest<FailedMessageResourceStage> {
+public class ManageLabelsComponentTest
+        extends CoreComponentTestBase<FailedMessageResourceStage, AddLabelWhenStage, SearchFailedMessageThenStage> {
 
     private final FailedMessageId failedMessageId = newFailedMessageId();
 
-    @ScenarioStage
-    private AddLabelWhenStage addLabelWhenStage;
-
     @Test
     public void addLabelToFailedMessage() {
-        given().aFailedMessage(newCreateFailedMessageRequest().withFailedMessageId(failedMessageId).withBrokerName("some-broker")).exists();
+        given().aFailedMessage$Exists(newCreateFailedMessageRequest().withFailedMessageId(failedMessageId).withBrokerName("some-broker"));
 
-        addLabelWhenStage.when().$IsAddedAsALabelToFailedMessage$("foo", failedMessageId);
-        addLabelWhenStage.when().$IsAddedAsALabelToFailedMessage$("bar", failedMessageId);
+        when().$IsAddedAsALabelToFailedMessage$("foo", failedMessageId);
+        when().$IsAddedAsALabelToFailedMessage$("bar", failedMessageId);
 
         then().aFailedMessageWithId$Has(failedMessageId, aFailedMessage().withLabels(containsInAnyOrder("foo", "bar")));
     }
 
     @Test
     public void replaceLabelsOnAFailedMessage() {
-        given().aFailedMessage(newCreateFailedMessageRequest().withFailedMessageId(failedMessageId).withBrokerName("some-broker").withLabel("something")).exists();
+        given().aFailedMessage$Exists(newCreateFailedMessageRequest().withFailedMessageId(failedMessageId).withBrokerName("some-broker").withLabel("something"));
 
-        addLabelWhenStage.when().failedMessage$HasTheFollowingLabelsSet$(failedMessageId, "foo", "bar");
+        when().failedMessage$HasTheFollowingLabelsSet$(failedMessageId, "foo", "bar");
 
         then().aFailedMessageWithId$Has(failedMessageId, aFailedMessage().withLabels(containsInAnyOrder("foo", "bar")));
     }
 
     @Test
     public void replaceTheLabelsOnAFailedMessageWithAnEmptySet() {
-        given().aFailedMessage(newCreateFailedMessageRequest().withFailedMessageId(failedMessageId).withBrokerName("some-broker").withLabel("something")).exists();
+        given().aFailedMessage$Exists(newCreateFailedMessageRequest().withFailedMessageId(failedMessageId).withBrokerName("some-broker").withLabel("something"));
 
-        addLabelWhenStage.when().failedMessage$HasTheFollowingLabelsSet$(failedMessageId);
+        when().failedMessage$HasTheFollowingLabelsSet$(failedMessageId);
 
         then().aFailedMessageWithId$Has(failedMessageId, aFailedMessage().withLabels(emptyIterable()));
     }
 
     @Test
     public void removeLabelFromFailedMessage() {
-        given().aFailedMessage(newCreateFailedMessageRequest()
+        given().aFailedMessage$Exists(newCreateFailedMessageRequest()
                 .withFailedMessageId(failedMessageId).withBrokerName("some-broker")
-                .withLabel("foo").withLabel("bar")).exists();
+                .withLabel("foo").withLabel("bar"));
 
-        addLabelWhenStage.when().theLabel$IsRemovedFromFAiledMessage$("bar", failedMessageId);
+        when().theLabel$IsRemovedFromFAiledMessage$("bar", failedMessageId);
 
         then().aFailedMessageWithId$Has(failedMessageId, aFailedMessage().withLabels(contains("foo")));
     }
-
-
 }
