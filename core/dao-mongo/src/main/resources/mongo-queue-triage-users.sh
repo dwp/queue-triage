@@ -14,6 +14,6 @@ db.createUser({
     user: "%s",
     pwd: "%s",
     roles: [
-        "failedMessageReadWrite"
+        "queueTriageAppRole"
     ]
 })""" % (options.appUser, options.appUser, options.appPassword))

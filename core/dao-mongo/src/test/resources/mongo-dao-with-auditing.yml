@@ -1,0 +1,14 @@
+dao:
+  mongo:
+    serverAddresses:
+    - host: localhost
+      port: 27017
+    dbName: someDatabase
+    failedMessage:
+      name: someCollection
+      username: failedMessageUser
+      password: Passw0rd
+      audited: true
+      auditCollection:
+        name: someCollectionAudit
+

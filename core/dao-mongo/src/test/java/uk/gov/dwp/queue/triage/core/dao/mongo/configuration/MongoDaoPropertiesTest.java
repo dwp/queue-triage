@@ -49,7 +49,7 @@ public class MongoDaoPropertiesTest {
             serverAddress("db2.server.com", 27017)
         ));
         assertThat(properties.getDbName(), is("someDatabase"));
-        assertThat(properties.getFailedMessage(), is(collection("someCollection", Optional.of("failedMessageUser"), Optional.of("Passw0rd".toCharArray()))));
+        assertThat(properties.getFailedMessage(), is(collection("someCollection", Optional.of("failedMessageUser"), Optional.of("Passw0rd".toCharArray()), false)));
         assertThat(properties.getOptions(), allOf(
             sslEnabled(true),
             invalidHostnameAllowed(true)
@@ -66,10 +66,46 @@ public class MongoDaoPropertiesTest {
             serverAddress("localhost", 27017)
         ));
         assertThat(properties.getDbName(), is("queue-triage"));
-        assertThat(properties.getFailedMessage(), is(collection("failedMessage", Optional.empty(), Optional.empty())));
+        assertThat(properties.getFailedMessage(), is(collection("failedMessage", Optional.empty(), Optional.empty(), false)));
         assertThat(properties.getOptions(), allOf(
             sslEnabled(false),
             invalidHostnameAllowed(false)
+        ));
+    }
+
+    @Test
+    public void createAuditingDefaultMongoConfiguration() {
+        AnnotationConfigApplicationContext applicationContext = createApplicationContext("mongo-dao-with-auditing-defaults.yml");
+
+        MongoDaoProperties properties = applicationContext.getBean(MongoDaoProperties.class);
+
+        assertThat(properties.getServerAddresses(), contains(
+            serverAddress("localhost", 27017)
+        ));
+        assertThat(properties.getDbName(), is("queue-triage"));
+        assertThat(properties.getFailedMessage(), is(collection("failedMessage", Optional.empty(), Optional.empty(), true)));
+        assertThat(properties.getFailedMessage().getAuditCollection().getName(), is("failedMessageAudit"));
+        assertThat(properties.getOptions(), allOf(
+            sslEnabled(false),
+            invalidHostnameAllowed(false)
+        ));
+    }
+
+    @Test
+    public void createDefaultMongoConfigurationWithAuditing() {
+        AnnotationConfigApplicationContext applicationContext = createApplicationContext("mongo-dao-with-auditing.yml");
+
+        MongoDaoProperties properties = applicationContext.getBean(MongoDaoProperties.class);
+
+        assertThat(properties.getServerAddresses(), contains(
+                serverAddress("localhost", 27017)
+        ));
+        assertThat(properties.getDbName(), is("someDatabase"));
+        assertThat(properties.getFailedMessage(), is(collection("someCollection", Optional.of("failedMessageUser"), Optional.of("Passw0rd".toCharArray()), true)));
+        assertThat(properties.getFailedMessage().getAuditCollection().getName(), is("someCollectionAudit"));
+        assertThat(properties.getOptions(), allOf(
+                sslEnabled(false),
+                invalidHostnameAllowed(false)
         ));
     }
 
@@ -119,20 +155,23 @@ public class MongoDaoPropertiesTest {
         };
     }
 
-    public TypeSafeDiagnosingMatcher<Collection> collection(String name, Optional<String> username, Optional<char[]> password) {
+    public TypeSafeDiagnosingMatcher<Collection> collection(String name, Optional<String> username, Optional<char[]> password, boolean audited) {
         return new TypeSafeDiagnosingMatcher<Collection>() {
             @Override
             protected boolean matchesSafely(Collection collection, Description description) {
+                description.appendText("was dao.mongo.").appendText(name).appendText(".username=").appendValue(collection.getUsername())
+                        .appendText(", dao.mongo.").appendText(name).appendText(".password=").appendValue(collection.getPassword());
                 return name.equals(collection.getName())
                        && username.equals(collection.getOptionalUsername())
-                       && Arrays.equals(password.orElse(new char[]{}), collection.getOptionalPassword().orElse(new char[]{}));
+                       && Arrays.equals(password.orElse(new char[]{}), collection.getOptionalPassword().orElse(new char[]{}))
+                        && audited == collection.isAudited();
             }
 
             @Override
             public void describeTo(Description description) {
                 description
                     .appendText("dao.mongo.").appendText(name).appendText(".username=").appendValue(username)
-                    .appendText(", dao.mongo.").appendText(name).appendText(".password=").appendValue(password);
+                    .appendText(", dao.mongo.").appendText(name).appendText(".password=").appendValue(password.orElse(new char[]{}));
             }
         };
     }

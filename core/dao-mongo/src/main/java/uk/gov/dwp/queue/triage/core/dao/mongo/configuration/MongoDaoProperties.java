@@ -13,7 +13,7 @@ import static java.util.Optional.ofNullable;
 public class MongoDaoProperties {
 
     private List<MongoServerAddress> serverAddresses = new ArrayList<>();
-    private Optional<String> dbName = Optional.empty();
+    private String dbName;
     private Collection failedMessage = new Collection();
     private MongoOptions options = new MongoOptions();
 
@@ -26,11 +26,11 @@ public class MongoDaoProperties {
     }
 
     public String getDbName() {
-        return dbName.orElse("queue-triage");
+        return Optional.ofNullable(dbName).orElse("queue-triage");
     }
 
     public void setDbName(String dbName) {
-        this.dbName = ofNullable(dbName);
+        this.dbName = dbName;
     }
 
     public Collection getFailedMessage() {
@@ -60,6 +60,8 @@ public class MongoDaoProperties {
         private String name = "failedMessage";
         private String username;
         private char[] password;
+        private boolean audited;
+        private AuditCollection auditCollection = new AuditCollection();
 
         public String getName() {
             return name;
@@ -91,6 +93,34 @@ public class MongoDaoProperties {
 
         public void setPassword(char[] password) {
             this.password = password;
+        }
+
+        public boolean isAudited() {
+            return audited;
+        }
+
+        public void setAudited(boolean audited) {
+            this.audited = audited;
+        }
+
+        public AuditCollection getAuditCollection() {
+            return auditCollection;
+        }
+
+        public void setAuditCollection(AuditCollection auditCollection) {
+            this.auditCollection = auditCollection;
+        }
+
+        public static class AuditCollection {
+            private String name;
+
+            public String getName() {
+                return Optional.ofNullable(name).orElse("failedMessageAudit");
+            }
+
+            public void setName(String name) {
+                this.name = name;
+            }
         }
     }
 
