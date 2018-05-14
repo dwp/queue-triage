@@ -37,6 +37,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 public class AuditingMongoCollection implements MongoCollection<Document> {
 
@@ -51,240 +52,232 @@ public class AuditingMongoCollection implements MongoCollection<Document> {
 
     private static Logger LOGGER = LoggerFactory.getLogger(AuditingMongoCollection.class);
 
-    private final MongoCollection<Document> failedMessageCollection;
-    private final MongoCollection<Document> failedMessageAuditCollection;
+    private final MongoCollection<Document> sourceCollection;
+    private final MongoCollection<Document> auditCollection;
 
-    public AuditingMongoCollection(MongoCollection<Document> failedMessageCollection,
-                                   MongoCollection<Document> failedMessageAuditCollection) {
-        this.failedMessageCollection = failedMessageCollection;
-        this.failedMessageAuditCollection = failedMessageAuditCollection;
+    public AuditingMongoCollection(MongoCollection<Document> sourceCollection,
+                                   MongoCollection<Document> auditCollection) {
+        this.sourceCollection = sourceCollection;
+        this.auditCollection = auditCollection;
     }
 
     @Override
     public MongoNamespace getNamespace() {
-        return failedMessageCollection.getNamespace();
+        return sourceCollection.getNamespace();
     }
 
     @Override
     public Class<Document> getDocumentClass() {
-        return failedMessageCollection.getDocumentClass();
+        return sourceCollection.getDocumentClass();
     }
 
     @Override
     public CodecRegistry getCodecRegistry() {
-        return failedMessageCollection.getCodecRegistry();
+        return sourceCollection.getCodecRegistry();
     }
 
     @Override
     public ReadPreference getReadPreference() {
-        return failedMessageCollection.getReadPreference();
+        return sourceCollection.getReadPreference();
     }
 
     @Override
     public WriteConcern getWriteConcern() {
-        return failedMessageCollection.getWriteConcern();
+        return sourceCollection.getWriteConcern();
     }
 
     @Override
     public ReadConcern getReadConcern() {
-        return failedMessageCollection.getReadConcern();
+        return sourceCollection.getReadConcern();
     }
 
     @Override
     public <NewTDocument> MongoCollection<NewTDocument> withDocumentClass(Class<NewTDocument> clazz) {
-        return failedMessageCollection.withDocumentClass(clazz);
+        return sourceCollection.withDocumentClass(clazz);
     }
 
     @Override
     public MongoCollection<Document> withCodecRegistry(CodecRegistry codecRegistry) {
-        return failedMessageCollection.withCodecRegistry(codecRegistry);
+        return sourceCollection.withCodecRegistry(codecRegistry);
     }
 
     @Override
     public MongoCollection<Document> withReadPreference(ReadPreference readPreference) {
-        return failedMessageCollection.withReadPreference(readPreference);
+        return sourceCollection.withReadPreference(readPreference);
     }
 
     @Override
     public MongoCollection<Document> withWriteConcern(WriteConcern writeConcern) {
-        return failedMessageCollection.withWriteConcern(writeConcern);
+        return sourceCollection.withWriteConcern(writeConcern);
     }
 
     @Override
     public MongoCollection<Document> withReadConcern(ReadConcern readConcern) {
-        return failedMessageCollection.withReadConcern(readConcern);
+        return sourceCollection.withReadConcern(readConcern);
     }
 
     @Override
     public long count() {
-        return failedMessageCollection.count();
+        return sourceCollection.count();
     }
 
     @Override
     public long count(Bson filter) {
-        return failedMessageCollection.count(filter);
+        return sourceCollection.count(filter);
     }
 
     @Override
     public long count(Bson filter, CountOptions options) {
-        return failedMessageCollection.count(filter, options);
+        return sourceCollection.count(filter, options);
     }
 
     @Override
     public <TResult> DistinctIterable<TResult> distinct(String fieldName, Class<TResult> tResultClass) {
-        return failedMessageCollection.distinct(fieldName, tResultClass);
+        return sourceCollection.distinct(fieldName, tResultClass);
     }
 
     @Override
     public <TResult> DistinctIterable<TResult> distinct(String fieldName, Bson filter, Class<TResult> tResultClass) {
-        return failedMessageCollection.distinct(fieldName, filter, tResultClass);
+        return sourceCollection.distinct(fieldName, filter, tResultClass);
     }
 
     @Override
     public FindIterable<Document> find() {
-        return failedMessageCollection.find();
+        return sourceCollection.find();
     }
 
     @Override
     public <TResult> FindIterable<TResult> find(Class<TResult> tResultClass) {
-        return failedMessageCollection.find(tResultClass);
+        return sourceCollection.find(tResultClass);
     }
 
     @Override
     public FindIterable<Document> find(Bson filter) {
-        return failedMessageCollection.find(filter);
+        return sourceCollection.find(filter);
     }
 
     @Override
     public <TResult> FindIterable<TResult> find(Bson filter, Class<TResult> tResultClass) {
-        return failedMessageCollection.find(filter, tResultClass);
+        return sourceCollection.find(filter, tResultClass);
     }
 
     @Override
     public AggregateIterable<Document> aggregate(List<? extends Bson> pipeline) {
-        return failedMessageCollection.aggregate(pipeline);
+        return sourceCollection.aggregate(pipeline);
     }
 
     @Override
     public <TResult> AggregateIterable<TResult> aggregate(List<? extends Bson> pipeline, Class<TResult> tResultClass) {
-        return failedMessageCollection.aggregate(pipeline, tResultClass);
+        return sourceCollection.aggregate(pipeline, tResultClass);
     }
 
     @Override
     public MapReduceIterable<Document> mapReduce(String mapFunction, String reduceFunction) {
-        return failedMessageCollection.mapReduce(mapFunction, reduceFunction);
+        return sourceCollection.mapReduce(mapFunction, reduceFunction);
     }
 
     @Override
     public <TResult> MapReduceIterable<TResult> mapReduce(String mapFunction, String reduceFunction, Class<TResult> tResultClass) {
-        return failedMessageCollection.mapReduce(mapFunction, reduceFunction, tResultClass);
+        return sourceCollection.mapReduce(mapFunction, reduceFunction, tResultClass);
     }
 
     @Override
     public BulkWriteResult bulkWrite(List<? extends WriteModel<? extends Document>> requests) {
         LOGGER.warn("bulkWrite operation is not currently audited");
-        return failedMessageCollection.bulkWrite(requests);
+        return sourceCollection.bulkWrite(requests);
     }
 
     @Override
     public BulkWriteResult bulkWrite(List<? extends WriteModel<? extends Document>> requests, BulkWriteOptions options) {
         LOGGER.warn("bulkWrite operation is not currently audited");
-        return failedMessageCollection.bulkWrite(requests, options);
+        return sourceCollection.bulkWrite(requests, options);
     }
 
     @Override
     public void insertOne(Document document) {
-        failedMessageCollection.insertOne(document);
-        insertFailedMessageAuditDocument(document);
+        sourceCollection.insertOne(document);
+        createInsertAuditDocument(document);
     }
 
     @Override
     public void insertOne(Document document, InsertOneOptions options) {
-        failedMessageCollection.insertOne(document, options);
-        insertFailedMessageAuditDocument(document);
+        sourceCollection.insertOne(document, options);
+        createInsertAuditDocument(document);
     }
 
     @Override
     public void insertMany(List<? extends Document> documents) {
-        failedMessageCollection.insertMany(documents);
-        documents.forEach(this::insertFailedMessageAuditDocument);
+        sourceCollection.insertMany(documents);
+        documents.forEach(this::createInsertAuditDocument);
     }
 
     @Override
     public void insertMany(List<? extends Document> documents, InsertManyOptions options) {
-        failedMessageCollection.insertMany(documents, options);
-        documents.forEach(this::insertFailedMessageAuditDocument);
+        sourceCollection.insertMany(documents, options);
+        documents.forEach(this::createInsertAuditDocument);
     }
 
-    private void insertFailedMessageAuditDocument(Document document) {
-        failedMessageAuditCollection.insertOne(new Document()
+    @Override
+    public DeleteResult deleteOne(Bson filter) {
+        return auditDeleteOne(filter, () -> sourceCollection.deleteOne(filter));
+    }
+
+    @Override
+    public DeleteResult deleteOne(Bson filter, DeleteOptions options) {
+        return auditDeleteOne(filter, () -> sourceCollection.deleteOne(filter, options));
+    }
+
+    @Override
+    public DeleteResult deleteMany(Bson filter) {
+        return auditDeleteMany(filter, () -> sourceCollection.deleteMany(filter));
+    }
+
+    @Override
+    public DeleteResult deleteMany(Bson filter, DeleteOptions options) {
+        return auditDeleteMany(filter, () -> sourceCollection.deleteMany(filter, options));
+    }
+
+    private DeleteResult auditDeleteOne(Bson filter, Supplier<DeleteResult> deleteOneCommand) {
+        Optional.ofNullable(sourceCollection.find(filter).first())
+                .ifPresent(this::createDeleteAuditDocument);
+        return deleteOneCommand.get();
+    }
+
+    private DeleteResult auditDeleteMany(Bson filter, Supplier<DeleteResult> deleteManyCommand) {
+        sourceCollection
+                .find(filter)
+                .forEach((Consumer<Document>) this::createDeleteAuditDocument);
+        return deleteManyCommand.get();
+    }
+
+    private void createInsertAuditDocument(Document document) {
+        auditCollection.insertOne(new Document()
                 .append(AUDIT_ACTION_KEY, INSERT_AUDIT_ACTION)
                 .append(AUDIT_DATE_TIME_KEY, Instant.now())
                 .append(DOCUMENT_KEY, document)
         );
     }
 
-    @Override
-    public DeleteResult deleteOne(Bson filter) {
-        createFailedMessageDeleteAuditDocument(filter);
-        return failedMessageCollection.deleteOne(filter);
-    }
-
-    private void createFailedMessageDeleteAuditDocument(Bson filter) {
-        Optional.ofNullable(failedMessageCollection.find(filter).first())
-                .ifPresent(document -> failedMessageAuditCollection
-                        .insertOne(new Document()
-                                .append(AUDIT_ACTION_KEY, DELETE_AUDIT_ACTION)
-                                .append(AUDIT_DATE_TIME_KEY, Instant.now())
-                                .append(DOCUMENT_KEY, document)));
-    }
-
-    @Override
-    public DeleteResult deleteOne(Bson filter, DeleteOptions options) {
-        createFailedMessageDeleteAuditDocument(filter);
-        return failedMessageCollection.deleteOne(filter, options);
-    }
-
-    @Override
-    public DeleteResult deleteMany(Bson filter) {
-        failedMessageCollection.find(filter)
-                .forEach((Consumer<Document>) document -> failedMessageAuditCollection.insertOne(new Document()
-                        .append(AUDIT_ACTION_KEY, DELETE_AUDIT_ACTION)
-                        .append(AUDIT_DATE_TIME_KEY, Instant.now())
-                        .append(DOCUMENT_KEY, document)));
-        return markDocumentsAsDeleted(filter, failedMessageCollection.deleteMany(filter));
-    }
-
-    @Override
-    public DeleteResult deleteMany(Bson filter, DeleteOptions options) {
-        return markDocumentsAsDeleted(filter, failedMessageCollection.deleteMany(filter, options));
-    }
-
-    private DeleteResult markDocumentsAsDeleted(Bson filter, DeleteResult deleteResult) {
-        if (deleteResult.getDeletedCount() > 0) {
-            failedMessageAuditCollection
-                    .find(filter)
-                    .forEach((Consumer<Document>) document -> failedMessageAuditCollection.insertOne(new Document()
-                            .append(AUDIT_ACTION_KEY, DELETE_AUDIT_ACTION)
-                            .append(AUDIT_DATE_TIME_KEY, Instant.now())
-                            .append(DOCUMENT_KEY, document)));
-        }
-        return deleteResult;
+    private void createDeleteAuditDocument(Document document) {
+        auditCollection.insertOne(new Document()
+                .append(AUDIT_ACTION_KEY, DELETE_AUDIT_ACTION)
+                .append(AUDIT_DATE_TIME_KEY, Instant.now())
+                .append(DOCUMENT_KEY, document));
     }
 
     @Override
     public UpdateResult replaceOne(Bson filter, Document replacement) {
-        return replaceDocument(replacement, failedMessageCollection.replaceOne(filter, replacement));
+        return createReplaceAuditDocument(replacement, sourceCollection.replaceOne(filter, replacement));
     }
 
     @Override
     public UpdateResult replaceOne(Bson filter, Document replacement, UpdateOptions updateOptions) {
-        return replaceDocument(replacement, failedMessageCollection.replaceOne(filter, replacement, updateOptions));
+        return createReplaceAuditDocument(replacement, sourceCollection.replaceOne(filter, replacement, updateOptions));
     }
 
-    private UpdateResult replaceDocument(Document replacement, UpdateResult updateResult) {
+    private UpdateResult createReplaceAuditDocument(Document replacement, UpdateResult updateResult) {
         if (!updateResult.wasAcknowledged() || updateResult.getMatchedCount() > 0) {
-            failedMessageAuditCollection.insertOne(new Document()
+            auditCollection.insertOne(new Document()
                     .append(AUDIT_ACTION_KEY, REPLACE_AUDIT_ACTION)
                     .append(AUDIT_DATE_TIME_KEY, Instant.now())
                     .append(DOCUMENT_KEY, replacement));
@@ -296,7 +289,7 @@ public class AuditingMongoCollection implements MongoCollection<Document> {
     public UpdateResult updateOne(Bson filter, Bson update) {
         return createFailedMessageUpdateAuditDocument(
                 filter,
-                idFilter -> failedMessageCollection.updateOne(idFilter.map(Bson.class::cast).orElse(filter), update)
+                idFilter -> sourceCollection.updateOne(idFilter.map(Bson.class::cast).orElse(filter), update)
         );
     }
 
@@ -304,20 +297,20 @@ public class AuditingMongoCollection implements MongoCollection<Document> {
     public UpdateResult updateOne(Bson filter, Bson update, UpdateOptions updateOptions) {
         return createFailedMessageUpdateAuditDocument(
                 filter,
-                idFilter -> failedMessageCollection.updateOne(idFilter.map(Bson.class::cast).orElse(filter), update, updateOptions)
+                idFilter -> sourceCollection.updateOne(idFilter.map(Bson.class::cast).orElse(filter), update, updateOptions)
         );
     }
 
     public UpdateResult createFailedMessageUpdateAuditDocument(Bson filter, Function<Optional<Document>, UpdateResult> updateOperation) {
-        final Optional<Document> id = Optional.ofNullable(failedMessageCollection
+        final Optional<Document> id = Optional.ofNullable(sourceCollection
                 .find(filter)
                 .projection(new Document("_id", 1))
                 .first());
         final UpdateResult updateResult = updateOperation.apply(id);
-        id.ifPresent(x -> failedMessageAuditCollection.insertOne(new Document()
+        id.ifPresent(x -> auditCollection.insertOne(new Document()
                 .append(AUDIT_ACTION_KEY, UPDATE_AUDIT_ACTION)
                 .append(AUDIT_DATE_TIME_KEY, Instant.now())
-                .append(DOCUMENT_KEY, failedMessageCollection.find(x).first())
+                .append(DOCUMENT_KEY, sourceCollection.find(x).first())
         ));
         return updateResult;
     }
@@ -325,112 +318,112 @@ public class AuditingMongoCollection implements MongoCollection<Document> {
     @Override
     public UpdateResult updateMany(Bson filter, Bson update) {
         LOGGER.warn("updateMany operation is not currently audited");
-        return failedMessageCollection.updateMany(filter, update);
+        return sourceCollection.updateMany(filter, update);
     }
 
     @Override
     public UpdateResult updateMany(Bson filter, Bson update, UpdateOptions updateOptions) {
         LOGGER.warn("updateMany with UpdateOptions operation is not currently audited");
-        return failedMessageCollection.updateMany(filter, update, updateOptions);
+        return sourceCollection.updateMany(filter, update, updateOptions);
     }
 
     @Override
     public Document findOneAndDelete(Bson filter) {
         LOGGER.warn("findOneAndDelete operation is not currently audited");
-        return failedMessageCollection.findOneAndDelete(filter);
+        return sourceCollection.findOneAndDelete(filter);
     }
 
     @Override
     public Document findOneAndDelete(Bson filter, FindOneAndDeleteOptions options) {
         LOGGER.warn("findOneAndDelete operation is not currently audited");
-        return failedMessageCollection.findOneAndDelete(filter, options);
+        return sourceCollection.findOneAndDelete(filter, options);
     }
 
     @Override
     public Document findOneAndReplace(Bson filter, Document replacement) {
         LOGGER.warn("findOneAndReplace operation is not currently audited");
-        return failedMessageCollection.findOneAndReplace(filter, replacement);
+        return sourceCollection.findOneAndReplace(filter, replacement);
     }
 
     @Override
     public Document findOneAndReplace(Bson filter, Document replacement, FindOneAndReplaceOptions options) {
         LOGGER.warn("findOneAndReplace operation is not currently audited");
-        return failedMessageCollection.findOneAndReplace(filter, replacement, options);
+        return sourceCollection.findOneAndReplace(filter, replacement, options);
     }
 
     @Override
     public Document findOneAndUpdate(Bson filter, Bson update) {
         LOGGER.warn("findOneAndUpdate operation is not currently audited");
-        return failedMessageCollection.findOneAndUpdate(filter, update);
+        return sourceCollection.findOneAndUpdate(filter, update);
     }
 
     @Override
     public Document findOneAndUpdate(Bson filter, Bson update, FindOneAndUpdateOptions options) {
         LOGGER.warn("findOneAndUpdate operation is not currently audited");
-        return failedMessageCollection.findOneAndUpdate(filter, update, options);
+        return sourceCollection.findOneAndUpdate(filter, update, options);
     }
 
     @Override
     public void drop() {
         LOGGER.warn("drop operation is not currently audited");
-        failedMessageCollection.drop();
+        sourceCollection.drop();
     }
 
     @Override
     public String createIndex(Bson keys) {
         LOGGER.warn("createIndex operation is not currently audited");
-        return failedMessageCollection.createIndex(keys);
+        return sourceCollection.createIndex(keys);
     }
 
     @Override
     public String createIndex(Bson keys, IndexOptions indexOptions) {
         LOGGER.warn("createIndex operation is not currently audited");
-        return failedMessageCollection.createIndex(keys, indexOptions);
+        return sourceCollection.createIndex(keys, indexOptions);
     }
 
     @Override
     public List<String> createIndexes(List<IndexModel> indexes) {
         LOGGER.warn("createIndex operation is not currently audited");
-        return failedMessageCollection.createIndexes(indexes);
+        return sourceCollection.createIndexes(indexes);
     }
 
     @Override
     public ListIndexesIterable<Document> listIndexes() {
-        return failedMessageCollection.listIndexes();
+        return sourceCollection.listIndexes();
     }
 
     @Override
     public <TResult> ListIndexesIterable<TResult> listIndexes(Class<TResult> tResultClass) {
-        return failedMessageCollection.listIndexes(tResultClass);
+        return sourceCollection.listIndexes(tResultClass);
     }
 
     @Override
     public void dropIndex(String indexName) {
         LOGGER.warn("dropIndex(indexName) operation is not currently audited");
-        failedMessageCollection.dropIndex(indexName);
+        sourceCollection.dropIndex(indexName);
     }
 
     @Override
     public void dropIndex(Bson keys) {
         LOGGER.warn("dropIndex(keys) operation is not currently audited");
-        failedMessageCollection.dropIndex(keys);
+        sourceCollection.dropIndex(keys);
     }
 
     @Override
     public void dropIndexes() {
         LOGGER.warn("dropIndexes operation is not currently audited");
-        failedMessageCollection.dropIndexes();
+        sourceCollection.dropIndexes();
     }
 
     @Override
     public void renameCollection(MongoNamespace newCollectionNamespace) {
         LOGGER.warn("renameCollection operation is not currently audited");
-        failedMessageCollection.renameCollection(newCollectionNamespace);
+        sourceCollection.renameCollection(newCollectionNamespace);
     }
 
     @Override
     public void renameCollection(MongoNamespace newCollectionNamespace, RenameCollectionOptions renameCollectionOptions) {
         LOGGER.warn("renameCollection operation is not currently audited");
-        failedMessageCollection.renameCollection(newCollectionNamespace, renameCollectionOptions);
+        sourceCollection.renameCollection(newCollectionNamespace, renameCollectionOptions);
     }
 }
