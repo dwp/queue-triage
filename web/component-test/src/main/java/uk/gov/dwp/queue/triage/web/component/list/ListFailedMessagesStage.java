@@ -44,7 +44,7 @@ public class ListFailedMessagesStage extends Stage<ListFailedMessagesStage> {
     @ProvidedScenarioState
     private Map<FailedMessageId, SearchFailedMessageResponse> searchFailedMessageResponses = new HashMap<>();
 
-    public ListFailedMessagesStage aFailedMessage$Exists(@Format(value = ReflectionArgumentFormatter.class) SearchFailedMessageResponseBuilder builder) {
+    public ListFailedMessagesStage aFailedMessage$Exists(@Format(value = ReflectionArgumentFormatter.class, args = "failedMessageId") SearchFailedMessageResponseBuilder builder) {
         SearchFailedMessageResponse response = builder.build();
         searchFailedMessageResponses.put(response.getFailedMessageId(), response);
         return this;

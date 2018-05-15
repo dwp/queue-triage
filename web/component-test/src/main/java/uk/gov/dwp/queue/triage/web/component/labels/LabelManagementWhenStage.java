@@ -1,6 +1,7 @@
 package uk.gov.dwp.queue.triage.web.component.labels;
 
 import com.codeborne.selenide.Selenide;
+import com.tngtech.jgiven.annotation.Quoted;
 import org.openqa.selenium.By;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,7 +15,7 @@ public class LabelManagementWhenStage extends WhenStage<LabelManagementWhenStage
 
     private static final Logger LOGGER = LoggerFactory.getLogger(LabelManagementWhenStage.class);
 
-    public LabelManagementWhenStage theUserAddslabels$ToFailedMessage$(String labels, FailedMessageId failedMessageId) {
+    public LabelManagementWhenStage theUserAddsLabels$ToFailedMessage$(@Quoted String labels, FailedMessageId failedMessageId) {
         LOGGER.debug("Adding label(s): {} to failedMessage: {}", labels, failedMessageId);
         FailedMessageGrid.selectCheckboxForFailedMessage(failedMessageId);
 
@@ -22,6 +23,10 @@ public class LabelManagementWhenStage extends WhenStage<LabelManagementWhenStage
 
         FailedMessageGrid.selectCheckboxForFailedMessage(failedMessageId);
         return this;
+    }
+
+    public LabelManagementWhenStage theUserRemovesAllLabelsFromFailedMessage(FailedMessageId failedMessageId) {
+        return theUserAddsLabels$ToFailedMessage$("", failedMessageId);
     }
 
     public LabelManagementWhenStage theUserClicksSave() {

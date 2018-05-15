@@ -1,7 +1,5 @@
 package uk.gov.dwp.queue.triage.web.server.search;
 
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 import uk.gov.dwp.queue.triage.core.client.FailedMessageResponse;
 import uk.gov.dwp.queue.triage.core.client.SearchFailedMessageClient;
 import uk.gov.dwp.queue.triage.core.client.search.SearchFailedMessageResponse;
