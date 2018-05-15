@@ -49,5 +49,6 @@ public class DeleteFailedMessageComponentTest extends WebComponentTest<ListFaile
         when().and().theUserConfirmsTheyWantToDeleteTheMessages();
 
         then().failedMessage$IsDeleted(FAILED_MESSAGE_ID_1);
+        then().and().failedMessage$IsNotDeleted(FAILED_MESSAGE_ID_2);
     }
 }

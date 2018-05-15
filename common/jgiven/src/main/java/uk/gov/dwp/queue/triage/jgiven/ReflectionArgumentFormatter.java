@@ -2,6 +2,7 @@ package uk.gov.dwp.queue.triage.jgiven;
 
 import com.tngtech.jgiven.format.ArgumentFormatter;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 import java.util.stream.Stream;
 
@@ -16,6 +17,10 @@ public class ReflectionArgumentFormatter implements ArgumentFormatter<Object> {
                     .map(item -> format(item, fieldsToInclude))
                     .collect(joining(", and "));
         }
-        return ReflectionToStringBuilder.toString(argumentToFormat, fieldsToInclude != null ? toStringWithFields(fieldsToInclude) : null);
+        return ReflectionToStringBuilder.toString(argumentToFormat, toStringStyle(fieldsToInclude));
+    }
+
+    private ToStringStyle toStringStyle(String...fieldToInclude) {
+        return ((fieldToInclude == null) || (fieldToInclude.length == 0)) ? null : toStringWithFields(fieldToInclude);
     }
 }

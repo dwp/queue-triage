@@ -10,6 +10,7 @@ import uk.gov.dwp.queue.triage.web.component.list.ListFailedMessagesStage;
 import uk.gov.dwp.queue.triage.web.component.login.LoginGivenStage;
 
 import java.time.Instant;
+import java.util.Collections;
 
 import static java.time.temporal.ChronoUnit.MINUTES;
 import static uk.gov.dwp.queue.triage.core.client.search.SearchFailedMessageResponse.newSearchFailedMessageResponse;
@@ -50,8 +51,8 @@ public class LabelManagementComponentTest extends SimpleBaseWebComponentTest<Lab
         loginGivenStage.given().and().theUserHasSuccessfullyLoggedOn();
         listFailedMessagesStage.given().and().theUserHasNavigatedToTheFailedMessagesPage();
 
-        when().theUserAddslabels$ToFailedMessage$("foo", FAILED_MESSAGE_ID_1);
-        when().and().theUserAddslabels$ToFailedMessage$("label1, label2", FAILED_MESSAGE_ID_2);
+        when().theUserAddsLabels$ToFailedMessage$("foo", FAILED_MESSAGE_ID_1);
+        when().and().theUserAddsLabels$ToFailedMessage$("label1, label2", FAILED_MESSAGE_ID_2);
         when().and().theUserClicksSave();
 
         labelManagementThenStage.then().failedMessage$IsUpdatedWithLabels$(FAILED_MESSAGE_ID_1, "foo");
@@ -67,6 +68,7 @@ public class LabelManagementComponentTest extends SimpleBaseWebComponentTest<Lab
                 .withStatus(FailedMessageStatus.FAILED)
                 .withStatusDateTime(NOW)
                 .withContent("Boom")
+                .withLabels(Collections.singleton("foo"))
         );
         listFailedMessagesStage.given().and().aFailedMessage$Exists(newSearchFailedMessageResponse()
                 .withFailedMessageId(FAILED_MESSAGE_ID_2)
@@ -80,7 +82,7 @@ public class LabelManagementComponentTest extends SimpleBaseWebComponentTest<Lab
         loginGivenStage.given().and().theUserHasSuccessfullyLoggedOn();
         listFailedMessagesStage.given().and().theUserHasNavigatedToTheFailedMessagesPage();
 
-        when().theUserAddslabels$ToFailedMessage$("", FAILED_MESSAGE_ID_1);
+        when().theUserRemovesAllLabelsFromFailedMessage(FAILED_MESSAGE_ID_1);
         when().and().theUserClicksSave();
 
         labelManagementThenStage.then().failedMessage$IsUpdatedWithNoLabels(FAILED_MESSAGE_ID_1);
