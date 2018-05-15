@@ -4,7 +4,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoCredential;
 import com.mongodb.ServerAddress;
+import com.mongodb.client.MongoCollection;
 import org.bson.BsonType;
+import org.bson.Document;
 import org.bson.Transformer;
 import org.bson.codecs.BsonTypeClassMap;
 import org.bson.codecs.DocumentCodecProvider;
@@ -17,6 +19,7 @@ import org.springframework.context.annotation.Import;
 import uk.gov.dwp.queue.triage.core.dao.FailedMessageDao;
 import uk.gov.dwp.queue.triage.core.dao.ObjectConverter;
 import uk.gov.dwp.queue.triage.core.dao.PropertiesConverter;
+import uk.gov.dwp.queue.triage.core.dao.mongo.AuditingMongoCollection;
 import uk.gov.dwp.queue.triage.core.dao.mongo.DestinationDocumentConverter;
 import uk.gov.dwp.queue.triage.core.dao.mongo.DocumentConverter;
 import uk.gov.dwp.queue.triage.core.dao.mongo.FailedMessageConverter;
@@ -92,12 +95,28 @@ public class MongoDaoConfig {
     }
 
     @Bean
-    public FailedMessageDao failedMessageDao(MongoClient mongoClient,
-                                             MongoDaoProperties mongoDaoProperties,
+    public MongoCollection<Document> failedMessageCollection(MongoClient mongoClient,
+                                                             MongoDaoProperties mongoDaoProperties) {
+        MongoCollection<Document> failedMessageCollection = mongoClient
+                .getDatabase(mongoDaoProperties.getDbName())
+                .getCollection(mongoDaoProperties.getFailedMessage().getName());
+        if (mongoDaoProperties.getFailedMessage().isAudited()) {
+            failedMessageCollection = new AuditingMongoCollection(
+                    failedMessageCollection,
+                    mongoClient
+                            .getDatabase(mongoDaoProperties.getDbName())
+                            .getCollection(mongoDaoProperties.getFailedMessage().getAuditCollection().getName())
+            );
+        }
+        return failedMessageCollection;
+    }
+
+    @Bean
+    public FailedMessageDao failedMessageDao(MongoCollection<Document> failedMessageCollection,
                                              FailedMessageConverter failedMessageConverter,
                                              DocumentConverter<StatusHistoryEvent> failedMessageStatusDocumentConverter) {
         return new FailedMessageMongoDao(
-                mongoClient.getDatabase(mongoDaoProperties.getDbName()).getCollection(mongoDaoProperties.getFailedMessage().getName()),
+                failedMessageCollection,
                 failedMessageConverter,
                 failedMessageStatusDocumentConverter,
                 new RemoveRecordsQueryFactory()

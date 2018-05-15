@@ -1,29 +1,64 @@
 package uk.gov.dwp.queue.triage.core.service;
 
-import org.hamcrest.Matchers;
+import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
+import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.internal.hamcrest.HamcrestArgumentMatcher;
+import org.mockito.junit.MockitoJUnit;
+import org.mockito.junit.MockitoRule;
+import uk.gov.dwp.queue.triage.core.client.update.UpdateRequest;
 import uk.gov.dwp.queue.triage.core.dao.FailedMessageDao;
 import uk.gov.dwp.queue.triage.core.domain.FailedMessage;
-import uk.gov.dwp.queue.triage.core.domain.StatusHistoryEvent;
-import uk.gov.dwp.queue.triage.core.domain.StatusHistoryEventMatcher;
+import uk.gov.dwp.queue.triage.core.domain.FailedMessageBuilder;
+import uk.gov.dwp.queue.triage.core.domain.update.StatusUpdateRequest;
 import uk.gov.dwp.queue.triage.id.FailedMessageId;
 
-import java.time.Instant;
+import java.util.Collections;
+import java.util.List;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.Matchers.hasSize;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyZeroInteractions;
+import static org.mockito.Mockito.when;
 import static uk.gov.dwp.queue.triage.core.domain.StatusHistoryEvent.Status.DELETED;
 import static uk.gov.dwp.queue.triage.core.domain.StatusHistoryEvent.Status.RESEND;
+import static uk.gov.dwp.queue.triage.core.domain.update.StatusUpdateRequest.statusUpdateRequest;
+import static uk.gov.dwp.queue.triage.core.domain.update.StatusUpdateRequestMatcher.aStatusUpdateRequest;
 
 public class FailedMessageServiceTest {
 
     private static final FailedMessageId FAILED_MESSAGE_ID = FailedMessageId.newFailedMessageId();
-    private static final Instant NOW = Instant.now();
 
-    private final FailedMessageDao failedMessageDao = Mockito.mock(FailedMessageDao.class);
+    @Rule
+    public ExpectedException expectedException = ExpectedException.none();
+    @Rule
+    public MockitoRule mockitoJUnit = MockitoJUnit.rule();
 
-    private final FailedMessageService underTest = new FailedMessageService(failedMessageDao);
-    private final FailedMessage failedMessage = Mockito.mock(FailedMessage.class);
+    @Mock
+    private FailedMessageDao failedMessageDao;
+    @Mock
+    private FailedMessage failedMessage;
+    @Mock
+    private FailedMessageBuilder failedMessageBuilder;
+    @Mock
+    private FailedMessageBuilderFactory failedMessageBuilderFactory;
+    @Mock
+    private UpdateRequest updateRequest;
+    @Captor
+    private ArgumentCaptor<List<? extends UpdateRequest>> updateRequests;
+
+    private FailedMessageService underTest
+            ;
+    @Before
+    public void setUp() {
+        underTest = new FailedMessageService(failedMessageDao, failedMessageBuilderFactory);
+    }
 
     @Test
     public void createFailedMessageDelegatesToDao() {
@@ -33,36 +68,49 @@ public class FailedMessageServiceTest {
     }
 
     @Test
-    public void updateStatus() throws Exception {
-        underTest.updateStatus(FAILED_MESSAGE_ID, RESEND);
+    public void updateStatus() {
+        when(failedMessageBuilderFactory.create(FAILED_MESSAGE_ID)).thenReturn(failedMessageBuilder);
+        when(failedMessageBuilder.apply(updateRequests.capture())).thenReturn(failedMessageBuilder);
+        when(failedMessageBuilder.build()).thenReturn(failedMessage);
 
-        Mockito.verify(failedMessageDao).updateStatus(
-                Mockito.eq(FAILED_MESSAGE_ID),
-                argThat(StatusHistoryEventMatcher.equalTo(RESEND).withUpdatedDateTime(Matchers.notNullValue(Instant.class)))
-        );
-    }
+        underTest.update(FAILED_MESSAGE_ID, statusUpdateRequest(RESEND));
 
-    @Test
-    public void updateStatusWithGivenDate() {
-        underTest.updateStatus(FAILED_MESSAGE_ID, new StatusHistoryEvent(RESEND, NOW));
-
-        Mockito.verify(failedMessageDao).updateStatus(
-                Mockito.eq(FAILED_MESSAGE_ID),
-                argThat(StatusHistoryEventMatcher.equalTo(RESEND).withUpdatedDateTime(Matchers.equalTo(NOW)))
-        );
+        verify(failedMessageDao).update(failedMessage);
+        assertThat(updateRequests.getValue(), hasSize(1));
+        assertThat((StatusUpdateRequest) updateRequests.getValue().get(0), aStatusUpdateRequest(RESEND));
     }
 
     @Test
     public void deleteFailedMessage() {
+        when(failedMessageBuilderFactory.create(FAILED_MESSAGE_ID)).thenReturn(failedMessageBuilder);
+        when(failedMessageBuilder.apply(updateRequests.capture())).thenReturn(failedMessageBuilder);
+        when(failedMessageBuilder.build()).thenReturn(failedMessage);
+
         underTest.delete(FAILED_MESSAGE_ID);
 
-        Mockito.verify(failedMessageDao).updateStatus(
-                Mockito.eq(FAILED_MESSAGE_ID),
-                argThat(StatusHistoryEventMatcher.equalTo(DELETED).withUpdatedDateTime(Matchers.notNullValue(Instant.class)))
-        );
+        verify(failedMessageDao).update(failedMessage);
+        assertThat(updateRequests.getValue(), hasSize(1));
+        assertThat((StatusUpdateRequest) updateRequests.getValue().get(0), aStatusUpdateRequest(DELETED));
     }
 
-    public StatusHistoryEvent argThat(StatusHistoryEventMatcher matcher) {
-        return Mockito.argThat(new HamcrestArgumentMatcher<>(matcher));
+    @Test
+    public void noUpdatesArePerformedIfTheUpdateRequestListIsEmpty() {
+        underTest.update(FAILED_MESSAGE_ID, Collections.emptyList());
+
+        verifyZeroInteractions(failedMessageDao);
+        verifyZeroInteractions(failedMessageBuilderFactory);
+    }
+
+    @Test
+    public void updateAFailedMessageSuccessfully() {
+        when(failedMessageBuilderFactory.create(FAILED_MESSAGE_ID)).thenReturn(failedMessageBuilder);
+        when(failedMessageBuilder.apply(updateRequests.capture())).thenReturn(failedMessageBuilder);
+        when(failedMessageBuilder.build()).thenReturn(failedMessage);
+
+        underTest.update(FAILED_MESSAGE_ID, Collections.singletonList(updateRequest));
+
+        verify(failedMessageDao).update(failedMessage);
+        assertThat(updateRequests.getValue(), contains(updateRequest));
+
     }
 }

@@ -9,7 +9,6 @@ import uk.gov.dwp.queue.triage.core.client.search.SearchFailedMessageRequest;
 import uk.gov.dwp.queue.triage.core.client.search.SearchFailedMessageResponse;
 import uk.gov.dwp.queue.triage.core.dao.FailedMessageDao;
 import uk.gov.dwp.queue.triage.core.domain.FailedMessage;
-import uk.gov.dwp.queue.triage.core.domain.StatusHistoryEvent;
 import uk.gov.dwp.queue.triage.core.search.FailedMessageSearchService;
 import uk.gov.dwp.queue.triage.core.search.SearchFailedMessageResponseAdapter;
 import uk.gov.dwp.queue.triage.id.FailedMessageId;
@@ -53,7 +52,7 @@ public class FailedMessageSearchResourceTest {
 
     @Test
     public void findMessageById() {
-        when(failedMessageDao.findById(FAILED_MESSAGE_ID)).thenReturn(failedMessage);
+        when(failedMessageDao.findById(FAILED_MESSAGE_ID)).thenReturn(Optional.of(failedMessage));
         when(failedMessage.getStatus()).thenReturn(FAILED);
         when(failedMessageResponseFactory.create(failedMessage)).thenReturn(failedMessageResponse);
 
@@ -64,7 +63,7 @@ public class FailedMessageSearchResourceTest {
     public void findMessageByIdThrowsNotFoundExceptionWhenMessageDoesNotExist() {
         expectedException.expect(NotFoundException.class);
         expectedException.expectMessage("Failed Message: " + FAILED_MESSAGE_ID + " not found");
-        when(failedMessageDao.findById(FAILED_MESSAGE_ID)).thenReturn(null);
+        when(failedMessageDao.findById(FAILED_MESSAGE_ID)).thenReturn(Optional.empty());
 
         underTest.getFailedMessage(FAILED_MESSAGE_ID);
 
@@ -75,7 +74,7 @@ public class FailedMessageSearchResourceTest {
     public void findMessageByIdThrowsNotFoundExceptionWhenMessageIsDeleted() {
         expectedException.expect(NotFoundException.class);
         expectedException.expectMessage("Failed Message: " + FAILED_MESSAGE_ID + " not found");
-        when(failedMessageDao.findById(FAILED_MESSAGE_ID)).thenReturn(failedMessage);
+        when(failedMessageDao.findById(FAILED_MESSAGE_ID)).thenReturn(Optional.of(failedMessage));
         when(failedMessage.getStatus()).thenReturn(DELETED);
 
         underTest.getFailedMessage(FAILED_MESSAGE_ID);

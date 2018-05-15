@@ -7,6 +7,7 @@ import uk.gov.dwp.queue.triage.core.jms.MessageSender;
 import uk.gov.dwp.queue.triage.core.service.FailedMessageService;
 
 import static uk.gov.dwp.queue.triage.core.domain.StatusHistoryEvent.Status.SENT;
+import static uk.gov.dwp.queue.triage.core.domain.update.StatusUpdateRequest.statusUpdateRequest;
 
 public class FailedMessageSender implements MessageSender {
 
@@ -24,7 +25,7 @@ public class FailedMessageSender implements MessageSender {
     public void send(FailedMessage failedMessage) {
         try {
             messageSender.send(failedMessage);
-            failedMessageService.updateStatus(failedMessage.getFailedMessageId(), SENT);
+            failedMessageService.update(failedMessage.getFailedMessageId(), statusUpdateRequest(SENT));
         } catch (Exception e) {
             LOGGER.error("Could not send FailedMessage: " + failedMessage.getFailedMessageId(), e);
         }

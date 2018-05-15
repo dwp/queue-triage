@@ -55,31 +55,36 @@ public class BaseW2UIRequest {
 
         public T withCmd(String cmd) {
             this.cmd = cmd;
-            return (T)this;
+            return self();
         }
 
         public T withLimit(int limit) {
             this.limit = limit;
-            return (T)this;
+            return self();
         }
 
         public T withOffset(int offset) {
             this.offset = offset;
-            return (T)this;
+            return self();
         }
 
         public T withSelectedRecords(List<String> selectedRecords) {
             this.selectedRecords = selectedRecords;
-            return (T)this;
+            return self();
         }
 
         public T withSelectedRecords(FailedMessageId...selectedRecords) {
             this.selectedRecords.addAll(Stream.of(selectedRecords).map(FailedMessageId::toString).collect(Collectors.toList()));
-            return (T)this;
+            return self();
         }
 
         public T withSelectedRecord(FailedMessageId selectedRecord) {
             this.selectedRecords.add(selectedRecord.toString());
+            return self();
+        }
+
+        @SuppressWarnings("unchecked")
+        private T self() {
             return (T)this;
         }
     }

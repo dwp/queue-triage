@@ -19,6 +19,7 @@ dependencies {
     testImplementation project(':common:jackson')
     testImplementation project(':common:matchers')
     testImplementation project(':core:client-test-support')
+    testImplementation project(':core:domain-test-support')
     testImplementation project(':core:dao')
     testImplementation 'junit:junit'
     testImplementation 'org.apache.activemq:activemq-client'

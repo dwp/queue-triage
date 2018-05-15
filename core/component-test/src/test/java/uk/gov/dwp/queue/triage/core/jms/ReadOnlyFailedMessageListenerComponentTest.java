@@ -3,9 +3,9 @@ package uk.gov.dwp.queue.triage.core.jms;
 import com.tngtech.jgiven.annotation.ScenarioStage;
 import org.junit.Test;
 import org.springframework.test.context.ActiveProfiles;
-import uk.gov.dwp.queue.triage.core.BaseCoreComponentTest;
 import uk.gov.dwp.queue.triage.core.JmsStage;
-import uk.gov.dwp.queue.triage.core.search.SearchFailedMessageStage;
+import uk.gov.dwp.queue.triage.core.SimpleCoreComponentTestBase;
+import uk.gov.dwp.queue.triage.core.search.SearchFailedMessageThenStage;
 
 import java.util.Optional;
 
@@ -14,10 +14,10 @@ import static uk.gov.dwp.queue.triage.core.client.search.SearchFailedMessageRequ
 import static uk.gov.dwp.queue.triage.core.client.search.SearchFailedMessageResponseMatcher.aFailedMessage;
 
 @ActiveProfiles(value = "read-only-component-test", inheritProfiles = false)
-public class ReadOnlyFailedMessageListenerComponentTest extends BaseCoreComponentTest<JmsStage> {
+public class ReadOnlyFailedMessageListenerComponentTest extends SimpleCoreComponentTestBase<JmsStage> {
 
     @ScenarioStage
-    private SearchFailedMessageStage searchFailedMessageStage;
+    private SearchFailedMessageThenStage searchFailedMessageThenStage;
     @ScenarioStage
     private FailedMessageListenerAdminGivenStage messageListenerGivenStage;
     @ScenarioStage
@@ -35,7 +35,7 @@ public class ReadOnlyFailedMessageListenerComponentTest extends BaseCoreComponen
 
         messageListenerAdminWhenStage.when().theMesageListenerReadsMessagesOnBroker$("internal-broker");
 
-        searchFailedMessageStage.then().aSearch$WillContainAResponseWhere$(
+        searchFailedMessageThenStage.then().aSearch$WillContainAResponseWhere$(
                 searchMatchingAllCriteria().withBroker("internal-broker"),
                 aFailedMessage()
                         .withBroker(equalTo("internal-broker"))
@@ -56,7 +56,7 @@ public class ReadOnlyFailedMessageListenerComponentTest extends BaseCoreComponen
         messageListenerAdminWhenStage.when().and().theMesageListenerReadsMessagesOnBroker$("internal-broker");
         messageListenerAdminWhenStage.when().and().theMesageListenerReadsMessagesOnBroker$("internal-broker");
 
-        searchFailedMessageStage.then().aSearch$WillContainAResponseWhere$(
+        searchFailedMessageThenStage.then().aSearch$WillContainAResponseWhere$(
                 searchMatchingAllCriteria().withBroker("internal-broker"),
                 aFailedMessage()
                         .withBroker(equalTo("internal-broker"))

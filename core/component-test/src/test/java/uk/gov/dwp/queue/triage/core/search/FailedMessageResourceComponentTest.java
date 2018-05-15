@@ -4,8 +4,8 @@ import com.tngtech.jgiven.integration.spring.EnableJGiven;
 import org.hamcrest.Matchers;
 import org.junit.Test;
 import org.springframework.boot.test.context.SpringBootTest;
-import uk.gov.dwp.queue.triage.core.BaseCoreComponentTest;
 import uk.gov.dwp.queue.triage.core.FailedMessageResourceStage;
+import uk.gov.dwp.queue.triage.core.SimpleCoreComponentTestBase;
 import uk.gov.dwp.queue.triage.id.FailedMessageId;
 
 import java.time.Instant;
@@ -19,7 +19,7 @@ import static uk.gov.dwp.queue.triage.id.FailedMessageId.newFailedMessageId;
 
 @EnableJGiven
 @SpringBootTest(webEnvironment= RANDOM_PORT)
-public class FailedMessageResourceComponentTest extends BaseCoreComponentTest<FailedMessageResourceStage> {
+public class FailedMessageResourceComponentTest extends SimpleCoreComponentTestBase<FailedMessageResourceStage> {
 
     private static final Instant NOW = Instant.now();
 
@@ -38,7 +38,7 @@ public class FailedMessageResourceComponentTest extends BaseCoreComponentTest<Fa
 
         when().aMessageWithId$IsSelected(failedMessageId);
 
-        then().thenTheFailedMessageReturned(aFailedMessage()
+        then().theFailedMessageReturned(aFailedMessage()
                 .withFailedMessageId(equalTo(failedMessageId))
                 .withContent(equalTo("Hello World"))
                 .withBroker(equalTo("broker"))

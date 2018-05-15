@@ -18,6 +18,7 @@ import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 
 import static java.time.Instant.now;
@@ -30,7 +31,6 @@ import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.emptyIterable;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.nullValue;
 import static uk.gov.dwp.queue.triage.core.domain.FailedMessageMatcher.aFailedMessage;
 import static uk.gov.dwp.queue.triage.core.domain.StatusHistoryEvent.Status.DELETED;
 import static uk.gov.dwp.queue.triage.core.domain.StatusHistoryEvent.Status.FAILED;
@@ -59,7 +59,7 @@ public class FailedMessageMongoDaoTest extends AbstractMongoDaoTest {
 
     @Test
     public void findFailedMessageThatDoesNotExistReturnsNull() {
-        assertThat(underTest.findById(newFailedMessageId()), is(nullValue(FailedMessage.class)));
+        assertThat(underTest.findById(newFailedMessageId()), is(Optional.empty()));
     }
 
     @Test
@@ -68,7 +68,7 @@ public class FailedMessageMongoDaoTest extends AbstractMongoDaoTest {
 
         underTest.insert(failedMessageBuilder.build());
 
-        assertThat(underTest.findById(failedMessageId), is(aFailedMessage()
+        assertThat(underTest.findById(failedMessageId).orElse(null), is(aFailedMessage()
                 .withFailedMessageId(equalTo(failedMessageId))
                 .withContent(equalTo("Hello"))
                 .withProperties(equalTo(emptyMap()))
@@ -97,7 +97,7 @@ public class FailedMessageMongoDaoTest extends AbstractMongoDaoTest {
 
         underTest.insert(failedMessageBuilder.build());
 
-        assertThat(underTest.findById(failedMessageId), is(aFailedMessage()
+        assertThat(underTest.findById(failedMessageId).orElse(null), is(aFailedMessage()
                 .withFailedMessageId(equalTo(failedMessageId))
                 .withContent(equalTo("Hello"))
                 .withProperties(equalTo(properties))
@@ -133,7 +133,7 @@ public class FailedMessageMongoDaoTest extends AbstractMongoDaoTest {
     @Test
     public void updateStatus() {
         underTest.insert(failedMessageBuilder.build());
-        underTest.updateStatus(failedMessageId, statusHistoryEvent(RESEND));
+        underTest.update(failedMessageBuilder.withStatusHistoryEvent(statusHistoryEvent(RESEND)).build());
 
         assertThat(underTest.getStatusHistory(failedMessageId), contains(
                 StatusHistoryEventMatcher.equalTo(RESEND),
@@ -175,7 +175,7 @@ public class FailedMessageMongoDaoTest extends AbstractMongoDaoTest {
         underTest.insert(failedMessageBuilder.build());
         underTest.addLabel(failedMessageId, "foo");
 
-        assertThat(underTest.findById(failedMessageId), aFailedMessage().withLabels(contains("foo")));
+        assertThat(underTest.findById(failedMessageId).orElse(null), aFailedMessage().withLabels(contains("foo")));
     }
 
     @Test
@@ -183,7 +183,7 @@ public class FailedMessageMongoDaoTest extends AbstractMongoDaoTest {
         underTest.insert(failedMessageBuilder.withLabel("foo").build());
         underTest.addLabel(failedMessageId, "foo");
 
-        assertThat(underTest.findById(failedMessageId), aFailedMessage().withLabels(contains("foo")));
+        assertThat(underTest.findById(failedMessageId).orElse(null), aFailedMessage().withLabels(contains("foo")));
     }
 
     @Test
@@ -200,7 +200,7 @@ public class FailedMessageMongoDaoTest extends AbstractMongoDaoTest {
 
         underTest.setLabels(failedMessageId, ImmutableSet.of("foo", "bar"));
 
-        assertThat(underTest.findById(failedMessageId), aFailedMessage().withLabels(containsInAnyOrder("foo", "bar")));
+        assertThat(underTest.findById(failedMessageId).orElse(null), aFailedMessage().withLabels(containsInAnyOrder("foo", "bar")));
     }
 
     @Test
@@ -209,7 +209,7 @@ public class FailedMessageMongoDaoTest extends AbstractMongoDaoTest {
 
         underTest.removeLabel(failedMessageId, "foo");
 
-        assertThat(underTest.findById(failedMessageId), aFailedMessage().withLabels(emptyIterable()));
+        assertThat(underTest.findById(failedMessageId).orElse(null), aFailedMessage().withLabels(emptyIterable()));
     }
 
     @Test
@@ -218,14 +218,14 @@ public class FailedMessageMongoDaoTest extends AbstractMongoDaoTest {
 
         underTest.removeLabel(failedMessageId, "bar");
 
-        assertThat(underTest.findById(failedMessageId), aFailedMessage().withLabels(contains("foo")));
+        assertThat(underTest.findById(failedMessageId).orElse(null), aFailedMessage().withLabels(contains("foo")));
     }
 
     @Test
     public void removeLabelForAFailedMessageThatDoesNotExist() {
         underTest.removeLabel(failedMessageId, "bar");
 
-        //TODO: What should be the behaviour (no current use case)? Throw an Exception?  Return a Boolean?
+        // What should be the behaviour (no current use case)? Throw an Exception?  Return a Boolean?
         assertThat(collection.count(), is(0L));
     }
 
@@ -242,7 +242,7 @@ public class FailedMessageMongoDaoTest extends AbstractMongoDaoTest {
                 .build()
         );
 
-        assertThat(underTest.findById(failedMessageId), aFailedMessage()
+        assertThat(underTest.findById(failedMessageId).orElse(null), aFailedMessage()
                 .withJmsMessageId(equalTo("new-" + JMS_MESSAGE_ID))
                 .withDestination(DestinationMatcher.aDestination().withBrokerName("broker").withName("another.queue.name"))
                 .withContent(equalTo("Goodbye"))

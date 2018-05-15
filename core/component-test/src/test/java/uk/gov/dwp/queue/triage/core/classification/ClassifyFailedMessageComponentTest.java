@@ -4,11 +4,11 @@ import com.tngtech.jgiven.annotation.ScenarioStage;
 import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
-import uk.gov.dwp.queue.triage.core.BaseCoreComponentTest;
 import uk.gov.dwp.queue.triage.core.FailedMessageResourceStage;
 import uk.gov.dwp.queue.triage.core.JmsStage;
+import uk.gov.dwp.queue.triage.core.SimpleCoreComponentTestBase;
 import uk.gov.dwp.queue.triage.core.domain.FailedMessageResponseMatcher;
-import uk.gov.dwp.queue.triage.core.search.SearchFailedMessageStage;
+import uk.gov.dwp.queue.triage.core.search.SearchFailedMessageThenStage;
 import uk.gov.dwp.queue.triage.id.FailedMessageId;
 
 import static org.hamcrest.Matchers.equalTo;
@@ -17,11 +17,11 @@ import static uk.gov.dwp.queue.triage.core.client.search.SearchFailedMessageRequ
 import static uk.gov.dwp.queue.triage.core.client.search.SearchFailedMessageResponseMatcher.aFailedMessage;
 import static uk.gov.dwp.queue.triage.id.FailedMessageId.newFailedMessageId;
 
-public class ClassifyFailedMessageComponentTest extends BaseCoreComponentTest<JmsStage> {
+public class ClassifyFailedMessageComponentTest extends SimpleCoreComponentTestBase<JmsStage> {
 
     private final FailedMessageId failedMessageId = newFailedMessageId();
     @ScenarioStage
-    private SearchFailedMessageStage searchFailedMessageStage;
+    private SearchFailedMessageThenStage searchFailedMessageThenStage;
     @ScenarioStage
     private MessageClassificationGivenStage messageClassificationGivenStage;
     @ScenarioStage
@@ -38,22 +38,20 @@ public class ClassifyFailedMessageComponentTest extends BaseCoreComponentTest<Jm
     @Test
     public void messageClassifiedByContentIsDeleted() {
         messageClassificationGivenStage.given().and().aMessageClassifierExistsToDeleteMessagesWithContent$On$BrokerAnd$Queue("poison", "any", "any");
-        failedMessageResourceStage.and().aFailedMessage(newCreateFailedMessageRequest()
+        failedMessageResourceStage.and().aFailedMessage$Exists(newCreateFailedMessageRequest()
                 .withFailedMessageId(newFailedMessageId())
                 .withBrokerName("some-broker")
                 .withDestinationName("some-queue")
-                .withContent("poison")
-        ).exists();
-        failedMessageResourceStage.and().aFailedMessage(newCreateFailedMessageRequest()
+                .withContent("poison"));
+        failedMessageResourceStage.and().aFailedMessage$Exists(newCreateFailedMessageRequest()
                 .withFailedMessageId(failedMessageId)
                 .withBrokerName("some-broker")
                 .withDestinationName("some-queue")
-                .withContent("nuts")
-        ).exists();
+                .withContent("nuts"));
 
         messageClassificationWhenStage.when().theMessageClassificationJobExecutes();
 
-        searchFailedMessageStage.then().aSearch$WillContainAResponseWhere$(
+        searchFailedMessageThenStage.then().aSearch$WillContainAResponseWhere$(
                 searchMatchingAllCriteria().withBroker("some-broker"),
                 aFailedMessage()
                         .withFailedMessageId(equalTo(failedMessageId))
@@ -67,22 +65,20 @@ public class ClassifyFailedMessageComponentTest extends BaseCoreComponentTest<Jm
                 "poison",
                 "some-broker",
                 "any");
-        failedMessageResourceStage.and().aFailedMessage(newCreateFailedMessageRequest()
+        failedMessageResourceStage.and().aFailedMessage$Exists(newCreateFailedMessageRequest()
                 .withFailedMessageId(newFailedMessageId())
                 .withBrokerName("some-broker")
                 .withDestinationName("some-queue")
-                .withContent("poison")
-        ).exists();
-        failedMessageResourceStage.and().aFailedMessage(newCreateFailedMessageRequest()
+                .withContent("poison"));
+        failedMessageResourceStage.and().aFailedMessage$Exists(newCreateFailedMessageRequest()
                 .withFailedMessageId(failedMessageId)
                 .withBrokerName("another-broker")
                 .withDestinationName("some-queue")
-                .withContent("poison")
-        ).exists();
+                .withContent("poison"));
 
         messageClassificationWhenStage.when().theMessageClassificationJobExecutes();
 
-        searchFailedMessageStage.then().aSearch$WillContainAResponseWhere$(
+        searchFailedMessageThenStage.then().aSearch$WillContainAResponseWhere$(
                 searchMatchingAllCriteria().withDestination("some-queue"),
                 aFailedMessage().withFailedMessageId(equalTo(failedMessageId))
         );
@@ -93,16 +89,15 @@ public class ClassifyFailedMessageComponentTest extends BaseCoreComponentTest<Jm
         messageClassificationGivenStage.given().aMessageClassifierExistsToLabelAnyMessage$FromBroker$(
                 "investigate",
                 "some-broker");
-        failedMessageResourceStage.and().aFailedMessage(newCreateFailedMessageRequest()
+        failedMessageResourceStage.and().aFailedMessage$Exists(newCreateFailedMessageRequest()
                 .withFailedMessageId(failedMessageId)
                 .withBrokerName("some-broker")
                 .withDestinationName("some-queue")
-                .withContent("poison")
-        ).exists();
+                .withContent("poison"));
 
         messageClassificationWhenStage.when().theMessageClassificationJobExecutes();
 
-        failedMessageResourceStage.then().aFailedMessageWithId$Has(
+        searchFailedMessageThenStage.then().aFailedMessageWithId$Has(
                 failedMessageId, FailedMessageResponseMatcher.aFailedMessage().withLabels(Matchers.contains("investigate")));
     }
 }

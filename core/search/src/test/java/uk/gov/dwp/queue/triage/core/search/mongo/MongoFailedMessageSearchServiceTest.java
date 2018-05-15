@@ -60,7 +60,7 @@ public class MongoFailedMessageSearchServiceTest extends AbstractMongoDaoTest {
     @Before
     public void setUp() {
         super.setUp();
-        underTest = new MongoFailedMessageSearchService(collection, mongoSearchRequestAdapter, failedMessageConverter, mongoStatusHistoryQueryBuilder);
+        underTest = new MongoFailedMessageSearchService(collection, mongoSearchRequestAdapter, failedMessageConverter, mongoStatusHistoryQueryBuilder, failedMessageMongoDao);
     }
 
     @Override

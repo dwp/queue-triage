@@ -28,7 +28,7 @@ public class MongoSearchRequestAdapter {
 
     public Document toQuery(SearchFailedMessageRequest request) {
         Document query;
-        if (request.getStatuses().size() > 0) {
+        if (!request.getStatuses().isEmpty()) {
             query = mongoStatusHistoryQueryBuilder.currentStatusIn(fromFailedMessageStatus(request.getStatuses()));
         } else {
             query = mongoStatusHistoryQueryBuilder.currentStatusNotEqualTo(DELETED);
@@ -39,7 +39,7 @@ public class MongoSearchRequestAdapter {
         request.getDestination().ifPresent(destination -> predicates.add(new Document(DESTINATION + "." + NAME, destination)));
         request.getContent().ifPresent(content -> predicates.add(new Document(CONTENT, Pattern.compile(content))));
         request.getJmsMessageId().ifPresent(jmsMessageId -> predicates.add(new Document(JMS_MESSAGE_ID, jmsMessageId)));
-        if (predicates.size() > 0) {
+        if (!predicates.isEmpty()) {
             query.append(request.getOperator() == AND ? QueryOperators.AND : QueryOperators.OR, predicates);
         }
         return query;

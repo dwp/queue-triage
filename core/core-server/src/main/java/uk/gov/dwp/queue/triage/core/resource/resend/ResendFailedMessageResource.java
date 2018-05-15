@@ -1,7 +1,7 @@
 package uk.gov.dwp.queue.triage.core.resource.resend;
 
 import uk.gov.dwp.queue.triage.core.client.resend.ResendFailedMessageClient;
-import uk.gov.dwp.queue.triage.core.domain.StatusHistoryEvent;
+import uk.gov.dwp.queue.triage.core.domain.update.StatusUpdateRequest;
 import uk.gov.dwp.queue.triage.core.service.FailedMessageService;
 import uk.gov.dwp.queue.triage.id.FailedMessageId;
 
@@ -10,6 +10,7 @@ import java.time.Duration;
 import java.time.Instant;
 
 import static uk.gov.dwp.queue.triage.core.domain.StatusHistoryEvent.Status.RESEND;
+import static uk.gov.dwp.queue.triage.core.domain.update.StatusUpdateRequest.statusUpdateRequest;
 
 public class ResendFailedMessageResource implements ResendFailedMessageClient {
 
@@ -24,14 +25,11 @@ public class ResendFailedMessageResource implements ResendFailedMessageClient {
 
     @Override
     public void resendFailedMessage(FailedMessageId failedMessageId) {
-        failedMessageService.updateStatus(failedMessageId, RESEND);
+        failedMessageService.update(failedMessageId, statusUpdateRequest(RESEND));
     }
 
     @Override
     public void resendFailedMessageWithDelay(FailedMessageId failedMessageId, Duration duration) {
-        failedMessageService.updateStatus(
-                failedMessageId,
-                new StatusHistoryEvent(RESEND, Instant.now(clock).plus(duration))
-        );
+        failedMessageService.update(failedMessageId, new StatusUpdateRequest(RESEND, Instant.now(clock).plus(duration)));
     }
 }
