@@ -16,7 +16,6 @@ import org.springframework.core.convert.support.DefaultConversionService;
 import org.springframework.core.env.ConfigurableEnvironment;
 import org.springframework.core.env.MapPropertySource;
 import org.springframework.core.env.PropertySource;
-
 import uk.gov.dwp.vault.SensitiveConfigValueLookupRegistry;
 import uk.gov.dwp.vault.SensitiveConfigValueLookupStrategy;
 import uk.gov.dwp.vault.SingleValueVaultLookupStrategy;
@@ -93,19 +92,10 @@ public class VaultAutoConfiguration {
     }
 
 
-    private Converter<char[], String> chararacterArrayToStringConverter() {
-        return new Converter<char[], String>() {
-            @Override
-            public String convert(char[] source) {
-                return new String(source);
-            }
-        };
-    }
-
     @Bean
     public ConversionService conversionService() {
         DefaultConversionService defaultConversionService = new DefaultConversionService();
-        defaultConversionService.addConverter(chararacterArrayToStringConverter());
+        defaultConversionService.addConverter(new CharacterArrayToStringConverter());
         return defaultConversionService;
     }
 
@@ -127,4 +117,10 @@ public class VaultAutoConfiguration {
             .flatMap(g -> g.entrySet().stream());
     }
 
+    public static class CharacterArrayToStringConverter implements Converter<char[], String> {
+        @Override
+        public String convert(char[] source) {
+            return new String(source);
+        }
+    }
 }

@@ -28,3 +28,6 @@ dependencies {
     testRuntime        'org.yaml:snakeyaml'
 
 }
+
+// This module and core:dao-mongo both rely on Mongo - don't run them in parallel
+tasks.test.mustRunAfter project(':core:dao-mongo').tasks.test
