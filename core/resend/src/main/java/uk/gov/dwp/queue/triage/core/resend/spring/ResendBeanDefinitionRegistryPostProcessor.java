@@ -24,6 +24,7 @@ public class ResendBeanDefinitionRegistryPostProcessor implements BeanDefinition
     private final JmsTemplateBeanDefinitionFactory jmsTemplateBeanDefinitionFactory;
     private final ResendScheduledExecutorServiceBeanDefinitionFactory resendScheduledExecutorServiceBeanDefinitionFactory;
 
+    // CHECKSTYLE:OFF
     public ResendBeanDefinitionRegistryPostProcessor(Environment environment,
                                                      ActiveMQConnectionFactoryFactoryBeanDefinitionFactory activeMQConnectionFactoryFactoryBeanDefinitionFactory,
                                                      ActiveMQConnectionFactoryBeanDefinitionFactory activeMQConnectionFactoryBeanDefinitionFactory,
@@ -32,6 +33,7 @@ public class ResendBeanDefinitionRegistryPostProcessor implements BeanDefinition
                                                      SpringMessageSenderBeanDefinitionFactory springMessageSenderBeanDefinitionFactory,
                                                      JmsTemplateBeanDefinitionFactory jmsTemplateBeanDefinitionFactory,
                                                      ResendScheduledExecutorServiceBeanDefinitionFactory resendScheduledExecutorServiceBeanDefinitionFactory) {
+    // CHECKSTYLE:ON
         this.environment = environment;
         this.activeMQConnectionFactoryFactoryBeanDefinitionFactory = activeMQConnectionFactoryFactoryBeanDefinitionFactory;
         this.activeMQConnectionFactoryBeanDefinitionFactory = activeMQConnectionFactoryBeanDefinitionFactory;
