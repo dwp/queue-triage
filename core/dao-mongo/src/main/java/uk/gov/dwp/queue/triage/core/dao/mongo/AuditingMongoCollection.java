@@ -39,6 +39,22 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
+/**
+ * Writes an audit document to a separate collection in the format:
+ * <pre>
+ * {
+ *   "_id" : ObjectId("5af56fc30b41674d8030c9b0"),
+ *    "auditAction" : "INSERT",
+ *    "auditDateTime" : ISODate("2018-05-11T10:26:11.666Z"),
+ *    "document" : {
+ *      "_id" : "e30eaa4a-4700-4a37-a771-dac30eddbd45",
+ *      ...
+ *    }
+ * }
+ * </pre>
+ * NOTE: At this time certain operations are NOT audited (as they are not used by the application), if an operation that
+ * is not audited is executed a message will be written to the application logs at level WARN
+ */
 public class AuditingMongoCollection implements MongoCollection<Document> {
 
     static final String AUDIT_ACTION_KEY = "auditAction";
@@ -50,7 +66,7 @@ public class AuditingMongoCollection implements MongoCollection<Document> {
     static final String REPLACE_AUDIT_ACTION = "REPLACE";
     static final String UPDATE_AUDIT_ACTION = "UPDATE";
 
-    private static Logger LOGGER = LoggerFactory.getLogger(AuditingMongoCollection.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(AuditingMongoCollection.class);
 
     private final MongoCollection<Document> sourceCollection;
     private final MongoCollection<Document> auditCollection;
@@ -183,13 +199,13 @@ public class AuditingMongoCollection implements MongoCollection<Document> {
 
     @Override
     public BulkWriteResult bulkWrite(List<? extends WriteModel<? extends Document>> requests) {
-        LOGGER.warn("bulkWrite operation is not currently audited");
+        warnOperationNotAudited("bulkWrite");
         return sourceCollection.bulkWrite(requests);
     }
 
     @Override
     public BulkWriteResult bulkWrite(List<? extends WriteModel<? extends Document>> requests, BulkWriteOptions options) {
-        LOGGER.warn("bulkWrite operation is not currently audited");
+        warnOperationNotAudited("bulkWrite with options");
         return sourceCollection.bulkWrite(requests, options);
     }
 
@@ -317,73 +333,73 @@ public class AuditingMongoCollection implements MongoCollection<Document> {
 
     @Override
     public UpdateResult updateMany(Bson filter, Bson update) {
-        LOGGER.warn("updateMany operation is not currently audited");
+        warnOperationNotAudited("updateMany");
         return sourceCollection.updateMany(filter, update);
     }
 
     @Override
     public UpdateResult updateMany(Bson filter, Bson update, UpdateOptions updateOptions) {
-        LOGGER.warn("updateMany with UpdateOptions operation is not currently audited");
+        warnOperationNotAudited("updateMany with options");
         return sourceCollection.updateMany(filter, update, updateOptions);
     }
 
     @Override
     public Document findOneAndDelete(Bson filter) {
-        LOGGER.warn("findOneAndDelete operation is not currently audited");
+        warnOperationNotAudited("findOneAndDelete");
         return sourceCollection.findOneAndDelete(filter);
     }
 
     @Override
     public Document findOneAndDelete(Bson filter, FindOneAndDeleteOptions options) {
-        LOGGER.warn("findOneAndDelete operation is not currently audited");
+        warnOperationNotAudited("findOneAndDelete with options");
         return sourceCollection.findOneAndDelete(filter, options);
     }
 
     @Override
     public Document findOneAndReplace(Bson filter, Document replacement) {
-        LOGGER.warn("findOneAndReplace operation is not currently audited");
+        warnOperationNotAudited("findOneAndReplace");
         return sourceCollection.findOneAndReplace(filter, replacement);
     }
 
     @Override
     public Document findOneAndReplace(Bson filter, Document replacement, FindOneAndReplaceOptions options) {
-        LOGGER.warn("findOneAndReplace operation is not currently audited");
+        warnOperationNotAudited("findOneAndReplace with options");
         return sourceCollection.findOneAndReplace(filter, replacement, options);
     }
 
     @Override
     public Document findOneAndUpdate(Bson filter, Bson update) {
-        LOGGER.warn("findOneAndUpdate operation is not currently audited");
+        warnOperationNotAudited("findOneAndUpdate");
         return sourceCollection.findOneAndUpdate(filter, update);
     }
 
     @Override
     public Document findOneAndUpdate(Bson filter, Bson update, FindOneAndUpdateOptions options) {
-        LOGGER.warn("findOneAndUpdate operation is not currently audited");
+        warnOperationNotAudited("findOneAndUpdate with options");
         return sourceCollection.findOneAndUpdate(filter, update, options);
     }
 
     @Override
     public void drop() {
-        LOGGER.warn("drop operation is not currently audited");
+        warnOperationNotAudited("drop");
         sourceCollection.drop();
     }
 
     @Override
     public String createIndex(Bson keys) {
-        LOGGER.warn("createIndex operation is not currently audited");
+        warnOperationNotAudited("createIndex");
         return sourceCollection.createIndex(keys);
     }
 
     @Override
     public String createIndex(Bson keys, IndexOptions indexOptions) {
-        LOGGER.warn("createIndex operation is not currently audited");
+        warnOperationNotAudited("createIndex with options");
         return sourceCollection.createIndex(keys, indexOptions);
     }
 
     @Override
     public List<String> createIndexes(List<IndexModel> indexes) {
-        LOGGER.warn("createIndex operation is not currently audited");
+        warnOperationNotAudited("createIndexes");
         return sourceCollection.createIndexes(indexes);
     }
 
@@ -399,31 +415,35 @@ public class AuditingMongoCollection implements MongoCollection<Document> {
 
     @Override
     public void dropIndex(String indexName) {
-        LOGGER.warn("dropIndex(indexName) operation is not currently audited");
+        warnOperationNotAudited("dropIndex with name");
         sourceCollection.dropIndex(indexName);
     }
 
     @Override
     public void dropIndex(Bson keys) {
-        LOGGER.warn("dropIndex(keys) operation is not currently audited");
+        warnOperationNotAudited("dropIndex with keys");
         sourceCollection.dropIndex(keys);
     }
 
     @Override
     public void dropIndexes() {
-        LOGGER.warn("dropIndexes operation is not currently audited");
+        warnOperationNotAudited("dropIndexes");
         sourceCollection.dropIndexes();
     }
 
     @Override
     public void renameCollection(MongoNamespace newCollectionNamespace) {
-        LOGGER.warn("renameCollection operation is not currently audited");
+        warnOperationNotAudited("renameCollection");
         sourceCollection.renameCollection(newCollectionNamespace);
     }
 
     @Override
     public void renameCollection(MongoNamespace newCollectionNamespace, RenameCollectionOptions renameCollectionOptions) {
-        LOGGER.warn("renameCollection operation is not currently audited");
+        warnOperationNotAudited("renameCollection with options");
         sourceCollection.renameCollection(newCollectionNamespace, renameCollectionOptions);
+    }
+
+    protected void warnOperationNotAudited(String operation) {
+        LOGGER.warn("{} operation is not currently audited", operation);
     }
 }

@@ -168,6 +168,8 @@ subprojects {
             dependency 'org.objenesis:objenesis:2.5.1'
             dependency 'org.valid4j:json-path-matchers:1.1'
             dependency 'org.yaml:snakeyaml:1.17'
+            dependency 'uk.org.lidalia:slf4j-test:1.1.0'
+
         }
     }
 }
