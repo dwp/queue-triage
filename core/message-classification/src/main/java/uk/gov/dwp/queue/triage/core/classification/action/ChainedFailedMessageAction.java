@@ -18,8 +18,4 @@ public class ChainedFailedMessageAction implements FailedMessageAction {
     public void accept(FailedMessage failedMessage) {
         actions.forEach(action -> action.accept(failedMessage));
     }
-
-    List<FailedMessageAction> getActions() {
-        return actions;
-    }
 }
