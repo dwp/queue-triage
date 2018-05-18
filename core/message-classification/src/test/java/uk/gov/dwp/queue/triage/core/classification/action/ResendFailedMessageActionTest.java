@@ -63,7 +63,7 @@ public class ResendFailedMessageActionTest {
 
     @Test
     public void resendFailedMessageActionWithNullDelay() {
-        ResendFailedMessageAction underTest = createResendFailedMessageAction(null);
+        ResendFailedMessageAction underTest = resendFailedMessageActionWithFixedClock(null);
 
         underTest.accept(failedMessage);
 
@@ -73,7 +73,7 @@ public class ResendFailedMessageActionTest {
 
     @Test
     public void resendFailedMessageActionWithGivenDelay() {
-        ResendFailedMessageAction underTest = createResendFailedMessageAction(Duration.ofSeconds(10));
+        ResendFailedMessageAction underTest = resendFailedMessageActionWithFixedClock(Duration.ofSeconds(10));
 
         underTest.accept(failedMessage);
 
@@ -81,12 +81,7 @@ public class ResendFailedMessageActionTest {
         assertThat(statusUpdateRequest.getValue(), aStatusUpdateRequest(RESEND).withUpdatedDateTime(FIXED_CLOCK.instant().plusSeconds(10)));
     }
 
-    private ResendFailedMessageAction createResendFailedMessageAction(final Duration resendDelay) {
-        return new ResendFailedMessageAction(resendDelay, failedMessageService) {
-            @Override
-            protected Clock getClock() {
-                return FIXED_CLOCK;
-            }
-        };
+    private ResendFailedMessageAction resendFailedMessageActionWithFixedClock(final Duration resendDelay) {
+        return new ResendFailedMessageAction(resendDelay, failedMessageService, FIXED_CLOCK);
     }
 }

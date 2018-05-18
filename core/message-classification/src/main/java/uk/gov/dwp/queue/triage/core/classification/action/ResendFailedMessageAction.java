@@ -16,25 +16,29 @@ public class ResendFailedMessageAction implements FailedMessageAction {
 
     private final Duration resendDelay;
     private final FailedMessageService failedMessageService;
+    private final Clock clock;
 
     public ResendFailedMessageAction(@JsonProperty("resendDelay") Duration resendDelay,
                                      @JacksonInject FailedMessageService failedMessageService) {
+        this(resendDelay, failedMessageService, Clock.systemUTC());
+    }
+
+    ResendFailedMessageAction(Duration resendDelay,
+                              FailedMessageService failedMessageService,
+                              Clock clock) {
         this.resendDelay = resendDelay;
         this.failedMessageService = failedMessageService;
+        this.clock = clock;
     }
 
     @Override
     public void accept(FailedMessage failedMessage) {
         failedMessageService.update(
                 failedMessage.getFailedMessageId(),
-                new StatusUpdateRequest(RESEND, getClock().instant().plus(getResendDelay())));
+                new StatusUpdateRequest(RESEND, clock.instant().plus(getResendDelay())));
     }
 
     private Duration getResendDelay() {
         return Optional.ofNullable(resendDelay).orElse(Duration.ofSeconds(0));
-    }
-
-    protected Clock getClock() {
-        return Clock.systemUTC();
     }
 }
