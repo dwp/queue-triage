@@ -1,18 +1,18 @@
 # Directories
 .buckd/
+buck-out/
 .idea/
 activemq-data/
-buck-out/
 build/
 jgiven-reports/
 target/
 .gradle/
 out/
 .DS_Store
-*.ipr
-*.iws
 
 # Files
 *.iml
+*.ipr
+*.iws
+*.pyc
 .buckconfig.local
-/jgiven-reports/
