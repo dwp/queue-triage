@@ -23,9 +23,9 @@ before_script:
 
 script:
   - ./gradlew build -Pselenium.remote_url=http://localhost:4444/wd/hub
+  - ./ci/release.sh
 
 after_success:
-  - ./ci/release.sh
   - ./ci/sonarqube.sh
 
 services:
