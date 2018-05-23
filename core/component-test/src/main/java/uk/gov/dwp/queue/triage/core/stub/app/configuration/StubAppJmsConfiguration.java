@@ -1,14 +1,12 @@
 package uk.gov.dwp.queue.triage.core.stub.app.configuration;
 
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.jms.connection.JmsTransactionManager;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.jms.listener.DefaultMessageListenerContainer;
-
 import uk.gov.dwp.queue.triage.core.classification.MessageClassifier;
 import uk.gov.dwp.queue.triage.core.jms.JmsMessagePropertyExtractor;
 import uk.gov.dwp.queue.triage.core.jms.MessageTextExtractor;
@@ -45,7 +43,7 @@ public class StubAppJmsConfiguration {
     }
 
     private MessageClassifier defaultMessageClassifier() {
-        return new MessageClassifier(failedMessage -> true, failedMessage -> { throw new RuntimeException("Head Shot!"); });
+        return new MessageClassifier(BROKER_NAME, failedMessage -> true, failedMessage -> { throw new RuntimeException("Head Shot!"); });
     }
 
     @Bean(destroyMethod = "shutdown")

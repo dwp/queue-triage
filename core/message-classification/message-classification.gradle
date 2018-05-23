@@ -7,8 +7,9 @@ dependencies {
     implementation project(':core:search')
     implementation 'com.fasterxml.jackson.core:jackson-annotations'
     implementation 'com.fasterxml.jackson.core:jackson-databind'
-    implementation 'javax.ws.rs:javax.ws.rs-api'
+    implementation 'com.jayway.jsonpath:json-path'
     implementation 'io.swagger:swagger-annotations'
+    implementation 'javax.ws.rs:javax.ws.rs-api'
     implementation 'org.apache.commons:commons-lang3'
     implementation 'org.slf4j:slf4j-api'
 
@@ -21,6 +22,7 @@ dependencies {
     testImplementation project(':common:matchers')
     testImplementation project(':core:domain-test-support')
     testImplementation 'junit:junit'
+    testImplementation 'commons-io:commons-io:2.6'
     testImplementation 'org.hamcrest:hamcrest-core'
     testImplementation 'org.hamcrest:hamcrest-library'
     testImplementation 'org.hibernate:hibernate-validator'

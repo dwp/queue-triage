@@ -37,8 +37,7 @@ public class PropertyMatchesPredicate implements FailedMessagePredicate {
                 .matches();
     }
 
-    public String getPropertyAsString(FailedMessage failedMessage) {
-        // TODO: Should we only support Objects or type Number, CharSequence, Boolean
+    private String getPropertyAsString(FailedMessage failedMessage) {
         return Optional.ofNullable(failedMessage.getProperty(name))
                 .map(String::valueOf)
                 .orElse("");

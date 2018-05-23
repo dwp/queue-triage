@@ -36,7 +36,7 @@ public class MessageClassificationGivenStage extends GivenStage<MessageClassific
         }
         testRestTemplate.postForLocation(
                 "/core/message-classification",
-                new MessageClassifier(new AndPredicate(predicates), new DeleteMessageAction(null))
+                new MessageClassifier("Default Classifier", new AndPredicate(predicates), new DeleteMessageAction(null))
         );
         return this;
     }
@@ -44,7 +44,7 @@ public class MessageClassificationGivenStage extends GivenStage<MessageClassific
     public MessageClassificationGivenStage aMessageClassifierExistsToLabelAnyMessage$FromBroker$(String label, String broker) {
         testRestTemplate.postForLocation(
                 "/core/message-classification",
-                new MessageClassifier(new BrokerEqualsPredicate(broker), new LabelMessageAction(label, null))
+                new MessageClassifier("Default Classifier", new BrokerEqualsPredicate(broker), new LabelMessageAction(label, null))
         );
         return this;
     }

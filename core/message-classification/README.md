@@ -77,7 +77,9 @@ A number of Failed Message Predicates are provided:
 * AndPredicate - All of the given predicates must evaluate to `true`
 * OrPredicate - Any of the given predicates evaluate to `true`
 * BrokerEqualToPredicate - Name of the Broker equals a given value
+* ContentContainsJsonPathPredicate - Message Content contains a specified JSON path
 * ContentEqualToPredicate - Content of the message equals a given value
+* ContentMatchesJsonPath - Value extracted by the JSON path matches a given regular expression
 * DestinationEqualToPredicate - Name of the Destination equals a given value
 * PropertyEqualToPredicate - Value of a JMS property equals a given value
 * PropertyExistsPredicate - Given JMS property exists
