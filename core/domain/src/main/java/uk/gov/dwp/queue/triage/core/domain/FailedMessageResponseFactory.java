@@ -1,8 +1,6 @@
-package uk.gov.dwp.queue.triage.core.resource.search;
+package uk.gov.dwp.queue.triage.core.domain;
 
 import uk.gov.dwp.queue.triage.core.client.FailedMessageResponse;
-import uk.gov.dwp.queue.triage.core.domain.FailedMessage;
-import uk.gov.dwp.queue.triage.core.domain.FailedMessageStatusAdapter;
 
 public class FailedMessageResponseFactory {
 

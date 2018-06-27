@@ -317,7 +317,7 @@ public class AuditingMongoCollection implements MongoCollection<Document> {
         );
     }
 
-    public UpdateResult createFailedMessageUpdateAuditDocument(Bson filter, Function<Optional<Document>, UpdateResult> updateOperation) {
+    private UpdateResult createFailedMessageUpdateAuditDocument(Bson filter, Function<Optional<Document>, UpdateResult> updateOperation) {
         final Optional<Document> id = Optional.ofNullable(sourceCollection
                 .find(filter)
                 .projection(new Document("_id", 1))

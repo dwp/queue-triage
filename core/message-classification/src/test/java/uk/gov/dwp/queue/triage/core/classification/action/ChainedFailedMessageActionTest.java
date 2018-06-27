@@ -2,26 +2,35 @@ package uk.gov.dwp.queue.triage.core.classification.action;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonTypeName;
+import com.fasterxml.jackson.databind.InjectableValues;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.hamcrest.Matchers;
+import org.junit.Before;
 import org.junit.Test;
 import uk.gov.dwp.queue.triage.core.domain.FailedMessage;
 import uk.gov.dwp.queue.triage.jackson.configuration.JacksonConfiguration;
 
 import java.util.Arrays;
+import java.util.Collections;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 public class ChainedFailedMessageActionTest {
 
-    private final ObjectMapper objectMapper = new JacksonConfiguration().objectMapper();
+    private final ObjectMapper objectMapper = new JacksonConfiguration().objectMapper(new InjectableValues.Std());
 
     private final FailedMessage failedMessage = mock(FailedMessage.class);
     private final FailedMessageAction failedMessageAction1 = mock(FailedMessageAction.class);
     private final FailedMessageAction failedMessageAction2 = mock(FailedMessageAction.class);
-    private final CustomFailedMessageAction customFailedMessageAction = new CustomFailedMessageAction();
+
+    @Before
+    public void setUp() {
+        objectMapper.registerSubtypes(CustomFailedMessageAction.class);
+    }
 
     @Test
     public void allActionsInTheListAreExecuted() {
@@ -40,10 +49,22 @@ public class ChainedFailedMessageActionTest {
         objectMapper.registerSubtypes(CustomFailedMessageAction.class);
 
         FailedMessageAction underTest = objectMapper.readValue(
-                objectMapper.writeValueAsString(customFailedMessageAction),
-                FailedMessageAction.class
+                objectMapper.writeValueAsString(
+                        new ChainedFailedMessageAction(Collections.singletonList(new CustomFailedMessageAction()))),
+                        FailedMessageAction.class
         );
-        assertThat(underTest.getClass(), equalTo(CustomFailedMessageAction.class));
+        assertThat(underTest.getClass(), equalTo(ChainedFailedMessageAction.class));
+    }
+
+    @Test
+    public void testToString() {
+        when(failedMessageAction1.toString()).thenReturn("action1");
+        when(failedMessageAction2.toString()).thenReturn("action2");
+        ChainedFailedMessageAction underTest = new ChainedFailedMessageAction(Arrays.asList(
+                failedMessageAction1, failedMessageAction2
+        ));
+
+        assertThat(underTest.toString(), Matchers.is("action1 AND action2"));
     }
 
     @JsonTypeName("custom")

@@ -7,6 +7,7 @@ import uk.gov.dwp.queue.triage.core.service.FailedMessageLabelService;
 
 public class LabelMessageAction implements FailedMessageAction {
 
+    @JsonProperty
     private final String label;
     private final FailedMessageLabelService failedMessageLabelService;
 
@@ -21,8 +22,8 @@ public class LabelMessageAction implements FailedMessageAction {
         failedMessageLabelService.addLabel(failedMessage.getFailedMessageId(), label);
     }
 
-    @JsonProperty
-    public String getLabel() {
-        return label;
+    @Override
+    public String toString() {
+        return "set label = '" + label + "'";
     }
 }

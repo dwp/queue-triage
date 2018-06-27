@@ -1,5 +1,6 @@
 package uk.gov.dwp.queue.triage.core.client.update;
 
+import com.fasterxml.jackson.databind.InjectableValues;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
@@ -18,7 +19,7 @@ import static org.valid4j.matchers.jsonpath.JsonPathMatchers.hasJsonPath;
 public class ContentUpdateRequestTest {
 
     private static final String CONTENT = "some-content";
-    private static ObjectMapper OBJECT_MAPPER = new JacksonConfiguration().objectMapper();
+    private static ObjectMapper OBJECT_MAPPER = new JacksonConfiguration().objectMapper(new InjectableValues.Std());
 
     @Test
     public void serialiseAndDeserialiseRequest() throws IOException {

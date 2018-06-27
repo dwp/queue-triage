@@ -5,10 +5,10 @@ import com.google.common.collect.ImmutableSet;
 import org.junit.Test;
 import uk.gov.dwp.queue.triage.core.CoreComponentTestBase;
 import uk.gov.dwp.queue.triage.core.FailedMessageResourceStage;
+import uk.gov.dwp.queue.triage.core.client.FailedMessageResponseMatcher;
 import uk.gov.dwp.queue.triage.core.client.update.ContentUpdateRequest;
 import uk.gov.dwp.queue.triage.core.client.update.DestinationUpdateRequest;
 import uk.gov.dwp.queue.triage.core.client.update.PropertiesUpdateRequest;
-import uk.gov.dwp.queue.triage.core.domain.FailedMessageResponseMatcher;
 import uk.gov.dwp.queue.triage.core.search.SearchFailedMessageThenStage;
 import uk.gov.dwp.queue.triage.id.FailedMessageId;
 

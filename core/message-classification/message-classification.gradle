@@ -1,6 +1,7 @@
 dependencies {
     implementation project(':common:id')
     implementation project(':common:cxf')
+    implementation project(':common:jackson')
     implementation project(':core:client')
     implementation project(':core:domain')
     implementation project(':core:service')
@@ -18,8 +19,8 @@ dependencies {
     implementation 'org.springframework:spring-core'
     implementation 'org.springframework.boot:spring-boot'
 
-    testImplementation project(':common:jackson')
     testImplementation project(':common:matchers')
+    testImplementation project(':core:client-test-support')
     testImplementation project(':core:domain-test-support')
     testImplementation 'junit:junit'
     testImplementation 'commons-io:commons-io:2.6'

@@ -3,13 +3,14 @@ package uk.gov.dwp.queue.triage.core.service;
 import uk.gov.dwp.queue.triage.core.dao.FailedMessageDao;
 import uk.gov.dwp.queue.triage.core.domain.FailedMessage;
 import uk.gov.dwp.queue.triage.core.domain.FailedMessageBuilder;
-import uk.gov.dwp.queue.triage.core.domain.FailedMessageNotFoundException;
 import uk.gov.dwp.queue.triage.core.domain.StatusHistoryEvent;
 import uk.gov.dwp.queue.triage.core.domain.update.adapter.UpdateRequestAdapterRegistry;
 import uk.gov.dwp.queue.triage.id.FailedMessageId;
 
 import java.util.function.Function;
 import java.util.function.Predicate;
+
+import static uk.gov.dwp.queue.triage.core.domain.FailedMessageNotFoundException.failedMessageNotFound;
 
 public class FailedMessageBuilderFactory {
 
@@ -27,7 +28,7 @@ public class FailedMessageBuilderFactory {
         return failedMessageDao.findById(failedMessageId)
                 .filter(IS_DELETED.negate())
                 .map(createFailedMessageBuilder())
-                .orElseThrow(() -> new FailedMessageNotFoundException(failedMessageId))
+                .orElseThrow(failedMessageNotFound(failedMessageId))
                 .withUpdateRequestAdapterRegistry(updateRequestAdapterRegistry);
     }
 

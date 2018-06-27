@@ -1,5 +1,6 @@
 package uk.gov.dwp.queue.triage.core.client.search;
 
+import com.fasterxml.jackson.databind.InjectableValues;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Test;
 import uk.gov.dwp.queue.triage.core.client.FailedMessageStatus;
@@ -29,7 +30,7 @@ public class SearchFailedMessageResponseTest {
     private static final String SOME_CONTENT = "some-content";
     private static final String JMS_MESSAGE_ID = "jms-message-id";
     private static final FailedMessageId FAILED_MESSAGE_ID = newFailedMessageId();
-    private static final ObjectMapper OBJECT_MAPPER = new JacksonConfiguration().objectMapper();
+    private static final ObjectMapper OBJECT_MAPPER = new JacksonConfiguration().objectMapper(new InjectableValues.Std());
 
     private final SearchFailedMessageResponseBuilder searchFailedMessageResponseBuilder = newSearchFailedMessageResponse()
             .withBroker(BROKER_NAME)

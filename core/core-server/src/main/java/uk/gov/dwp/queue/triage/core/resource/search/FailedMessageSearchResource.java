@@ -5,6 +5,7 @@ import uk.gov.dwp.queue.triage.core.client.SearchFailedMessageClient;
 import uk.gov.dwp.queue.triage.core.client.search.SearchFailedMessageRequest;
 import uk.gov.dwp.queue.triage.core.client.search.SearchFailedMessageResponse;
 import uk.gov.dwp.queue.triage.core.dao.FailedMessageDao;
+import uk.gov.dwp.queue.triage.core.domain.FailedMessageResponseFactory;
 import uk.gov.dwp.queue.triage.core.search.FailedMessageSearchService;
 import uk.gov.dwp.queue.triage.core.search.SearchFailedMessageResponseAdapter;
 import uk.gov.dwp.queue.triage.id.FailedMessageId;

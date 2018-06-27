@@ -1,6 +1,8 @@
 package uk.gov.dwp.queue.triage.core.classification.action;
 
+import com.fasterxml.jackson.databind.InjectableValues;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
@@ -41,7 +43,7 @@ public class ResendFailedMessageActionTest {
     @Before
     public void setUp() {
         final JacksonConfiguration jacksonConfiguration = new JacksonConfiguration();
-        objectMapper = jacksonConfiguration.objectMapper().setInjectableValues(
+        objectMapper = jacksonConfiguration.objectMapper(new InjectableValues.Std()).setInjectableValues(
                 jacksonConfiguration.jacksonInjectableValues().addValue(FailedMessageService.class, failedMessageService)
         );
         when(failedMessage.getFailedMessageId()).thenReturn(FAILED_MESSAGE_ID);
@@ -79,6 +81,13 @@ public class ResendFailedMessageActionTest {
 
         verify(failedMessageService).update(eq(FAILED_MESSAGE_ID), statusUpdateRequest.capture());
         assertThat(statusUpdateRequest.getValue(), aStatusUpdateRequest(RESEND).withUpdatedDateTime(FIXED_CLOCK.instant().plusSeconds(10)));
+    }
+
+    @Test
+    public void testToString() {
+        ResendFailedMessageAction underTest = resendFailedMessageActionWithFixedClock(Duration.ofDays(2).plusMinutes(15).plusSeconds(10).plusMillis(5));
+
+        assertThat(underTest.toString(), Matchers.is("resend in 48:15:10.005"));
     }
 
     private ResendFailedMessageAction resendFailedMessageActionWithFixedClock(final Duration resendDelay) {

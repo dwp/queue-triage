@@ -7,8 +7,8 @@ import org.hamcrest.Matchers;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jms.core.JmsTemplate;
-import uk.gov.dwp.queue.triage.core.classification.MessageClassifier;
 import uk.gov.dwp.queue.triage.core.classification.action.FailedMessageAction;
+import uk.gov.dwp.queue.triage.core.classification.classifier.ExecutingMessageClassifier;
 import uk.gov.dwp.queue.triage.core.classification.predicate.ContentEqualToPredicate;
 import uk.gov.dwp.queue.triage.core.jms.TextMessageBuilder;
 import uk.gov.dwp.queue.triage.core.stub.app.resource.StubMessageClassifierResource;
@@ -47,8 +47,8 @@ public class JmsStage extends Stage<JmsStage> {
     }
 
     private void addMessageClassifierWithContent(String content, FailedMessageAction failedMessageAction) {
-        stubMessageClassifierResource.addMessageClassifier(new MessageClassifier(
-                content, new ContentEqualToPredicate(content), failedMessageAction)
+        stubMessageClassifierResource.addMessageClassifier(new ExecutingMessageClassifier(
+                new ContentEqualToPredicate(content), failedMessageAction)
         );
     }
 

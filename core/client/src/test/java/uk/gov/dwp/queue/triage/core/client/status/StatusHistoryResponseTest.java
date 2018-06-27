@@ -1,5 +1,6 @@
 package uk.gov.dwp.queue.triage.core.client.status;
 
+import com.fasterxml.jackson.databind.InjectableValues;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Test;
 import uk.gov.dwp.queue.triage.jackson.configuration.JacksonConfiguration;
@@ -15,7 +16,7 @@ import static uk.gov.dwp.queue.triage.core.domain.StatusHistoryResponseMatcher.s
 public class StatusHistoryResponseTest {
 
     private static final Instant NOW = Instant.now();
-    private static final ObjectMapper OBJECT_MAPPER = new JacksonConfiguration().objectMapper();
+    private static final ObjectMapper OBJECT_MAPPER = new JacksonConfiguration().objectMapper(new InjectableValues.Std());
 
     private final StatusHistoryResponse underTest = new StatusHistoryResponse(FAILED, NOW);
 

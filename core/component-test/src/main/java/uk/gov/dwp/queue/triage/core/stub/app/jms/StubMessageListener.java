@@ -2,10 +2,11 @@ package uk.gov.dwp.queue.triage.core.stub.app.jms;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import uk.gov.dwp.queue.triage.core.classification.MessageClassifier;
+import uk.gov.dwp.queue.triage.core.classification.classifier.MessageClassificationOutcome;
+import uk.gov.dwp.queue.triage.core.classification.classifier.StringDescription;
+import uk.gov.dwp.queue.triage.core.classification.server.repository.MessageClassificationRepository;
 import uk.gov.dwp.queue.triage.core.domain.FailedMessage;
 import uk.gov.dwp.queue.triage.core.jms.FailedMessageFactory;
-import uk.gov.dwp.queue.triage.core.stub.app.repository.MessageClassifierRepository;
 
 import javax.jms.JMSException;
 import javax.jms.Message;
@@ -15,19 +16,13 @@ public class StubMessageListener implements MessageListener {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(StubMessageListener.class);
 
-    private final String brokerName;
     private final FailedMessageFactory failedMessageFactory;
-    private final MessageClassifierRepository messageClassifierRepository;
-    private final MessageClassifier  defaultMessageClassifier;
+    private final MessageClassificationRepository messageClassificationRepository;
 
-    public StubMessageListener(String brokerName,
-                               FailedMessageFactory failedMessageFactory,
-                               MessageClassifierRepository messageClassifierRepository,
-                               MessageClassifier defaultMessageClassifier) {
-        this.brokerName = brokerName;
+    public StubMessageListener(FailedMessageFactory failedMessageFactory,
+                               MessageClassificationRepository messageClassificationRepository) {
         this.failedMessageFactory = failedMessageFactory;
-        this.messageClassifierRepository = messageClassifierRepository;
-        this.defaultMessageClassifier = defaultMessageClassifier;
+        this.messageClassificationRepository = messageClassificationRepository;
     }
 
     @Override
@@ -35,13 +30,14 @@ public class StubMessageListener implements MessageListener {
         try {
             FailedMessage failedMessage = failedMessageFactory.createFailedMessage(message);
             LOGGER.debug("Received failedMessage with content: {}", failedMessage.getContent());
-            messageClassifierRepository
-                    .getClassifiers(brokerName)
-                    .stream()
-                    .filter(classifier -> classifier.test(failedMessage))
-                    .findFirst()
-                    .orElse(defaultMessageClassifier)
-                    .accept(failedMessage);
+            final MessageClassificationOutcome outcome = messageClassificationRepository
+                    .findLatest()
+                    .classify(failedMessage, new StringDescription());
+            if (outcome.isMatched()) {
+                outcome.execute();
+            } else {
+                LOGGER.warn("FailedMessage: {} not classified.  Have you configured a defaultClassifier for the stub?", failedMessage.getFailedMessageId());
+            }
         } catch (JMSException ignore) {}
     }
 }

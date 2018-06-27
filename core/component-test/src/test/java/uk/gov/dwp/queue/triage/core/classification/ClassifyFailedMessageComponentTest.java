@@ -7,7 +7,7 @@ import org.junit.Test;
 import uk.gov.dwp.queue.triage.core.FailedMessageResourceStage;
 import uk.gov.dwp.queue.triage.core.JmsStage;
 import uk.gov.dwp.queue.triage.core.SimpleCoreComponentTestBase;
-import uk.gov.dwp.queue.triage.core.domain.FailedMessageResponseMatcher;
+import uk.gov.dwp.queue.triage.core.client.FailedMessageResponseMatcher;
 import uk.gov.dwp.queue.triage.core.search.SearchFailedMessageThenStage;
 import uk.gov.dwp.queue.triage.id.FailedMessageId;
 

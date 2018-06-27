@@ -1,6 +1,7 @@
 package uk.gov.dwp.queue.triage.web.server.api.status;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.InjectableValues;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Test;
 import uk.gov.dwp.queue.triage.core.client.FailedMessageStatus;
@@ -16,7 +17,7 @@ import static org.valid4j.matchers.jsonpath.JsonPathMatchers.hasJsonPath;
 
 public class StatusHistoryListItemTest {
 
-    private static final ObjectMapper OBJECT_MAPPER = new JacksonConfiguration().objectMapper();
+    private static final ObjectMapper OBJECT_MAPPER = new JacksonConfiguration().objectMapper(new InjectableValues.Std());
     private final StatusHistoryListItem underTest = new StatusHistoryListItem(new StatusHistoryResponse(FailedMessageStatus.FAILED, Instant.EPOCH.plusMillis(1)));
 
     @Test

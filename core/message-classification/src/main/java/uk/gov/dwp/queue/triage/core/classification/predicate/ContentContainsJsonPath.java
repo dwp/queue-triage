@@ -6,12 +6,15 @@ import com.jayway.jsonpath.ParseContext;
 import com.jayway.jsonpath.PathNotFoundException;
 import net.minidev.json.JSONArray;
 import org.apache.commons.lang3.StringUtils;
+import uk.gov.dwp.queue.triage.core.classification.classifier.Description;
+import uk.gov.dwp.queue.triage.core.classification.classifier.StringDescription;
 import uk.gov.dwp.queue.triage.core.domain.FailedMessage;
 
 import static com.jayway.jsonpath.Configuration.defaultConfiguration;
 
 public class ContentContainsJsonPath implements FailedMessagePredicate {
 
+    @JsonProperty
     private final String jsonPath;
     private final ParseContext parseContext = JsonPath.using(defaultConfiguration());
 
@@ -34,5 +37,15 @@ public class ContentContainsJsonPath implements FailedMessagePredicate {
             }
         }
         return false;
+    }
+
+    @Override
+    public Description describe(Description description) {
+        return description.append("content contains json path ").append(jsonPath);
+    }
+
+    @Override
+    public String toString() {
+        return describe(new StringDescription()).toString();
     }
 }

@@ -1,17 +1,22 @@
 package uk.gov.dwp.queue.triage.core.classification.server;
 
+import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
-import uk.gov.dwp.queue.triage.core.classification.MessageClassifier;
+import org.mockito.Answers;
+import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnit;
+import org.mockito.junit.MockitoRule;
+import uk.gov.dwp.queue.triage.core.classification.classifier.Description;
+import uk.gov.dwp.queue.triage.core.classification.classifier.MessageClassificationOutcome;
+import uk.gov.dwp.queue.triage.core.classification.classifier.MessageClassifierGroup;
 import uk.gov.dwp.queue.triage.core.classification.server.repository.MessageClassificationRepository;
 import uk.gov.dwp.queue.triage.core.domain.FailedMessage;
 import uk.gov.dwp.queue.triage.core.search.FailedMessageSearchService;
 
-import java.util.Arrays;
 import java.util.Collections;
 
 import static java.util.Collections.singletonList;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
@@ -19,20 +24,34 @@ import static uk.gov.dwp.queue.triage.core.domain.StatusHistoryEvent.Status.FAIL
 
 public class MessageClassificationServiceTest {
 
-    private final FailedMessageSearchService failedMessageSearchService = mock(FailedMessageSearchService.class);
-    private final MessageClassificationRepository messageClassificationRepository = mock(MessageClassificationRepository.class);
+    @Rule
+    public MockitoRule rule = MockitoJUnit.rule();
+    @Mock(answer = Answers.RETURNS_SELF)
+    private Description<String> description;
+    @Mock
+    private FailedMessage failedMessage;
+    @Mock
+    private MessageClassificationOutcome<String> messageClassificationOutcome;
+    @Mock
+    private FailedMessageSearchService failedMessageSearchService;
+    @Mock
+    private MessageClassificationRepository messageClassificationRepository;
+    @Mock
+    private MessageClassifierGroup messageClassifier;
 
-    private final FailedMessage failedMessage = mock(FailedMessage.class);
-    private final MessageClassifier messageClassifier1 = mock(MessageClassifier.class);
-    private final MessageClassifier messageClassifier2 = mock(MessageClassifier.class);
+    private MessageClassificationService underTest;
 
-    private final MessageClassificationService underTest = new MessageClassificationService(
-            failedMessageSearchService,
-            messageClassificationRepository
-    );
+    @Before
+    public void setUp() {
+        underTest = new MessageClassificationService<>(
+                failedMessageSearchService,
+                messageClassificationRepository,
+                () -> description
+        );
+    }
 
     @Test
-    public void noFailedMessagesExist() throws Exception {
+    public void classifyFailedMessagesWhenNoneExist() {
         when(failedMessageSearchService.findByStatus(FAILED)).thenReturn(Collections.emptyList());
 
         underTest.classifyFailedMessages();
@@ -41,28 +60,29 @@ public class MessageClassificationServiceTest {
     }
 
     @Test
-    public void whenAClassifierIsNotApplicableTheActionIsNotExecuted() throws Exception {
+    public void classifyFailedMessagesNotMatched() {
         when(failedMessageSearchService.findByStatus(FAILED)).thenReturn(singletonList(failedMessage));
-        when(messageClassificationRepository.findAll()).thenReturn(singletonList(messageClassifier1));
-        when(messageClassifier1.test(failedMessage)).thenReturn(false);
+        when(messageClassificationRepository.findLatest()).thenReturn(messageClassifier);
+        when(messageClassifier.classify(failedMessage, description)).thenReturn(messageClassificationOutcome);
+        when(messageClassificationOutcome.isMatched()).thenReturn(false);
 
         underTest.classifyFailedMessages();
 
-        verify(messageClassifier1).test(failedMessage);
-        verify(messageClassifier1, never()).accept(failedMessage);
+        verify(messageClassifier).classify(failedMessage, description);
+        verify(messageClassificationOutcome).getDescription();
+        verify(messageClassificationOutcome).execute();
     }
 
     @Test
-    public void whenMultipleClassifiersAreApplicableOnlyTheFirstActionIsExecuted() throws Exception {
+    public void classifyFailedMessagesMatched() {
         when(failedMessageSearchService.findByStatus(FAILED)).thenReturn(singletonList(failedMessage));
-        when(messageClassificationRepository.findAll()).thenReturn(Arrays.asList(messageClassifier1, messageClassifier2));
-        when(messageClassifier1.test(failedMessage)).thenReturn(true);
-        when(messageClassifier2.test(failedMessage)).thenReturn(true);
+        when(messageClassificationRepository.findLatest()).thenReturn(messageClassifier);
+        when(messageClassifier.classify(failedMessage, description)).thenReturn(messageClassificationOutcome);
 
         underTest.classifyFailedMessages();
 
-        verify(messageClassifier1).test(failedMessage);
-        verify(messageClassifier1).accept(failedMessage);
-        verifyZeroInteractions(messageClassifier2);
+        verify(messageClassifier).classify(failedMessage, description);
+        verify(messageClassificationOutcome).getDescription();
+        verify(messageClassificationOutcome).execute();
     }
 }

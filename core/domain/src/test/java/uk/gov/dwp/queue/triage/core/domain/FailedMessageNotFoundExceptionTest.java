@@ -12,10 +12,19 @@ public class FailedMessageNotFoundExceptionTest {
 
     @Test
     public void verifyMessage() {
-        final FailedMessageNotFoundException failedMessageNotFoundException = new FailedMessageNotFoundException(FAILED_MESSAGE_ID);
+        final FailedMessageNotFoundException underTest = new FailedMessageNotFoundException(FAILED_MESSAGE_ID);
 
-        assertEquals("Failed Message: " + FAILED_MESSAGE_ID + " not found", failedMessageNotFoundException.getMessage());
-        assertEquals("Failed Message: " + FAILED_MESSAGE_ID + " not found", failedMessageNotFoundException.getLocalizedMessage());
-        assertNull(failedMessageNotFoundException.getCause());
+        assertEquals("Failed Message: " + FAILED_MESSAGE_ID + " not found", underTest.getMessage());
+        assertEquals("Failed Message: " + FAILED_MESSAGE_ID + " not found", underTest.getLocalizedMessage());
+        assertNull(underTest.getCause());
+    }
+
+    @Test
+    public void verifySupplier() {
+        final FailedMessageNotFoundException underTest = FailedMessageNotFoundException.failedMessageNotFound(FAILED_MESSAGE_ID).get();
+
+        assertEquals("Failed Message: " + FAILED_MESSAGE_ID + " not found", underTest.getMessage());
+        assertEquals("Failed Message: " + FAILED_MESSAGE_ID + " not found", underTest.getLocalizedMessage());
+        assertNull(underTest.getCause());
     }
 }

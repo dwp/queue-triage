@@ -5,6 +5,8 @@ import com.jayway.jsonpath.JsonPath;
 import com.jayway.jsonpath.ParseContext;
 import net.minidev.json.JSONArray;
 import org.apache.commons.lang3.StringUtils;
+import uk.gov.dwp.queue.triage.core.classification.classifier.Description;
+import uk.gov.dwp.queue.triage.core.classification.classifier.StringDescription;
 import uk.gov.dwp.queue.triage.core.domain.FailedMessage;
 
 import java.util.Optional;
@@ -49,5 +51,15 @@ public class ContentMatchesJsonPath implements FailedMessagePredicate {
                     .matches();
         }
         return false;
+    }
+
+    @Override
+    public Description describe(Description description) {
+        return description.append(jsonPath).append(" matches ").append(regex);
+    }
+
+    @Override
+    public String toString() {
+        return describe(new StringDescription()).toString();
     }
 }

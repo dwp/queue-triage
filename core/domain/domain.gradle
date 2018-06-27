@@ -8,6 +8,7 @@ dependencies {
 
     testImplementation project(':core:domain-test-support')
     testImplementation project(':core:client')
+    testImplementation project(':core:client-test-support')
     // this was test:common
     testImplementation 'net.bytebuddy:byte-buddy'
     testImplementation 'org.hamcrest:hamcrest-core'

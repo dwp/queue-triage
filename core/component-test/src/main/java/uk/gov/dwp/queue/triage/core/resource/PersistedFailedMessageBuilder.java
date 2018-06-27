@@ -6,6 +6,7 @@ import uk.gov.dwp.queue.triage.id.FailedMessageId;
 
 import java.time.Instant;
 import java.util.Map;
+import java.util.Set;
 
 import static uk.gov.dwp.queue.triage.core.client.CreateFailedMessageRequest.newCreateFailedMessageRequest;
 
@@ -69,6 +70,16 @@ public class PersistedFailedMessageBuilder {
 
     public PersistedFailedMessageBuilder withProperty(String key, Object value) {
         failedMessageBuilder.withProperty(key, value);
+        return this;
+    }
+
+    public PersistedFailedMessageBuilder withLabels(Set<String> labels) {
+        failedMessageBuilder.withLabels(labels);
+        return this;
+    }
+
+    public PersistedFailedMessageBuilder withLabel(String label) {
+        failedMessageBuilder.withLabel(label);
         return this;
     }
 }

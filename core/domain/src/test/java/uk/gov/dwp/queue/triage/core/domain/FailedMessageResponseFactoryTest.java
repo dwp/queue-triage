@@ -1,20 +1,19 @@
-package uk.gov.dwp.queue.triage.core.resource.search;
+package uk.gov.dwp.queue.triage.core.domain;
 
+import org.hamcrest.CoreMatchers;
 import org.hamcrest.Matchers;
 import org.junit.Test;
 import uk.gov.dwp.queue.triage.core.client.FailedMessageResponse;
-import uk.gov.dwp.queue.triage.core.domain.Destination;
 import uk.gov.dwp.queue.triage.id.FailedMessageId;
 
 import java.time.Instant;
 import java.util.Collections;
 
 import static java.util.Optional.of;
-import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
+import static uk.gov.dwp.queue.triage.core.client.FailedMessageResponseMatcher.aFailedMessage;
 import static uk.gov.dwp.queue.triage.core.domain.FailedMessageBuilder.newFailedMessage;
-import static uk.gov.dwp.queue.triage.core.domain.FailedMessageResponseMatcher.aFailedMessage;
 
 public class FailedMessageResponseFactoryTest {
 
@@ -36,7 +35,7 @@ public class FailedMessageResponseFactoryTest {
                 .build()
         );
 
-        assertThat(failedMessageResponse, is(aFailedMessage()
+        assertThat(failedMessageResponse, CoreMatchers.is(aFailedMessage()
                 .withFailedMessageId(equalTo(FAILED_MESSAGE_ID))
                 .withContent(equalTo("Hello World"))
                 .withBroker(equalTo("broker"))

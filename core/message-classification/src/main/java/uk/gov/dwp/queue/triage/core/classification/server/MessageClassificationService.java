@@ -2,27 +2,32 @@ package uk.gov.dwp.queue.triage.core.classification.server;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import uk.gov.dwp.queue.triage.core.classification.MessageClassifier;
+import uk.gov.dwp.queue.triage.core.classification.classifier.Description;
+import uk.gov.dwp.queue.triage.core.classification.classifier.MessageClassificationOutcome;
+import uk.gov.dwp.queue.triage.core.classification.classifier.MessageClassifier;
 import uk.gov.dwp.queue.triage.core.classification.server.repository.MessageClassificationRepository;
 import uk.gov.dwp.queue.triage.core.domain.FailedMessage;
 import uk.gov.dwp.queue.triage.core.search.FailedMessageSearchService;
 
 import java.util.Collection;
-import java.util.List;
+import java.util.function.Supplier;
 
 import static uk.gov.dwp.queue.triage.core.domain.StatusHistoryEvent.Status.FAILED;
 
-public class MessageClassificationService {
+public class MessageClassificationService<T> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MessageClassificationService.class);
 
     private final FailedMessageSearchService failedMessageSearchService;
     private final MessageClassificationRepository messageClassificationRepository;
+    private final Supplier<Description<T>> descriptionFactory;
 
     public MessageClassificationService(FailedMessageSearchService failedMessageSearchService,
-                                        MessageClassificationRepository messageClassificationRepository) {
+                                        MessageClassificationRepository messageClassificationRepository,
+                                        Supplier<Description<T>> descriptionFactory) {
         this.failedMessageSearchService = failedMessageSearchService;
         this.messageClassificationRepository = messageClassificationRepository;
+        this.descriptionFactory = descriptionFactory;
     }
 
     public void classifyFailedMessages() {
@@ -32,16 +37,12 @@ public class MessageClassificationService {
             return;
         }
         LOGGER.info("Attempting to classify {} messages", failedMessages.size());
-        List<MessageClassifier> messageClassifiers = messageClassificationRepository.findAll();
+        MessageClassifier messageClassifiers = messageClassificationRepository.findLatest();
 
-        // This is VERY inefficient, think of a better implementation for example
-        // split the classifiers by broker and/or queue name
         failedMessages
-                .forEach(failedMessage -> messageClassifiers
-                        .stream()
-                        .filter(messageClassifier -> messageClassifier.test(failedMessage))
-                        .peek(messageClassifier -> LOGGER.debug("Applying MessageClassifier to FailedMessageId: {}", failedMessage.getFailedMessageId()))
-                        .findFirst()
-                        .ifPresent(messageClassifier -> messageClassifier.accept(failedMessage)));
+                .stream()
+                .map(failedMessage -> messageClassifiers.classify(failedMessage, descriptionFactory.get()))
+                .peek(outcome -> LOGGER.debug("{}", outcome.getDescription()))
+                .forEach(MessageClassificationOutcome::execute);
     }
 }

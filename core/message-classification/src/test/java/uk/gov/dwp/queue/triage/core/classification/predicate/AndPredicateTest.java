@@ -1,8 +1,13 @@
 package uk.gov.dwp.queue.triage.core.classification.predicate;
 
-import com.fasterxml.jackson.annotation.JsonTypeName;
+import com.fasterxml.jackson.databind.InjectableValues;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Test;
+import org.mockito.InOrder;
+import org.mockito.Mockito;
+import org.mockito.stubbing.Answer;
+import uk.gov.dwp.queue.triage.core.classification.classifier.Description;
+import uk.gov.dwp.queue.triage.core.classification.classifier.StringDescription;
 import uk.gov.dwp.queue.triage.core.domain.FailedMessage;
 import uk.gov.dwp.queue.triage.jackson.configuration.JacksonConfiguration;
 
@@ -13,6 +18,7 @@ import static java.util.Collections.singletonList;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.is;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
@@ -20,7 +26,7 @@ import static org.mockito.Mockito.when;
 
 public class AndPredicateTest {
 
-    private final FailedMessagePredicate alwaysTruePredicate = new AndPredicateTest.AlwaysTruePredicate();
+    private final FailedMessagePredicate alwaysTruePredicate = new BooleanPredicate(true);
     private final FailedMessage failedMessage = mock(FailedMessage.class);
     private final FailedMessagePredicate failedMessagePredicate1 = mock(FailedMessagePredicate.class);
     private final FailedMessagePredicate failedMessagePredicate2 = mock(FailedMessagePredicate.class);
@@ -62,30 +68,40 @@ public class AndPredicateTest {
 
     @Test
     public void canSerialiseAndDeserialisePredicate() throws IOException {
-        ObjectMapper objectMapper = new JacksonConfiguration().objectMapper();
-        objectMapper.registerSubtypes(AlwaysTruePredicate.class);
+        ObjectMapper objectMapper = new JacksonConfiguration().objectMapper(new InjectableValues.Std());
+        objectMapper.registerSubtypes(BooleanPredicate.class);
 
         final AndPredicate underTest = objectMapper.readValue(
-                objectMapper.writeValueAsString(new AndPredicate(singletonList(new AlwaysTruePredicate()))),
+                objectMapper.writeValueAsString(new AndPredicate(singletonList(alwaysTruePredicate))),
                 AndPredicate.class
         );
 
         assertThat(underTest.getPredicates(), contains(alwaysTruePredicate));
     }
 
-    @JsonTypeName("alwaysTrue")
-    public static class AlwaysTruePredicate implements FailedMessagePredicate {
+    @Test
+    public void describeTest() {
+        final Description description = mock(StringDescription.class, Mockito.RETURNS_SELF);
 
-        @Override
-        public boolean test(FailedMessage failedMessage) {
-            return true;
-        }
+        underTest.describe(description);
 
-        @Override
-        public boolean equals(Object object) {
-            if (object == this) return true;
-            return object instanceof AlwaysTruePredicate;
-        }
+        final InOrder orderVerifier = Mockito.inOrder(description, failedMessagePredicate1, failedMessagePredicate2);
+        orderVerifier.verify(description).append("( ");
+        orderVerifier.verify(failedMessagePredicate1).describe(description);
+        orderVerifier.verify(description).append(" AND ");
+        orderVerifier.verify(failedMessagePredicate2).describe(description);
+        orderVerifier.verify(description).append(" )");
     }
 
+    @Test
+    public void toStringTest() {
+        when(failedMessagePredicate1.describe(any(Description.class))).thenAnswer(withDescription("predicate1"));
+        when(failedMessagePredicate2.describe(any(Description.class))).thenAnswer(withDescription("predicate2"));
+
+        assertThat(underTest.toString(), is("( predicate1 AND predicate2 )"));
+    }
+
+    private Answer<Description> withDescription(String predicateDescription) {
+        return invocation -> ((Description)invocation.getArgument(0)).append(predicateDescription);
+    }
 }

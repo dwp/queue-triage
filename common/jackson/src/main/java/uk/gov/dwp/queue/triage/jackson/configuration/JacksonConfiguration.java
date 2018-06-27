@@ -33,7 +33,7 @@ public class JacksonConfiguration {
     }
 
     @Bean
-    public ObjectMapper objectMapper() {
+    public ObjectMapper objectMapper(InjectableValues.Std injectableValues) {
         return new ObjectMapper()
                 .configure(DeserializationFeature.READ_DATE_TIMESTAMPS_AS_NANOSECONDS, false)
                 .setDateFormat(new ISO8601DateFormatWithMilliSeconds())
@@ -42,6 +42,6 @@ public class JacksonConfiguration {
                 .registerModule(new SimpleModule()
                         .addSerializer(Id.class, new IdSerializer())
                         .addDeserializer(Id.class, new IdDeserializer()))
-                .setInjectableValues(jacksonInjectableValues());
+                .setInjectableValues(injectableValues);
     }
 }

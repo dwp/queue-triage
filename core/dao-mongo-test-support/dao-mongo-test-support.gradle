@@ -10,6 +10,12 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-test'
     implementation 'org.hamcrest:hamcrest-core'
     implementation 'junit:junit'
+
+    testImplementation 'javax.validation:validation-api'
+    testImplementation 'org.hamcrest:hamcrest-library'
+    testImplementation 'org.hibernate:hibernate-validator'
+    testImplementation 'org.valid4j:json-path-matchers'
+    testImplementation 'uk.org.lidalia:slf4j-test'
 }
 
 sonarqube {

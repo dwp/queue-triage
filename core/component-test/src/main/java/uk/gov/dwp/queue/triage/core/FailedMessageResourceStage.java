@@ -10,7 +10,7 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import uk.gov.dwp.queue.triage.core.client.CreateFailedMessageClient;
 import uk.gov.dwp.queue.triage.core.client.CreateFailedMessageRequest.CreateFailedMessageRequestBuilder;
 import uk.gov.dwp.queue.triage.core.client.FailedMessageResponse;
-import uk.gov.dwp.queue.triage.core.domain.FailedMessageResponseMatcher;
+import uk.gov.dwp.queue.triage.core.client.FailedMessageResponseMatcher;
 import uk.gov.dwp.queue.triage.core.resource.PersistedFailedMessageBuilder;
 import uk.gov.dwp.queue.triage.id.FailedMessageId;
 import uk.gov.dwp.queue.triage.jgiven.ReflectionArgumentFormatter;

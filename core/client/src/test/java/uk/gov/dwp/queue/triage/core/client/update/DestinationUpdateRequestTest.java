@@ -1,5 +1,6 @@
 package uk.gov.dwp.queue.triage.core.client.update;
 
+import com.fasterxml.jackson.databind.InjectableValues;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
@@ -19,7 +20,7 @@ public class DestinationUpdateRequestTest {
 
     private static final String BROKER_NAME = "some-broker";
     private static final String DESTINATION_NAME = "some-queue";
-    private static ObjectMapper OBJECT_MAPPER = new JacksonConfiguration().objectMapper();
+    private static ObjectMapper OBJECT_MAPPER = new JacksonConfiguration().objectMapper(new InjectableValues.Std());
 
     @Test
     public void serialiseAndDeserialiseRequest() throws IOException {

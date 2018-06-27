@@ -10,6 +10,7 @@ import java.time.Clock;
 import java.time.Duration;
 import java.util.Optional;
 
+import static org.apache.commons.lang3.time.DurationFormatUtils.formatDurationHMS;
 import static uk.gov.dwp.queue.triage.core.domain.StatusHistoryEvent.Status.RESEND;
 
 public class ResendFailedMessageAction implements FailedMessageAction {
@@ -40,5 +41,10 @@ public class ResendFailedMessageAction implements FailedMessageAction {
 
     private Duration getResendDelay() {
         return Optional.ofNullable(resendDelay).orElse(Duration.ofSeconds(0));
+    }
+
+    @Override
+    public String toString() {
+        return "resend in " + formatDurationHMS(getResendDelay().toMillis());
     }
 }

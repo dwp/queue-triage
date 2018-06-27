@@ -1,25 +1,21 @@
 package uk.gov.dwp.queue.triage.core.classification.predicate;
 
 import org.apache.commons.io.IOUtils;
+import org.hamcrest.Matcher;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import uk.gov.dwp.queue.triage.core.domain.FailedMessage;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class ContentMatchesJsonPathTest {
+public class ContentMatchesJsonPathTest extends AbstractFailedMessagePredicateTest {
 
     private static String messageContent;
-    private final FailedMessage failedMessage = mock(FailedMessage.class);
-
-    private ContentMatchesJsonPath underTest;
 
     @BeforeClass
     public static void loadMessageContent() throws IOException {
@@ -51,7 +47,6 @@ public class ContentMatchesJsonPathTest {
 
     @Test
     public void successfullyMatchSingleField() {
-        underTest = new ContentMatchesJsonPath("$.expensive", "10");
         assertThat(underTest.test(failedMessage), is(true));
     }
 
@@ -94,7 +89,22 @@ public class ContentMatchesJsonPathTest {
     @Test
     public void messageContentIsNull() {
         when(failedMessage.getContent()).thenReturn(null);
-        underTest = new ContentMatchesJsonPath("$.expensive", "10");
+
         assertThat(underTest.test(failedMessage), is(false));
+    }
+
+    @Override
+    protected Matcher<String> expectedDescription() {
+        return is("$.expensive matches 10");
+    }
+
+    @Override
+    protected FailedMessagePredicate createPredicateUnderTest() {
+        return new ContentMatchesJsonPath("$.expensive", "10");
+    }
+
+    @Override
+    protected String[] excludedFieldsFromEquality() {
+        return new String[]{"parseContext", "pattern"};
     }
 }

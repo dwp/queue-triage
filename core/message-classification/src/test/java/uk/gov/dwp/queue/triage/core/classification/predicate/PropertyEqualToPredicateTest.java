@@ -1,25 +1,16 @@
 package uk.gov.dwp.queue.triage.core.classification.predicate;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.hamcrest.Matcher;
 import org.junit.Test;
-import uk.gov.dwp.queue.triage.core.domain.FailedMessage;
-import uk.gov.dwp.queue.triage.jackson.configuration.JacksonConfiguration;
-
-import java.io.IOException;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class PropertyEqualToPredicateTest {
-
-    private FailedMessage failedMessage = mock(FailedMessage.class);
-    private PropertyEqualToPredicate underTest;
+public class PropertyEqualToPredicateTest extends AbstractFailedMessagePredicateTest {
 
     @Test(expected = IllegalArgumentException.class)
-    public void propertyNameCannotBeNull() throws Exception {
+    public void propertyNameCannotBeNull() {
         underTest = new PropertyEqualToPredicate(null, "foo");
     }
 
@@ -31,7 +22,6 @@ public class PropertyEqualToPredicateTest {
     @Test
     public void propertiesMatch() {
         when(failedMessage.getProperty("foo")).thenReturn("bar");
-        underTest = new PropertyEqualToPredicate("foo", "bar");
 
         assertThat(underTest.test(failedMessage), is(true));
     }
@@ -39,30 +29,24 @@ public class PropertyEqualToPredicateTest {
     @Test
     public void propertiesDoNotMatch() {
         when(failedMessage.getProperty("foo")).thenReturn("rab");
-        underTest = new PropertyEqualToPredicate("foo", "bar");
 
         assertThat(underTest.test(failedMessage), is(false));
     }
 
     @Test
-    public void propertyDoesNotExist() throws Exception {
+    public void propertyDoesNotExist() {
         when(failedMessage.getProperty("foo")).thenReturn(null);
 
-        underTest = new PropertyEqualToPredicate("foo", "bar");
-
         assertThat(underTest.test(failedMessage), is(false));
     }
 
-    @Test
-    public void canSerialiseAndDeserialisePredicate() throws IOException {
-        ObjectMapper objectMapper = new JacksonConfiguration().objectMapper();
+    @Override
+    protected Matcher<String> expectedDescription() {
+        return is("property[foo] = bar");
+    }
 
-        underTest = new PropertyEqualToPredicate("foo", "bar");
-        String json = objectMapper.writeValueAsString(underTest);
-
-        assertThat(EqualsBuilder.reflectionEquals(
-                underTest,
-                objectMapper.readValue(json, FailedMessagePredicate.class)
-        ), is(true));
+    @Override
+    protected FailedMessagePredicate createPredicateUnderTest() {
+        return new PropertyEqualToPredicate("foo", "bar");
     }
 }
