@@ -1,11 +1,9 @@
 package uk.gov.dwp.queue.triage.core.classification.classifier;
 
-import uk.gov.dwp.queue.triage.core.domain.FailedMessage;
-
-import static uk.gov.dwp.queue.triage.core.classification.classifier.MessageClassificationOutcome.notMatched;
+import uk.gov.dwp.queue.triage.core.classification.predicate.BooleanPredicate;
 
 /**
- * A simple {@code MessageClassifier that always returns an unmatched {@code MessageClassificationOutcome}}
+ * A simple {@link MessageClassifier} that always returns an unmatched {@link MessageClassificationOutcome}}
  */
 public final class UnmatchedMessageClassifier implements MessageClassifier {
 
@@ -16,9 +14,8 @@ public final class UnmatchedMessageClassifier implements MessageClassifier {
     }
 
     @Override
-    public <T> MessageClassificationOutcome<T> classify(FailedMessage failedMessage, Description<T> description) {
-        description.append("always unmatched");
-        return notMatched(failedMessage, description);
+    public MessageClassificationOutcome classify(MessageClassificationContext context) {
+        return context.notMatched(new BooleanPredicate(false));
     }
 
     @Override

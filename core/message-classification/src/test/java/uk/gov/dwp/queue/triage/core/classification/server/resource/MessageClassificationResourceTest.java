@@ -8,7 +8,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
-import uk.gov.dwp.queue.triage.core.classification.classifier.Description;
+import uk.gov.dwp.queue.triage.core.classification.classifier.MessageClassificationContext;
 import uk.gov.dwp.queue.triage.core.classification.classifier.MessageClassificationOutcome;
 import uk.gov.dwp.queue.triage.core.classification.classifier.MessageClassificationOutcomeAdapter;
 import uk.gov.dwp.queue.triage.core.classification.classifier.MessageClassifierGroup;
@@ -44,9 +44,7 @@ public class MessageClassificationResourceTest {
     @Mock
     private FailedMessage failedMessage;
     @Mock
-    private MessageClassificationOutcome<String> messageClassificationOutcome;
-    @Mock
-    private Description<String> description;
+    private MessageClassificationOutcome messageClassificationOutcome;
     @Mock
     private MessageClassificationOutcomeAdapter outcomeAdapter;
     @Mock
@@ -55,7 +53,7 @@ public class MessageClassificationResourceTest {
 
     @Before
     public void setUp() {
-        underTest = new MessageClassificationResource<>(repository, failedMessageSearchService, () -> description, outcomeAdapter);
+        underTest = new MessageClassificationResource<>(repository, failedMessageSearchService, outcomeAdapter);
     }
 
     @Test
@@ -97,14 +95,14 @@ public class MessageClassificationResourceTest {
     public void classifyByFailedMessageId() {
         when(failedMessageSearchService.findById(failedMessageId)).thenReturn(Optional.of(failedMessage));
         when(repository.findLatest()).thenReturn(messageClassifier);
-        when(messageClassifier.classify(failedMessage, description)).thenReturn(messageClassificationOutcome);
+        when(messageClassifier.classify(new MessageClassificationContext(failedMessage))).thenReturn(messageClassificationOutcome);
         when(outcomeAdapter.toOutcomeResponse(messageClassificationOutcome)).thenReturn(messageClassificationOutcomeResponse);
 
         final MessageClassificationOutcomeResponse outcomeResponse = underTest.classifyFailedMessage(failedMessageId);
 
         assertThat(outcomeResponse, is(messageClassificationOutcomeResponse));
         verify(failedMessageSearchService).findById(failedMessageId);
-        verify(messageClassifier).classify(failedMessage, description);
+        verify(messageClassifier).classify(new MessageClassificationContext(failedMessage));
         verify(outcomeAdapter).toOutcomeResponse(messageClassificationOutcome);
         verifyZeroInteractions(messageClassificationOutcome);
     }
@@ -112,13 +110,13 @@ public class MessageClassificationResourceTest {
     @Test
     public void classifyFailedMessage() {
         when(repository.findLatest()).thenReturn(messageClassifier);
-        when(messageClassifier.classify(failedMessage, description)).thenReturn(messageClassificationOutcome);
+        when(messageClassifier.classify(new MessageClassificationContext(failedMessage))).thenReturn(messageClassificationOutcome);
         when(outcomeAdapter.toOutcomeResponse(messageClassificationOutcome)).thenReturn(messageClassificationOutcomeResponse);
 
         final MessageClassificationOutcomeResponse outcome = underTest.classifyFailedMessage(failedMessage);
 
         assertThat(outcome, is(messageClassificationOutcomeResponse));
-        verify(messageClassifier).classify(failedMessage, description);
+        verify(messageClassifier).classify(new MessageClassificationContext(failedMessage));
         verify(outcomeAdapter).toOutcomeResponse(messageClassificationOutcome);
         verifyZeroInteractions(messageClassificationOutcome);
     }

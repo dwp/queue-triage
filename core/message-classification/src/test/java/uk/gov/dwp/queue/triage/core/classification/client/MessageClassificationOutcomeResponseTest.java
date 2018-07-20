@@ -1,6 +1,5 @@
 package uk.gov.dwp.queue.triage.core.classification.client;
 
-import com.fasterxml.jackson.databind.InjectableValues;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Test;
 import uk.gov.dwp.queue.triage.core.client.FailedMessageResponse;
@@ -18,7 +17,7 @@ import static uk.gov.dwp.queue.triage.core.domain.FailedMessageResponseBuilder.n
 public class MessageClassificationOutcomeResponseTest {
 
     private final FailedMessageId failedMessageId = FailedMessageId.newFailedMessageId();
-    private final ObjectMapper objectMapper = new JacksonConfiguration().objectMapper(new InjectableValues.Std());
+    private final ObjectMapper objectMapper = JacksonConfiguration.defaultObjectMapper();
 
     @Test
     public void serialiseAndDeserialiseResponse() throws IOException {

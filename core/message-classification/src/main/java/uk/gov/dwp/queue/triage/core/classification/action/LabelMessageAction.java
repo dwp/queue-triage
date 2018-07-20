@@ -24,6 +24,6 @@ public class LabelMessageAction implements FailedMessageAction {
 
     @Override
     public String toString() {
-        return "set label = '" + label + "'";
+        return "set label '" + label + "'";
     }
 }

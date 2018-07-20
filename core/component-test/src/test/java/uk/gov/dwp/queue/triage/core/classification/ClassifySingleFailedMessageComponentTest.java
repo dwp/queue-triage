@@ -1,6 +1,7 @@
 package uk.gov.dwp.queue.triage.core.classification;
 
 import com.tngtech.jgiven.annotation.ScenarioStage;
+import org.junit.Before;
 import org.junit.Test;
 import uk.gov.dwp.queue.triage.core.CoreComponentTestBase;
 import uk.gov.dwp.queue.triage.core.FailedMessageResourceStage;
@@ -27,7 +28,7 @@ public class ClassifySingleFailedMessageComponentTest
     @ScenarioStage
     private FailedMessageResourceStage failedMessageResourceStage;
 
-    @Test
+    @Before
     public void setUp() {
         given().noMessageClassifiersExist();
     }
@@ -61,7 +62,7 @@ public class ClassifySingleFailedMessageComponentTest
         when().failedMessage$IsClassified(failedMessageId);
         then().theFailedMessageWas$Matched(false)
                 .and()
-                .producedDescription$("( broker = 'internal-broker' [true] AND ( ( destination = 'some-queue' [false] ) OR ( destination = 'another-queue' [true] AND content contains json path $.foo [false] ) ) )")
+                .producedDescription$("matched = false, ( broker = 'internal-broker' [true] AND ( destination = 'some-queue' [false] OR ( destination = 'another-queue' [true] AND content contains json path $.foo [false] ) ) )")
                 .and()
                 .failedMessageActionWas$("null");
     }
@@ -95,7 +96,7 @@ public class ClassifySingleFailedMessageComponentTest
         when().failedMessage$IsClassified(failedMessageId);
         then().theFailedMessageWas$Matched(true)
                 .and()
-                .producedDescription$("( broker = 'internal-broker' [true] AND ( ( destination = 'some-queue' [false] ) OR ( destination = 'another-queue' [true] AND content contains json path $.foo [true] ) ) )")
+                .producedDescription$("matched = true, ( broker = 'internal-broker' [true] AND ( destination = 'some-queue' [false] OR ( destination = 'another-queue' [true] AND content contains json path $.foo [true] ) ) )")
                 .and()
                 .failedMessageActionWas$("{\"_action\":\"delete\"}");
 

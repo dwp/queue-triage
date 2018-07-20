@@ -1,44 +1,41 @@
 package uk.gov.dwp.queue.triage.core.classification.classifier;
 
 import uk.gov.dwp.queue.triage.core.classification.action.FailedMessageAction;
+import uk.gov.dwp.queue.triage.core.classification.predicate.AndPredicate;
+import uk.gov.dwp.queue.triage.core.classification.predicate.FailedMessagePredicate;
+import uk.gov.dwp.queue.triage.core.classification.predicate.OrPredicate;
 import uk.gov.dwp.queue.triage.core.domain.FailedMessage;
 
-import static java.util.Objects.requireNonNull;
+import java.util.Arrays;
+import java.util.Optional;
 
-public class MessageClassificationOutcome<T> {
+public class MessageClassificationOutcome {
 
     private final boolean matched;
-    private final Description<T> description;
+    private final FailedMessagePredicate predicate;
     private final FailedMessage failedMessage;
-    private final FailedMessageAction failedMessageAction;
+    private final FailedMessageAction action;
 
-    public static <T> MessageClassificationOutcome<T> matched(FailedMessage failedMessage, Description<T> description, FailedMessageAction failedMessageAction) {
-        return new MessageClassificationOutcome<>(true, description, requireNonNull(failedMessage), requireNonNull(failedMessageAction));
-    }
-
-    public static <T> MessageClassificationOutcome<T> notMatched(FailedMessage failedMessage, Description<T> description) {
-        return new MessageClassificationOutcome<>(false, description, failedMessage, null);
-    }
-
-    private MessageClassificationOutcome(boolean matched,
-                                         Description<T> description,
-                                         FailedMessage failedMessage,
-                                         FailedMessageAction failedMessageAction) {
+    MessageClassificationOutcome(boolean matched,
+                                 FailedMessagePredicate predicate,
+                                 FailedMessage failedMessage,
+                                 FailedMessageAction action) {
         this.matched = matched;
-        this.description = description;
+        this.predicate = predicate;
         this.failedMessage = failedMessage;
-        this.failedMessageAction = failedMessageAction;
+        this.action = action;
     }
 
     public boolean isMatched() {
         return matched;
     }
 
-    FailedMessageAction getFailedMessageAction() {
-        return failedMessageAction;
+    public String getDescription() {
+        return predicate.describe(new StringDescription().append("matched = ").append(matched).append(", ")).getOutput();
     }
 
-    public Description<T> getDescription() {
+    public <T> Description<T> getDescription(Description<T> description) {
+        // TODO
         return description;
     }
 
@@ -46,21 +43,42 @@ public class MessageClassificationOutcome<T> {
         return failedMessage;
     }
 
-    public MessageClassificationOutcome<T> append(String description) {
-        return new MessageClassificationOutcome<>(matched, this.description.append(description), failedMessage, failedMessageAction);
+    public void execute() {
+        if (action != null) {
+            action.accept(failedMessage);
+        }
     }
 
-    public void execute() {
-        if (failedMessageAction != null) {
-            failedMessageAction.accept(failedMessage);
-        }
+    FailedMessageAction getFailedMessageAction() {
+        return action;
+    }
+
+    FailedMessagePredicate getFailedMessagePredicate() {
+        return predicate;
     }
 
     @Override
     public String toString() {
-        return "matched = " + matched + " " + description;
+        return "matched = " + matched + " " + predicate;
     }
 
+    public MessageClassificationOutcome and(MessageClassificationOutcome outcome) {
+        final boolean matched = this.matched && outcome.isMatched();
+        return new MessageClassificationOutcome(
+                matched,
+                AndPredicate.and(predicate, outcome.predicate),
+                failedMessage,
+                matched ? Optional.ofNullable(outcome.getFailedMessageAction()).orElse(action) : null
+        );
+    }
 
-
+    public MessageClassificationOutcome or(MessageClassificationOutcome outcome) {
+        final boolean matched = this.matched || outcome.isMatched();
+        return new MessageClassificationOutcome(
+                matched,
+                new OrPredicate(Arrays.asList(predicate, outcome.predicate)),
+                failedMessage,
+                Optional.ofNullable(outcome.getFailedMessageAction()).orElse(action)
+        );
+    }
 }

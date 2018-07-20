@@ -3,8 +3,6 @@ package uk.gov.dwp.queue.triage.core.classification.predicate;
 import com.fasterxml.jackson.databind.InjectableValues;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Test;
-import org.mockito.InOrder;
-import org.mockito.Mockito;
 import org.mockito.stubbing.Answer;
 import uk.gov.dwp.queue.triage.core.classification.classifier.Description;
 import uk.gov.dwp.queue.triage.core.classification.classifier.StringDescription;
@@ -81,22 +79,16 @@ public class AndPredicateTest {
 
     @Test
     public void describeTest() {
-        final Description description = mock(StringDescription.class, Mockito.RETURNS_SELF);
+        when(failedMessagePredicate1.describe(any(StringDescription.class))).thenAnswer(withDescription("predicate1"));
+        when(failedMessagePredicate2.describe(any(StringDescription.class))).thenAnswer(withDescription("predicate2"));
 
-        underTest.describe(description);
-
-        final InOrder orderVerifier = Mockito.inOrder(description, failedMessagePredicate1, failedMessagePredicate2);
-        orderVerifier.verify(description).append("( ");
-        orderVerifier.verify(failedMessagePredicate1).describe(description);
-        orderVerifier.verify(description).append(" AND ");
-        orderVerifier.verify(failedMessagePredicate2).describe(description);
-        orderVerifier.verify(description).append(" )");
+        assertThat(underTest.describe(new StringDescription()).getOutput(), is("( predicate1 AND predicate2 )"));
     }
 
     @Test
     public void toStringTest() {
-        when(failedMessagePredicate1.describe(any(Description.class))).thenAnswer(withDescription("predicate1"));
-        when(failedMessagePredicate2.describe(any(Description.class))).thenAnswer(withDescription("predicate2"));
+        when(failedMessagePredicate1.describe(any(StringDescription.class))).thenAnswer(withDescription("predicate1"));
+        when(failedMessagePredicate2.describe(any(StringDescription.class))).thenAnswer(withDescription("predicate2"));
 
         assertThat(underTest.toString(), is("( predicate1 AND predicate2 )"));
     }

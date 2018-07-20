@@ -2,60 +2,62 @@ package uk.gov.dwp.queue.triage.core.classification.classifier;
 
 import org.junit.Test;
 
-import java.io.IOException;
-
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.hamcrest.Matchers.not;
+import static org.hamcrest.Matchers.sameInstance;
 
 public class StringDescriptionTest {
 
-    private final Appendable appendable = mock(Appendable.class);
-    private StringDescription underTest = new StringDescription(appendable);
+    private StringDescription underTest;
+
+    @Test
+    public void instantiateAnEmptyStringDescription() {
+        underTest = new StringDescription();
+
+        assertThat(underTest.getOutput(), is(""));
+        assertThat(underTest.toString(), is(""));
+    }
 
     @Test
     public void instantiateDescriptionWithString() {
-        underTest = new StringDescription("Something");
-
-        assertThat(underTest.getOutput(), is("Something"));
-    }
-
-    @Test
-    public void instantiateDescriptionWithAppendable() {
-        when(appendable.toString()).thenReturn("Foo");
+        underTest = new StringDescription("Foo");
 
         assertThat(underTest.getOutput(), is("Foo"));
+        assertThat(underTest.toString(), is("Foo"));
     }
 
     @Test
-    public void appendAString() throws IOException {
-        assertThat(underTest.append("Foo"), is(underTest));
+    public void appendAStringReturnsANewObject() {
+        underTest = new StringDescription("Foo");
+        final Description<String> returnedDescription = underTest.append(" Bar");
 
-        verify(appendable).append("Foo");
+        assertThat(returnedDescription, is(not(sameInstance(underTest))));
+        assertThat(returnedDescription.getOutput(), is("Foo Bar"));
+        assertThat(underTest.toString(), is("Foo"));
     }
 
     @Test
-    public void appendAnObject() throws IOException {
+    public void appendAnObject()  {
+        underTest = new StringDescription("Foo ");
+
         final Description returnedDescription = underTest.append(true);
 
-        assertThat(returnedDescription, is(underTest));
-        verify(appendable).append("true");
+        assertThat(returnedDescription, is(not(sameInstance(underTest))));
+        assertThat(returnedDescription.getOutput(), is("Foo true"));
+        assertThat(underTest.getOutput(), is("Foo "));
     }
 
     @Test
-    public void appendADescription() throws IOException {
-        final Description returnedDescription = underTest.append(new StringDescription("Foo"));
+    public void appendADescription() {
+        underTest = new StringDescription("Foo");
+        final StringDescription anotherDescription = new StringDescription(" Bar");
 
-        assertThat(returnedDescription, is(underTest));
-        verify(appendable).append("Foo");
-    }
+        final Description returnedDescription = underTest.append(anotherDescription);
 
-    @Test(expected = RuntimeException.class)
-    public void exceptionIsThrownAsARuntimeException() throws IOException {
-        when(appendable.append("Foo")).thenThrow(IOException.class);
-
-        underTest.append("Foo");
+        assertThat(returnedDescription, is(not(sameInstance(underTest))));
+        assertThat(returnedDescription.getOutput(), is("Foo Bar"));
+        assertThat(underTest.getOutput(), is("Foo"));
+        assertThat(anotherDescription.getOutput(), is(" Bar"));
     }
 }

@@ -2,8 +2,8 @@ package uk.gov.dwp.queue.triage.core.stub.app.jms;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import uk.gov.dwp.queue.triage.core.classification.classifier.MessageClassificationContext;
 import uk.gov.dwp.queue.triage.core.classification.classifier.MessageClassificationOutcome;
-import uk.gov.dwp.queue.triage.core.classification.classifier.StringDescription;
 import uk.gov.dwp.queue.triage.core.classification.server.repository.MessageClassificationRepository;
 import uk.gov.dwp.queue.triage.core.domain.FailedMessage;
 import uk.gov.dwp.queue.triage.core.jms.FailedMessageFactory;
@@ -32,7 +32,7 @@ public class StubMessageListener implements MessageListener {
             LOGGER.debug("Received failedMessage with content: {}", failedMessage.getContent());
             final MessageClassificationOutcome outcome = messageClassificationRepository
                     .findLatest()
-                    .classify(failedMessage, new StringDescription());
+                    .classify(new MessageClassificationContext(failedMessage));
             if (outcome.isMatched()) {
                 outcome.execute();
             } else {

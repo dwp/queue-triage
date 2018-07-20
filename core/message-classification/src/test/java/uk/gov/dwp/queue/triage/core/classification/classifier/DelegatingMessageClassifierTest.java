@@ -1,12 +1,10 @@
 package uk.gov.dwp.queue.triage.core.classification.classifier;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.InjectableValues;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-import org.mockito.Answers;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
@@ -23,6 +21,7 @@ import java.util.Optional;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
@@ -32,61 +31,57 @@ public class DelegatingMessageClassifierTest {
 
     @Rule
     public MockitoRule mockitoRule = MockitoJUnit.rule();
-    @Mock(answer = Answers.RETURNS_SELF)
-    private Description<String> description;
+    @Mock
+    private MessageClassificationContext context;
     @Mock
     private FailedMessage failedMessage;
     @Mock
-    private FailedMessagePredicate failedMessagePredicate;
+    private FailedMessagePredicate predicate;
     @Mock
     private MessageClassifierGroup messageClassifierGroup;
     @Mock
-    private MessageClassificationOutcome<String> messageClassificationOutcome;
+    private MessageClassificationOutcome outcome;
 
     private DelegatingMessageClassifier underTest;
 
     @Before
     public void setUp() {
-        underTest = new DelegatingMessageClassifier(failedMessagePredicate, messageClassifierGroup);
+        underTest = new DelegatingMessageClassifier(predicate, messageClassifierGroup);
     }
 
     @Test
     public void predicateIsNotMatched() {
-        when(failedMessagePredicate.describe(description)).thenReturn(description);
-        when(failedMessagePredicate.test(failedMessage)).thenReturn(false);
+        when(context.getFailedMessage()).thenReturn(failedMessage);
+        when(predicate.test(failedMessage)).thenReturn(false);
+        when(context.notMatched(predicate)).thenReturn(outcome);
 
-        final MessageClassificationOutcome outcome = underTest.classify(failedMessage, description);
+        assertThat(underTest.classify(context), is(outcome));
 
-        assertThat(outcome.isMatched(), is(false));
-        assertThat(outcome.getDescription(), is(description));
-        verify(failedMessagePredicate).test(failedMessage);
-        verify(failedMessagePredicate).describe(description);
-        verify(description).append(" [");
-        verify(description).append(false);
-        verify(description).append("]");
+        verify(predicate).test(failedMessage);
+        verify(context).notMatched(predicate);
         verifyZeroInteractions(messageClassifierGroup);
     }
 
     @Test
     public void predicateIsMatched() {
-        when(failedMessagePredicate.describe(description)).thenReturn(description);
-        when(failedMessagePredicate.test(failedMessage)).thenReturn(true);
-        when(messageClassifierGroup.classify(failedMessage, description)).thenReturn(messageClassificationOutcome);
+        when(context.getFailedMessage()).thenReturn(failedMessage);
+        when(predicate.test(failedMessage)).thenReturn(true);
+        MessageClassificationOutcome initialClassificationOutcome = mock(MessageClassificationOutcome.class);
+        when(context.matched(predicate)).thenReturn(initialClassificationOutcome);
+        MessageClassificationOutcome subsequentClassificationOutcome = mock(MessageClassificationOutcome.class);
+        when(messageClassifierGroup.classify(context)).thenReturn(subsequentClassificationOutcome);
+        when(initialClassificationOutcome.and(subsequentClassificationOutcome)).thenReturn(outcome);
 
-        final MessageClassificationOutcome outcome = underTest.classify(failedMessage, description);
+        assertThat(underTest.classify(context), is(outcome));
 
-        assertThat(outcome, is(messageClassificationOutcome));
-        verify(failedMessagePredicate).test(failedMessage);
-        verify(failedMessagePredicate).describe(description);
-        verify(description).append(" [");
-        verify(description).append(true);
-        verify(description).append("]");
-        verify(messageClassifierGroup).classify(failedMessage, description);
+        verify(predicate).test(failedMessage);
+        verify(context).matched(predicate);
+        verify(initialClassificationOutcome).and(subsequentClassificationOutcome);
     }
 
     @Test
     public void classifierCanBeSerialisedAndDeserialsed() throws JsonProcessingException {
-        ObjectMapper objectMapper = new JacksonConfiguration().objectMapper(new InjectableValues.Std());
+        ObjectMapper objectMapper = JacksonConfiguration.defaultObjectMapper();
         String json = objectMapper.writeValueAsString(new DelegatingMessageClassifier(
                 new BrokerEqualsPredicate("internal-broker"),
                 newClassifierCollection()
@@ -103,5 +98,12 @@ public class DelegatingMessageClassifierTest {
                         .build()
         ));
         System.out.println(json);
+    }
+
+    @Test
+    public void testToString() {
+        when(predicate.toString()).thenReturn("predicate");
+        when(messageClassifierGroup.toString()).thenReturn("more classifiers");
+        assertThat(underTest.toString(), is("if predicate then more classifiers"));
     }
 }

@@ -44,4 +44,9 @@ public class JacksonConfiguration {
                         .addDeserializer(Id.class, new IdDeserializer()))
                 .setInjectableValues(injectableValues);
     }
+
+    public static ObjectMapper defaultObjectMapper() {
+        final JacksonConfiguration jacksonConfiguration = new JacksonConfiguration();
+        return jacksonConfiguration.objectMapper(jacksonConfiguration.jacksonInjectableValues());
+    }
 }

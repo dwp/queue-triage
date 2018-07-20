@@ -4,6 +4,7 @@ import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
+import uk.gov.dwp.queue.triage.core.classification.classifier.Description;
 import uk.gov.dwp.queue.triage.core.classification.classifier.StringDescription;
 import uk.gov.dwp.queue.triage.core.domain.Destination;
 
@@ -53,8 +54,7 @@ public class DestinationEqualsPredicateTest extends AbstractFailedMessagePredica
     public void describeWithAnEmptyDestination() {
         underTest = new DestinationEqualsPredicate(Optional.empty());
 
-        final StringDescription description = new StringDescription();
-        underTest.describe(description);
+        final Description<String> description = underTest.describe(new StringDescription());
 
         assertThat(description.getOutput(), is("destination is empty"));
     }

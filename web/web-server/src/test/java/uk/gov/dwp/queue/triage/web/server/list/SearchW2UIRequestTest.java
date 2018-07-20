@@ -1,6 +1,5 @@
 package uk.gov.dwp.queue.triage.web.server.list;
 
-import com.fasterxml.jackson.databind.InjectableValues;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
@@ -27,7 +26,7 @@ import static uk.gov.dwp.queue.triage.web.server.search.SearchW2UIRequest.Logic.
 
 public class SearchW2UIRequestTest {
 
-    private static final ObjectMapper OBJECT_MAPPER = new JacksonConfiguration().objectMapper(new InjectableValues.Std());
+    private static final ObjectMapper OBJECT_MAPPER = JacksonConfiguration.defaultObjectMapper();
 
     @Test
     public void canDeserialiseSearchW2UIRequest() throws Exception {

@@ -1,6 +1,5 @@
 package uk.gov.dwp.queue.triage.core.classification.action;
 
-import com.fasterxml.jackson.databind.InjectableValues;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.hamcrest.Matchers;
 import org.junit.Before;
@@ -43,7 +42,7 @@ public class ResendFailedMessageActionTest {
     @Before
     public void setUp() {
         final JacksonConfiguration jacksonConfiguration = new JacksonConfiguration();
-        objectMapper = jacksonConfiguration.objectMapper(new InjectableValues.Std()).setInjectableValues(
+        objectMapper = JacksonConfiguration.defaultObjectMapper().setInjectableValues(
                 jacksonConfiguration.jacksonInjectableValues().addValue(FailedMessageService.class, failedMessageService)
         );
         when(failedMessage.getFailedMessageId()).thenReturn(FAILED_MESSAGE_ID);

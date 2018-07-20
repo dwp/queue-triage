@@ -28,6 +28,6 @@ public class BooleanPredicate implements FailedMessagePredicate {
 
     @Override
     public Description describe(Description description) {
-        return description.append("result = ").append(result);
+        return description.append(result);
     }
 }

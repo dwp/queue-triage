@@ -24,21 +24,21 @@ public class OrPredicate implements FailedMessagePredicate {
                 .anyMatch(p -> p.test(failedMessage));
     }
 
-    List<FailedMessagePredicate> getPredicates() {
+    public List<FailedMessagePredicate> getPredicates() {
         return predicates;
     }
 
     @Override
-    public Description describe(Description description) {
-        description.append("( ");
+    public <T> Description<T> describe(Description<T> description) {
+        Description<T> finalDescription = description.append("( ");
         final Iterator<FailedMessagePredicate> iterator = predicates.iterator();
         while (iterator.hasNext()) {
-            iterator.next().describe(description);
+            finalDescription = iterator.next().describe(finalDescription);
             if (iterator.hasNext()) {
-                description.append(" OR ");
+                finalDescription = finalDescription.append(" OR ");
             }
         }
-        return description.append(" )");
+        return finalDescription.append(" )");
     }
 
     @Override

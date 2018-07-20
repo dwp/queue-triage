@@ -2,7 +2,6 @@ package uk.gov.dwp.queue.triage.core.dao;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.InjectableValues;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableMap;
 import org.junit.Before;
@@ -41,7 +40,7 @@ public class PropertiesConverterTest {
 
     private final ObjectMapper objectMapper = mock(ObjectMapper.class);
 
-    private final PropertiesConverter underTest = new PropertiesConverter(new JacksonConfiguration().objectMapper(new InjectableValues.Std()));
+    private final PropertiesConverter underTest = new PropertiesConverter(JacksonConfiguration.defaultObjectMapper());
 
     @Before
     public void setUp() {

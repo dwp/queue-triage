@@ -25,25 +25,49 @@ public class AndPredicate implements FailedMessagePredicate {
                 .allMatch(p -> p.test(failedMessage));
     }
 
-    List<FailedMessagePredicate> getPredicates() {
+    public List<FailedMessagePredicate> getPredicates() {
         return new ArrayList<>(predicates);
     }
 
     @Override
     public Description describe(Description description) {
-        description.append("( ");
+        Description finalDescription = description.append("( ");
         final Iterator<FailedMessagePredicate> iterator = predicates.iterator();
         while (iterator.hasNext()) {
-            iterator.next().describe(description);
+            finalDescription = iterator.next().describe(finalDescription);
             if (iterator.hasNext()) {
-                description.append(" AND ");
+                finalDescription = finalDescription.append(" AND ");
             }
         }
-        return description.append(" )");
+        return finalDescription.append(" )");
+    }
+
+    public AndPredicate and(FailedMessagePredicate failedMessagePredicate) {
+        List<FailedMessagePredicate> predicates = this.getPredicates();
+        if (failedMessagePredicate instanceof AndPredicate) {
+            predicates.addAll(((AndPredicate)failedMessagePredicate).getPredicates());
+        } else {
+            predicates.add(failedMessagePredicate);
+        }
+        return new AndPredicate(predicates);
     }
 
     @Override
     public String toString() {
         return describe(new StringDescription()).toString();
+    }
+
+    public static AndPredicate and(FailedMessagePredicate lhs, FailedMessagePredicate rhs) {
+        if (lhs instanceof AndPredicate) {
+            return ((AndPredicate) lhs).and(rhs);
+        }
+        List<FailedMessagePredicate> predicates = new ArrayList<>();
+        predicates.add(lhs);
+        if (rhs instanceof AndPredicate) {
+            predicates.addAll(((AndPredicate)rhs).getPredicates());
+        } else {
+            predicates.add(rhs);
+        }
+        return new AndPredicate(predicates);
     }
 }

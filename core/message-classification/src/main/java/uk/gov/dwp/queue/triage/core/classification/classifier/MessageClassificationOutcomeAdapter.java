@@ -20,7 +20,7 @@ public class MessageClassificationOutcomeAdapter {
         this.failedMessageResponseFactory = failedMessageResponseFactory;
     }
 
-    public <T> MessageClassificationOutcomeResponse toOutcomeResponse(MessageClassificationOutcome<T> outcome) {
+    public MessageClassificationOutcomeResponse toOutcomeResponse(MessageClassificationOutcome outcome) {
         String failedMessageAction;
         try {
             failedMessageAction = objectMapper.writeValueAsString(outcome.getFailedMessageAction());
@@ -30,7 +30,7 @@ public class MessageClassificationOutcomeAdapter {
         }
         return new MessageClassificationOutcomeResponse(
                 outcome.isMatched(),
-                outcome.getDescription().getOutput().toString(),
+                outcome.getDescription(), // Consider using MessageClassificationOutcome#getDescription(Description)
                 failedMessageResponseFactory.create(outcome.getFailedMessage()),
                 failedMessageAction
         );

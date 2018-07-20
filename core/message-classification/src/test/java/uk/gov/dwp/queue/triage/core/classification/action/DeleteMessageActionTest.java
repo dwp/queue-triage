@@ -18,7 +18,7 @@ import static org.mockito.Mockito.when;
 public class DeleteMessageActionTest {
 
     private static final FailedMessageId FAILED_MESSAGE_ID = FailedMessageId.newFailedMessageId();
-    private final ObjectMapper objectMapper = new JacksonConfiguration().objectMapper(new InjectableValues.Std());
+    private final ObjectMapper objectMapper = JacksonConfiguration.defaultObjectMapper();
 
     private final FailedMessageService failedMessageService = mock(FailedMessageService.class);
     private final FailedMessage failedMessage = mock(FailedMessage.class);

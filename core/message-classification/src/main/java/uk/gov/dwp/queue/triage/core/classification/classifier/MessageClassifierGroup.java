@@ -1,13 +1,14 @@
 package uk.gov.dwp.queue.triage.core.classification.classifier;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import uk.gov.dwp.queue.triage.core.domain.FailedMessage;
+import uk.gov.dwp.queue.triage.core.classification.predicate.BooleanPredicate;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class MessageClassifierGroup implements MessageClassifier {
 
@@ -27,27 +28,21 @@ public class MessageClassifierGroup implements MessageClassifier {
     }
 
     @Override
-    public <T> MessageClassificationOutcome<T> classify(FailedMessage failedMessage, Description<T> description) {
-        appendParenthesisIfRequired("( ", description);
-        final Iterator<MessageClassifier> it = messageClassifiers.iterator();
-        while (it.hasNext()) {
-            final MessageClassificationOutcome<T> outcome = it.next().classify(failedMessage, description.append("( "));
-            description.append(" )");
+    public MessageClassificationOutcome classify(MessageClassificationContext context) {
+        MessageClassificationOutcome outcome = null;
+        for (MessageClassifier messageClassifier : messageClassifiers) {
+            final MessageClassificationOutcome latestOutcome = messageClassifier.classify(context);
+            outcome = Optional.ofNullable(outcome).map(currentOutcome -> currentOutcome.or(latestOutcome)).orElse(latestOutcome);
             if (outcome.isMatched()) {
-                appendParenthesisIfRequired(" )", description);
                 return outcome;
-            } else if (it.hasNext()) {
-                description.append(" OR ");
             }
         }
-        appendParenthesisIfRequired(" )", description);
-        return MessageClassificationOutcome.notMatched(failedMessage, description);
+        return Optional.ofNullable(outcome).orElse(context.notMatched(new BooleanPredicate(false)));
     }
 
-    private <T> void appendParenthesisIfRequired(String parenthesis, Description<T> description) {
-        if (messageClassifiers.size() > 1) {
-            description.append(parenthesis);
-        }
+    @Override
+    public String toString() {
+        return messageClassifiers.stream().map(MessageClassifier::toString).collect(Collectors.joining(" OR "));
     }
 
     public List<MessageClassifier> getClassifiers() {

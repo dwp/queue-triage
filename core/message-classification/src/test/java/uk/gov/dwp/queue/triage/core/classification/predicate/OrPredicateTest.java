@@ -1,12 +1,10 @@
 package uk.gov.dwp.queue.triage.core.classification.predicate;
 
-import com.fasterxml.jackson.databind.InjectableValues;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Test;
-import org.mockito.InOrder;
-import org.mockito.Mockito;
 import org.mockito.stubbing.Answer;
 import uk.gov.dwp.queue.triage.core.classification.classifier.Description;
+import uk.gov.dwp.queue.triage.core.classification.classifier.StringDescription;
 import uk.gov.dwp.queue.triage.core.domain.FailedMessage;
 import uk.gov.dwp.queue.triage.jackson.configuration.JacksonConfiguration;
 
@@ -27,7 +25,6 @@ public class OrPredicateTest {
 
     private final FailedMessagePredicate alwaysTruePredicate = new BooleanPredicate(true);
     private final FailedMessage failedMessage = mock(FailedMessage.class);
-    private final Description description = mock(Description.class);
     private final FailedMessagePredicate failedMessagePredicate1 = mock(FailedMessagePredicate.class);
     private final FailedMessagePredicate failedMessagePredicate2 = mock(FailedMessagePredicate.class);
 
@@ -67,7 +64,7 @@ public class OrPredicateTest {
 
     @Test
     public void canSerialiseAndDeserialisePredicate() throws IOException {
-        ObjectMapper objectMapper = new JacksonConfiguration().objectMapper(new InjectableValues.Std());
+        ObjectMapper objectMapper = JacksonConfiguration.defaultObjectMapper();
         objectMapper.registerSubtypes(BooleanPredicate.class);
 
         final OrPredicate underTest = objectMapper.readValue(
@@ -80,23 +77,17 @@ public class OrPredicateTest {
 
     @Test
     public void testDescribe() {
-        when(failedMessagePredicate1.describe(description)).thenReturn(description);
-        when(failedMessagePredicate2.describe(description)).thenReturn(description);
+        when(failedMessagePredicate1.describe(any(StringDescription.class))).thenAnswer(withDescription("predicate1"));
+        when(failedMessagePredicate2.describe(any(StringDescription.class))).thenAnswer(withDescription("predicate2"));
 
-        underTest.describe(description);
+        assertThat(underTest.describe(new StringDescription()).getOutput(), is("( predicate1 OR predicate2 )"));
 
-        final InOrder orderVerifier = Mockito.inOrder(description, failedMessagePredicate1, failedMessagePredicate2);
-        orderVerifier.verify(description).append("( ");
-        orderVerifier.verify(failedMessagePredicate1).describe(description);
-        orderVerifier.verify(description).append(" OR ");
-        orderVerifier.verify(failedMessagePredicate2).describe(description);
-        orderVerifier.verify(description).append(" )");
     }
 
     @Test
     public void toStringTest() {
-        when(failedMessagePredicate1.describe(any(Description.class))).thenAnswer(withDescription("predicate1"));
-        when(failedMessagePredicate2.describe(any(Description.class))).thenAnswer(withDescription("predicate2"));
+        when(failedMessagePredicate1.describe(any(StringDescription.class))).thenAnswer(withDescription("predicate1"));
+        when(failedMessagePredicate2.describe(any(StringDescription.class))).thenAnswer(withDescription("predicate2"));
 
         assertThat(underTest.toString(), is("( predicate1 OR predicate2 )"));
     }

@@ -2,7 +2,6 @@ package uk.gov.dwp.queue.triage.core.classification.action;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonTypeName;
-import com.fasterxml.jackson.databind.InjectableValues;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.hamcrest.Matchers;
 import org.junit.Before;
@@ -21,7 +20,7 @@ import static org.mockito.Mockito.when;
 
 public class ChainedFailedMessageActionTest {
 
-    private final ObjectMapper objectMapper = new JacksonConfiguration().objectMapper(new InjectableValues.Std());
+    private final ObjectMapper objectMapper = JacksonConfiguration.defaultObjectMapper();
 
     private final FailedMessage failedMessage = mock(FailedMessage.class);
     private final FailedMessageAction failedMessageAction1 = mock(FailedMessageAction.class);

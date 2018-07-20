@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import uk.gov.dwp.queue.triage.core.classification.classifier.Description;
+import uk.gov.dwp.queue.triage.core.classification.classifier.FailedMessagePredicateWithResult;
 import uk.gov.dwp.queue.triage.core.domain.FailedMessage;
 
 @JsonTypeInfo(
@@ -22,11 +23,12 @@ import uk.gov.dwp.queue.triage.core.domain.FailedMessage;
         @Type(value = PropertyEqualToPredicate.class, name = "propertyEqualTo"),
         @Type(value = PropertyExistsPredicate.class, name = "propertyExists"),
         @Type(value = PropertyMatchesPredicate.class, name = "propertyMatches"),
+        @Type(value = FailedMessagePredicateWithResult.class, name = "predicateWithResult")
 })
 public interface FailedMessagePredicate {
 
     boolean test(FailedMessage failedMessage);
 
-    Description describe(Description description);
+    <T> Description<T> describe(Description<T> description);
 
 }

@@ -2,7 +2,6 @@ package uk.gov.dwp.queue.triage.core.classification.classifier;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import uk.gov.dwp.queue.triage.core.domain.FailedMessage;
 
 @JsonTypeInfo(
         use = JsonTypeInfo.Id.NAME,
@@ -17,6 +16,6 @@ import uk.gov.dwp.queue.triage.core.domain.FailedMessage;
 })
 public interface MessageClassifier {
 
-    <T> MessageClassificationOutcome<T> classify(FailedMessage failedMessage, Description<T> description);
+    MessageClassificationOutcome classify(MessageClassificationContext context);
 
 }

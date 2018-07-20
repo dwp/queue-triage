@@ -2,7 +2,6 @@ package uk.gov.dwp.queue.triage.core.classification.classifier;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import uk.gov.dwp.queue.triage.core.classification.predicate.FailedMessagePredicate;
-import uk.gov.dwp.queue.triage.core.domain.FailedMessage;
 
 import static java.util.Objects.requireNonNull;
 
@@ -20,19 +19,17 @@ public class DelegatingMessageClassifier implements MessageClassifier {
     }
 
     @Override
-    public <T> MessageClassificationOutcome<T> classify(FailedMessage failedMessage, Description<T> description) {
-        final boolean matched = predicate.test(failedMessage);
-        predicate.describe(description).append(" [").append(matched).append("]");
+    public MessageClassificationOutcome classify(MessageClassificationContext context) {
+        final boolean matched = predicate.test(context.getFailedMessage());
         if (matched) {
-            description.append(" AND ");
-            return messageClassifier.classify(failedMessage, description);
+            return context.matched(predicate).and(messageClassifier.classify(context));
         } else {
-            return MessageClassificationOutcome.notMatched(failedMessage, description);
+            return context.notMatched(predicate);
         }
     }
 
     @Override
     public String toString() {
-        return "when " + predicate + " then " + messageClassifier;
+        return "if " + predicate + " then " + messageClassifier;
     }
 }

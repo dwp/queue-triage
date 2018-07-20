@@ -6,7 +6,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import uk.gov.dwp.queue.triage.core.classification.classifier.MessageClassificationOutcomeAdapter;
-import uk.gov.dwp.queue.triage.core.classification.classifier.StringDescription;
 import uk.gov.dwp.queue.triage.core.classification.server.MessageClassificationService;
 import uk.gov.dwp.queue.triage.core.classification.server.executor.MessageClassificationExecutorService;
 import uk.gov.dwp.queue.triage.core.classification.server.repository.MessageClassificationRepository;
@@ -33,7 +32,6 @@ public class MessageClassificationConfiguration {
         return resourceRegistry.add(new MessageClassificationResource<>(
                 messageClassificationRepository,
                 failedMessageSearchService,
-                StringDescription::new,
                 new MessageClassificationOutcomeAdapter(objectMapper, new FailedMessageResponseFactory()))
         );
     }
@@ -46,7 +44,7 @@ public class MessageClassificationConfiguration {
     @Bean
     public MessageClassificationService messageClassificationService(FailedMessageSearchService failedMessageSearchService,
                                                                      MessageClassificationRepository messageClassificationRepository) {
-        return new MessageClassificationService<>(failedMessageSearchService, messageClassificationRepository, StringDescription::new);
+        return new MessageClassificationService<>(failedMessageSearchService, messageClassificationRepository);
     }
 
     @Bean(initMethod = "start", destroyMethod = "stop")

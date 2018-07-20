@@ -25,9 +25,7 @@ public class MessageClassificationOutcomeAdapterTest {
     @Mock
     private ObjectMapper objectMapper;
     @Mock
-    private Description<String> description;
-    @Mock
-    private MessageClassificationOutcome<String> outcome;
+    private MessageClassificationOutcome outcome;
     @Mock
     private FailedMessageResponseFactory failedMessageResponseFactory;
     @Mock
@@ -48,8 +46,7 @@ public class MessageClassificationOutcomeAdapterTest {
     public void convertOutcomeToOutcomeResponse() throws JsonProcessingException {
         when(outcome.isMatched()).thenReturn(true);
         when(outcome.getFailedMessage()).thenReturn(failedMessage);
-        when(outcome.getDescription()).thenReturn(description);
-        when(description.getOutput()).thenReturn("Description");
+        when(outcome.getDescription()).thenReturn("Description");
         when(outcome.getFailedMessageAction()).thenReturn(failedMessageAction);
         when(objectMapper.writeValueAsString(failedMessageAction)).thenReturn("Action");
         when(failedMessageResponseFactory.create(failedMessage)).thenReturn(failedMessageResponse);
@@ -67,8 +64,7 @@ public class MessageClassificationOutcomeAdapterTest {
         failedMessageAction = new StubFailedMessageAction();
         when(outcome.isMatched()).thenReturn(true);
         when(outcome.getFailedMessage()).thenReturn(failedMessage);
-        when(outcome.getDescription()).thenReturn(description);
-        when(description.getOutput()).thenReturn("Description");
+        when(outcome.getDescription()).thenReturn("Description");
         when(outcome.getFailedMessageAction()).thenReturn(failedMessageAction);
         when(objectMapper.writeValueAsString(failedMessageAction)).thenThrow(JsonProcessingException.class);
         when(failedMessageResponseFactory.create(failedMessage)).thenReturn(failedMessageResponse);

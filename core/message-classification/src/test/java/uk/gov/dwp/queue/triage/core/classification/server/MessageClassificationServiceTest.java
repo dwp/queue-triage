@@ -8,6 +8,7 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 import uk.gov.dwp.queue.triage.core.classification.classifier.Description;
+import uk.gov.dwp.queue.triage.core.classification.classifier.MessageClassificationContext;
 import uk.gov.dwp.queue.triage.core.classification.classifier.MessageClassificationOutcome;
 import uk.gov.dwp.queue.triage.core.classification.classifier.MessageClassifierGroup;
 import uk.gov.dwp.queue.triage.core.classification.server.repository.MessageClassificationRepository;
@@ -31,7 +32,7 @@ public class MessageClassificationServiceTest {
     @Mock
     private FailedMessage failedMessage;
     @Mock
-    private MessageClassificationOutcome<String> messageClassificationOutcome;
+    private MessageClassificationOutcome messageClassificationOutcome;
     @Mock
     private FailedMessageSearchService failedMessageSearchService;
     @Mock
@@ -45,8 +46,7 @@ public class MessageClassificationServiceTest {
     public void setUp() {
         underTest = new MessageClassificationService<>(
                 failedMessageSearchService,
-                messageClassificationRepository,
-                () -> description
+                messageClassificationRepository
         );
     }
 
@@ -63,12 +63,12 @@ public class MessageClassificationServiceTest {
     public void classifyFailedMessagesNotMatched() {
         when(failedMessageSearchService.findByStatus(FAILED)).thenReturn(singletonList(failedMessage));
         when(messageClassificationRepository.findLatest()).thenReturn(messageClassifier);
-        when(messageClassifier.classify(failedMessage, description)).thenReturn(messageClassificationOutcome);
+        when(messageClassifier.classify(new MessageClassificationContext(failedMessage))).thenReturn(messageClassificationOutcome);
         when(messageClassificationOutcome.isMatched()).thenReturn(false);
 
         underTest.classifyFailedMessages();
 
-        verify(messageClassifier).classify(failedMessage, description);
+        verify(messageClassifier).classify(new MessageClassificationContext(failedMessage));
         verify(messageClassificationOutcome).getDescription();
         verify(messageClassificationOutcome).execute();
     }
@@ -77,11 +77,11 @@ public class MessageClassificationServiceTest {
     public void classifyFailedMessagesMatched() {
         when(failedMessageSearchService.findByStatus(FAILED)).thenReturn(singletonList(failedMessage));
         when(messageClassificationRepository.findLatest()).thenReturn(messageClassifier);
-        when(messageClassifier.classify(failedMessage, description)).thenReturn(messageClassificationOutcome);
+        when(messageClassifier.classify(new MessageClassificationContext(failedMessage))).thenReturn(messageClassificationOutcome);
 
         underTest.classifyFailedMessages();
 
-        verify(messageClassifier).classify(failedMessage, description);
+        verify(messageClassifier).classify(new MessageClassificationContext(failedMessage));
         verify(messageClassificationOutcome).getDescription();
         verify(messageClassificationOutcome).execute();
     }

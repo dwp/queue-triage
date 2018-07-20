@@ -4,18 +4,17 @@ import uk.gov.dwp.queue.triage.core.classification.classifier.MessageClassifier;
 import uk.gov.dwp.queue.triage.core.classification.classifier.UnmatchedMessageClassifier;
 import uk.gov.dwp.queue.triage.core.classification.server.repository.MessageClassificationRepository;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Vector;
 
 public class InMemoryMessageClassificationRepository implements MessageClassificationRepository {
 
-    private List<MessageClassifier> messageClassifiers;
+    private Vector<MessageClassifier> messageClassifiers;
 
     public InMemoryMessageClassificationRepository() {
-        this(new ArrayList<>());
+        this(new Vector<>());
     }
 
-    InMemoryMessageClassificationRepository(List<MessageClassifier> messageClassifiers) {
+    InMemoryMessageClassificationRepository(Vector<MessageClassifier> messageClassifiers) {
         this.messageClassifiers = messageClassifiers;
     }
 
@@ -26,8 +25,7 @@ public class InMemoryMessageClassificationRepository implements MessageClassific
 
     @Override
     public MessageClassifier findLatest() {
-        int lastElement = messageClassifiers.size() - 1;
-        return messageClassifiers.get(lastElement);
+        return messageClassifiers.isEmpty() ? null : messageClassifiers.lastElement();
     }
 
     @Override

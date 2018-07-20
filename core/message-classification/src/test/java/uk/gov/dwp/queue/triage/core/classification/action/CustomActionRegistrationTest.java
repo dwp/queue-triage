@@ -3,7 +3,6 @@ package uk.gov.dwp.queue.triage.core.classification.action;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.InjectableValues;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Before;
 import org.junit.Test;
@@ -21,7 +20,7 @@ import static org.valid4j.matchers.jsonpath.JsonPathMatchers.hasJsonPath;
 
 public class CustomActionRegistrationTest {
 
-    private final ObjectMapper objectMapper = new JacksonConfiguration().objectMapper(new InjectableValues.Std());
+    private final ObjectMapper objectMapper = JacksonConfiguration.defaultObjectMapper();
     private final FailedMessage failedMessage = mock(FailedMessage.class);
 
     @Before

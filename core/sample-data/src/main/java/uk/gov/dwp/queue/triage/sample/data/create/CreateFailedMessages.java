@@ -1,6 +1,5 @@
 package uk.gov.dwp.queue.triage.sample.data.create;
 
-import com.fasterxml.jackson.databind.InjectableValues;
 import org.apache.cxf.jaxrs.client.JAXRSClientFactory;
 import uk.gov.dwp.queue.triage.core.client.CreateFailedMessageClient;
 import uk.gov.dwp.queue.triage.core.client.CreateFailedMessageRequest;
@@ -41,7 +40,7 @@ public class CreateFailedMessages {
                         "http://localhost:9991/core",
                         CreateFailedMessageClient.class,
                         singletonList(jacksonConfiguration.jacksonJsonProvider(
-                                new CxfConfiguration(), jacksonConfiguration.objectMapper(new InjectableValues.Std())
+                                new CxfConfiguration(), JacksonConfiguration.defaultObjectMapper()
                         ))
                 )
         );

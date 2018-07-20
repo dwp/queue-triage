@@ -1,16 +1,16 @@
 package uk.gov.dwp.queue.triage.core.classification.classifier;
 
 import com.fasterxml.jackson.annotation.JsonTypeName;
-import com.fasterxml.jackson.databind.InjectableValues;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-import org.mockito.Answers;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
+import uk.gov.dwp.queue.triage.core.classification.action.LabelMessageAction;
 import uk.gov.dwp.queue.triage.core.classification.classifier.MessageClassifierGroup.Builder;
+import uk.gov.dwp.queue.triage.core.classification.predicate.BooleanPredicate;
 import uk.gov.dwp.queue.triage.core.domain.FailedMessage;
 import uk.gov.dwp.queue.triage.jackson.configuration.JacksonConfiguration;
 
@@ -21,7 +21,7 @@ import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
-import static org.mockito.Mockito.times;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.verifyZeroInteractions;
@@ -33,17 +33,18 @@ import static uk.gov.dwp.queue.triage.matchers.ReflectionEqualsMatcher.reflectio
 
 public class MessageClassifierGroupTest {
 
-
-    private final ObjectMapper objectMapper = new JacksonConfiguration().objectMapper(new InjectableValues.Std());
-
     @Rule
     public MockitoRule rule = MockitoJUnit.rule();
-    @Mock(answer = Answers.RETURNS_SELF)
-    private Description<String> description;
     @Mock
     private FailedMessage failedMessage;
     @Mock
-    private MessageClassificationOutcome<String> messageClassificationOutcome;
+    private MessageClassificationContext context;
+    @Mock
+    private MessageClassificationOutcome classifier1Outcome;
+    @Mock
+    private MessageClassificationOutcome classifier2Outcome;
+    @Mock
+    private MessageClassificationOutcome finalOutcome;
     @Mock
     private MessageClassifier messageClassifier1;
     @Mock
@@ -54,38 +55,42 @@ public class MessageClassifierGroupTest {
     @Before
     public void setUp() {
         underTest = newClassifierCollection().withClassifier(messageClassifier1).withClassifier(messageClassifier2).build();
-        objectMapper.registerSubtypes(DoNothingMessageClassifier.class);
+    }
+
+    @Test
+    public void messageClassifiersExist() {
+        underTest = newClassifierCollection().build();
+        when(context.notMatched(new BooleanPredicate(false))).thenReturn(finalOutcome);
+
+        assertThat(underTest.classify(context), is(finalOutcome));
+
+        verify(context).notMatched(new BooleanPredicate(false));
+        verifyNoMoreInteractions(context);
     }
 
     @Test
     public void noClassifiersMatch() {
-        when(messageClassifier1.classify(failedMessage, description)).thenReturn(messageClassificationOutcome);
-        when(messageClassifier2.classify(failedMessage, description)).thenReturn(messageClassificationOutcome);
-        when(messageClassificationOutcome.isMatched()).thenReturn(false);
+        when(messageClassifier1.classify(context)).thenReturn(classifier1Outcome);
+        when(messageClassifier2.classify(context)).thenReturn(classifier2Outcome);
+        when(classifier1Outcome.isMatched()).thenReturn(false);
+        when(finalOutcome.isMatched()).thenReturn(false);
+        when(classifier1Outcome.or(classifier2Outcome)).thenReturn(finalOutcome);
 
-        final MessageClassificationOutcome outcome = underTest.classify(failedMessage, description);
+        assertThat(underTest.classify(context), is(finalOutcome));
 
-        assertThat(outcome.isMatched(), is(false));
-        assertThat(outcome.getFailedMessage(), is(failedMessage));
-        verify(messageClassifier1).classify(failedMessage, description);
-        verify(description, times(3)).append("( ");
-        verify(description).append(" OR ");
-        verify(description, times(3)).append(" )");
-        verifyNoMoreInteractions(description);
-        verify(messageClassifier2).classify(failedMessage, description);
-        verify(messageClassificationOutcome, times(2)).isMatched();
+        verify(messageClassifier1).classify(context);
+        verify(messageClassifier2).classify(context);
+        verify(classifier1Outcome).or(classifier2Outcome);
     }
 
     @Test
     public void firstClassifierMatches() {
-        when(messageClassifier1.classify(failedMessage, description)).thenReturn(messageClassificationOutcome);
-        when(messageClassificationOutcome.isMatched()).thenReturn(true);
+        when(messageClassifier1.classify(context)).thenReturn(classifier1Outcome);
+        when(classifier1Outcome.isMatched()).thenReturn(true);
 
-        final MessageClassificationOutcome outcome = underTest.classify(failedMessage, description);
+        assertThat(underTest.classify(context), is(this.classifier1Outcome));
 
-        assertThat(outcome, is(messageClassificationOutcome));
-        verify(description, times(2)).append("( ");
-        verify(description, times(2)).append(" )");
+        verify(messageClassifier1).classify(context);
         verifyZeroInteractions(messageClassifier2);
     }
 
@@ -104,6 +109,9 @@ public class MessageClassifierGroupTest {
 
     @Test
     public void canSerialiseAndDeserialiseMessageClassifier() throws IOException {
+        final ObjectMapper objectMapper = JacksonConfiguration.defaultObjectMapper();
+        objectMapper.registerSubtypes(DoNothingMessageClassifier.class);
+
         underTest = newClassifierCollection()
                 .withClassifier(new DoNothingMessageClassifier())
                 .withClassifier(new DoNothingMessageClassifier())
@@ -119,11 +127,46 @@ public class MessageClassifierGroupTest {
         assertThat(objectMapper.readValue(json, MessageClassifier.class), reflectionEquals(underTest));
     }
 
+    @Test
+    public void twoExecutingMessageClassifiers() {
+        final MessageClassifierGroup classifier = newClassifierCollection()
+                .withClassifier(new ExecutingMessageClassifier(new BooleanPredicate(false), new LabelMessageAction("for", null)))
+                .withClassifier(new ExecutingMessageClassifier(new BooleanPredicate(true), new LabelMessageAction("bar", null)))
+                .build();
+
+        MessageClassificationOutcome classify = classifier.classify(new MessageClassificationContext(failedMessage));
+
+        assertEquals("matched = true, ( false [false] OR true [true] )", classify.getDescription());
+
+    }
+    @Test
+    public void anExecutingMessageClassifierThenDelegatingMessageClassifier() {
+        final MessageClassifierGroup classifier = newClassifierCollection()
+                .withClassifier(new ExecutingMessageClassifier(new BooleanPredicate(false), new LabelMessageAction("for", null)))
+                .withClassifier(new DelegatingMessageClassifier(new BooleanPredicate(true), new ExecutingMessageClassifier(new BooleanPredicate(true), new LabelMessageAction("bar", null))))
+                .build();
+
+        MessageClassificationOutcome classify = classifier.classify(new MessageClassificationContext(failedMessage));
+
+        assertEquals("matched = true, ( false [false] OR ( true [true] AND true [true] ) )", classify.getDescription());
+
+    }
+
+    @Test
+    public void testToString() {
+        when(messageClassifier1.toString()).thenReturn("classifier1");
+        when(messageClassifier2.toString()).thenReturn("classifier2");
+
+        final MessageClassifierGroup underTest = newClassifierCollection().withClassifier(messageClassifier1).withClassifier(messageClassifier2).build();
+
+        assertThat(underTest.toString(), is("classifier1 OR classifier2"));
+    }
+
     @JsonTypeName("doNothing")
     private static class DoNothingMessageClassifier implements MessageClassifier {
 
         @Override
-        public <T> MessageClassificationOutcome<T> classify(FailedMessage failedMessage, Description<T> description) {
+        public MessageClassificationOutcome classify(MessageClassificationContext context) {
             return null;
         }
 

@@ -4,17 +4,18 @@ import org.junit.Test;
 import uk.gov.dwp.queue.triage.core.classification.classifier.MessageClassifier;
 import uk.gov.dwp.queue.triage.core.classification.classifier.MessageClassifierGroup;
 
-import java.util.ArrayList;
+import java.util.Vector;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.nullValue;
 import static org.mockito.Mockito.mock;
 import static uk.gov.dwp.queue.triage.core.classification.classifier.UnmatchedMessageClassifier.ALWAYS_UNMATCHED;
 
 public class InMemoryMessageClassificationRepositoryTest {
 
-    private final ArrayList<MessageClassifier> messageClassifiers = new ArrayList<>();
+    private final Vector<MessageClassifier> messageClassifiers = new Vector<>();
     private final MessageClassifierGroup messageClassifier = mock(MessageClassifierGroup.class);
 
     private final InMemoryMessageClassificationRepository underTest = new InMemoryMessageClassificationRepository(messageClassifiers);
@@ -37,12 +38,17 @@ public class InMemoryMessageClassificationRepositoryTest {
     }
 
     @Test
-    public void findAllMessageClassifiers() {
+    public void findLatestMessageClassifiers() {
+        messageClassifiers.add(mock(MessageClassifier.class));
         messageClassifiers.add(messageClassifier);
 
         final MessageClassifier messageClassifiers = underTest.findLatest();
 
-        // TODO: Fix me
-//        assertThat(messageClassifiers, contains(messageClassifier));
+        assertThat(messageClassifiers, is(messageClassifier));
+    }
+
+    @Test
+    public void findLatestMessageClassifierWhenEmpty() {
+        assertThat(new InMemoryMessageClassificationRepository().findLatest(), nullValue());
     }
 }

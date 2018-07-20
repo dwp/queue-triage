@@ -18,7 +18,7 @@ import static org.mockito.Mockito.when;
 public class LabelMessageActionTest {
 
     private static final FailedMessageId FAILED_MESSAGE_ID = FailedMessageId.newFailedMessageId();
-    private final ObjectMapper objectMapper = new JacksonConfiguration().objectMapper(new InjectableValues.Std());
+    private final ObjectMapper objectMapper = JacksonConfiguration.defaultObjectMapper();
 
     private final FailedMessageLabelService failedMessageLabelService = mock(FailedMessageLabelService.class);
     private final FailedMessage failedMessage = mock(FailedMessage.class);
@@ -48,6 +48,6 @@ public class LabelMessageActionTest {
     public void testToString() {
         LabelMessageAction underTest = new LabelMessageAction("foo", failedMessageLabelService);
 
-        assertThat(underTest.toString(), Matchers.is("set label = 'foo'"));
+        assertThat(underTest.toString(), Matchers.is("set label 'foo'"));
     }
 }

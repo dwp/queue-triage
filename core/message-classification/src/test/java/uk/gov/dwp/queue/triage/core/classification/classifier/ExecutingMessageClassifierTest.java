@@ -1,11 +1,9 @@
 package uk.gov.dwp.queue.triage.core.classification.classifier;
 
-import com.fasterxml.jackson.databind.InjectableValues;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-import org.mockito.Answers;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
@@ -22,7 +20,6 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.nullValue;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.valid4j.matchers.jsonpath.JsonPathMatchers.hasJsonPath;
@@ -30,16 +27,16 @@ import static uk.gov.dwp.queue.triage.matchers.ReflectionEqualsMatcher.reflectio
 
 public class ExecutingMessageClassifierTest {
 
-    private final ObjectMapper objectMapper = new JacksonConfiguration().objectMapper(new InjectableValues.Std());
-
     @Rule
     public MockitoRule mockitoRule = MockitoJUnit.rule();
     @Mock
     private FailedMessage failedMessage;
-    @Mock(answer = Answers.RETURNS_SELF)
-    private Description<String> description;
     @Mock
-    private FailedMessageAction failedMessageAction;
+    private MessageClassificationContext context;
+    @Mock
+    private MessageClassificationOutcome outcome;
+    @Mock
+    private FailedMessageAction action;
     @Mock
     private FailedMessagePredicate predicate;
 
@@ -47,45 +44,37 @@ public class ExecutingMessageClassifierTest {
 
     @Before
     public void setUp() {
-        underTest = new ExecutingMessageClassifier(predicate, failedMessageAction);
+        underTest = new ExecutingMessageClassifier(predicate, action);
+
     }
 
     @Test
     public void actionIsExecutedIfThePredicateIsTrue() {
-        when(predicate.describe(description)).thenReturn(description);
+        when(context.getFailedMessage()).thenReturn(failedMessage);
         when(predicate.test(failedMessage)).thenReturn(true);
+        when(context.matched(predicate, action)).thenReturn(outcome);
 
-        final MessageClassificationOutcome outcome = underTest.classify(failedMessage, description);
+        assertThat(underTest.classify(context), is(outcome));
 
-        assertThat(outcome.isMatched(), is(true));
-        assertThat(outcome.getDescription(), is(description));
-        assertThat(outcome.getFailedMessage(), is(failedMessage));
-        assertThat(outcome.getFailedMessageAction(), is(failedMessageAction));
-        verify(predicate).describe(description);
-        verify(description).append(" [");
-        verify(description).append(true);
-        verify(description).append("]");
+        verify(predicate).test(failedMessage);
+        verify(context).matched(predicate, action);
     }
 
     @Test
     public void actionIsNotExecutedIfThePredicateIsFalse() {
-        when(predicate.describe(description)).thenReturn(description);
+        when(context.getFailedMessage()).thenReturn(failedMessage);
         when(predicate.test(failedMessage)).thenReturn(false);
+        when(context.notMatched(predicate)).thenReturn(outcome);
 
-        final MessageClassificationOutcome outcome = underTest.classify(failedMessage, description);
+        assertThat(underTest.classify(context), is(outcome));
 
-        assertThat(outcome.isMatched(), is(false));
-        assertThat(outcome.getDescription(), is(description));
-        assertThat(outcome.getFailedMessage(), is(failedMessage));
-        assertThat(outcome.getFailedMessageAction(), is(nullValue()));
-        verify(predicate).describe(description);
-        verify(description).append(" [");
-        verify(description).append(false);
-        verify(description).append("]");
+        verify(predicate).test(failedMessage);
+        verify(context).notMatched(predicate);
     }
 
     @Test
     public void canSerialiseAndDeserialiseMessageClassifier() throws IOException {
+        final ObjectMapper objectMapper = JacksonConfiguration.defaultObjectMapper();
         objectMapper.registerSubtypes(BooleanPredicate.class);
         objectMapper.registerSubtypes(GetPropertyAction.class);
 
@@ -105,5 +94,12 @@ public class ExecutingMessageClassifierTest {
         ));
 
         assertThat(objectMapper.readValue(json, ExecutingMessageClassifier.class), reflectionEquals(underTest));
+    }
+
+    @Test
+    public void testToString() {
+        when(predicate.toString()).thenReturn("predicate");
+        when(action.toString()).thenReturn("action");
+        assertThat(underTest.toString(), is("if predicate then action"));
     }
 }

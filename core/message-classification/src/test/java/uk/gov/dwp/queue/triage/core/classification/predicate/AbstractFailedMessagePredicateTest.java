@@ -1,10 +1,10 @@
 package uk.gov.dwp.queue.triage.core.classification.predicate;
 
-import com.fasterxml.jackson.databind.InjectableValues;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.hamcrest.Matcher;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import uk.gov.dwp.queue.triage.core.classification.classifier.Description;
 import uk.gov.dwp.queue.triage.core.classification.classifier.StringDescription;
@@ -19,8 +19,15 @@ import static org.mockito.Mockito.mock;
 
 public abstract class AbstractFailedMessagePredicateTest {
 
+    private static final ObjectMapper OBJECT_MAPPER = JacksonConfiguration.defaultObjectMapper();
+
     protected final FailedMessage failedMessage = mock(FailedMessage.class);
     protected FailedMessagePredicate underTest;
+
+    @BeforeClass
+    public static void registerBooleanPredicate() {
+        OBJECT_MAPPER.registerSubtypes(BooleanPredicate.class);
+    }
 
     @Before
     public void assignPredicateUnderTest() {
@@ -29,11 +36,10 @@ public abstract class AbstractFailedMessagePredicateTest {
 
     @Test
     public void canSerialiseAndDeserialisePredicate() throws IOException {
-        ObjectMapper objectMapper = new JacksonConfiguration().objectMapper(new InjectableValues.Std());
 
-        String json = objectMapper.writeValueAsString(underTest);
+        String json = OBJECT_MAPPER.writeValueAsString(underTest);
 
-        final FailedMessagePredicate failedMessagePredicate = objectMapper.readValue(json, FailedMessagePredicate.class);
+        final FailedMessagePredicate failedMessagePredicate = OBJECT_MAPPER.readValue(json, FailedMessagePredicate.class);
         assertThat(
                 underTest.getClass().getSimpleName() + " is not equal after serialisation/deserialisation",
                 EqualsBuilder.reflectionEquals(underTest, failedMessagePredicate, excludedFieldsFromEquality()),
@@ -42,9 +48,7 @@ public abstract class AbstractFailedMessagePredicateTest {
 
     @Test
     public void describeTest() {
-        final Description<String> description = new StringDescription();
-
-        underTest.describe(description);
+        final Description<String> description = underTest.describe(new StringDescription());
 
         assertThat(underTest.getClass().getSimpleName() + " description", description.getOutput(), expectedDescription());
     }

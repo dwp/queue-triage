@@ -5,34 +5,33 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
+import uk.gov.dwp.queue.triage.core.classification.predicate.BooleanPredicate;
 import uk.gov.dwp.queue.triage.core.domain.FailedMessage;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static uk.gov.dwp.queue.triage.core.classification.classifier.MessageClassifierGroup.newClassifierCollection;
 
 public class UnmatchedMessageClassifierTest {
 
-    private static final String DESCRIPTION = "always unmatched";
     @Rule
     public MockitoRule mockitoRule = MockitoJUnit.rule();
     @Mock
-    private FailedMessage failedMessage;
+    private MessageClassificationContext context;
     @Mock
-    private Description<String> description;
+    private MessageClassificationOutcome outcome;
+    @Mock
+    private FailedMessage failedMessage;
 
     private final MessageClassifier underTest = UnmatchedMessageClassifier.ALWAYS_UNMATCHED;
 
     @Test
     public void testClassify() {
+        when(context.getFailedMessage()).thenReturn(failedMessage);
+        when(context.notMatched(new BooleanPredicate(false))).thenReturn(outcome);
 
-        final MessageClassificationOutcome<String> outcome = underTest.classify(failedMessage, description);
-
-        verify(description).append(DESCRIPTION);
-        assertThat(outcome.isMatched(), is(false));
-        assertThat(outcome.getFailedMessage(), is(failedMessage));
-        assertThat(outcome.getDescription(), is(description));
+        assertThat(underTest.classify(context), is(outcome));
     }
 
     @Test
