@@ -18,11 +18,11 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import uk.gov.dwp.queue.triage.core.client.FailedMessageResponse;
+import uk.gov.dwp.queue.triage.core.client.FailedMessageResponseMatcher;
 import uk.gov.dwp.queue.triage.core.client.search.SearchFailedMessageRequest;
 import uk.gov.dwp.queue.triage.core.client.search.SearchFailedMessageRequest.SearchFailedMessageRequestBuilder;
 import uk.gov.dwp.queue.triage.core.client.search.SearchFailedMessageResponse;
 import uk.gov.dwp.queue.triage.core.client.search.SearchFailedMessageResponseMatcher;
-import uk.gov.dwp.queue.triage.core.domain.FailedMessageResponseMatcher;
 import uk.gov.dwp.queue.triage.id.FailedMessageId;
 import uk.gov.dwp.queue.triage.jgiven.ReflectionArgumentFormatter;
 

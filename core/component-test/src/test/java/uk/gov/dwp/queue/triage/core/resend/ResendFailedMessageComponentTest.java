@@ -12,10 +12,10 @@ import uk.gov.dwp.queue.triage.id.FailedMessageId;
 import java.time.Duration;
 
 import static uk.gov.dwp.queue.triage.core.client.CreateFailedMessageRequest.newCreateFailedMessageRequest;
+import static uk.gov.dwp.queue.triage.core.client.FailedMessageResponseMatcher.aFailedMessage;
 import static uk.gov.dwp.queue.triage.core.client.FailedMessageStatus.FAILED;
 import static uk.gov.dwp.queue.triage.core.client.FailedMessageStatus.RESENDING;
 import static uk.gov.dwp.queue.triage.core.client.FailedMessageStatus.SENT;
-import static uk.gov.dwp.queue.triage.core.domain.FailedMessageResponseMatcher.aFailedMessage;
 import static uk.gov.dwp.queue.triage.id.FailedMessageId.newFailedMessageId;
 
 public class ResendFailedMessageComponentTest

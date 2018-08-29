@@ -26,7 +26,7 @@ import static uk.gov.dwp.queue.triage.web.server.search.SearchW2UIRequest.Logic.
 
 public class SearchW2UIRequestTest {
 
-    private static final ObjectMapper OBJECT_MAPPER = new JacksonConfiguration().objectMapper();
+    private static final ObjectMapper OBJECT_MAPPER = JacksonConfiguration.defaultObjectMapper();
 
     @Test
     public void canDeserialiseSearchW2UIRequest() throws Exception {

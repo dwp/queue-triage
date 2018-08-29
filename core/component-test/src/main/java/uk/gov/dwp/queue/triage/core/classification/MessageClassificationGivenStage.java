@@ -6,6 +6,8 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpEntity;
 import uk.gov.dwp.queue.triage.core.classification.action.DeleteMessageAction;
 import uk.gov.dwp.queue.triage.core.classification.action.LabelMessageAction;
+import uk.gov.dwp.queue.triage.core.classification.classifier.ExecutingMessageClassifier;
+import uk.gov.dwp.queue.triage.core.classification.classifier.MessageClassifier;
 import uk.gov.dwp.queue.triage.core.classification.predicate.AndPredicate;
 import uk.gov.dwp.queue.triage.core.classification.predicate.BrokerEqualsPredicate;
 import uk.gov.dwp.queue.triage.core.classification.predicate.ContentEqualToPredicate;
@@ -36,17 +38,17 @@ public class MessageClassificationGivenStage extends GivenStage<MessageClassific
         }
         testRestTemplate.postForLocation(
                 "/core/message-classification",
-                new MessageClassifier(new AndPredicate(predicates), new DeleteMessageAction(null))
+                new ExecutingMessageClassifier(new AndPredicate(predicates), new DeleteMessageAction(null))
         );
-        return this;
+        return self();
     }
 
     public MessageClassificationGivenStage aMessageClassifierExistsToLabelAnyMessage$FromBroker$(String label, String broker) {
         testRestTemplate.postForLocation(
                 "/core/message-classification",
-                new MessageClassifier(new BrokerEqualsPredicate(broker), new LabelMessageAction(label, null))
+                new ExecutingMessageClassifier(new BrokerEqualsPredicate(broker), new LabelMessageAction(label, null))
         );
-        return this;
+        return self();
     }
 
     public MessageClassificationGivenStage theMessageClassificationJobIsNotRunning() {
@@ -54,10 +56,19 @@ public class MessageClassificationGivenStage extends GivenStage<MessageClassific
                 "/core/admin/executor/message-classification/pause",
                 HttpEntity.EMPTY
         );
-        return super.self();
+        return self();
     }
 
-    public void noMessageClassifiersExist() {
+    public MessageClassificationGivenStage noMessageClassifiersExist() {
         testRestTemplate.delete("/core/message-classification");
+        return self();
+    }
+
+    public MessageClassificationGivenStage theFollowingMessageClassifiersExist(MessageClassifier messageClassifier) {
+        testRestTemplate.postForLocation(
+                "/core/message-classification",
+                messageClassifier
+        );
+        return self();
     }
 }

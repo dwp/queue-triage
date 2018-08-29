@@ -1,14 +1,12 @@
 package uk.gov.dwp.queue.triage.core.classification.server.repository;
 
-import uk.gov.dwp.queue.triage.core.classification.MessageClassifier;
-
-import java.util.List;
+import uk.gov.dwp.queue.triage.core.classification.classifier.MessageClassifier;
 
 public interface MessageClassificationRepository {
 
-    void insert(MessageClassifier messageClassifier);
+    void save(MessageClassifier messageClassifier);
 
-    List<MessageClassifier> findAll();
+    MessageClassifier findLatest();
 
     void deleteAll();
 }

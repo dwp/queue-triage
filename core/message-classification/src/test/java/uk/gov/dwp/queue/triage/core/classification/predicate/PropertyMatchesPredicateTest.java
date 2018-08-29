@@ -1,26 +1,16 @@
 package uk.gov.dwp.queue.triage.core.classification.predicate;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import org.hamcrest.Matcher;
 import org.junit.Test;
-import uk.gov.dwp.queue.triage.core.domain.FailedMessage;
-import uk.gov.dwp.queue.triage.jackson.configuration.JacksonConfiguration;
-
-import java.io.IOException;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import static uk.gov.dwp.queue.triage.matchers.ReflectionEqualsMatcher.reflectionEquals;
 
-public class PropertyMatchesPredicateTest {
-
-    private FailedMessage failedMessage = mock(FailedMessage.class);
-
-    private PropertyMatchesPredicate underTest;
+public class PropertyMatchesPredicateTest extends AbstractFailedMessagePredicateTest {
 
     @Test(expected = IllegalArgumentException.class)
-    public void propertyNameCannotBeNull() throws Exception {
+    public void propertyNameCannotBeNull() {
         underTest = new PropertyMatchesPredicate(null, "foo");
     }
 
@@ -31,7 +21,7 @@ public class PropertyMatchesPredicateTest {
 
 
     @Test
-    public void propertyMatchesPattern() throws Exception {
+    public void propertyMatchesPattern() {
         when(failedMessage.getProperty("foo")).thenReturn("some.property.value");
 
         underTest = new PropertyMatchesPredicate("foo", "^some\\.property.*");
@@ -40,7 +30,7 @@ public class PropertyMatchesPredicateTest {
     }
 
     @Test
-    public void propertyDoesNotMatchPattern() throws Exception {
+    public void propertyDoesNotMatchPattern() {
         when(failedMessage.getProperty("foo")).thenReturn("some.property.value");
 
         underTest = new PropertyMatchesPredicate("foo", "^some\\.property");
@@ -49,7 +39,7 @@ public class PropertyMatchesPredicateTest {
     }
 
     @Test
-    public void propertyValueIsNull() throws Exception {
+    public void propertyValueIsNull() {
         when(failedMessage.getProperty("foo")).thenReturn(null);
 
         underTest = new PropertyMatchesPredicate("foo", "^some\\.property");
@@ -75,15 +65,18 @@ public class PropertyMatchesPredicateTest {
         assertThat(underTest.test(failedMessage), is(true));
     }
 
-    @Test
-    public void canSerialiseAndDeserialisePredicate() throws IOException {
-        ObjectMapper objectMapper = new JacksonConfiguration().objectMapper();
-
-        underTest = new PropertyMatchesPredicate("foo", "bar");
-        String json = objectMapper.writeValueAsString(underTest);
-
-        assertThat(objectMapper.readValue(json, FailedMessagePredicate.class), reflectionEquals(underTest, "pattern"));
+    @Override
+    protected Matcher<String> expectedDescription() {
+        return is("property[foo] matches bar");
     }
 
+    @Override
+    protected FailedMessagePredicate createPredicateUnderTest() {
+        return new PropertyMatchesPredicate("foo", "bar");
+    }
 
+    @Override
+    protected String[] excludedFieldsFromEquality() {
+        return new String[] {"pattern"};
+    }
 }

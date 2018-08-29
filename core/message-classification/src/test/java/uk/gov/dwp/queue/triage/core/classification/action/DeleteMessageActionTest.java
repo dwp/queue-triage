@@ -9,6 +9,8 @@ import uk.gov.dwp.queue.triage.core.service.FailedMessageService;
 import uk.gov.dwp.queue.triage.id.FailedMessageId;
 import uk.gov.dwp.queue.triage.jackson.configuration.JacksonConfiguration;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -16,7 +18,7 @@ import static org.mockito.Mockito.when;
 public class DeleteMessageActionTest {
 
     private static final FailedMessageId FAILED_MESSAGE_ID = FailedMessageId.newFailedMessageId();
-    private final ObjectMapper objectMapper = new JacksonConfiguration().objectMapper();
+    private final ObjectMapper objectMapper = JacksonConfiguration.defaultObjectMapper();
 
     private final FailedMessageService failedMessageService = mock(FailedMessageService.class);
     private final FailedMessage failedMessage = mock(FailedMessage.class);
@@ -40,5 +42,10 @@ public class DeleteMessageActionTest {
         underTest.accept(failedMessage);
 
         verify(failedMessageService).delete(FAILED_MESSAGE_ID);
+    }
+
+    @Test
+    public void testToString() {
+        assertThat(new DeleteMessageAction(failedMessageService).toString(), is("delete failedMessage"));
     }
 }

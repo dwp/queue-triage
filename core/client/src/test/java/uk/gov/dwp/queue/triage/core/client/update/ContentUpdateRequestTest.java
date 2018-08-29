@@ -18,7 +18,7 @@ import static org.valid4j.matchers.jsonpath.JsonPathMatchers.hasJsonPath;
 public class ContentUpdateRequestTest {
 
     private static final String CONTENT = "some-content";
-    private static ObjectMapper OBJECT_MAPPER = new JacksonConfiguration().objectMapper();
+    private static ObjectMapper OBJECT_MAPPER = JacksonConfiguration.defaultObjectMapper();
 
     @Test
     public void serialiseAndDeserialiseRequest() throws IOException {

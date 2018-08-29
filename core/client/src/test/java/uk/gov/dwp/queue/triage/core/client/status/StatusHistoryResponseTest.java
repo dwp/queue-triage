@@ -15,7 +15,7 @@ import static uk.gov.dwp.queue.triage.core.domain.StatusHistoryResponseMatcher.s
 public class StatusHistoryResponseTest {
 
     private static final Instant NOW = Instant.now();
-    private static final ObjectMapper OBJECT_MAPPER = new JacksonConfiguration().objectMapper();
+    private static final ObjectMapper OBJECT_MAPPER = JacksonConfiguration.defaultObjectMapper();
 
     private final StatusHistoryResponse underTest = new StatusHistoryResponse(FAILED, NOW);
 

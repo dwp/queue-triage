@@ -40,7 +40,7 @@ public class PropertiesConverterTest {
 
     private final ObjectMapper objectMapper = mock(ObjectMapper.class);
 
-    private final PropertiesConverter underTest = new PropertiesConverter(new JacksonConfiguration().objectMapper());
+    private final PropertiesConverter underTest = new PropertiesConverter(JacksonConfiguration.defaultObjectMapper());
 
     @Before
     public void setUp() {

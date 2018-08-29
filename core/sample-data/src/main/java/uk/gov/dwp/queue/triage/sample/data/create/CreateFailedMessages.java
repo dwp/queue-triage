@@ -40,7 +40,7 @@ public class CreateFailedMessages {
                         "http://localhost:9991/core",
                         CreateFailedMessageClient.class,
                         singletonList(jacksonConfiguration.jacksonJsonProvider(
-                                new CxfConfiguration(), jacksonConfiguration.objectMapper()
+                                new CxfConfiguration(), JacksonConfiguration.defaultObjectMapper()
                         ))
                 )
         );

@@ -19,7 +19,7 @@ public class DestinationUpdateRequestTest {
 
     private static final String BROKER_NAME = "some-broker";
     private static final String DESTINATION_NAME = "some-queue";
-    private static ObjectMapper OBJECT_MAPPER = new JacksonConfiguration().objectMapper();
+    private static ObjectMapper OBJECT_MAPPER = JacksonConfiguration.defaultObjectMapper();
 
     @Test
     public void serialiseAndDeserialiseRequest() throws IOException {

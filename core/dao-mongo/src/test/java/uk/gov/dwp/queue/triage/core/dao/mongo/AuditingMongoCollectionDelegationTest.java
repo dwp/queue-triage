@@ -1,6 +1,9 @@
 package uk.gov.dwp.queue.triage.core.dao.mongo;
 
 import com.mongodb.MongoNamespace;
+import com.mongodb.ReadConcern;
+import com.mongodb.ReadPreference;
+import com.mongodb.WriteConcern;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.BulkWriteOptions;
 import com.mongodb.client.model.CountOptions;
@@ -122,6 +125,36 @@ public class AuditingMongoCollectionDelegationTest {
         underTest.withCodecRegistry(codecRegistry);
 
         verify(sourceCollection).withCodecRegistry(codecRegistry);
+        verifyZeroInteractions(auditCollection);
+    }
+
+    @Test
+    public void withReadPreference() {
+        final ReadPreference readPreference = mock(ReadPreference.class);
+
+        underTest.withReadPreference(readPreference);
+
+        verify(sourceCollection).withReadPreference(readPreference);
+        verifyZeroInteractions(auditCollection);
+    }
+
+    @Test
+    public void withWriteConcernIsNotAudited() {
+        final WriteConcern writeConcern = mock(WriteConcern.class);
+
+        underTest.withWriteConcern(writeConcern);
+
+        verify(sourceCollection).withWriteConcern(writeConcern);
+        verifyZeroInteractions(auditCollection);
+    }
+
+    @Test
+    public void withReadConcernIsNotAudited() {
+        final ReadConcern readConcern = mock(ReadConcern.class);
+
+        underTest.withReadConcern(readConcern);
+
+        verify(sourceCollection).withReadConcern(readConcern);
         verifyZeroInteractions(auditCollection);
     }
 

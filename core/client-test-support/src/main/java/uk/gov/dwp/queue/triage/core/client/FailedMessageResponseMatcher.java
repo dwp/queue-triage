@@ -1,11 +1,9 @@
-package uk.gov.dwp.queue.triage.core.domain;
+package uk.gov.dwp.queue.triage.core.client;
 
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
 import org.hamcrest.core.IsAnything;
-import uk.gov.dwp.queue.triage.core.client.FailedMessageResponse;
-import uk.gov.dwp.queue.triage.core.client.FailedMessageStatus;
 import uk.gov.dwp.queue.triage.id.FailedMessageId;
 
 import java.time.Instant;
@@ -112,10 +110,9 @@ public class FailedMessageResponseMatcher extends TypeSafeMatcher<FailedMessageR
         addMatcher(description, "status is", statusMatcher);
         addMatcher(description, "properties are ", propertiesMatcher);
         addMatcher(description, "labels with ", labelsMatcher);
-        ;
     }
 
-    public void addMatcher(Description description, String fieldName, Matcher<?> matcher) {
+    private void addMatcher(Description description, String fieldName, Matcher<?> matcher) {
         if (!(matcher instanceof IsAnything)) {
             description.appendText(fieldName).appendDescriptionOf(matcher).appendText(" ");
         }

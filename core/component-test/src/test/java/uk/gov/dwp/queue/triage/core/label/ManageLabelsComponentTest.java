@@ -10,7 +10,7 @@ import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.emptyIterable;
 import static uk.gov.dwp.queue.triage.core.client.CreateFailedMessageRequest.newCreateFailedMessageRequest;
-import static uk.gov.dwp.queue.triage.core.domain.FailedMessageResponseMatcher.aFailedMessage;
+import static uk.gov.dwp.queue.triage.core.client.FailedMessageResponseMatcher.aFailedMessage;
 import static uk.gov.dwp.queue.triage.id.FailedMessageId.newFailedMessageId;
 
 public class ManageLabelsComponentTest

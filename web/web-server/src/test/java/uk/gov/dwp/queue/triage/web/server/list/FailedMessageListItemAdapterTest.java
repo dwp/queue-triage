@@ -26,7 +26,7 @@ import static org.valid4j.matchers.jsonpath.JsonPathMatchers.hasJsonPath;
 
 public class FailedMessageListItemAdapterTest {
 
-    private static final ObjectMapper OBJECT_MAPPER = new JacksonConfiguration().objectMapper();
+    private static final ObjectMapper OBJECT_MAPPER = JacksonConfiguration.defaultObjectMapper();
     private static final Instant SOME_DATE_TIME = Instant.from(ZonedDateTime.of(LocalDate.of(2016, 2, 8), LocalTime.of(14, 43, 0), UTC));
     private static final String FAILED_MESSAGE_ID_1 = UUID.randomUUID().toString();
     private static final String FAILED_MESSAGE_ID_2 = UUID.randomUUID().toString();

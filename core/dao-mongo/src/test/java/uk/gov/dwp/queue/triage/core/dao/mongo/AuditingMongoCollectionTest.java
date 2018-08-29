@@ -4,6 +4,7 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.DeleteOptions;
 import com.mongodb.client.model.InsertManyOptions;
 import com.mongodb.client.model.InsertOneOptions;
+import com.mongodb.client.model.UpdateOptions;
 import org.bson.Document;
 import org.hamcrest.Matcher;
 import org.junit.Before;
@@ -24,6 +25,7 @@ import static uk.gov.dwp.queue.triage.core.dao.mongo.AuditingMongoCollection.AUD
 import static uk.gov.dwp.queue.triage.core.dao.mongo.AuditingMongoCollection.DELETE_AUDIT_ACTION;
 import static uk.gov.dwp.queue.triage.core.dao.mongo.AuditingMongoCollection.DOCUMENT_KEY;
 import static uk.gov.dwp.queue.triage.core.dao.mongo.AuditingMongoCollection.INSERT_AUDIT_ACTION;
+import static uk.gov.dwp.queue.triage.core.dao.mongo.AuditingMongoCollection.REPLACE_AUDIT_ACTION;
 import static uk.gov.dwp.queue.triage.core.dao.mongo.AuditingMongoCollection.UPDATE_AUDIT_ACTION;
 import static uk.gov.dwp.queue.triage.core.dao.mongo.DocumentMatcher.hasField;
 
@@ -134,6 +136,26 @@ public class AuditingMongoCollectionTest extends AbstractMongoDaoTest {
 
         assertThat(collection.find(documentWithId(failedMessageId)).first(), validFailedMessageDocument(hasField("foo", equalTo("zog"))));
         assertThat(auditDocumentFor(failedMessageId), validFailedMessageAuditDocument(UPDATE_AUDIT_ACTION, hasField("foo", equalTo("zog"))));
+    }
+
+    @Test
+    public void replaceOneIsAudited() {
+        collection.insertOne(documentWithId(failedMessageId).append("foo", "bar"));
+
+        underTest.replaceOne(documentWithId(failedMessageId), documentWithId(failedMessageId).append("ham", "eggs"));
+
+        assertThat(collection.find(documentWithId(failedMessageId)).first(), validFailedMessageDocument(hasField("ham", equalTo("eggs"))));
+        assertThat(auditDocumentFor(failedMessageId), validFailedMessageAuditDocument(REPLACE_AUDIT_ACTION, hasField("ham", equalTo("eggs"))));
+    }
+
+    @Test
+    public void replaceOneWithOptionsIsAudited() {
+        collection.insertOne(documentWithId(failedMessageId).append("foo", "bar"));
+
+        underTest.replaceOne(documentWithId(failedMessageId), documentWithId(failedMessageId).append("ham", "eggs"), new UpdateOptions());
+
+        assertThat(collection.find(documentWithId(failedMessageId)).first(), validFailedMessageDocument(hasField("ham", equalTo("eggs"))));
+        assertThat(auditDocumentFor(failedMessageId), validFailedMessageAuditDocument(REPLACE_AUDIT_ACTION, hasField("ham", equalTo("eggs"))));
     }
 
     private Matcher<Document> validFailedMessageAuditDocument(String auditAction, DocumentMatcher documentMatcher) {

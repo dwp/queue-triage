@@ -16,7 +16,7 @@ import static org.valid4j.matchers.jsonpath.JsonPathMatchers.hasJsonPath;
 
 public class StatusHistoryListItemTest {
 
-    private static final ObjectMapper OBJECT_MAPPER = new JacksonConfiguration().objectMapper();
+    private static final ObjectMapper OBJECT_MAPPER = JacksonConfiguration.defaultObjectMapper();
     private final StatusHistoryListItem underTest = new StatusHistoryListItem(new StatusHistoryResponse(FailedMessageStatus.FAILED, Instant.EPOCH.plusMillis(1)));
 
     @Test

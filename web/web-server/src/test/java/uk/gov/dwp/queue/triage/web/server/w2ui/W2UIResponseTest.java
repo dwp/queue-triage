@@ -16,7 +16,7 @@ import static org.valid4j.matchers.jsonpath.JsonPathMatchers.hasJsonPath;
 
 public class W2UIResponseTest {
 
-    private static final ObjectMapper OBJECT_MAPPER = new JacksonConfiguration().objectMapper();
+    private static final ObjectMapper OBJECT_MAPPER = JacksonConfiguration.defaultObjectMapper();
     private final W2UIResponse<String> underTest = W2UIResponse.success(Arrays.asList("foo", "bar"));
 
     @Test

@@ -2,6 +2,8 @@ package uk.gov.dwp.queue.triage.core.dao.mongo;
 
 import com.mongodb.MongoClient;
 import org.bson.Document;
+import org.bson.codecs.BsonTypeClassMap;
+import org.bson.codecs.DocumentCodec;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,7 +35,7 @@ public class MongoDatabaseLogger {
                 .getCollection(collectionName)
                 .find()
                 .forEach(logDocument(databaseName, collectionName));
-        LOGGER.info("Logging documents in {} complete", databaseName, collectionName);
+        LOGGER.info("Logging documents in {}.{} complete", databaseName, collectionName);
     }
 
     private Consumer<String> logCollection(String databaseName) {
@@ -44,7 +46,8 @@ public class MongoDatabaseLogger {
     }
 
     private Consumer<Document> logDocument(String databaseName, String collection) {
-        return document -> LoggerFactory.getLogger(databaseName + "." + collection).info(document.toJson());
+        return document -> LoggerFactory.getLogger(databaseName + "." + collection)
+                .info(document.toJson(new DocumentCodec(mongoClient.getMongoClientOptions().getCodecRegistry(), new BsonTypeClassMap())));
     }
 
 }

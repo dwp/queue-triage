@@ -16,4 +16,9 @@ public class DeleteMessageAction implements FailedMessageAction {
     public void accept(FailedMessage failedMessage) {
         failedMessageService.delete(failedMessage.getFailedMessageId());
     }
+
+    @Override
+    public String toString() {
+        return "delete failedMessage";
+    }
 }

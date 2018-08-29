@@ -31,7 +31,7 @@ public class FailedMessageListenerComponentTest extends SimpleCoreComponentTestB
     private SearchFailedMessageThenStage searchFailedMessageThenStage;
 
     @Test
-    public void deadLetteredMessageIsProcessedByTheApplication() throws Exception {
+    public void deadLetteredMessageIsProcessedByTheApplication() {
         given().aMessageWithContent$WillDeadLetter("poison");
         given().and().aMessageWithContent$WillBeConsumedSuccessfully("elixir");
 

@@ -1,6 +1,8 @@
 package uk.gov.dwp.queue.triage.core.classification.predicate;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import uk.gov.dwp.queue.triage.core.classification.classifier.Description;
+import uk.gov.dwp.queue.triage.core.classification.classifier.StringDescription;
 import uk.gov.dwp.queue.triage.core.domain.FailedMessage;
 
 import java.util.Objects;
@@ -21,7 +23,12 @@ public class DestinationEqualsPredicate implements FailedMessagePredicate {
     }
 
     @Override
+    public Description describe(Description description) {
+        return description.append("destination ").append(destination.map(d -> "= '" + d + "'").orElse("is empty"));
+    }
+
+    @Override
     public String toString() {
-        return "destination equals: " + destination;
+        return describe(new StringDescription()).toString();
     }
 }

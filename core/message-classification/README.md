@@ -1,18 +1,25 @@
 # Message Classification
 
-Message Classification is really the core of the queue-triage application.
+Message Classification is the core of the queue-triage application.
 
 Once a messages has been Dead-Lettered by an Application, queue triage:
 * De-queues the message
-* Classifies the message using a set of Predicates
-* Performs one or more Actions
+* Persists the message in the database
+* For the given message recursively executes each `MessageClassifier` that satisfies the provided `FailedMessagePredicate` until either
+  * a "matched" `MessageClassificationOutcome` is returned OR
+  * all the `MessageClassifiers` have been executed and an "unmatched" `MessageClassificationOutcome` is returned.
 
-A Message Classifier contains a `FailedMessagePredicate` and a `FailedMessageAction`.
+Currently 4 [MessageClassifiers](src/main/java/uk/gov/dwp/queue/triage/core/classification/classifier/MessageClassifier.java) are provided out of the box:
+* MessageClassifierGroup - An ordered collection of `MessageClassifiers`
+* DelegatingMessageClassifier - If the given predicate equates to true then execute the supplied `MessageClassifier`
+* ExecutingMessageClassifier - If the given `FailedMessagePredicate` equates to true then execute the supplied `FailedMessageAction`.
+* UnmatchedMessageClassifier - Always returns unmatched.  Used mainly for testing.
 
-#### Message Classifier with single Predicate and Action
+#### ExecutingMessageClassifier with single Predicate and Action
 
 ```json
 {
+  "_classifier": "executing",
   "predicate": {
        "_type": "destinationEqualTo",
        "destination": "destination-name"
@@ -24,7 +31,7 @@ A Message Classifier contains a `FailedMessagePredicate` and a `FailedMessageAct
 }
 ```
 
-#### Message Classifier with Multiple Predicates with chained Actions
+#### An ExecutingMessageClassifier with Multiple Predicates with chained Actions
 
 The following example demonstrates an more complex example with a predicate equivilent to
 `WHERE destination == 'destination-name' AND ( message.contains('%foo%') OR property['ham'] == 'eggs') )` if matched, the following actions will be executed in order:
@@ -32,6 +39,7 @@ The following example demonstrates an more complex example with a predicate equi
 * `ResendFailedMessageAction`
 ```json
 {
+  "_classifier": "executing",
   "predicate": {
     "_type": "and",
     "predicates": [ {
@@ -77,7 +85,9 @@ A number of Failed Message Predicates are provided:
 * AndPredicate - All of the given predicates must evaluate to `true`
 * OrPredicate - Any of the given predicates evaluate to `true`
 * BrokerEqualToPredicate - Name of the Broker equals a given value
+* ContentContainsJsonPathPredicate - Message Content contains a specified JSON path
 * ContentEqualToPredicate - Content of the message equals a given value
+* ContentMatchesJsonPath - Value extracted by the JSON path matches a given regular expression
 * DestinationEqualToPredicate - Name of the Destination equals a given value
 * PropertyEqualToPredicate - Value of a JMS property equals a given value
 * PropertyExistsPredicate - Given JMS property exists

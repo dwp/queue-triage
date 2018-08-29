@@ -18,7 +18,7 @@ import static uk.gov.dwp.queue.triage.core.client.FailedMessageStatus.FAILED;
 
 public class StatusUpdateRequestTest {
 
-    private static ObjectMapper OBJECT_MAPPER = new JacksonConfiguration().objectMapper();
+    private static ObjectMapper OBJECT_MAPPER = JacksonConfiguration.defaultObjectMapper();
 
     @Test
     public void serialiseAndDeserialiseRequest() throws IOException {

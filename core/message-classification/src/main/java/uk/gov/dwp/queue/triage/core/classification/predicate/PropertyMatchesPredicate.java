@@ -3,6 +3,8 @@ package uk.gov.dwp.queue.triage.core.classification.predicate;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.apache.commons.lang3.StringUtils;
+import uk.gov.dwp.queue.triage.core.classification.classifier.Description;
+import uk.gov.dwp.queue.triage.core.classification.classifier.StringDescription;
 import uk.gov.dwp.queue.triage.core.domain.FailedMessage;
 
 import java.util.Optional;
@@ -37,10 +39,21 @@ public class PropertyMatchesPredicate implements FailedMessagePredicate {
                 .matches();
     }
 
-    public String getPropertyAsString(FailedMessage failedMessage) {
-        // TODO: Should we only support Objects or type Number, CharSequence, Boolean
+    private String getPropertyAsString(FailedMessage failedMessage) {
         return Optional.ofNullable(failedMessage.getProperty(name))
                 .map(String::valueOf)
                 .orElse("");
+    }
+
+    @Override
+    public Description describe(Description description) {
+        return description
+                .append("property[").append(name).append("] matches ")
+                .append(regex);
+    }
+
+    @Override
+    public String toString() {
+        return describe(new StringDescription()).toString();
     }
 }

@@ -24,7 +24,7 @@ import static org.valid4j.matchers.jsonpath.JsonPathMatchers.hasJsonPath;
 
 public class PropertiesUpdateRequestTest {
 
-    private static ObjectMapper OBJECT_MAPPER = new JacksonConfiguration().objectMapper();
+    private static ObjectMapper OBJECT_MAPPER = JacksonConfiguration.defaultObjectMapper();
 
     @Test
     public void testSerialisingAndDeserialisingAPropertiesUpdateRequest() throws IOException {
